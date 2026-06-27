@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "title": "หมีทำหนัง (flim · framework)",
+  "collections": {
+    "characters": { "fields": ["name", "appearance"], "slots": ["sheet"] },
+    "shots": { "fields": ["imagePrompt", "motion", "dialogue", "cameraAngle"], "slots": ["image", "video"] }
+  },
+  "lookups": {
+    "cameraAngles": { "close": "โคลสอัพ", "medium": "มุมกลาง", "wide": "มุมกว้าง" },
+    "styles": { "cartoon": "การ์ตูน 3D", "anime": "อนิเมะ", "real": "เรียลลิสติก" }
+  },
+  "values": { "plot": "", "style": "cartoon", "imageModel": "🍌 Nano Banana Pro", "videoModel": "Veo 3.1 - Fast" },
+  "seed": {
+    "characters": [ { "id": "char_1", "fields": { "name": "หมีโบ", "appearance": "หมีสีน้ำตาลใส่แว่นกันแดด" } } ],
+    "shots": [ { "id": "s1", "fields": { "imagePrompt": "หมีโบยืนหน้าคาเฟ่", "motion": "หมีโบเดินเข้าคาเฟ่", "dialogue": "สวัสดีตอนเช้า", "cameraAngle": "medium" }, "refs": { "characters": ["char_1"] } } ]
+  },
+  "ops": [
+    { "id": "genSheet", "type": "image", "over": "characters", "model": "{values.imageModel}", "aspectRatio": "9:16", "prompt": "character reference sheet, {item.appearance}, สไตล์ {values.style}", "out": "sheet" },
+    { "id": "genShotImage", "type": "image", "over": "shots", "model": "{values.imageModel}", "aspectRatio": "9:16", "prompt": "{item.imagePrompt}, มุม {item.cameraAngle}, สไตล์ {values.style}", "refs": { "op": "lookupRefs", "from": "characters", "by": "{item.refs.characters}", "slot": "sheet" }, "out": "image" },
+    { "id": "genShotVideo", "type": "video", "over": "shots", "model": "{values.videoModel}", "aspectRatio": "9:16", "durationSeconds": "8", "prompt": "{item.motion}, พูดว่า: {item.dialogue}", "startFrame": "{item.slots.image}", "out": "video" }
+  ],
+  "stages": [
+    { "op": "genSheet" },
+    { "checkpoint": "studio", "gate": { "op": "all", "from": "characters", "slot": "sheet" } },
+    { "op": "genShotImage" },
+    { "checkpoint": "storyboard", "gate": { "op": "all", "from": "shots", "slot": "image" } },
+    { "op": "genShotVideo" },
+    { "checkpoint": "filming" }
+  ],
+  "phases": [
+    {
+      "id": "studio", "title": "1. สตูดิโอ — ตัวละคร", "subtitle": "ตั้งสไตล์ + สร้างหน้าตัวละครอ้างอิง",
+      "bind": "characters",
+      "form": [
+        { "el": "textarea", "field": "plot", "label": "เรื่องย่อ" },
+        { "el": "segmented", "field": "style", "label": "สไตล์ภาพ", "options": { "table": "styles" } },
+        { "el": "dashboard", "coll": "characters", "label": "ตัวละคร" }
+      ],
+      "card": [
+        { "el": "input", "field": "name", "label": "ชื่อ" },
+        { "el": "media-slot", "src": "{item.slots.sheet}" },
+        { "el": "textarea", "field": "appearance", "label": "รูปลักษณ์" },
+        { "el": "row", "card": [ { "el": "gen-button", "label": "สร้างหน้า", "op": "genSheet", "target": "{item}" }, { "el": "pick-button", "into": "{item.slots.sheet}" }, { "el": "delete-button" } ] }
+      ]
+    },
+    {
+      "id": "storyboard", "title": "2. สตอรี่บอร์ด — ภาพช็อต", "subtitle": "สร้างภาพแต่ละช็อต (ใช้หน้าตัวละคร)",
+      "bind": "shots",
+      "form": [ { "el": "dashboard", "coll": "shots", "label": "ช็อต" } ],
+      "card": [
+        { "el": "media-slot", "src": "{item.slots.image}" },
+        { "el": "textarea", "field": "imagePrompt", "label": "ภาพ" },
+        { "el": "dropdown", "field": "cameraAngle", "label": "มุมกล้อง", "options": { "table": "cameraAngles" } },
+        { "el": "row", "card": [ { "el": "gen-button", "label": "เจนภาพ", "op": "genShotImage", "target": "{item}" }, { "el": "pick-button", "into": "{item.slots.image}" } ] }
+      ]
+    },
+    {
+      "id": "filming", "title": "3. ถ่ายทำ — วิดีโอ", "subtitle": "สร้างวิดีโอจากภาพช็อต",
+      "bind": "shots",
+      "form": [ { "el": "dashboard", "coll": "shots", "label": "วิดีโอ" } ],
+      "card": [
+        { "el": "media-slot", "src": "{item.slots.video}" },
+        { "el": "textarea", "field": "motion", "label": "การเคลื่อนไหว" },
+        { "el": "textarea", "field": "dialogue", "label": "บทพูด" },
+        { "el": "row", "card": [ { "el": "gen-button", "label": "เจนวิดีโอ", "op": "genShotVideo", "target": "{item}" }, { "el": "download-button", "to": "{item.slots.video}" } ] }
+      ]
+    }
+  ]
+}
