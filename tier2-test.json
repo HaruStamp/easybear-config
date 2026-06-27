@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "rev": 1,
+  "title": "Tier 2 Test — fan-out (AI วาง 2 ช็อต → 2 ภาพ)",
+  "fields": [
+    {
+      "id": "idea",
+      "type": "textarea",
+      "label": "ไอเดียเรื่อง",
+      "default": "หมีแว่นนักสำรวจ เดินป่าเจอน้ำตกลับ"
+    }
+  ],
+  "steps": [
+    {
+      "type": "text",
+      "id": "plan",
+      "parse": "json",
+      "thinkingLevel": "low",
+      "systemInstruction": "คุณเป็นนักวางสตอรี่บอร์ด ออกแบบ 2 ช็อตจากไอเดียที่ได้ ตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่นนอก JSON · รูปแบบ: {\"shots\":[{\"desc\":\"image generation prompt ภาษาอังกฤษ บรรยายภาพช็อตนี้\"}]}",
+      "prompt": "ไอเดีย: {idea}"
+    },
+    {
+      "type": "forEach",
+      "id": "shot",
+      "over": "plan.shots",
+      "as": "s",
+      "steps": [
+        {
+          "type": "image",
+          "id": "img",
+          "model": "🍌 Nano Banana Pro",
+          "aspectRatio": "9:16",
+          "prompt": "{s.desc}"
+        }
+      ]
+    }
+  ]
+}
