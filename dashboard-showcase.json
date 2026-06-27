@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "rev": 1,
+  "title": "Dashboard Showcase",
+  "fields": [
+    { "id": "n1", "type": "note", "label": "เพิ่มรายการภาพหลาย ๆ อัน แล้วกดสร้าง → ดูแผงความคืบหน้า (batch) ทางขวา" },
+    { "id": "style", "type": "text", "label": "สไตล์รวม", "default": "หมีแว่นน่ารัก สไตล์การ์ตูน 3D" },
+    { "id": "aspect", "type": "select", "label": "สัดส่วน", "widget": "segmented", "options": [
+      { "value": "1:1", "label": "1:1", "icon": "crop_square" },
+      { "value": "9:16", "label": "9:16", "icon": "crop_portrait" }
+    ], "default": "9:16" },
+    { "id": "prompts", "type": "list", "label": "รายการภาพ (กด + เพิ่มหลายอัน)", "item": { "fields": [
+      { "key": "p", "label": "บรรยายภาพ เช่น กำลังชงกาแฟ" }
+    ] } }
+  ],
+  "policy": { "maxParallel": 2, "staggerMs": 5000 },
+  "steps": [
+    { "type": "forEach", "id": "batch", "over": "prompts", "as": "it", "steps": [
+      { "type": "image", "id": "img", "prompt": "{style}, {it.p}", "aspectRatio": "{aspect}" }
+    ] }
+  ]
+}
