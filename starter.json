@@ -1,18 +1,92 @@
 {
   "schemaVersion": 1,
-  "rev": 1,
+  "rev": 2,
   "title": "EasyBear Starter — Core Test",
   "fields": [
-    { "id": "prompt", "type": "textarea", "label": "คำสั่ง (prompt)", "default": "หมีแว่นน่ารัก ใส่ชุดนักสำรวจ ยืนหน้าน้ำตก" },
-    { "id": "refs", "type": "asset-pick", "label": "ภาพอ้างอิง — เลือกจาก Assets (แนบหลายรูปได้)", "multiple": true },
-    { "id": "uploads", "type": "upload", "label": "หรืออัปโหลดภาพอ้างอิงจากเครื่อง", "accept": "image/*", "multiple": true },
-    { "id": "imgModel", "type": "select", "label": "โมเดลภาพ", "options": ["🍌 Nano Banana Pro", "🍌 Nano Banana 2", "Imagen 4"], "default": "🍌 Nano Banana Pro" },
-    { "id": "vidModel", "type": "select", "label": "โมเดลวีดีโอ", "options": ["Veo 3.1 - Lite [Lower Priority]", "Veo 3.1 - Lite", "Veo 3.1 - Fast", "Veo 3.1 - Quality", "Omni Flash"], "default": "Veo 3.1 - Lite [Lower Priority]" },
-    { "id": "dur", "type": "select", "label": "ความยาววีดีโอ (วินาที)", "options": ["4", "6", "8"], "default": "4" }
+    {
+      "id": "prompt",
+      "type": "textarea",
+      "label": "คำสั่ง (prompt)",
+      "default": "หมีแว่นน่ารัก ใส่ชุดนักสำรวจ ยืนหน้าน้ำตก"
+    },
+    {
+      "id": "refs",
+      "type": "asset-pick",
+      "label": "ภาพอ้างอิง — เลือกจาก Assets (แนบหลายรูปได้)",
+      "multiple": true
+    },
+    {
+      "id": "uploads",
+      "type": "upload",
+      "label": "หรืออัปโหลดภาพอ้างอิงจากเครื่อง",
+      "accept": "image/*",
+      "multiple": true
+    },
+    {
+      "id": "imgModel",
+      "type": "select",
+      "label": "โมเดลภาพ",
+      "options": [
+        "🍌 Nano Banana Pro",
+        "🍌 Nano Banana 2",
+        "Imagen 4"
+      ],
+      "default": "🍌 Nano Banana Pro"
+    },
+    {
+      "id": "vidModel",
+      "type": "select",
+      "label": "โมเดลวีดีโอ",
+      "options": [
+        "Veo 3.1 - Lite [Lower Priority]",
+        "Veo 3.1 - Lite",
+        "Veo 3.1 - Fast",
+        "Veo 3.1 - Quality",
+        "Omni Flash"
+      ],
+      "default": "Veo 3.1 - Lite [Lower Priority]"
+    },
+    {
+      "id": "dur",
+      "type": "select",
+      "label": "ความยาววีดีโอ (วินาที) — บัญชีทั่วไป = 8 เท่านั้น (4/6 ต้องบัญชีพิเศษ)",
+      "options": [
+        "8",
+        "6",
+        "4"
+      ],
+      "default": "8"
+    }
   ],
   "steps": [
-    { "type": "image", "id": "img", "prompt": "{prompt}, chibi 2D style, pastel colors, white background", "model": "{imgModel}", "aspectRatio": "9:16", "refFrom": ["refs", "uploads"] },
-    { "type": "video", "id": "vid", "prompt": "{prompt}, gentle slow camera push-in, subtle motion", "model": "{vidModel}", "aspectRatio": "9:16", "durationSeconds": "{dur}", "fromImage": "img" }
+    {
+      "type": "image",
+      "id": "img",
+      "prompt": "{prompt}, chibi 2D style, pastel colors, white background",
+      "model": "{imgModel}",
+      "aspectRatio": "9:16",
+      "refFrom": [
+        "refs",
+        "uploads"
+      ]
+    },
+    {
+      "type": "video",
+      "id": "vid",
+      "prompt": "{prompt}, gentle slow camera push-in, subtle motion",
+      "model": "{vidModel}",
+      "aspectRatio": "9:16",
+      "durationSeconds": "{dur}",
+      "fromImage": "img"
+    }
   ],
-  "output": { "show": ["img", "vid"], "download": ["vid"] }
+  "output": {
+    "show": [
+      "img",
+      "vid"
+    ],
+    "download": [
+      "vid"
+    ]
+  }
 }
