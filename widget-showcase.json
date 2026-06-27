@@ -1,33 +1,46 @@
 {
   "schemaVersion": 1,
-  "rev": 2,
+  "rev": 3,
   "title": "Widget Showcase",
   "fields": [
-    { "id": "n1", "type": "note", "label": "โชว์ widget ทุกตัวในคลัง — กรอกแล้วกด สร้าง (gen ภาพจาก prompt)" },
+    { "id": "n1", "type": "note", "label": "โชว์ widget ทุกตัว + rich options (icon/desc) — กรอกแล้วกด สร้าง" },
     {
       "id": "panel", "type": "tabs", "label": "tabs",
       "tabs": [
         { "label": "พื้นฐาน", "fields": [
           { "id": "name", "type": "text", "label": "ชื่อ (text)" },
-          { "id": "mode", "type": "select", "label": "Mode (toggle)", "widget": "toggle", "options": ["A", "B"], "default": "A" }
+          { "id": "mood", "type": "select", "label": "อารมณ์ (toggle + icon)", "widget": "toggle", "options": [
+            { "value": "happy", "label": "สดใส", "icon": "sentiment_very_satisfied" },
+            { "value": "sad", "label": "ดราม่า", "icon": "sentiment_sad" }
+          ], "default": "happy" }
         ]},
         { "label": "สไตล์", "fields": [
-          { "id": "preset", "type": "select", "label": "พรีเซ็ต (grid)", "widget": "grid", "options": ["UGC", "การ์ตูน 3D", "ละคร", "โฆษณา"], "default": "UGC" },
-          { "id": "genres", "type": "chips", "label": "แนว (chips)", "options": ["ดราม่า", "ตลก", "สยอง", "รัก"] }
+          { "id": "genres", "type": "chips", "label": "แนว (chips + emoji)", "options": [
+            { "value": "drama", "label": "ดราม่า", "icon": "🎭" },
+            { "value": "comedy", "label": "ตลก", "icon": "😂" },
+            { "value": "horror", "label": "สยอง", "icon": "👻" }
+          ] }
         ]}
       ]
     },
-    { "id": "prompt", "type": "textarea", "label": "Prompt", "default": "หมีแว่นน่ารัก" },
-    { "id": "name", "type": "text", "label": "ชื่อ (text)" },
-    { "id": "mode", "type": "select", "label": "Mode (toggle)", "widget": "toggle", "options": ["A", "B"], "default": "A" },
-    { "id": "aspect", "type": "select", "label": "สัดส่วน (segmented)", "widget": "segmented", "options": ["16:9", "1:1", "9:16"], "default": "9:16" },
-    { "id": "preset", "type": "select", "label": "พรีเซ็ต (grid)", "widget": "grid", "options": ["UGC", "การ์ตูน 3D", "ละคร", "โฆษณา"], "default": "UGC" },
-    { "id": "model", "type": "select", "label": "โมเดล (dropdown)", "options": ["🍌 Nano Banana Pro", "Imagen 4"], "default": "🍌 Nano Banana Pro" },
+    { "id": "aspect", "type": "select", "label": "สัดส่วน (segmented + icon)", "widget": "segmented", "options": [
+      { "value": "16:9", "label": "16:9", "icon": "crop_16_9" },
+      { "value": "1:1", "label": "1:1", "icon": "crop_square" },
+      { "value": "9:16", "label": "9:16", "icon": "crop_portrait" }
+    ], "default": "9:16" },
+    { "id": "preset", "type": "select", "label": "พรีเซ็ต (grid + icon + desc)", "widget": "grid", "options": [
+      { "value": "ugc", "label": "UGC", "icon": "smartphone", "desc": "คลิปมือถือธรรมชาติ" },
+      { "value": "cartoon", "label": "การ์ตูน 3D", "icon": "view_in_ar", "desc": "สไตล์ 3 มิติ" },
+      { "value": "drama", "label": "ละคร", "icon": "theater_comedy", "desc": "ดราม่าจริงจัง" },
+      { "value": "ads", "label": "โฆษณา", "icon": "campaign", "desc": "ขายของ" }
+    ], "default": "ugc" },
+    { "id": "model", "type": "select", "label": "โมเดล (dropdown + icon + desc)", "options": [
+      { "value": "🍌 Nano Banana Pro", "label": "🍌 Nano Banana Pro", "icon": "auto_awesome", "desc": "คุณภาพสูงสุด" },
+      { "value": "Imagen 4", "label": "Imagen 4", "icon": "image", "desc": "เร็ว" }
+    ], "default": "🍌 Nano Banana Pro" },
     { "id": "count", "type": "number", "label": "จำนวน (stepper)", "widget": "stepper", "min": 1, "max": 9, "step": 1, "default": "2" },
-    { "id": "seed", "type": "number", "label": "Seed (number)", "default": "0" },
     { "id": "strength", "type": "slider", "label": "ความเข้ม (slider)", "min": 0, "max": 100, "step": 5, "default": "50" },
     { "id": "watermark", "type": "switch", "label": "ใส่ลายน้ำ (switch)", "default": "" },
-    { "id": "genres", "type": "chips", "label": "แนว (chips)", "options": ["ดราม่า", "ตลก", "สยอง", "รัก"] },
     { "id": "blocklist", "type": "taginput", "label": "คำต้องห้าม (taginput)" },
     {
       "id": "adv", "type": "group", "label": "ตั้งค่าขั้นสูง (group · พับได้)", "collapsible": true,
@@ -36,7 +49,8 @@
         { "id": "retry", "type": "switch", "label": "ลองใหม่อัตโนมัติ", "default": "true" }
       ]
     },
-    { "id": "refs", "type": "asset-pick", "label": "ภาพอ้างอิง (+ button)", "multiple": true }
+    { "id": "refs", "type": "asset-pick", "label": "ภาพอ้างอิง (+ button)", "multiple": true },
+    { "id": "prompt", "type": "textarea", "label": "Prompt", "default": "หมีแว่นน่ารัก" }
   ],
   "steps": [
     { "type": "image", "id": "image", "model": "{model}", "aspectRatio": "{aspect}", "prompt": "{prompt}", "refs": ["refs"] }
