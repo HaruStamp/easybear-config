@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "rev": 1,
+  "title": "Wizard Showcase",
+  "screens": [
+    {
+      "id": "s1", "title": "1. เนื้อหา", "subtitle": "กรอกสิ่งที่อยากสร้าง",
+      "fields": [
+        { "id": "name", "type": "text", "label": "ชื่องาน" },
+        { "id": "prompt", "type": "textarea", "label": "Prompt", "default": "หมีแว่นน่ารักใส่แว่นกันแดด" }
+      ]
+    },
+    {
+      "id": "s2", "title": "2. สไตล์", "subtitle": "เลือกอารมณ์และสัดส่วน",
+      "fields": [
+        { "id": "mood", "type": "select", "label": "อารมณ์", "widget": "toggle", "options": [
+          { "value": "happy", "label": "สดใส", "icon": "sentiment_very_satisfied" },
+          { "value": "sad", "label": "ดราม่า", "icon": "sentiment_sad" }
+        ], "default": "happy" },
+        { "id": "aspect", "type": "select", "label": "สัดส่วน", "widget": "segmented", "options": [
+          { "value": "16:9", "label": "16:9", "icon": "crop_16_9" },
+          { "value": "1:1", "label": "1:1", "icon": "crop_square" },
+          { "value": "9:16", "label": "9:16", "icon": "crop_portrait" }
+        ], "default": "9:16" },
+        { "id": "preset", "type": "select", "label": "พรีเซ็ต", "widget": "grid", "options": [
+          { "value": "ugc", "label": "UGC", "icon": "smartphone", "desc": "คลิปมือถือธรรมชาติ" },
+          { "value": "cartoon", "label": "การ์ตูน 3D", "icon": "view_in_ar", "desc": "สไตล์ 3 มิติ" }
+        ], "default": "ugc" }
+      ]
+    },
+    {
+      "id": "s3", "title": "3. ตั้งค่า", "subtitle": "โมเดลและภาพอ้างอิง",
+      "fields": [
+        { "id": "model", "type": "select", "label": "โมเดล", "options": [
+          { "value": "🍌 Nano Banana Pro", "label": "🍌 Nano Banana Pro", "icon": "auto_awesome", "desc": "คุณภาพสูงสุด" },
+          { "value": "Imagen 4", "label": "Imagen 4", "icon": "image", "desc": "เร็ว" }
+        ], "default": "🍌 Nano Banana Pro" },
+        { "id": "count", "type": "number", "label": "จำนวน", "widget": "stepper", "min": 1, "max": 4, "step": 1, "default": "1" },
+        { "id": "refs", "type": "asset-pick", "label": "ภาพอ้างอิง", "multiple": true }
+      ]
+    }
+  ],
+  "steps": [
+    { "type": "image", "id": "image", "model": "{model}", "aspectRatio": "{aspect}", "prompt": "{prompt}", "refs": ["refs"] }
+  ]
+}
