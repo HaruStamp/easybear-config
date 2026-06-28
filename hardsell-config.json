@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "title": "หมีแว่น ขายดุ — ปั่นคลิปขายสินค้า",
+  "icon": "storefront",
+  "persistBar": true,
+  "run": { "maxParallel": 2, "staggerMs": 1500, "maxAttempts": 3 },
+  "home": {
+    "title": "หมีแว่น ขายดุ",
+    "subtitle": "ใส่สินค้า → ล็อกรายละเอียด → เลือกมุมขาย → ปั่นคลิปขายสไตล์ TikTok อัตโนมัติ",
+    "hero": "🐻",
+    "cta": "เริ่มทำคลิปขาย"
+  },
+  "collections": {
+    "product": { "fields": [], "slots": ["photo"] },
+    "scenes": { "fields": ["beat", "hook", "script", "visualPrompt", "cta"], "slots": ["image", "video"] }
+  },
+  "lookups": {
+    "beats": { "hook": "ฮุก 3 วิแรก", "problem": "ตอกปัญหา", "solution": "เสนอสินค้า", "proof": "พิสูจน์/รีวิว", "cta": "ปิดการขาย" },
+    "imageModels": { "🍌 Nano Banana Pro": "🍌 Nano Banana Pro", "Imagen 4": "Imagen 4" },
+    "videoModels": { "Veo 3.1 - Fast": "Veo 3.1 - Fast", "Veo 3.1 - Quality": "Veo 3.1 - Quality" }
+  },
+  "values": {
+    "productName": "",
+    "productPrice": "",
+    "productFeatures": "",
+    "productAudience": "",
+    "sellAngle": "เจาะ pain point ของลูกค้าให้รู้สึกว่าต้องแก้ปัญหานี้เดี๋ยวนี้",
+    "tone": "ขายดุ เร่งเร้า กระตุ้นให้รีบตัดสินใจซื้อทันที",
+    "platform": "TikTok แนวตั้ง 9:16 จังหวะเร็ว",
+    "imageModel": "🍌 Nano Banana Pro",
+    "videoModel": "Veo 3.1 - Fast"
+  },
+  "seed": {
+    "product": [ { "id": "prod", "fields": {} } ],
+    "scenes": [
+      { "id": "sc1", "fields": { "beat": "hook" }, "refs": { "product": ["prod"] } },
+      { "id": "sc2", "fields": { "beat": "problem" }, "refs": { "product": ["prod"] } },
+      { "id": "sc3", "fields": { "beat": "solution" }, "refs": { "product": ["prod"] } },
+      { "id": "sc4", "fields": { "beat": "cta" }, "refs": { "product": ["prod"] } }
+    ]
+  },
+  "ops": [
+    {
+      "id": "genSceneImage", "type": "image", "over": "scenes",
+      "model": "{values.imageModel}", "aspectRatio": "9:16",
+      "prompt": "โฆษณาขายสินค้า {values.productName} ({values.productFeatures}) สำหรับ {values.productAudience}. ฉาก: {item.visualPrompt}. โทน: {values.tone}. มุมขาย: {values.sellAngle}. {values.platform}",
+      "refs": { "op": "lookupRefs", "from": "product", "by": "{item.refs.product}", "slot": "photo" },
+      "out": "image"
+    },
+    {
+      "id": "genSceneVideo", "type": "video", "over": "scenes",
+      "model": "{values.videoModel}", "aspectRatio": "9:16", "durationSeconds": "8",
+      "prompt": "{item.script}. คนพูดขายของแบบ {values.tone} พูดว่า: {item.hook}. CTA: {item.cta}",
+      "startFrame": "{item.slots.image}", "out": "video"
+    }
+  ],
+  "stages": [
+    { "op": "genSceneImage" },
+    { "checkpoint": "scenes", "gate": { "op": "all", "from": "scenes", "slot": "image" } },
+    { "op": "genSceneVideo" },
+    { "checkpoint": "filming" }
+  ],
+  "phases": [
+    {
+      "id": "setup", "title": "1. สินค้า + มุมขาย", "subtitle": "ล็อกสินค้า คุมรายละเอียดเป๊ะ แล้วเลือกมุมขาย/โทน",
+      "bind": "product",
+      "form": [
+        { "el": "note", "value": "ใส่ข้อมูลสินค้าให้ครบ — ล็อกไว้ใช้ทุกฉาก (คุม detail ไม่ให้ AI มั่วชื่อ/ราคา/จุดเด่น)" },
+        { "el": "input", "field": "productName", "label": "ชื่อสินค้า" },
+        { "el": "input", "field": "productPrice", "label": "ราคา" },
+        { "el": "textarea", "field": "productFeatures", "label": "จุดเด่น/คุณสมบัติ (คั่นด้วย ,)" },
+        { "el": "input", "field": "productAudience", "label": "กลุ่มลูกค้า" },
+        { "el": "divider" },
+        { "el": "segmented", "field": "sellAngle", "label": "มุมขาย", "options": [
+          { "value": "เจาะ pain point ของลูกค้าให้รู้สึกว่าต้องแก้ปัญหานี้เดี๋ยวนี้", "label": "Pain point", "icon": "bolt" },
+          { "value": "กระตุ้นความอยากได้ ชูภาพชีวิตที่ดีขึ้นหลังใช้สินค้า", "label": "Desire", "icon": "favorite" },
+          { "value": "พิสูจน์ด้วยรีวิว/ผลลัพธ์จริง สร้างความน่าเชื่อถือ", "label": "Proof", "icon": "verified" }
+        ] },
+        { "el": "segmented", "field": "tone", "label": "โทน", "options": [
+          { "value": "ขายดุ เร่งเร้า กระตุ้นให้รีบตัดสินใจซื้อทันที", "label": "ดุ/เร่งปิด", "icon": "local_fire_department" },
+          { "value": "นุ่มนวล สร้างความเชื่อใจ ค่อย ๆ โน้มน้าว", "label": "นุ่มนวล", "icon": "spa" }
+        ] },
+        { "el": "dropdown", "field": "platform", "label": "แพลตฟอร์ม", "options": [
+          { "value": "TikTok แนวตั้ง 9:16 จังหวะเร็ว", "label": "TikTok" },
+          { "value": "Instagram Reels แนวตั้ง 9:16", "label": "Reels" },
+          { "value": "YouTube Shorts แนวตั้ง 9:16", "label": "Shorts" }
+        ] },
+        { "el": "divider" },
+        { "el": "note", "value": "เซฟ/โหลดงาน — กันงานหายตอน Flow บล็อก (clear cookie)" },
+        { "el": "row", "card": [
+          { "el": "save-button", "scope": "all", "label": "เซฟทั้งโปรเจกต์", "icon": "save" },
+          { "el": "load-button", "mode": "replace", "label": "โหลดโปรเจกต์", "icon": "upload_file" }
+        ] }
+      ],
+      "card": [
+        { "el": "note", "value": "รูปสินค้า (อัปโหลด/เลือก) — ใช้อ้างอิงทุกฉากให้สินค้าหน้าตาตรงจริง" },
+        { "el": "media-slot", "src": "{item.slots.photo}" },
+        { "el": "row", "card": [
+          { "el": "upload", "into": "{item.slots.photo}", "label": "อัปโหลดรูปสินค้า", "icon": "add_photo_alternate" },
+          { "el": "pick-button", "into": "{item.slots.photo}", "label": "เลือกจาก asset" }
+        ] }
+      ]
+    },
+    {
+      "id": "scenes", "title": "2. สคริปต์ + ภาพ", "subtitle": "เขียนสคริปต์แต่ละบีท (AI ช่วยได้) → เจนภาพโฆษณา",
+      "bind": "scenes",
+      "form": [
+        { "el": "dashboard", "coll": "scenes", "label": "ฉากขาย" },
+        { "el": "add-button", "coll": "scenes", "label": "เพิ่มฉาก" }
+      ],
+      "card": [
+        { "el": "dropdown", "field": "beat", "label": "บีท (จังหวะขาย)", "options": { "table": "beats" } },
+        { "el": "media-slot", "src": "{item.slots.image}" },
+        { "el": "input", "field": "hook", "label": "ฮุก/ประโยคเด็ด" },
+        { "el": "textarea", "field": "script", "label": "สคริปต์พากย์" },
+        { "el": "ai-fill-button", "field": "script", "value": "เขียนสคริปต์ขายของสไตล์ {values.tone} สำหรับสินค้า {values.productName} บีท {item.beat}", "label": "AI เขียนสคริปต์" },
+        { "el": "textarea", "field": "visualPrompt", "label": "ภาพ (visual prompt)" },
+        { "el": "input", "field": "cta", "label": "CTA (ปุ่มปิดการขาย)" },
+        { "el": "row", "card": [
+          { "el": "gen-button", "label": "เจนภาพ", "op": "genSceneImage", "target": "{item}" },
+          { "el": "pick-button", "into": "{item.slots.image}" },
+          { "el": "copy-button", "value": "{item.script}", "label": "คัดลอกสคริปต์" }
+        ] }
+      ]
+    },
+    {
+      "id": "filming", "title": "3. วิดีโอ + ประกอบคลิป", "subtitle": "เจนวิดีโอแต่ละฉาก แล้วเปิดโปรแกรมตัดต่อ",
+      "bind": "scenes",
+      "form": [
+        { "el": "dashboard", "coll": "scenes", "label": "วิดีโอ" },
+        { "el": "open-editor", "coll": "scenes", "label": "เปิดโปรแกรมตัดต่อ", "icon": "movie_edit" }
+      ],
+      "card": [
+        { "el": "media-slot", "src": "{item.slots.video}" },
+        { "el": "row", "card": [
+          { "el": "gen-button", "label": "เจนวิดีโอ", "op": "genSceneVideo", "target": "{item}" },
+          { "el": "download-button", "to": "{item.slots.video}" }
+        ] }
+      ]
+    }
+  ]
+}
