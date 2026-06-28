@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "title": "หมีทำหนัง — Parity (รวม Board+ถ่ายทำ + dialogue หลายคน)",
+  "icon": "movie",
+  "persistBar": true,
+  "theme": { "vars": { "--ev-accent": "#e0b341", "--ev-bg": "#0b0b0d", "--ev-surface": "rgba(255,255,255,0.045)", "--ev-surface2": "rgba(255,255,255,0.10)" } },
+  "run": { "maxParallel": 2, "staggerMs": 1200, "maxAttempts": 3 },
+  "home": { "title": "หมีทำหนัง", "subtitle": "สร้างตัวละคร → บอร์ด+ถ่ายทำในหน้าเดียว (dialogue หลายคนได้)", "hero": "🐻", "cta": "เริ่มทำหนัง" },
+  "collections": {
+    "characters": { "fields": ["name", "appearance"], "slots": ["sheet"] },
+    "scenes": { "fields": ["name", "detail"], "slots": ["ref"] },
+    "shots": { "fields": ["title", "imagePrompt", "cameraAngle", "mood", "cameraDir", "motion", "duration"], "slots": ["image", "video"] },
+    "lines": { "fields": ["speaker", "text", "audioType"], "slots": [] }
+  },
+  "lookups": {
+    "cameraAngles": { "close": "โคลสอัพ", "medium": "มุมกลาง", "wide": "มุมกว้าง" },
+    "moods": { "happy": "สดใส", "tense": "ตึงเครียด", "sad": "เศร้า", "romantic": "โรแมนติก" },
+    "cameraDirs": { "static": "นิ่ง", "pan": "แพน", "dolly": "ดอลลี่", "handheld": "มือถือ" },
+    "audioTypes": { "lipsync": "พูดเข้าปาก", "vo": "เสียงบรรยาย" },
+    "imageModels": { "🍌 Nano Banana Pro": "🍌 Nano Banana Pro", "Imagen 4": "Imagen 4" },
+    "videoModels": { "Veo 3.1 - Fast": "Veo 3.1 - Fast", "Omni Flash": "Omni Flash" }
+  },
+  "values": { "style": "ละครไทย cinematic", "imageModel": "🍌 Nano Banana Pro", "videoModel": "Veo 3.1 - Fast" },
+  "seed": {
+    "characters": [ { "id": "c1", "fields": { "name": "มินตรา", "appearance": "หญิงสาวผมยาว" } }, { "id": "c2", "fields": { "name": "กวิน", "appearance": "ชายหนุ่มสูทเข้ม" } } ],
+    "scenes": [ { "id": "sc1", "fields": { "name": "ตลาดกลางคืน" } } ],
+    "shots": [ { "id": "s1", "fields": { "title": "The Invitation", "cameraAngle": "wide", "mood": "romantic", "duration": "8" }, "refs": { "characters": ["c1", "c2"], "scenes": ["sc1"] } } ],
+    "lines": [ { "id": "l1", "fields": { "speaker": "มินตรา", "text": "ไปเดินตลาดกลางคืนกันไหม", "audioType": "lipsync" }, "refs": { "shot": ["s1"] } } ]
+  },
+  "ops": [
+    { "id": "genSheet", "type": "image", "over": "characters", "model": "{values.imageModel}", "aspectRatio": "9:16", "prompt": "character sheet {item.appearance} สไตล์ {values.style}", "out": "sheet" },
+    { "id": "genImg", "type": "image", "over": "shots", "model": "{values.imageModel}", "aspectRatio": "9:16",
+      "prompt": "{item.imagePrompt} มุม {item.cameraAngle} อารมณ์ {item.mood} สไตล์ {values.style}",
+      "refs": { "op": "lookupRefs", "from": "characters", "by": "{item.refs.characters}", "slot": "sheet" }, "out": "image" },
+    { "id": "genVid", "type": "video", "over": "shots", "model": "{values.videoModel}", "aspectRatio": "9:16", "durationSeconds": "{item.duration}",
+      "prompt": "{item.motion} กล้อง {item.cameraDir}", "startFrame": "{item.slots.image}", "out": "video" }
+  ],
+  "stages": [
+    { "op": "genSheet" },
+    { "checkpoint": "studio", "gate": { "op": "all", "from": "characters", "slot": "sheet" } },
+    { "op": "genImg" },
+    { "checkpoint": "board" },
+    { "op": "genVid" },
+    { "checkpoint": "board" }
+  ],
+  "phases": [
+    {
+      "id": "studio", "title": "1. ตัวละคร + ฉาก", "subtitle": "สร้าง asset (ใช้อ้างอิงในช็อต)",
+      "bind": "characters",
+      "form": [ { "el": "dashboard", "coll": "characters", "label": "ตัวละคร" } ],
+      "card": [
+        { "el": "media-slot", "src": "{item.slots.sheet}", "aspect": "3:4" },
+        { "el": "input", "field": "name", "label": "ชื่อ", "maxLength": 40 },
+        { "el": "textarea", "field": "appearance", "label": "รูปลักษณ์", "maxLength": 200 },
+        { "el": "row", "card": [
+          { "el": "gen-button", "label": "เจนหน้า", "op": "genSheet", "target": "{item}", "variant": "solid", "icon": "auto_awesome" },
+          { "el": "pick-button", "into": "{item.slots.sheet}" },
+          { "el": "delete-button" }
+        ] }
+      ]
+    },
+    {
+      "id": "board", "title": "2. บอร์ด + ถ่ายทำ (หน้าเดียว)", "subtitle": "ตั้งค่าทุกอย่างในการ์ดเดียว — ภาพ/วิดีโอ/บทพูดหลายคน/ตัวละคร",
+      "bind": "shots",
+      "form": [
+        { "el": "dashboard", "coll": "shots", "label": "ช็อต" },
+        { "el": "add-button", "coll": "shots", "label": "เพิ่มช็อต", "variant": "outline" }
+      ],
+      "card": [
+        { "el": "input", "field": "title", "label": "ชื่อช็อต", "style": { "fontWeight": "700", "fontSize": "15px" } },
+        { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
+          { "el": "media-slot", "src": "{item.slots.image}", "aspect": "9:16", "style": { "maxWidth": "150px" } },
+          { "el": "media-slot", "src": "{item.slots.video}", "aspect": "9:16", "style": { "maxWidth": "150px" } }
+        ] },
+        { "el": "note", "value": "ตั้งค่าภาพ", "tone": "info", "icon": "image" },
+        { "el": "row", "card": [
+          { "el": "dropdown", "field": "cameraAngle", "label": "มุมกล้อง", "options": { "table": "cameraAngles" } },
+          { "el": "dropdown", "field": "mood", "label": "อารมณ์", "options": { "table": "moods" } }
+        ] },
+        { "el": "textarea", "field": "imagePrompt", "label": "ภาพ (visual)", "maxLength": 500 },
+        { "el": "note", "value": "ตั้งค่าวิดีโอ", "tone": "info", "icon": "movie" },
+        { "el": "row", "card": [
+          { "el": "dropdown", "field": "cameraDir", "label": "กำกับกล้อง", "options": { "table": "cameraDirs" } },
+          { "el": "segmented", "field": "duration", "label": "ความยาว", "options": [ { "value": "4", "label": "4ว" }, { "value": "6", "label": "6ว" }, { "value": "8", "label": "8ว" } ] }
+        ] },
+        { "el": "textarea", "field": "motion", "label": "การเคลื่อนไหว (motion)", "maxLength": 300 },
+        { "el": "note", "value": "บทพูด (เพิ่มได้หลายคน · เลือกชื่อตัวละคร)", "tone": "success", "icon": "record_voice_over" },
+        { "el": "child-list", "label": "Dialogue", "childColl": "lines", "childBy": "shot", "placeholder": "เพิ่มบทพูด", "card": [
+          { "el": "dropdown", "field": "speaker", "options": { "coll": "characters", "label": "name", "value": "name" }, "placeholder": "ใคร" },
+          { "el": "input", "field": "text", "placeholder": "พิมพ์บทพูด..." },
+          { "el": "dropdown", "field": "audioType", "options": { "table": "audioTypes" }, "placeholder": "แบบ" }
+        ] },
+        { "el": "ref-select", "field": "characters", "coll": "characters", "label": "ตัวละครในช็อต", "icon": "person" },
+        { "el": "ref-select", "field": "scenes", "coll": "scenes", "label": "ฉาก", "icon": "landscape" },
+        { "el": "row", "card": [
+          { "el": "copy-button", "value": "{item.imagePrompt}", "label": "คัดลอก prompt" },
+          { "el": "gen-button", "label": "เจนภาพ", "op": "genImg", "target": "{item}", "variant": "solid", "icon": "image" },
+          { "el": "gen-button", "label": "เจนวิดีโอ", "op": "genVid", "target": "{item}", "variant": "solid", "icon": "movie" },
+          { "el": "download-button", "to": "{item.slots.video}" }
+        ] },
+        { "el": "open-editor", "coll": "shots", "label": "เปิดตัดต่อ", "variant": "outline", "icon": "movie_edit" }
+      ]
+    }
+  ]
+}
