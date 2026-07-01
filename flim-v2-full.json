@@ -376,17 +376,27 @@
             {
               "el": "md",
               "value": "**สร้างละครเรื่องใหม่**",
-              "className": "text-center text-2xl sm:text-3xl font-black tracking-tight relative"
+              "className": "text-center text-3xl sm:text-4xl font-black tracking-tighter relative"
             },
             {
               "el": "text",
               "value": "ใส่พล็อตกับจำนวนตอน เดี๋ยวพี่หมีจัดการออกแบบบททั้งหมดให้",
-              "className": "text-center mb-2 relative"
+              "className": "text-center text-sm sm:text-base mt-1.5 mb-2 relative"
             },
             {
               "el": "card",
-              "className": "relative gap-7",
+              "className": "relative gap-8 sm:p-8 lg:p-10",
+              "style": { "borderRadius": "32px" },
               "card": [
+                {
+                  "el": "section",
+                  "icon": "title",
+                  "label": "ชื่อเรื่อง",
+                  "summary": "(ไม่ใส่ก็ได้ — AI ตั้งให้)",
+                  "card": [
+                    { "el": "input", "field": "title", "placeholder": "ตั้งชื่อเรื่องของคุณ...", "className": "h-[52px] rounded-2xl px-4 text-[15px]" }
+                  ]
+                },
                 {
                   "el": "section",
                   "icon": "tune",
@@ -407,15 +417,9 @@
                   "el": "section",
                   "icon": "menu_book",
                   "label": "พล็อตเรื่อง / เนื้อเรื่องหลัก",
+                  "headerRight": { "el": "ai-fill-button", "field": "plot", "label": "สุ่มพล็อต", "icon": "auto_fix_high", "variant": "outline", "size": "sm", "className": "rounded-full", "prompt": "เสนอไอเดียพล็อตละครสั้นแนวตั้ง 1 เรื่อง สั้นกระชับ มี hook สะดุดใจ ปมขัดแย้งชัด จุดหักมุม (2-3 ประโยค) ตอบเฉพาะพล็อตเท่านั้น:" },
                   "card": [
-                    {
-                      "el": "row",
-                      "className": "justify-end",
-                      "card": [
-                        { "el": "ai-fill-button", "field": "plot", "label": "สุ่มพล็อต", "icon": "auto_fix_high", "variant": "outline", "size": "sm", "prompt": "เสนอไอเดียพล็อตละครสั้นแนวตั้ง 1 เรื่อง สั้นกระชับ มี hook สะดุดใจ ปมขัดแย้งชัด จุดหักมุม (2-3 ประโยค) ตอบเฉพาะพล็อตเท่านั้น:" }
-                      ]
-                    },
-                    { "el": "textarea", "field": "plot", "maxLength": 1000, "placeholder": "พิมพ์พล็อตของคุณ หรือกด 'สุ่มพล็อต' ให้ AI คิดให้..." }
+                    { "el": "textarea", "field": "plot", "maxLength": 1000, "placeholder": "พิมพ์พล็อตของคุณ หรือกด 'สุ่มพล็อต' ให้ AI คิดให้...", "className": "min-h-[120px] rounded-2xl px-4 py-3 text-[15px]" }
                   ]
                 },
                 {
@@ -427,6 +431,8 @@
                     {
                       "el": "chips",
                       "field": "genre",
+                      "chipClass": "rounded-2xl px-4 py-2.5 text-[14px] font-bold",
+                      "check": true,
                       "options": ["ตลก", "ดราม่า", "โรแมนติก", "แอคชั่น", "ไซไฟ", "แฟนตาซี", "สยองขวัญ", "ล้างแค้น", "คุณธรรม", "ชีวิตประจำวัน", "สืบสวน", "อาชญากรรม", "ลึกลับ", "สารคดี", "ประวัติศาสตร์", "การศึกษา", "สาระน่ารู้", "How-to", "เล่าเรื่อง", "ตำนาน", "นิทาน", "What if", "ธรรมะ", "ละครสัตว์"]
                     }
                   ]
@@ -462,43 +468,60 @@
                       ]
                     },
                     {
-                      "el": "row",
+                      "el": "box",
                       "when": "narration!=silent",
+                      "className": "grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1",
                       "card": [
                         {
-                          "el": "segmented",
-                          "field": "dialogueLanguage",
-                          "label": "ภาษาบทพูด",
-                          "options": [
-                            { "value": "th", "label": "ไทย" },
-                            { "value": "en", "label": "English" }
+                          "el": "column",
+                          "card": [
+                            {
+                              "el": "segmented",
+                              "field": "dialogueLanguage",
+                              "label": "ภาษาบทพูด",
+                              "options": [
+                                { "value": "th", "label": "ไทย" },
+                                { "value": "en", "label": "English" }
+                              ]
+                            }
                           ]
                         },
                         {
-                          "el": "dropdown",
-                          "field": "accent",
-                          "label": "สำเนียงหลัก",
-                          "options": ["กลาง", "อีสาน", "เหนือ", "ใต้", "กรุงเทพ"]
+                          "el": "column",
+                          "card": [
+                            {
+                              "el": "dropdown",
+                              "field": "accent",
+                              "label": "สำเนียงหลัก",
+                              "options": ["กลาง", "อีสาน", "เหนือ", "ใต้", "กรุงเทพ"]
+                            }
+                          ]
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "el": "section",
-                  "icon": "tune",
-                  "label": "จำนวนตอน / ช็อตต่อตอน",
+                  "el": "box",
+                  "className": "grid grid-cols-1 sm:grid-cols-2 gap-5",
                   "card": [
-                    {
-                      "el": "row",
-                      "card": [
-                        { "el": "slider", "field": "epCount", "label": "จำนวนตอน", "min": 1, "max": 10, "unit": "ตอน" },
-                        { "el": "slider", "field": "shotsPerEp", "label": "ช็อตต่อตอน", "min": 5, "max": 30, "unit": "ช็อต" }
-                      ]
-                    }
+                    { "el": "column", "card": [ { "el": "slider", "field": "epCount", "label": "จำนวนตอน", "min": 1, "max": 10, "unit": "ตอน" } ] },
+                    { "el": "column", "card": [ { "el": "slider", "field": "shotsPerEp", "label": "ช็อตต่อตอน", "min": 5, "max": 30, "unit": "ช็อต" } ] }
                   ]
                 },
-                { "el": "run-button", "label": "สร้างบทละคร", "icon": "auto_awesome", "textSize": "text-base", "className": "w-full h-[60px] justify-center rounded-2xl" }
+                {
+                  "el": "note",
+                  "tone": "warn",
+                  "when": { "op": "gt", "a": { "op": "mul", "a": "{epCount}", "b": "{shotsPerEp}" }, "b": 120 },
+                  "value": "โปรเจกต์ใหญ่มาก — วิดีโอทุกช็อตถูกเก็บในหน่วยความจำของแท็บ อาจช้าหรือเซฟไฟล์ใหญ่จนบันทึกไม่สำเร็จ แนะนำรวมไม่เกิน 120 ช็อตต่อโปรเจกต์"
+                },
+                {
+                  "el": "note",
+                  "tone": "info",
+                  "when": { "op": "lte", "a": { "op": "mul", "a": "{epCount}", "b": "{shotsPerEp}" }, "b": 28 },
+                  "value": "ช็อตน้อย — เหมาะกับเรื่องปมเดียว กระชับ จบเร็ว · อยากได้ปมหลายชั้น/หักมุมลึก แนะนำเพิ่มช็อตต่อตอน (ให้ AI มีที่ปูเรื่องก่อนถึงจุดเฉลย)"
+                },
+                { "el": "run-button", "label": "สร้างบทละคร", "icon": "auto_awesome", "textSize": "text-xl", "className": "w-full h-[66px] justify-center rounded-[22px]" }
               ]
             }
           ]
