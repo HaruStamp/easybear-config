@@ -312,11 +312,56 @@
   },
   "ops": [
     {
-      "id": "architect",
+      "id": "structVars",
       "type": "transform",
       "over": "project",
-      "out": "plan",
-      "fn": "architect"
+      "out": "sv",
+      "fn": "structVars"
+    },
+    {
+      "id": "structure",
+      "type": "llm",
+      "over": "project",
+      "out": "structure",
+      "parse": "json",
+      "systemInstruction": "{brain.structure.designRules}",
+      "prompt": "{brain.structure.buildPrompt}",
+      "interpFrom": "item.data.sv",
+      "thinkingLevel": "high"
+    },
+    {
+      "id": "mapStructure",
+      "type": "transform",
+      "over": "project",
+      "out": "mapped",
+      "fn": "mapStructure"
+    },
+    {
+      "id": "buildShots",
+      "type": "transform",
+      "over": "project",
+      "out": "built",
+      "fn": "buildShots"
+    },
+    {
+      "id": "revise",
+      "type": "llm",
+      "over": "project",
+      "out": "revised",
+      "parse": "json",
+      "when": "mode!=follow",
+      "systemInstruction": "{brain.revise.sys}",
+      "prompt": "{brain.revise.prompt}",
+      "interpFrom": "item.data.rv",
+      "thinkingLevel": "high"
+    },
+    {
+      "id": "applyRevise",
+      "type": "transform",
+      "over": "project",
+      "out": "applied",
+      "when": "mode!=follow",
+      "fn": "applyRevise"
     },
     {
       "id": "genCharSheet",
@@ -416,7 +461,22 @@
   ],
   "stages": [
     {
-      "op": "architect"
+      "op": "structVars"
+    },
+    {
+      "op": "structure"
+    },
+    {
+      "op": "mapStructure"
+    },
+    {
+      "op": "buildShots"
+    },
+    {
+      "op": "revise"
+    },
+    {
+      "op": "applyRevise"
     },
     {
       "checkpoint": "review"
