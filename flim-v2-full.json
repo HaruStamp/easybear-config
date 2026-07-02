@@ -500,10 +500,26 @@
       "op": "genImage"
     },
     {
-      "checkpoint": "storyboard"
+      "checkpoint": "storyboard",
+      "gate": {
+        "op": "all",
+        "from": "shots",
+        "slot": "image"
+      }
     },
     {
       "op": "genVideo"
+    },
+    {
+      "checkpoint": "filming",
+      "gate": {
+        "op": "all",
+        "from": "shots",
+        "slot": "video"
+      }
+    },
+    {
+      "checkpoint": "final"
     }
   ],
   "phases": [
@@ -718,6 +734,15 @@
           "label": "ตัวละคร"
         },
         {
+          "el": "gen-phase",
+          "ops": ["genCharSheet", "genSceneRef", "genObjectRef"],
+          "label": "สร้าง Reference ทั้งหมด",
+          "icon": "auto_awesome",
+          "variant": "solid",
+          "size": "lg",
+          "className": "w-full justify-center rounded-2xl"
+        },
+        {
           "el": "group",
           "label": "ตัวละคร",
           "icon": "group",
@@ -888,17 +913,14 @@
     },
     {
       "id": "storyboard",
-      "title": "สตอรี่บอร์ด + ถ่ายทำ (รวม)",
-      "subtitle": "การ์ดเดียวต่อช็อต: สร้างภาพ → พอมีภาพ ส่วนวิดีโอ+บทพูดจะโผล่ (multi-state)",
+      "title": "สตอรี่บอร์ด — สร้างภาพ",
+      "subtitle": "ตั้งค่า ref/พรอมต์แต่ละช็อต → สร้างภาพนิ่ง (ใช้เป็นเฟรมแรกของวิดีโอ) · กด \"สร้างภาพทั้งหมด\" ทีเดียว หรือรายช็อต แล้วค่อยไปต่อ",
       "bind": "shots",
       "cardClass": "w-full",
       "cardHeader": false,
       "form": [
-        {
-          "el": "dashboard",
-          "coll": "shots",
-          "label": "ช็อตทั้งหมด"
-        }
+        { "el": "dashboard", "coll": "shots", "label": "ช็อตทั้งหมด" },
+        { "el": "gen-phase", "ops": ["genImage"], "label": "สร้างภาพทั้งหมด", "icon": "photo_library", "variant": "solid", "size": "lg", "className": "w-full justify-center rounded-2xl" }
       ],
       "card": [
         {
@@ -938,8 +960,22 @@
               ]
             }
           ]
-        },
-        { "el": "divider", "when": "item.slots.image!=" },
+        }
+      ]
+    },
+    {
+      "id": "filming",
+      "title": "ถ่ายทำ — สร้างวิดีโอ",
+      "subtitle": "จากภาพแต่ละช็อต → สร้างวิดีโอ + ใส่บทพูด (วิดีโอใช้ภาพเป็นเฟรมแรก) · กด \"สร้างวิดีโอทั้งหมด\" ทีเดียว หรือรายช็อต",
+      "bind": "shots",
+      "cardClass": "w-full",
+      "cardHeader": false,
+      "form": [
+        { "el": "dashboard", "coll": "shots", "label": "ช็อตทั้งหมด" },
+        { "el": "gen-phase", "ops": ["genVideo"], "label": "สร้างวิดีโอทั้งหมด", "icon": "videocam", "variant": "solid", "size": "lg", "className": "w-full justify-center rounded-2xl" }
+      ],
+      "card": [
+        { "el": "note", "when": "item.slots.image=", "tone": "warn", "icon": "image", "value": "ช็อตนี้ยังไม่มีภาพ — กลับไปหน้า \"สตอรี่บอร์ด\" สร้างภาพก่อน แล้วค่อยสร้างวิดีโอ" },
         {
           "el": "box",
           "when": "item.slots.image!=",
@@ -947,8 +983,9 @@
           "card": [
             {
               "el": "box",
-              "className": "w-full sm:w-[180px] shrink-0",
+              "className": "relative w-full sm:w-[180px] shrink-0",
               "card": [
+                { "el": "md", "value": { "op": "add", "a": "{index}", "b": 1 }, "className": "absolute top-1 left-1 z-10 bg-white text-black text-[13px] font-black rounded-lg px-2 py-0.5 leading-none" },
                 { "el": "media-slot", "src": "{item.slots.video}", "aspect": "9:16" }
               ]
             },
