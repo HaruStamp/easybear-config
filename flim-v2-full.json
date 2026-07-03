@@ -719,6 +719,7 @@
   "phases": [
     {
       "id": "setup",
+      "navLabel": "ข้อมูล",
       "title": "ข้อมูล",
       "form": [
         { "el": "use", "component": "runBanner" },
@@ -1074,6 +1075,7 @@
     },
     {
       "id": "review",
+      "navLabel": "ภาพรวม",
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ตรวจบท",
       "subtitle": "อ่าน/แก้บทแต่ละตอนก่อนเริ่มผลิตภาพ — ยืนยันแล้วค่อยไปต่อ",
@@ -1101,8 +1103,11 @@
               "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
             },
             {
-              "el": "use",
-              "component": "genreChips"
+              "el": "chips",
+              "field": "genre",
+              "readonly": true,
+              "chipClass": "px-3 py-1 rounded-full text-[12px]",
+              "empty": "ยังไม่ได้เลือกแนวเรื่อง"
             },
             {
               "el": "box",
@@ -1918,6 +1923,11 @@
                               ],
                               "card": [
                                 {
+                                  "el": "text",
+                                  "value": "ภาพ (Image)",
+                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                },
+                                {
                                   "el": "textarea",
                                   "field": "imagePrompt",
                                   "label": "คำบรรยายภาพ (Visual)"
@@ -1929,19 +1939,38 @@
                                       "el": "dropdown",
                                       "field": "cameraAngle",
                                       "label": "มุมกล้อง",
-                                      "options": { "table": "cameraAngleOpts" }
+                                      "options": {
+                                        "table": "cameraAngleOpts"
+                                      }
                                     },
                                     {
                                       "el": "dropdown",
                                       "field": "mood",
                                       "label": "อารมณ์",
-                                      "options": { "table": "moodOpts" }
-                                    },
+                                      "options": {
+                                        "table": "moodOpts"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "divider"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "วิดีโอ (Video)",
+                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                },
+                                {
+                                  "el": "row",
+                                  "card": [
                                     {
                                       "el": "dropdown",
-                                      "field": "audioType",
-                                      "label": "รูปแบบเสียง",
-                                      "options": { "table": "audioTypeOpts" }
+                                      "field": "cameraDirection",
+                                      "label": "กำกับกล้อง",
+                                      "options": {
+                                        "table": "cameraDirOpts"
+                                      }
                                     }
                                   ]
                                 },
@@ -1969,10 +1998,65 @@
                                     {
                                       "value": "10",
                                       "label": "10 วิ",
-                                      "disabledWhen": { "op": "not", "a": { "op": "contains", "a": "{values.videoModel}", "b": "Omni" } },
+                                      "disabledWhen": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "contains",
+                                          "a": "{values.videoModel}",
+                                          "b": "Omni"
+                                        }
+                                      },
                                       "reason": "ต้องใช้โมเดล Omni Flash"
                                     }
                                   ]
+                                },
+                                {
+                                  "el": "divider"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "เสียง (Audio)",
+                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                },
+                                {
+                                  "el": "dropdown",
+                                  "field": "audioType",
+                                  "label": "รูปแบบเสียง",
+                                  "options": {
+                                    "table": "audioTypeOpts"
+                                  }
+                                },
+                                {
+                                  "el": "child-list",
+                                  "childColl": "lines",
+                                  "childBy": "shot",
+                                  "label": "บทพูด (หลายคน)",
+                                  "placeholder": "เพิ่มบรรทัด",
+                                  "card": [
+                                    {
+                                      "el": "dropdown",
+                                      "field": "speaker",
+                                      "label": "ผู้พูด",
+                                      "options": {
+                                        "coll": "characters",
+                                        "label": "name",
+                                        "value": "name"
+                                      }
+                                    },
+                                    {
+                                      "el": "input",
+                                      "field": "text",
+                                      "placeholder": "พูดว่า..."
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "divider"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "อ้างอิงในช็อต (References)",
+                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
                                 },
                                 {
                                   "el": "row",
@@ -2149,6 +2233,7 @@
     },
     {
       "id": "studio",
+      "navLabel": "สตูดิโอ",
       "navGate": { "op": "count", "from": "episodes" },
       "hideTitle": true,
       "title": "สตูดิโอ — คลังอ้างอิง (Studio)",
@@ -2392,6 +2477,7 @@
     },
     {
       "id": "storyboard",
+      "navLabel": "บอร์ด",
       "navGate": { "op": "count", "from": "episodes" },
       "title": "สตอรี่บอร์ด — สร้างภาพ",
       "subtitle": "ตั้งค่า ref/พรอมต์แต่ละช็อต → สร้างภาพนิ่ง (ใช้เป็นเฟรมแรกของวิดีโอ) · กด \"สร้างภาพทั้งหมด\" ทีเดียว หรือรายช็อต แล้วค่อยไปต่อ",
@@ -2451,6 +2537,7 @@
     },
     {
       "id": "filming",
+      "navLabel": "สร้างวิดีโอ",
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ถ่ายทำ — สร้างวิดีโอ",
       "subtitle": "จากภาพแต่ละช็อต → สร้างวิดีโอ + ใส่บทพูด (วิดีโอใช้ภาพเป็นเฟรมแรก) · กด \"สร้างวิดีโอทั้งหมด\" ทีเดียว หรือรายช็อต",
@@ -2558,6 +2645,7 @@
     },
     {
       "id": "final",
+      "navLabel": "รีวิว",
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ส่งออก (Final)",
       "subtitle": "ปก + แคปชั่น + ตัดต่อรวมเป็นวิดีโอ",
