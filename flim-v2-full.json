@@ -750,11 +750,12 @@
                     {
                       "el": "grid-select",
                       "field": "mode",
-                      "cols": 2,
+                      "cols": 3,
                       "contained": true,
                       "options": [
                         { "value": "create", "label": "แต่งเรื่องให้", "icon": "auto_fix_high", "desc": "มีแค่ไอเดีย — AI ออกแบบเรื่อง/ตัวละคร/หักมุม ต่อยอดให้" },
-                        { "value": "follow", "label": "ทำตามบทเป๊ะ", "icon": "menu_book", "desc": "มีบท/นิยายแล้ว — AI ทำตามนั้น แค่ลงรายละเอียด ไม่แต่งใหม่" }
+                        { "value": "follow", "label": "ทำตามบทเป๊ะ", "icon": "menu_book", "desc": "มีบท/นิยายแล้ว — AI ทำตามนั้น แค่ลงรายละเอียด ไม่แต่งใหม่" },
+                        { "value": "gem", "label": "Gem คิดบท", "icon": "smart_toy", "desc": "ใช้ Gem สมองใหญ่เขียนบทนอกโปรแกรม แล้วโหลดไฟล์กลับ — บทสนุกที่สุด" }
                       ]
                     }
                   ]
@@ -920,7 +921,151 @@
                   "when": { "op": "lte", "a": { "op": "mul", "a": "{epCount}", "b": "{shotsPerEp}" }, "b": 28 },
                   "value": "ช็อตน้อย — เหมาะกับเรื่องปมเดียว กระชับ จบเร็ว · อยากได้ปมหลายชั้น/หักมุมลึก แนะนำเพิ่มช็อตต่อตอน (ให้ AI มีที่ปูเรื่องก่อนถึงจุดเฉลย)"
                 },
-                { "el": "run-button", "label": "สร้างบทละคร", "icon": "auto_awesome", "textSize": "text-xl", "className": "w-full h-[66px] justify-center rounded-[22px]" }
+                { "el": "run-button", "when": "mode!=gem", "label": "สร้างบทละคร", "icon": "auto_awesome", "textSize": "text-xl", "className": "w-full h-[66px] justify-center rounded-[22px]" },
+                {
+                  "el": "box",
+                  "when": "mode=gem",
+                  "className": "space-y-4",
+                  "card": [
+                    {
+                      "el": "group",
+                      "icon": "import_contacts",
+                      "label": "วิธีใช้โหมด Gem คิดบท",
+                      "card": [
+                        {
+                          "el": "note",
+                          "value": "1) ตั้งค่าทุกอย่างด้านบนให้เรียบร้อย แล้วกด \"คัดลอกคำสั่ง Gem\" — คำสั่งจะรวมพล็อต แนว สไตล์ และค่าที่ตั้งไว้ทั้งหมดให้อัตโนมัติ"
+                        },
+                        {
+                          "el": "note",
+                          "value": "2) กด \"คัดลอกลิงก์ Gem\" แล้วเปิดแท็บใหม่วางลิงก์ → วางคำสั่งลงในแชท รอสักครู่จะได้บทเป็นกล่องโค้ด JSON — อยากได้บทเข้มข้นขึ้น พิมพ์ \"ขัดบท\" ต่ออีก 1-2 รอบ"
+                        },
+                        {
+                          "el": "note",
+                          "value": "3) คัดลอก JSON จากกล่องโค้ด แล้วกด \"โหลดไฟล์ JSON เข้าโปรเจกต์\" ด้านล่าง — วางแล้วกดโหลด หรือเลือกไฟล์ .json จากเครื่องก็ได้ บทจะเข้าโปรเจกต์ทันที"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                      "card": [
+                        {
+                          "el": "copy-button",
+                          "label": "คัดลอกคำสั่ง Gem",
+                          "icon": "content_copy",
+                          "variant": "solid",
+                          "size": "lg",
+                          "className": "w-full h-[56px] justify-center rounded-2xl",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "พล็อต: {plot}\nแนว: {genre}\nสไตล์ภาพ: ",
+                              {
+                                "op": "lookup",
+                                "table": "styleLabels",
+                                "key": "{style}",
+                                "fallback": "{style}"
+                              },
+                              " ({style})\nจำนวนตอน: {epCount} · ช็อตต่อตอน: {shotsPerEp}\nโหมดเสียง: ",
+                              {
+                                "op": "lookup",
+                                "table": "narrationLabels",
+                                "key": "{narration}",
+                                "fallback": "{narration}"
+                              },
+                              "\nภาษา: ",
+                              {
+                                "op": "lookup",
+                                "table": "langLabels",
+                                "key": "{dialogueLanguage}",
+                                "fallback": "{dialogueLanguage}"
+                              },
+                              " · สำเนียง: ",
+                              {
+                                "op": "lookup",
+                                "table": "accentLabels",
+                                "key": "{accent}",
+                                "fallback": "{accent}"
+                              },
+                              " ({accent})\nชื่อเรื่อง: {title}"
+                            ]
+                          }
+                        },
+                        {
+                          "el": "copy-button",
+                          "label": "คัดลอกลิงก์ Gem",
+                          "icon": "link",
+                          "variant": "outline-accent",
+                          "size": "lg",
+                          "className": "w-full h-[56px] justify-center rounded-2xl",
+                          "value": "https://gemini.google.com/gem/9114f57ab134"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "note",
+                      "tone": "info",
+                      "value": "แอปเปิดแท็บใหม่เองไม่ได้ — คัดลอกลิงก์ Gem แล้วไปวางในแท็บใหม่ได้เลย"
+                    },
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "__gemModal",
+                      "value": "1",
+                      "label": "โหลดไฟล์ JSON เข้าโปรเจกต์",
+                      "icon": "upload_file",
+                      "variant": "solid",
+                      "size": "lg",
+                      "textSize": "text-xl",
+                      "className": "w-full h-[66px] justify-center rounded-[22px]"
+                    }
+                  ]
+                },
+                {
+                  "el": "modal",
+                  "when": "__gemModal=1",
+                  "field": "__gemModal",
+                  "label": "โหลด JSON จาก Gem",
+                  "preset": "pop",
+                  "style": {
+                    "maxWidth": "580px"
+                  },
+                  "card": [
+                    {
+                      "el": "note",
+                      "value": "วางข้อความ JSON ที่คัดลอกจาก Gem (ตั้งแต่ { ถึง }) แล้วกด \"โหลดเข้าโปรเจกต์\" · หรือเลือกไฟล์ .json จากเครื่อง"
+                    },
+                    {
+                      "el": "textarea",
+                      "field": "__gemJson",
+                      "placeholder": "Paste JSON content here...",
+                      "className": "font-mono h-[320px]"
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex gap-3 items-center",
+                      "card": [
+                        {
+                          "el": "load-button",
+                          "mode": "replace",
+                          "to": "__gemModal",
+                          "label": ".JSON จากเครื่อง"
+                        },
+                        {
+                          "el": "import-button",
+                          "field": "__gemJson",
+                          "to": "__gemModal",
+                          "mode": "replace",
+                          "label": "โหลดเข้าโปรเจกต์",
+                          "icon": "upload_file",
+                          "variant": "solid",
+                          "className": "flex-1 justify-center"
+                        }
+                      ]
+                    }
+                  ]
+                }
               ]
             }
           ]
