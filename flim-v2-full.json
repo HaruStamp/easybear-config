@@ -1439,20 +1439,30 @@
                         {
                           "el": "repeat",
                           "coll": "characters",
-                          "empty": "ยังไม่มีตัวละคร — กด \"เพิ่ม\"",
+                          "empty": "ยังไม่มีตัวละคร",
                           "card": [
                             {
                               "el": "box",
-                              "className": "flex gap-3 items-start border border-[var(--ev-border)] rounded-2xl p-3 bg-gradient-to-br from-[var(--ev-surface)] to-transparent",
+                              "className": "flex gap-4 border border-[var(--ev-border)] rounded-2xl p-4",
                               "card": [
                                 {
                                   "el": "box",
-                                  "className": "w-24 shrink-0",
+                                  "className": "w-[130px] shrink-0 flex flex-col gap-1.5",
                                   "card": [
                                     {
                                       "el": "media-slot",
                                       "src": "{item.slots.sheet}",
-                                      "aspect": "9:16"
+                                      "aspect": "3:4"
+                                    },
+                                    {
+                                      "el": "pick-button",
+                                      "into": "{item.slots.sheet}",
+                                      "filter": "image",
+                                      "label": "เปลี่ยนรูป",
+                                      "icon": "photo_library",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "className": "justify-center"
                                     }
                                   ]
                                 },
@@ -1461,20 +1471,14 @@
                                   "className": "flex-1 min-w-0 flex flex-col gap-2",
                                   "card": [
                                     {
-                                      "el": "input",
-                                      "field": "name",
-                                      "placeholder": "ตั้งชื่อ..."
-                                    },
-                                    {
-                                      "el": "textarea",
-                                      "field": "appearance",
-                                      "placeholder": "รายละเอียด (ใช้สร้างรูป)",
-                                      "maxLength": 200
-                                    },
-                                    {
                                       "el": "row",
-                                      "className": "justify-between",
+                                      "className": "items-center",
                                       "card": [
+                                        {
+                                          "el": "input",
+                                          "field": "name",
+                                          "className": "flex-1 font-bold"
+                                        },
                                         {
                                           "el": "stat-chip",
                                           "icon": "movie",
@@ -1486,7 +1490,71 @@
                                         },
                                         {
                                           "el": "delete-button",
-                                          "iconOnly": true
+                                          "iconOnly": true,
+                                          "size": "sm",
+                                          "variant": "ghost"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "textarea",
+                                      "field": "appearance",
+                                      "maxLength": 500,
+                                      "placeholder": "รูปลักษณ์ตัวละคร (ใช้ประกอบ prompt)"
+                                    },
+                                    {
+                                      "el": "row",
+                                      "className": "items-start",
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "icon": "sell",
+                                          "value": "ป้ายลักษณะ",
+                                          "className": "text-[11px] w-24 shrink-0 pt-2"
+                                        },
+                                        {
+                                          "el": "input",
+                                          "field": "lookTag",
+                                          "placeholder": "ป้ายสั้นๆ ไว้อ้างในภาพ/วิดีโอ เช่น หญิงสาวชุดครีม",
+                                          "className": "flex-1"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "row",
+                                      "className": "items-start",
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "icon": "graphic_eq",
+                                          "value": "สำเนียง",
+                                          "className": "text-[11px] w-24 shrink-0 pt-2"
+                                        },
+                                        {
+                                          "el": "dropdown",
+                                          "field": "accent",
+                                          "options": {
+                                            "table": "accentLabels"
+                                          },
+                                          "className": "flex-1"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "row",
+                                      "className": "items-start",
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "icon": "forum",
+                                          "value": "วิธีพูด",
+                                          "className": "text-[11px] w-24 shrink-0 pt-2"
+                                        },
+                                        {
+                                          "el": "input",
+                                          "field": "voiceTimbre",
+                                          "placeholder": "โทน/ลีลาการพูด เช่น เสียงเร็ว ชัดเจน มีจังหวะตลก",
+                                          "className": "flex-1"
                                         }
                                       ]
                                     }
@@ -1542,7 +1610,8 @@
                                       "el": "media-slot",
                                       "src": "{item.slots.ref}",
                                       "aspect": "16:9"
-                                    }
+                                    },
+                                    { "el": "pick-button", "into": "{item.slots.ref}", "filter": "image", "label": "เปลี่ยนรูป", "icon": "photo_library", "variant": "ghost", "size": "sm", "className": "justify-center w-full" }
                                   ]
                                 },
                                 {
@@ -1631,7 +1700,8 @@
                                       "el": "media-slot",
                                       "src": "{item.slots.ref}",
                                       "aspect": "1:1"
-                                    }
+                                    },
+                                    { "el": "pick-button", "into": "{item.slots.ref}", "filter": "image", "label": "เปลี่ยนรูป", "icon": "photo_library", "variant": "ghost", "size": "sm", "className": "justify-center w-full" }
                                   ]
                                 },
                                 {
@@ -1690,12 +1760,38 @@
           "pad": 6,
           "card": [
             {
-              "el": "segmented",
-              "field": "activeEp",
-              "options": {
-                "coll": "episodes",
-                "label": "title"
-              }
+              "el": "row",
+              "className": "items-center",
+              "card": [
+                {
+                  "el": "segmented",
+                  "field": "activeEp",
+                  "className": "flex-1",
+                  "options": {
+                    "coll": "episodes",
+                    "labelTpl": {
+                      "op": "concat",
+                      "parts": [
+                        "EP ",
+                        {
+                          "op": "add",
+                          "a": "{index}",
+                          "b": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "el": "magic-edit",
+                  "op": "extend",
+                  "label": "เพิ่มตอน",
+                  "icon": "add",
+                  "variant": "outline-accent",
+                  "size": "sm",
+                  "className": "rounded-full border-dashed shrink-0"
+                }
+              ]
             },
             {
               "el": "repeat",
@@ -1961,13 +2057,9 @@
                               "card": [
                                 {
                                   "el": "text",
-                                  "value": "ภาพ (Image)",
-                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
-                                },
-                                {
-                                  "el": "textarea",
-                                  "field": "imagePrompt",
-                                  "label": "คำบรรยายภาพ (Visual)"
+                                  "icon": "image",
+                                  "value": "ภาพเริ่มต้น (VISUAL)",
+                                  "className": "text-[11px] font-black tracking-widest text-[var(--ev-accent)] mt-1"
                                 },
                                 {
                                   "el": "row",
@@ -1991,15 +2083,19 @@
                                   ]
                                 },
                                 {
-                                  "el": "divider"
+                                  "el": "textarea",
+                                  "field": "imagePrompt",
+                                  "placeholder": "บรรยายภาพเริ่มต้นของช็อต (ฉาก/ตัวละคร/ท่าทาง)"
                                 },
                                 {
                                   "el": "text",
-                                  "value": "วิดีโอ (Video)",
-                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                  "icon": "movie",
+                                  "value": "วิดีโอ (MOTION)",
+                                  "className": "text-[11px] font-black tracking-widest text-[var(--ev-accent)] mt-1"
                                 },
                                 {
                                   "el": "row",
+                                  "className": "items-center",
                                   "card": [
                                     {
                                       "el": "dropdown",
@@ -2008,52 +2104,54 @@
                                       "options": {
                                         "table": "cameraDirOpts"
                                       }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "segmented",
-                                  "field": "duration",
-                                  "label": "ความยาว",
-                                  "options": [
-                                    {
-                                      "value": "8",
-                                      "label": "8 วิ"
                                     },
                                     {
-                                      "value": "4",
-                                      "label": "4 วิ",
-                                      "disabledWhen": "ultra=",
-                                      "reason": "Ultra"
-                                    },
-                                    {
-                                      "value": "6",
-                                      "label": "6 วิ",
-                                      "disabledWhen": "ultra=",
-                                      "reason": "Ultra"
-                                    },
-                                    {
-                                      "value": "10",
-                                      "label": "10 วิ",
-                                      "disabledWhen": {
-                                        "op": "not",
-                                        "a": {
-                                          "op": "contains",
-                                          "a": "{values.videoModel}",
-                                          "b": "Omni"
+                                      "el": "segmented",
+                                      "field": "duration",
+                                      "options": [
+                                        {
+                                          "value": "8",
+                                          "label": "8 วิ"
+                                        },
+                                        {
+                                          "value": "4",
+                                          "label": "4 วิ",
+                                          "disabledWhen": "ultra=",
+                                          "reason": "Ultra"
+                                        },
+                                        {
+                                          "value": "6",
+                                          "label": "6 วิ",
+                                          "disabledWhen": "ultra=",
+                                          "reason": "Ultra"
+                                        },
+                                        {
+                                          "value": "10",
+                                          "label": "10 วิ",
+                                          "disabledWhen": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "contains",
+                                              "a": "{values.videoModel}",
+                                              "b": "Omni"
+                                            }
+                                          },
+                                          "reason": "ต้องใช้โมเดล Omni Flash"
                                         }
-                                      },
-                                      "reason": "ต้องใช้โมเดล Omni Flash"
+                                      ]
                                     }
                                   ]
                                 },
                                 {
-                                  "el": "divider"
+                                  "el": "textarea",
+                                  "field": "motion",
+                                  "placeholder": "การเคลื่อนไหว/แอ็คชั่นในช็อต (มุมกล้องเคลื่อนยังไง ตัวละครทำอะไร)"
                                 },
                                 {
                                   "el": "text",
-                                  "value": "เสียง (Audio)",
-                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                  "icon": "volume_up",
+                                  "value": "เสียง (AUDIO)",
+                                  "className": "text-[11px] font-black tracking-widest text-[var(--ev-accent)] mt-1"
                                 },
                                 {
                                   "el": "dropdown",
@@ -2088,12 +2186,10 @@
                                   ]
                                 },
                                 {
-                                  "el": "divider"
-                                },
-                                {
                                   "el": "text",
-                                  "value": "อ้างอิงในช็อต (References)",
-                                  "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
+                                  "icon": "link",
+                                  "value": "อ้างอิงในช็อต (REFERENCES)",
+                                  "className": "text-[11px] font-black tracking-widest text-[var(--ev-accent)] mt-1"
                                 },
                                 {
                                   "el": "row",
@@ -2139,13 +2235,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "el": "magic-edit",
-              "op": "extend",
-              "label": "เพิ่มตอนใหม่",
-              "variant": "outline",
-              "icon": "add"
             }
           ]
         },
