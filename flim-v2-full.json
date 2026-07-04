@@ -720,6 +720,7 @@
     {
       "id": "setup",
       "navLabel": "ข้อมูล",
+      "hideTitle": true,
       "title": "ข้อมูล",
       "form": [
         { "el": "use", "component": "runBanner" },
@@ -736,7 +737,7 @@
             {
               "el": "text",
               "value": "ใส่พล็อตกับจำนวนตอน เดี๋ยวพี่หมีจัดการออกแบบบททั้งหมดให้",
-              "className": "text-center text-sm sm:text-base mt-1.5 mb-2 relative"
+              "className": "text-center text-sm sm:text-base mt-1.5 mb-6 relative"
             },
             {
               "el": "card",
@@ -922,7 +923,7 @@
                   "when": { "op": "lte", "a": { "op": "mul", "a": "{epCount}", "b": "{shotsPerEp}" }, "b": 28 },
                   "value": "ช็อตน้อย — เหมาะกับเรื่องปมเดียว กระชับ จบเร็ว · อยากได้ปมหลายชั้น/หักมุมลึก แนะนำเพิ่มช็อตต่อตอน (ให้ AI มีที่ปูเรื่องก่อนถึงจุดเฉลย)"
                 },
-                { "el": "run-button", "when": "mode!=gem", "label": "สร้างบทละคร", "icon": "auto_awesome", "textSize": "text-xl", "className": "w-full h-[66px] justify-center rounded-[22px]" },
+                { "el": "run-button", "when": "mode!=gem", "label": "สร้างบทละคร", "variant": "contrast", "icon": "auto_awesome", "textSize": "text-xl", "className": "w-full h-[66px] justify-center rounded-[22px]" },
                 {
                   "el": "box",
                   "when": "mode=gem",
@@ -1076,6 +1077,7 @@
     {
       "id": "review",
       "navLabel": "ภาพรวม",
+      "hideTitle": true,
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ตรวจบท",
       "subtitle": "อ่าน/แก้บทแต่ละตอนก่อนเริ่มผลิตภาพ — ยืนยันแล้วค่อยไปต่อ",
@@ -1085,6 +1087,7 @@
           "el": "group",
           "icon": "description",
           "label": "ภาพรวมเรื่อง",
+          "className": "w-full max-w-[1100px] mx-auto",
           "pad": 6,
           "card": [
             {
@@ -1101,6 +1104,7 @@
             {
               "el": "text",
               "value": "แนวเรื่อง (Genres)",
+              "icon": "theater_comedy",
               "className": "text-[10px] uppercase tracking-widest font-bold mt-1"
             },
             {
@@ -1194,9 +1198,14 @@
               ]
             },
             {
+              "el": "text",
+              "icon": "description",
+              "value": "เรื่องย่อ / พล็อต (Plot)",
+              "className": "text-[10px] uppercase tracking-widest font-bold mt-2"
+            },
+            {
               "el": "textarea",
               "field": "plot",
-              "label": "เรื่องย่อ / พล็อต (Plot)",
               "maxLength": 1000
             }
           ]
@@ -1205,6 +1214,7 @@
           "el": "group",
           "icon": "inventory",
           "label": "องค์ประกอบในเรื่อง",
+          "className": "w-full max-w-[1100px] mx-auto",
           "pad": 6,
           "collapsible": true,
           "summary": "ตัวละคร · ฉาก · วัตถุ",
@@ -1217,23 +1227,45 @@
                   "card": [
                     {
                       "el": "box",
-                      "className": "flex flex-col gap-4",
+                      "className": "flex flex-col rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-surface)] p-4 sm:p-5",
                       "card": [
                         {
-                          "el": "text",
-                          "value": {
-                            "op": "concat",
-                            "parts": [
-                              "ตัวละคร",
-                              " (",
-                              {
-                                "op": "count",
-                                "from": "characters"
-                              },
-                              ")"
-                            ]
-                          },
-                          "className": "text-[11px] uppercase tracking-widest font-bold text-[var(--ev-dim)]"
+                          "el": "box",
+                          "className": "flex items-center gap-2 pb-3",
+                          "card": [
+                            {
+                              "el": "text",
+                              "icon": "map",
+                              "value": "ASSET REFERENCE MAP",
+                              "className": "text-[12px] font-black tracking-widest text-[var(--ev-accent)]"
+                            },
+                            {
+                              "el": "text",
+                              "value": "ตารางสรุปเฉพาะรายการที่ถูกใช้ในบทจริง",
+                              "className": "text-[11px] ml-auto hidden sm:block"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex items-center gap-4 border-b border-[var(--ev-border)] pb-2",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "TYPE",
+                              "className": "text-[10px] font-bold tracking-widest w-24 shrink-0"
+                            },
+                            {
+                              "el": "text",
+                              "value": "ASSET NAME",
+                              "className": "text-[10px] font-bold tracking-widest w-52 shrink-0"
+                            },
+                            {
+                              "el": "text",
+                              "value": "USAGE (SHOT)",
+                              "className": "text-[10px] font-bold tracking-widest"
+                            }
+                          ]
                         },
                         {
                           "el": "repeat",
@@ -1242,46 +1274,41 @@
                           "card": [
                             {
                               "el": "box",
-                              "className": "flex flex-col gap-1.5 border border-[var(--ev-border)] rounded-xl p-3",
+                              "className": "flex items-start gap-4 border-b border-[var(--ev-border)] py-3.5",
                               "card": [
                                 {
                                   "el": "text",
-                                  "value": "{item.name}",
-                                  "className": "font-bold text-sm"
+                                  "icon": "person",
+                                  "value": "CAST",
+                                  "className": "text-[11px] tracking-widest w-24 shrink-0 pt-0.5"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1 w-52 shrink-0",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "{item.name}",
+                                      "className": "font-bold text-[13px] text-[var(--ev-text)]"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.appearance}",
+                                      "className": "text-[11px] leading-snug"
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "ref-map",
                                   "coll": "shots",
                                   "childBy": "char",
                                   "icon": "movie",
-                                  "valueLabel": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "{item.cameraAngle}",
-                                      " · ",
-                                      "{item.mood}"
-                                    ]
-                                  }
+                                  "valueLabel": "ช็อต {item.shotNumber}",
+                                  "className": "flex-1 min-w-0"
                                 }
                               ]
                             }
                           ]
-                        },
-                        {
-                          "el": "text",
-                          "value": {
-                            "op": "concat",
-                            "parts": [
-                              "ฉาก",
-                              " (",
-                              {
-                                "op": "count",
-                                "from": "scenes"
-                              },
-                              ")"
-                            ]
-                          },
-                          "className": "text-[11px] uppercase tracking-widest font-bold text-[var(--ev-dim)]"
                         },
                         {
                           "el": "repeat",
@@ -1290,46 +1317,41 @@
                           "card": [
                             {
                               "el": "box",
-                              "className": "flex flex-col gap-1.5 border border-[var(--ev-border)] rounded-xl p-3",
+                              "className": "flex items-start gap-4 border-b border-[var(--ev-border)] py-3.5",
                               "card": [
                                 {
                                   "el": "text",
-                                  "value": "{item.name}",
-                                  "className": "font-bold text-sm"
+                                  "icon": "landscape",
+                                  "value": "SCENE",
+                                  "className": "text-[11px] tracking-widest w-24 shrink-0 pt-0.5"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1 w-52 shrink-0",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "{item.name}",
+                                      "className": "font-bold text-[13px] text-[var(--ev-text)]"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.description}",
+                                      "className": "text-[11px] leading-snug"
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "ref-map",
                                   "coll": "shots",
                                   "childBy": "scene",
                                   "icon": "movie",
-                                  "valueLabel": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "{item.cameraAngle}",
-                                      " · ",
-                                      "{item.mood}"
-                                    ]
-                                  }
+                                  "valueLabel": "ช็อต {item.shotNumber}",
+                                  "className": "flex-1 min-w-0"
                                 }
                               ]
                             }
                           ]
-                        },
-                        {
-                          "el": "text",
-                          "value": {
-                            "op": "concat",
-                            "parts": [
-                              "วัตถุ",
-                              " (",
-                              {
-                                "op": "count",
-                                "from": "objects"
-                              },
-                              ")"
-                            ]
-                          },
-                          "className": "text-[11px] uppercase tracking-widest font-bold text-[var(--ev-dim)]"
                         },
                         {
                           "el": "repeat",
@@ -1338,26 +1360,37 @@
                           "card": [
                             {
                               "el": "box",
-                              "className": "flex flex-col gap-1.5 border border-[var(--ev-border)] rounded-xl p-3",
+                              "className": "flex items-start gap-4 border-b border-[var(--ev-border)] py-3.5",
                               "card": [
                                 {
                                   "el": "text",
-                                  "value": "{item.name}",
-                                  "className": "font-bold text-sm"
+                                  "icon": "category",
+                                  "value": "OBJECT",
+                                  "className": "text-[11px] tracking-widest w-24 shrink-0 pt-0.5"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1 w-52 shrink-0",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "{item.name}",
+                                      "className": "font-bold text-[13px] text-[var(--ev-text)]"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.description}",
+                                      "className": "text-[11px] leading-snug"
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "ref-map",
                                   "coll": "shots",
                                   "childBy": "object",
                                   "icon": "movie",
-                                  "valueLabel": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "{item.cameraAngle}",
-                                      " · ",
-                                      "{item.mood}"
-                                    ]
-                                  }
+                                  "valueLabel": "ช็อต {item.shotNumber}",
+                                  "className": "flex-1 min-w-0"
                                 }
                               ]
                             }
@@ -1653,6 +1686,7 @@
           "el": "group",
           "icon": "video_library",
           "label": "บทรายตอน",
+          "className": "w-full max-w-[1100px] mx-auto",
           "pad": 6,
           "card": [
             {
@@ -2119,6 +2153,7 @@
           "el": "group",
           "icon": "tune",
           "label": "ตั้งค่าการผลิต",
+          "className": "w-full max-w-[1100px] mx-auto",
           "pad": 6,
           "collapsible": true,
           "summary": {
@@ -2138,6 +2173,7 @@
         },
         {
           "el": "auto-panel",
+          "className": "w-full max-w-[1100px] mx-auto",
           "item": "episodes",
           "label": "ระบบผลิตอัตโนมัติ",
           "icon": "bolt",
@@ -2482,6 +2518,7 @@
     {
       "id": "storyboard",
       "navLabel": "บอร์ด",
+      "hideTitle": true,
       "navGate": { "op": "count", "from": "episodes" },
       "title": "สตอรี่บอร์ด — สร้างภาพ",
       "subtitle": "ตั้งค่า ref/พรอมต์แต่ละช็อต → สร้างภาพนิ่ง (ใช้เป็นเฟรมแรกของวิดีโอ) · กด \"สร้างภาพทั้งหมด\" ทีเดียว หรือรายช็อต แล้วค่อยไปต่อ",
@@ -2536,12 +2573,14 @@
               ]
             }
           ]
-        }
+        },
+        { "el": "next-button", "when": "autoOn=", "label": "ไปหน้าสร้างวิดีโอ", "className": "w-full max-w-[340px] h-[58px] justify-center rounded-2xl mx-auto" }
       ]
     },
     {
       "id": "filming",
       "navLabel": "สร้างวิดีโอ",
+      "hideTitle": true,
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ถ่ายทำ — สร้างวิดีโอ",
       "subtitle": "จากภาพแต่ละช็อต → สร้างวิดีโอ + ใส่บทพูด (วิดีโอใช้ภาพเป็นเฟรมแรก) · กด \"สร้างวิดีโอทั้งหมด\" ทีเดียว หรือรายช็อต",
@@ -2644,12 +2683,14 @@
             { "el": "text", "value": { "op": "pluck", "from": "shots", "field": "dialogue", "by": "ep", "byId": "{values.activeEp}", "sep": "\n\n" }, "className": "text-sm leading-relaxed rounded-2xl px-4 py-3 bg-[var(--ev-surface)] border border-[var(--ev-border)] whitespace-pre-wrap min-h-[120px]" },
             { "el": "copy-button", "value": { "op": "pluck", "from": "shots", "field": "dialogue", "by": "ep", "byId": "{values.activeEp}", "sep": "\n\n" }, "label": "Copy บทบรรยาย", "icon": "content_copy", "variant": "solid" }
           ]
-        }
+        },
+        { "el": "next-button", "when": "autoOn=", "label": "ไปหน้ารีวิว", "className": "w-full max-w-[340px] h-[58px] justify-center rounded-2xl mx-auto" }
       ]
     },
     {
       "id": "final",
       "navLabel": "รีวิว",
+      "hideTitle": true,
       "navGate": { "op": "count", "from": "episodes" },
       "title": "ส่งออก (Final)",
       "subtitle": "ปก + แคปชั่น + ตัดต่อรวมเป็นวิดีโอ",
