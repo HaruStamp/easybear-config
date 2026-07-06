@@ -869,7 +869,22 @@
       "parse": "json",
       "when": "dialogueLanguage!=en",
       "systemInstruction": "{brain.captionTh.sys}",
-      "prompt": "แนวเรื่อง: {values.genre}\nชื่อตอน: {item.title}\nเรื่องย่อ: {item.synopsis}\n\n{brain.captionTh.body}",
+      "prompt": {
+        "op": "concat",
+        "parts": [
+          "เรื่อง: {values.title} · แนวเรื่อง: {values.genre}\n",
+          "ตอนที่ ",
+          {
+            "op": "add",
+            "a": "{index}",
+            "b": 1
+          },
+          ": {item.title}\n",
+          "เรื่องย่อ: {item.synopsis}\n",
+          "ปมท้ายตอน: {item.cliffhanger}\n\n",
+          "{brain.captionTh.body}"
+        ]
+      },
       "thinkingLevel": "low"
     },
     {
@@ -880,7 +895,22 @@
       "parse": "json",
       "when": "dialogueLanguage=en",
       "systemInstruction": "{brain.captionEn.sys}",
-      "prompt": "Genre: {values.genre}\nTitle: {item.title}\nSynopsis: {item.synopsis}\n\n{brain.captionEn.body}",
+      "prompt": {
+        "op": "concat",
+        "parts": [
+          "Story: {values.title} · Genre: {values.genre}\n",
+          "Episode ",
+          {
+            "op": "add",
+            "a": "{index}",
+            "b": 1
+          },
+          ": {item.title}\n",
+          "Synopsis: {item.synopsis}\n",
+          "Cliffhanger: {item.cliffhanger}\n\n",
+          "{brain.captionEn.body}"
+        ]
+      },
       "thinkingLevel": "low"
     }
   ],
@@ -2700,6 +2730,112 @@
                       ]
                     },
                     {
+                      "label": "ตาราง",
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "w-full overflow-x-auto",
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "min-w-[520px] flex flex-col",
+                              "card": [
+                                {
+                                  "el": "box",
+                                  "className": "flex items-center gap-2 border-b border-[var(--ev-border)] pb-2 px-1",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "#",
+                                      "className": "text-[10px] font-bold tracking-widest w-8 shrink-0"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "ฉาก",
+                                      "className": "text-[10px] font-bold tracking-widest w-32 shrink-0"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "มุมกล้อง",
+                                      "className": "text-[10px] font-bold tracking-widest w-24 shrink-0"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "อารมณ์",
+                                      "className": "text-[10px] font-bold tracking-widest w-20 shrink-0"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "ภาพ/บท",
+                                      "className": "text-[10px] font-bold tracking-widest flex-1 min-w-0"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "repeat",
+                                  "coll": "shots",
+                                  "where": "refs.ep~{values.activeEp}",
+                                  "empty": "ตอนนี้ยังไม่มีช็อต",
+                                  "card": [
+                                    {
+                                      "el": "box",
+                                      "className": "flex items-start gap-2 border-b border-[var(--ev-border)] py-2 px-1",
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "add",
+                                            "a": "{index}",
+                                            "b": 1
+                                          },
+                                          "className": "w-8 h-6 rounded bg-[var(--ev-text)] !text-[var(--ev-bg)] flex items-center justify-center font-black !text-xs shrink-0"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "refName",
+                                            "field": "scene",
+                                            "coll": "scenes",
+                                            "fallback": "—"
+                                          },
+                                          "className": "!text-xs w-32 shrink-0 !text-[var(--ev-text)] font-medium"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "lookup",
+                                            "table": "cameraAngleOpts",
+                                            "key": "{item.cameraAngle}",
+                                            "fallback": "{item.cameraAngle}"
+                                          },
+                                          "className": "!text-xs w-24 shrink-0"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "lookup",
+                                            "table": "moodOpts",
+                                            "key": "{item.mood}",
+                                            "fallback": "{item.mood}"
+                                          },
+                                          "className": "!text-xs w-20 shrink-0"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": "{item.imagePrompt}",
+                                          "className": "!text-xs flex-1 min-w-0 line-clamp-2"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
                       "label": "จัดการ",
                       "card": [
                         {
@@ -2708,7 +2844,18 @@
                           "childBy": "ep",
                           "sortable": true,
                           "handleInside": true,
-                          "readonly": true,
+                          "readonly": false,
+                          "placeholder": "เพิ่ม Shot",
+                          "addDefaults": {
+                            "mood": "",
+                            "cameraAngle": "medium",
+                            "cameraDirection": "",
+                            "duration": "8",
+                            "audioType": "dialogue",
+                            "speaker": "",
+                            "imagePrompt": "",
+                            "motion": ""
+                          },
                           "empty": "ตอนนี้ยังไม่มีช็อต",
                           "card": [
                             {
@@ -3289,6 +3436,11 @@
                               "icon": "image_search"
                             },
                             {
+                              "el": "copy-button",
+                              "op": "genCharSheet",
+                              "iconOnly": true
+                            },
+                            {
                               "el": "delete-button",
                               "iconOnly": true
                             }
@@ -3428,6 +3580,11 @@
                               "icon": "image_search"
                             },
                             {
+                              "el": "copy-button",
+                              "op": "genObjectRef",
+                              "iconOnly": true
+                            },
+                            {
                               "el": "delete-button",
                               "iconOnly": true
                             }
@@ -3481,13 +3638,13 @@
                   "card": [
                     {
                       "el": "box",
-                      "className": "w-24 sm:w-28 shrink-0 mx-auto min-[720px]:mx-0",
+                      "className": "w-full sm:w-[280px] shrink-0 mx-auto min-[720px]:mx-0",
                       "card": [
                         {
                           "el": "media-slot",
                           "src": "{item.slots.ref}",
                           "aspect": "16:9",
-                          "className": "rounded-2xl ring-1 ring-white/10 bg-black"
+                          "className": "rounded-2xl ring-1 ring-white/10 bg-black aspect-video"
                         }
                       ]
                     },
@@ -3565,6 +3722,11 @@
                               "into": "{item.slots.ref}",
                               "iconOnly": true,
                               "icon": "image_search"
+                            },
+                            {
+                              "el": "copy-button",
+                              "op": "genSceneRef",
+                              "iconOnly": true
                             },
                             {
                               "el": "delete-button",
@@ -3727,6 +3889,43 @@
           "el": "dashboard",
           "coll": "shots",
           "label": "ช็อตทั้งหมด"
+        },
+        {
+          "el": "repeat",
+          "coll": "episodes",
+          "card": [
+            {
+              "el": "box",
+              "when": {
+                "op": "eq",
+                "a": "{item.id}",
+                "b": "{values.activeEp}"
+              },
+              "className": "flex flex-col gap-1",
+              "card": [
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "concat",
+                    "parts": [
+                      "EPISODE ",
+                      {
+                        "op": "add",
+                        "a": "{index}",
+                        "b": 1
+                      }
+                    ]
+                  },
+                  "className": "text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--ev-accent)]"
+                },
+                {
+                  "el": "text",
+                  "value": "{item.title}",
+                  "className": "text-2xl sm:text-3xl font-extrabold tracking-tight !text-[var(--ev-text)]"
+                }
+              ]
+            }
+          ]
         },
         {
           "el": "segmented",
@@ -3941,6 +4140,17 @@
                       "icon": "photo_library",
                       "variant": "outline",
                       "className": "w-full justify-center"
+                    },
+                    {
+                      "el": "row",
+                      "className": "justify-center",
+                      "card": [
+                        {
+                          "el": "copy-button",
+                          "op": "genImage",
+                          "iconOnly": true
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3975,6 +4185,43 @@
           "el": "dashboard",
           "coll": "shots",
           "label": "ช็อตทั้งหมด"
+        },
+        {
+          "el": "repeat",
+          "coll": "episodes",
+          "card": [
+            {
+              "el": "box",
+              "when": {
+                "op": "eq",
+                "a": "{item.id}",
+                "b": "{values.activeEp}"
+              },
+              "className": "flex flex-col gap-1",
+              "card": [
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "concat",
+                    "parts": [
+                      "EPISODE ",
+                      {
+                        "op": "add",
+                        "a": "{index}",
+                        "b": 1
+                      }
+                    ]
+                  },
+                  "className": "text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--ev-accent)]"
+                },
+                {
+                  "el": "text",
+                  "value": "{item.title}",
+                  "className": "text-2xl sm:text-3xl font-extrabold tracking-tight !text-[var(--ev-text)]"
+                }
+              ]
+            }
+          ]
         },
         {
           "el": "segmented",
