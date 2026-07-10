@@ -403,7 +403,33 @@
             "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-[var(--ev-accent)]/15",
             "card": [
               {
-                "el": "spinner"
+                "el": "spinner",
+                "when": {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "running"
+                }
+              },
+              {
+                "el": "icon",
+                "icon": "hourglass_top",
+                "textSize": "text-[24px]",
+                "className": "text-[var(--ev-accent)] animate-spin",
+                "when": {
+                  "op": "or",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "cooldown"
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "retrying"
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -413,11 +439,17 @@
             "card": [
               {
                 "el": "row",
-                "className": "justify-between items-center gap-2 flex-nowrap",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2.5 min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -436,8 +468,8 @@
                       },
                       {
                         "el": "text",
-                        "value": "กำลังพัก",
-                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
+                        "value": "⏸ กำลังพัก",
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-[var(--ev-accent)]/20 text-[var(--ev-accent)]",
                         "when": {
                           "op": "eq",
                           "a": "{values.__runState}",
@@ -459,6 +491,24 @@
                   {
                     "el": "text",
                     "value": "{values.__runDone}/{values.__runTotal} รายการ",
+                    "when": {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "cooldown"
+                      }
+                    },
+                    "className": "text-xs font-black tabular-nums shrink-0 text-[var(--ev-accent)]"
+                  },
+                  {
+                    "el": "text",
+                    "value": "เหลือ {values.__runCoolLeft} วินาที",
+                    "when": {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "cooldown"
+                    },
                     "className": "text-xs font-black tabular-nums shrink-0 text-[var(--ev-accent)]"
                   }
                 ]
@@ -476,47 +526,68 @@
                 }
               },
               {
-                "el": "row",
-                "className": "items-center gap-1.5 flex-nowrap",
-                "card": [
-                  {
-                    "el": "text",
-                    "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
-                    "value": {
-                      "op": "concat",
-                      "parts": [
-                        "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
-                        {
-                          "op": "lookup",
-                          "table": "opNames",
-                          "key": "{values.__runStage}",
-                          "fallback": "{values.__runStage}"
-                        },
-                        " · รายการที่ {values.__runDone}"
-                      ]
-                    }
-                  },
-                  {
-                    "el": "text",
-                    "value": "· พัก {values.__runCoolLeft} วิ",
-                    "when": {
-                      "op": "eq",
-                      "a": "{values.__runState}",
-                      "b": "cooldown"
+                "el": "text",
+                "when": {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "running"
+                },
+                "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "{values.__runStage}"
                     },
-                    "className": "text-[11px] font-bold text-amber-400 tabular-nums shrink-0"
-                  },
-                  {
-                    "el": "text",
-                    "value": "· ครั้งที่ {values.__runAttempt}",
-                    "when": {
-                      "op": "eq",
-                      "a": "{values.__runState}",
-                      "b": "retrying"
+                    " · รายการที่ {values.__runDone}"
+                  ]
+                }
+              },
+              {
+                "el": "text",
+                "when": {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "cooldown"
+                },
+                "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "{values.__runStage}"
                     },
-                    "className": "text-[11px] font-bold text-amber-400 tabular-nums shrink-0"
-                  }
-                ]
+                    " · พักก่อนทำชุดถัดไป"
+                  ]
+                }
+              },
+              {
+                "el": "text",
+                "when": {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "retrying"
+                },
+                "className": "text-[11px] font-bold truncate text-amber-400",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "{values.__runStage}"
+                    },
+                    " · ลองใหม่ครั้งที่ {values.__runAttempt}"
+                  ]
+                }
               }
             ]
           },
@@ -608,11 +679,17 @@
             "card": [
               {
                 "el": "row",
-                "className": "justify-between items-center gap-2 flex-nowrap",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2.5 min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -717,11 +794,17 @@
             "card": [
               {
                 "el": "row",
-                "className": "justify-between items-center gap-2 flex-nowrap",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2.5 min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -3704,11 +3787,17 @@
                       "card": [
                         {
                           "el": "row",
-                          "className": "justify-between items-center gap-2 flex-nowrap",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "className": "justify-between items-center gap-2",
                           "card": [
                             {
                               "el": "row",
-                              "className": "items-center gap-2 flex-1 min-w-0 flex-nowrap",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "className": "items-center gap-2 flex-1 min-w-0",
                               "card": [
                                 {
                                   "el": "icon",
@@ -3827,17 +3916,21 @@
                           "className": "w-full justify-center"
                         },
                         {
-                          "el": "delete-button",
-                          "iconOnly": true,
-                          "variant": "ghost",
-                          "className": "self-center opacity-40 hover:opacity-100"
-                        },
-                        {
                           "el": "note",
                           "tone": "danger",
                           "icon": "error",
                           "when": "item.status=error",
                           "value": "{item.meta.error}"
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex-1"
+                        },
+                        {
+                          "el": "delete-button",
+                          "iconOnly": true,
+                          "variant": "ghost",
+                          "className": "self-end mt-auto opacity-40 hover:opacity-100"
                         }
                       ]
                     }
@@ -3901,11 +3994,17 @@
                       "card": [
                         {
                           "el": "row",
-                          "className": "justify-between items-center gap-2 flex-nowrap",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "className": "justify-between items-center gap-2",
                           "card": [
                             {
                               "el": "row",
-                              "className": "items-center gap-2 flex-1 min-w-0 flex-nowrap",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "className": "items-center gap-2 flex-1 min-w-0",
                               "card": [
                                 {
                                   "el": "icon",
@@ -4018,17 +4117,21 @@
                           "className": "w-full justify-center"
                         },
                         {
-                          "el": "delete-button",
-                          "iconOnly": true,
-                          "variant": "ghost",
-                          "className": "self-center opacity-40 hover:opacity-100"
-                        },
-                        {
                           "el": "note",
                           "tone": "danger",
                           "icon": "error",
                           "when": "item.status=error",
                           "value": "{item.meta.error}"
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex-1"
+                        },
+                        {
+                          "el": "delete-button",
+                          "iconOnly": true,
+                          "variant": "ghost",
+                          "className": "self-end mt-auto opacity-40 hover:opacity-100"
                         }
                       ]
                     }
@@ -4092,11 +4195,17 @@
                       "card": [
                         {
                           "el": "row",
-                          "className": "justify-between items-center gap-2 flex-nowrap",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "className": "justify-between items-center gap-2",
                           "card": [
                             {
                               "el": "row",
-                              "className": "items-center gap-2 flex-1 min-w-0 flex-nowrap",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "className": "items-center gap-2 flex-1 min-w-0",
                               "card": [
                                 {
                                   "el": "icon",
@@ -4209,17 +4318,21 @@
                           "className": "w-full justify-center"
                         },
                         {
-                          "el": "delete-button",
-                          "iconOnly": true,
-                          "variant": "ghost",
-                          "className": "self-center opacity-40 hover:opacity-100"
-                        },
-                        {
                           "el": "note",
                           "tone": "danger",
                           "icon": "error",
                           "when": "item.status=error",
                           "value": "{item.meta.error}"
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex-1"
+                        },
+                        {
+                          "el": "delete-button",
+                          "iconOnly": true,
+                          "variant": "ghost",
+                          "className": "self-end mt-auto opacity-40 hover:opacity-100"
                         }
                       ]
                     }
