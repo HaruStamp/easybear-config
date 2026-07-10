@@ -213,6 +213,23 @@
     "activeEp": "ep_1"
   },
   "lookups": {
+    "opNames": {
+      "structVars": "เตรียมโครงเรื่อง",
+      "structure": "เขียนโครงเรื่อง",
+      "mapStructure": "จัดโครงเรื่อง",
+      "buildShots": "แตกช็อต",
+      "revise": "ขัดเกลาบท",
+      "applyRevise": "ปรับบท",
+      "genCharSheet": "สร้างภาพตัวละคร",
+      "genSceneRef": "สร้างภาพฉาก",
+      "genObjectRef": "สร้างภาพวัตถุ",
+      "genImage": "สร้างภาพช็อต",
+      "genVideo": "สร้างวิดีโอช็อต",
+      "genCoverPrompt": "คิดพรอมป์ปก",
+      "genCover": "สร้างภาพปก",
+      "genCaption": "เขียนแคปชัน",
+      "genCaptionEn": "เขียนแคปชัน EN"
+    },
     "styleHint": {
       "cinematic": "cinematic warm tone, soft cinematic light, Thai drama",
       "anime": "anime cel-shaded, vibrant, expressive",
@@ -352,7 +369,7 @@
             }
           ]
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-[var(--ev-accent)]/50",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[600px] flex items-center gap-3.5 px-5 py-4 rounded-[26px] border animate-in border-[var(--ev-accent)]/50",
         "style": {
           "backgroundColor": "#1b1512",
           "boxShadow": "0 0 26px rgba(255,106,0,0.18), 0 14px 48px rgba(0,0,0,0.65)"
@@ -360,7 +377,7 @@
         "card": [
           {
             "el": "box",
-            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-[var(--ev-accent)]/15",
+            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-[var(--ev-accent)]/15",
             "card": [
               {
                 "el": "spinner"
@@ -369,7 +386,7 @@
           },
           {
             "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "className": "flex-1 min-w-0 flex flex-col gap-2",
             "card": [
               {
                 "el": "row",
@@ -377,7 +394,7 @@
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2 flex-nowrap min-w-0",
+                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -387,7 +404,7 @@
                       {
                         "el": "text",
                         "value": "กำลังสร้าง",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-[var(--ev-accent)] text-black",
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-[var(--ev-accent)] text-black",
                         "when": {
                           "op": "eq",
                           "a": "{values.__runState}",
@@ -397,7 +414,7 @@
                       {
                         "el": "text",
                         "value": "กำลังพัก",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
                         "when": {
                           "op": "eq",
                           "a": "{values.__runState}",
@@ -407,7 +424,7 @@
                       {
                         "el": "text",
                         "value": "↻ ลองใหม่",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
                         "when": {
                           "op": "eq",
                           "a": "{values.__runState}",
@@ -437,12 +454,24 @@
               },
               {
                 "el": "row",
-                "className": "items-center gap-2 flex-nowrap",
+                "className": "items-center gap-1.5 flex-nowrap",
                 "card": [
                   {
                     "el": "text",
-                    "value": "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · {values.__runStage}",
-                    "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]"
+                    "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
+                        {
+                          "op": "lookup",
+                          "table": "opNames",
+                          "key": "{values.__runStage}",
+                          "fallback": "{values.__runStage}"
+                        },
+                        " · รายการที่ {values.__runDone}"
+                      ]
+                    }
                   },
                   {
                     "el": "text",
@@ -475,10 +504,10 @@
             "variant": "ghost",
             "style": {
               "borderRadius": "9999px",
-              "height": "40px",
+              "height": "42px",
               "backgroundColor": "rgba(255,255,255,0.08)"
             },
-            "className": "px-5 shrink-0 font-bold text-white"
+            "className": "px-6 shrink-0 font-bold text-white"
           }
         ]
       },
@@ -517,7 +546,7 @@
             }
           ]
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-green-500/50",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[600px] flex items-center gap-3.5 px-5 py-4 rounded-[26px] border animate-in border-green-500/50",
         "style": {
           "backgroundColor": "#1b1512",
           "boxShadow": "0 0 26px rgba(34,197,94,0.18), 0 14px 48px rgba(0,0,0,0.65)"
@@ -525,19 +554,19 @@
         "card": [
           {
             "el": "box",
-            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-green-500/15",
+            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-green-500/15",
             "card": [
               {
                 "el": "icon",
                 "icon": "check_circle",
-                "textSize": "text-[24px]",
+                "textSize": "text-[26px]",
                 "className": "text-green-400"
               }
             ]
           },
           {
             "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "className": "flex-1 min-w-0 flex flex-col gap-2",
             "card": [
               {
                 "el": "row",
@@ -545,7 +574,7 @@
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2 flex-nowrap min-w-0",
+                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -555,7 +584,7 @@
                       {
                         "el": "text",
                         "value": "✓ เสร็จ",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-green-500/20 text-green-400"
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-green-500/20 text-green-300"
                       }
                     ]
                   },
@@ -567,13 +596,25 @@
                 ]
               },
               {
-                "el": "progress-bar",
-                "value": 100
+                "el": "box",
+                "className": "h-1.5 rounded-full bg-green-500 w-full"
               },
               {
                 "el": "text",
-                "value": "สร้างครบทุกรายการแล้ว",
-                "className": "text-[11px] font-bold text-green-400"
+                "className": "text-[11px] font-bold text-green-400 truncate",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "{values.__runStage}"
+                    },
+                    "ครบทั้งหมดแล้ว"
+                  ]
+                }
               }
             ]
           },
@@ -586,9 +627,9 @@
             "variant": "contrast",
             "style": {
               "borderRadius": "9999px",
-              "height": "40px"
+              "height": "42px"
             },
-            "className": "px-5 shrink-0 font-bold"
+            "className": "px-6 shrink-0 font-bold"
           }
         ]
       },
@@ -599,7 +640,7 @@
           "a": "{values.__runState}",
           "b": "fail"
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-red-500/50",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[600px] flex items-center gap-3.5 px-5 py-4 rounded-[26px] border animate-in border-red-500/50",
         "style": {
           "backgroundColor": "#1b1512",
           "boxShadow": "0 0 26px rgba(239,68,68,0.18), 0 14px 48px rgba(0,0,0,0.65)"
@@ -607,19 +648,19 @@
         "card": [
           {
             "el": "box",
-            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-red-500/15",
+            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-red-500/15",
             "card": [
               {
                 "el": "icon",
                 "icon": "error",
-                "textSize": "text-[24px]",
+                "textSize": "text-[26px]",
                 "className": "text-red-400"
               }
             ]
           },
           {
             "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "className": "flex-1 min-w-0 flex flex-col gap-2",
             "card": [
               {
                 "el": "row",
@@ -627,7 +668,7 @@
                 "card": [
                   {
                     "el": "row",
-                    "className": "items-center gap-2 flex-nowrap min-w-0",
+                    "className": "items-center gap-2.5 flex-nowrap min-w-0",
                     "card": [
                       {
                         "el": "text",
@@ -637,7 +678,7 @@
                       {
                         "el": "text",
                         "value": "มีรายการพลาด",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-red-500/20 text-red-400"
+                        "className": "px-3 py-1 rounded-full text-[11px] font-bold shrink-0 bg-red-500/20 text-red-300"
                       }
                     ]
                   },
@@ -664,9 +705,9 @@
             "variant": "contrast",
             "style": {
               "borderRadius": "9999px",
-              "height": "40px"
+              "height": "42px"
             },
-            "className": "px-5 shrink-0 font-bold"
+            "className": "px-6 shrink-0 font-bold"
           }
         ]
       }
