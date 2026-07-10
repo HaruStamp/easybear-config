@@ -213,6 +213,14 @@
     "activeEp": "ep_1"
   },
   "lookups": {
+    "opBanner": {
+      "genCharSheet": "1",
+      "genSceneRef": "1",
+      "genObjectRef": "1",
+      "genImage": "1",
+      "genVideo": "1",
+      "genCover": "1"
+    },
     "opNames": {
       "structVars": "เตรียมโครงเรื่อง",
       "structure": "เขียนโครงเรื่อง",
@@ -350,22 +358,37 @@
       {
         "el": "box",
         "when": {
-          "op": "or",
+          "op": "and",
           "list": [
             {
               "op": "eq",
-              "a": "{values.__runState}",
-              "b": "running"
+              "a": {
+                "op": "lookup",
+                "table": "opBanner",
+                "key": "{values.__runStage}",
+                "fallback": ""
+              },
+              "b": "1"
             },
             {
-              "op": "eq",
-              "a": "{values.__runState}",
-              "b": "cooldown"
-            },
-            {
-              "op": "eq",
-              "a": "{values.__runState}",
-              "b": "retrying"
+              "op": "or",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "running"
+                },
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "cooldown"
+                },
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "retrying"
+                }
+              ]
             }
           ]
         },
@@ -514,33 +537,48 @@
       {
         "el": "box",
         "when": {
-          "op": "or",
+          "op": "and",
           "list": [
             {
               "op": "eq",
-              "a": "{values.__runState}",
-              "b": "done"
+              "a": {
+                "op": "lookup",
+                "table": "opBanner",
+                "key": "{values.__runStage}",
+                "fallback": ""
+              },
+              "b": "1"
             },
             {
-              "op": "and",
+              "op": "or",
               "list": [
                 {
                   "op": "eq",
                   "a": "{values.__runState}",
-                  "b": "idle"
+                  "b": "done"
                 },
                 {
-                  "op": "not",
-                  "a": {
-                    "op": "eq",
-                    "a": "{values.__runTotal}",
-                    "b": ""
-                  }
-                },
-                {
-                  "op": "eq",
-                  "a": "{values.__runDone}",
-                  "b": "{values.__runTotal}"
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "idle"
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.__runTotal}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.__runDone}",
+                      "b": "{values.__runTotal}"
+                    }
+                  ]
                 }
               ]
             }
@@ -636,9 +674,24 @@
       {
         "el": "box",
         "when": {
-          "op": "eq",
-          "a": "{values.__runState}",
-          "b": "fail"
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": {
+                "op": "lookup",
+                "table": "opBanner",
+                "key": "{values.__runStage}",
+                "fallback": ""
+              },
+              "b": "1"
+            },
+            {
+              "op": "eq",
+              "a": "{values.__runState}",
+              "b": "fail"
+            }
+          ]
         },
         "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[600px] flex items-center gap-3.5 px-5 py-4 rounded-[26px] border animate-in border-red-500/50",
         "style": {
