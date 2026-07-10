@@ -352,91 +352,133 @@
             }
           ]
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[460px] flex flex-col gap-2 px-5 py-4 rounded-[24px] shadow-2xl bg-[var(--ev-surface2)] border border-[var(--ev-accent)]/40 animate-in",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-[var(--ev-accent)]/50",
+        "style": {
+          "backgroundColor": "#1b1512",
+          "boxShadow": "0 0 26px rgba(255,106,0,0.18), 0 14px 48px rgba(0,0,0,0.65)"
+        },
         "card": [
           {
-            "el": "row",
-            "className": "justify-between items-center gap-2",
+            "el": "box",
+            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-[var(--ev-accent)]/15",
             "card": [
               {
-                "el": "text",
-                "value": "⚡ กำลังสร้าง",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "running"
-                },
-                "className": "text-sm font-extrabold text-[var(--ev-accent)]"
-              },
-              {
-                "el": "text",
-                "value": "⏸ กำลังพัก (กันระบบตรวจจับ)",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "cooldown"
-                },
-                "className": "text-sm font-extrabold text-amber-500"
-              },
-              {
-                "el": "text",
-                "value": "↻ ลองใหม่ที่พลาด",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "retrying"
-                },
-                "className": "text-sm font-extrabold text-amber-500"
-              },
-              {
-                "el": "text",
-                "value": "{values.__runDone}/{values.__runTotal}",
-                "className": "text-xs font-black tabular-nums text-[var(--ev-accent)]"
+                "el": "spinner"
               }
             ]
           },
           {
-            "el": "progress-bar",
-            "value": {
-              "op": "mul",
-              "a": {
-                "op": "div",
-                "a": "{values.__runDone}",
-                "b": "{values.__runTotal}"
-              },
-              "b": 100
-            }
-          },
-          {
-            "el": "row",
-            "className": "justify-between items-center gap-2",
+            "el": "box",
+            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
             "card": [
               {
-                "el": "text",
-                "value": "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · {values.__runStage}",
-                "className": "text-[11px] text-[var(--ev-dim)] truncate"
+                "el": "row",
+                "className": "justify-between items-center gap-2 flex-nowrap",
+                "card": [
+                  {
+                    "el": "row",
+                    "className": "items-center gap-2 flex-nowrap min-w-0",
+                    "card": [
+                      {
+                        "el": "text",
+                        "value": "Gen ทั้งหมด",
+                        "className": "text-sm font-extrabold shrink-0 text-white"
+                      },
+                      {
+                        "el": "text",
+                        "value": "กำลังสร้าง",
+                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-[var(--ev-accent)] text-black",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "running"
+                        }
+                      },
+                      {
+                        "el": "text",
+                        "value": "กำลังพัก",
+                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "cooldown"
+                        }
+                      },
+                      {
+                        "el": "text",
+                        "value": "↻ ลองใหม่",
+                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-amber-500 text-black",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "retrying"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "el": "text",
+                    "value": "{values.__runDone}/{values.__runTotal} รายการ",
+                    "className": "text-xs font-black tabular-nums shrink-0 text-[var(--ev-accent)]"
+                  }
+                ]
               },
               {
-                "el": "text",
-                "value": "พัก {values.__runCoolLeft} วิ",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "cooldown"
-                },
-                "className": "text-[11px] font-bold text-amber-500 tabular-nums shrink-0"
+                "el": "progress-bar",
+                "value": {
+                  "op": "mul",
+                  "a": {
+                    "op": "div",
+                    "a": "{values.__runDone}",
+                    "b": "{values.__runTotal}"
+                  },
+                  "b": 100
+                }
               },
               {
-                "el": "text",
-                "value": "ครั้งที่ {values.__runAttempt}",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "retrying"
-                },
-                "className": "text-[11px] font-bold text-amber-500 tabular-nums shrink-0"
+                "el": "row",
+                "className": "items-center gap-2 flex-nowrap",
+                "card": [
+                  {
+                    "el": "text",
+                    "value": "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · {values.__runStage}",
+                    "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]"
+                  },
+                  {
+                    "el": "text",
+                    "value": "· พัก {values.__runCoolLeft} วิ",
+                    "when": {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "cooldown"
+                    },
+                    "className": "text-[11px] font-bold text-amber-400 tabular-nums shrink-0"
+                  },
+                  {
+                    "el": "text",
+                    "value": "· ครั้งที่ {values.__runAttempt}",
+                    "when": {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "retrying"
+                    },
+                    "className": "text-[11px] font-bold text-amber-400 tabular-nums shrink-0"
+                  }
+                ]
               }
             ]
+          },
+          {
+            "el": "button",
+            "action": "stop",
+            "label": "หยุด",
+            "variant": "ghost",
+            "style": {
+              "borderRadius": "9999px",
+              "height": "40px",
+              "backgroundColor": "rgba(255,255,255,0.08)"
+            },
+            "className": "px-5 shrink-0 font-bold text-white"
           }
         ]
       },
@@ -475,17 +517,21 @@
             }
           ]
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3.5 rounded-[24px] shadow-2xl bg-[var(--ev-surface2)] border animate-in border-green-500/40",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-green-500/50",
+        "style": {
+          "backgroundColor": "#1b1512",
+          "boxShadow": "0 0 26px rgba(34,197,94,0.18), 0 14px 48px rgba(0,0,0,0.65)"
+        },
         "card": [
           {
             "el": "box",
-            "className": "w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center bg-green-500/15 text-green-400",
+            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-green-500/15",
             "card": [
               {
                 "el": "icon",
                 "icon": "check_circle",
-                "textSize": "text-[26px]",
-                "className": ""
+                "textSize": "text-[24px]",
+                "className": "text-green-400"
               }
             ]
           },
@@ -504,37 +550,29 @@
                       {
                         "el": "text",
                         "value": "Gen ทั้งหมด",
-                        "className": "text-sm font-extrabold shrink-0"
+                        "className": "text-sm font-extrabold shrink-0 text-white"
                       },
                       {
                         "el": "text",
                         "value": "✓ เสร็จ",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-green-500/15 text-green-400 shrink-0"
+                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-green-500/20 text-green-400"
                       }
                     ]
                   },
                   {
                     "el": "text",
                     "value": "{values.__runDone}/{values.__runTotal} รายการ",
-                    "className": "text-xs font-black tabular-nums text-[var(--ev-dim)] shrink-0"
+                    "className": "text-xs font-black tabular-nums shrink-0 text-green-400"
                   }
                 ]
               },
               {
                 "el": "progress-bar",
-                "value": {
-                  "op": "mul",
-                  "a": {
-                    "op": "div",
-                    "a": "{values.__runDone}",
-                    "b": "{values.__runTotal}"
-                  },
-                  "b": 100
-                }
+                "value": 100
               },
               {
                 "el": "text",
-                "value": "เสร็จครบทุกรายการแล้ว",
+                "value": "สร้างครบทุกรายการแล้ว",
                 "className": "text-[11px] font-bold text-green-400"
               }
             ]
@@ -561,17 +599,21 @@
           "a": "{values.__runState}",
           "b": "fail"
         },
-        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3.5 rounded-[24px] shadow-2xl bg-[var(--ev-surface2)] border animate-in border-red-500/40",
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[560px] flex items-center gap-3 px-4 py-3 rounded-[24px] border animate-in border-red-500/50",
+        "style": {
+          "backgroundColor": "#1b1512",
+          "boxShadow": "0 0 26px rgba(239,68,68,0.18), 0 14px 48px rgba(0,0,0,0.65)"
+        },
         "card": [
           {
             "el": "box",
-            "className": "w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center bg-red-500/15 text-red-400",
+            "className": "w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-red-500/15",
             "card": [
               {
                 "el": "icon",
                 "icon": "error",
-                "textSize": "text-[26px]",
-                "className": ""
+                "textSize": "text-[24px]",
+                "className": "text-red-400"
               }
             ]
           },
@@ -590,37 +632,25 @@
                       {
                         "el": "text",
                         "value": "Gen ทั้งหมด",
-                        "className": "text-sm font-extrabold shrink-0"
+                        "className": "text-sm font-extrabold shrink-0 text-white"
                       },
                       {
                         "el": "text",
                         "value": "มีรายการพลาด",
-                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-500/15 text-red-400 shrink-0"
+                        "className": "px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 bg-red-500/20 text-red-400"
                       }
                     ]
                   },
                   {
                     "el": "text",
-                    "value": "{values.__runDone}/{values.__runTotal} รายการ",
-                    "className": "text-xs font-black tabular-nums text-[var(--ev-dim)] shrink-0"
+                    "value": "พลาด {values.__runFail}",
+                    "className": "text-xs font-black tabular-nums shrink-0 text-red-400"
                   }
                 ]
               },
               {
-                "el": "progress-bar",
-                "value": {
-                  "op": "mul",
-                  "a": {
-                    "op": "div",
-                    "a": "{values.__runDone}",
-                    "b": "{values.__runTotal}"
-                  },
-                  "b": 100
-                }
-              },
-              {
                 "el": "text",
-                "value": "พลาด {values.__runFail} รายการ — กด \"ลองใหม่\" ที่การ์ดที่พลาด",
+                "value": "กด \"ลองใหม่\" ที่การ์ดที่พลาด แล้วสั่ง Gen อีกครั้ง",
                 "className": "text-[11px] font-bold text-red-400"
               }
             ]
@@ -3506,13 +3536,19 @@
               ],
               "label": "Gen Asset ทั้งหมด",
               "icon": "auto_awesome",
-              "variant": "outline",
+              "variant": "contrast",
               "size": "lg",
               "style": {
                 "height": "52px",
                 "borderRadius": "16px"
               },
-              "className": "px-6 shrink-0 font-bold"
+              "className": "px-8 shrink-0 font-bold",
+              "mobile": {
+                "className": "w-full justify-center font-bold"
+              },
+              "tablet": {
+                "className": "w-full justify-center font-bold"
+              }
             }
           ]
         },
