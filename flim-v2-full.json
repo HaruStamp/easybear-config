@@ -205,6 +205,7 @@
     "phaseDelay": "60",
     "autoOn": "",
     "autoScope": "all",
+    "autoPrevRef": "",
     "plot": "หมีแว่นเปิดร้านกาแฟวันแรก เจอลูกค้าตัวป่วน",
     "genre": "ตลก, ดราม่า",
     "epCount": "3",
@@ -564,9 +565,31 @@
               {
                 "el": "text",
                 "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "running"
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "running"
+                    },
+                    {
+                      "op": "lt",
+                      "a": {
+                        "op": "add",
+                        "a": "{values.__runDone}",
+                        "b": 1
+                      },
+                      "b": {
+                        "op": "min",
+                        "a": {
+                          "op": "add",
+                          "a": "{values.__runDone}",
+                          "b": "{values.maxParallel}"
+                        },
+                        "b": "{values.__runTotal}"
+                      }
+                    }
+                  ]
                 },
                 "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
                 "value": {
@@ -586,7 +609,82 @@
                       "key": "{values.__runStage}",
                       "fallback": "{values.__runStage}"
                     },
-                    " · รายการ {values.__runDone}/{values.__runTotal}"
+                    " · รายการที่ ",
+                    {
+                      "op": "add",
+                      "a": "{values.__runDone}",
+                      "b": 1
+                    },
+                    "-",
+                    {
+                      "op": "min",
+                      "a": {
+                        "op": "add",
+                        "a": "{values.__runDone}",
+                        "b": "{values.maxParallel}"
+                      },
+                      "b": "{values.__runTotal}"
+                    }
+                  ]
+                }
+              },
+              {
+                "el": "text",
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "running"
+                    },
+                    {
+                      "op": "gte",
+                      "a": {
+                        "op": "add",
+                        "a": "{values.__runDone}",
+                        "b": 1
+                      },
+                      "b": {
+                        "op": "min",
+                        "a": {
+                          "op": "add",
+                          "a": "{values.__runDone}",
+                          "b": "{values.maxParallel}"
+                        },
+                        "b": "{values.__runTotal}"
+                      }
+                    }
+                  ]
+                },
+                "className": "text-[11px] font-bold truncate text-[var(--ev-accent)]",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "เฟส ",
+                    {
+                      "op": "lookup",
+                      "table": "opPhase",
+                      "key": "{values.__runStage}",
+                      "fallback": ""
+                    },
+                    " · ",
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "{values.__runStage}"
+                    },
+                    " · รายการที่ ",
+                    {
+                      "op": "min",
+                      "a": {
+                        "op": "add",
+                        "a": "{values.__runDone}",
+                        "b": 1
+                      },
+                      "b": "{values.__runTotal}"
+                    }
                   ]
                 }
               },
@@ -935,6 +1033,13 @@
         "className": "w-full gap-3"
       },
       {
+        "el": "switch",
+        "field": "autoPrevRef",
+        "icon": "link",
+        "label": "ภาพต่อเนื่องอัตโนมัติ",
+        "placeholder": "ทุกช็อตแนบภาพช็อตก่อนหน้าเป็นรูปอ้างอิงให้เอง (ช็อตแรกไม่มี = ข้าม)"
+      },
+      {
         "el": "segmented",
         "variant": "tab",
         "field": "aspect",
@@ -1088,6 +1193,11 @@
         "genre",
         "epCount",
         "shotsPerEp"
+      ],
+      "slots": [
+        "ref1",
+        "ref2",
+        "ref3"
       ]
     },
     "characters": {
@@ -1182,7 +1292,12 @@
       "systemInstruction": "{brain.structure.designRules}",
       "prompt": "{brain.structure.buildPrompt}",
       "interpFrom": "item.data.sv",
-      "thinkingLevel": "high"
+      "thinkingLevel": "high",
+      "images": [
+        "{item.slots.ref1}",
+        "{item.slots.ref2}",
+        "{item.slots.ref3}"
+      ]
     },
     {
       "id": "mapStructure",
@@ -1271,6 +1386,19 @@
             "from": "objects",
             "by": "{item.refs.object}",
             "slot": "ref"
+          },
+          {
+            "from": "shots",
+            "by": {
+              "op": "prevId",
+              "from": "shots"
+            },
+            "slot": "image",
+            "when": {
+              "op": "or",
+              "a": "{item.prevRef}",
+              "b": "{values.autoPrevRef}"
+            }
           }
         ]
       },
@@ -1808,6 +1936,134 @@
                           "label": "อินโฟกราฟิก/สื่อการเรียน",
                           "icon": "school",
                           "desc": "ภาพประกอบสะอาด สอนเข้าใจง่าย"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "section",
+                  "icon": "imagesmode",
+                  "label": "รูปอ้างอิงให้ AI",
+                  "summary": "(ไม่ใส่ก็ได้ — แนบรูปสไตล์/ตัวละคร ให้ AI เห็นก่อนเขียนบท)",
+                  "card": [
+                    {
+                      "el": "repeat",
+                      "coll": "project",
+                      "card": [
+                        {
+                          "el": "row",
+                          "className": "gap-3 flex-wrap items-start",
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "flex flex-col gap-1.5 w-[112px]",
+                              "card": [
+                                {
+                                  "el": "media-slot",
+                                  "src": "{item.slots.ref1}",
+                                  "aspect": "1:1"
+                                },
+                                {
+                                  "el": "upload",
+                                  "into": "ref1",
+                                  "label": "รูป 1",
+                                  "resize": {
+                                    "maxPx": 768,
+                                    "quality": 0.8
+                                  },
+                                  "className": "text-center"
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "hook",
+                                  "fn": "clearSlot",
+                                  "to": "ref1",
+                                  "label": "เอาออก",
+                                  "icon": "close",
+                                  "variant": "ghost",
+                                  "className": "text-xs h-7",
+                                  "when": {
+                                    "op": "some",
+                                    "from": "project",
+                                    "slot": "ref1"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "className": "flex flex-col gap-1.5 w-[112px]",
+                              "card": [
+                                {
+                                  "el": "media-slot",
+                                  "src": "{item.slots.ref2}",
+                                  "aspect": "1:1"
+                                },
+                                {
+                                  "el": "upload",
+                                  "into": "ref2",
+                                  "label": "รูป 2",
+                                  "resize": {
+                                    "maxPx": 768,
+                                    "quality": 0.8
+                                  },
+                                  "className": "text-center"
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "hook",
+                                  "fn": "clearSlot",
+                                  "to": "ref2",
+                                  "label": "เอาออก",
+                                  "icon": "close",
+                                  "variant": "ghost",
+                                  "className": "text-xs h-7",
+                                  "when": {
+                                    "op": "some",
+                                    "from": "project",
+                                    "slot": "ref2"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "className": "flex flex-col gap-1.5 w-[112px]",
+                              "card": [
+                                {
+                                  "el": "media-slot",
+                                  "src": "{item.slots.ref3}",
+                                  "aspect": "1:1"
+                                },
+                                {
+                                  "el": "upload",
+                                  "into": "ref3",
+                                  "label": "รูป 3",
+                                  "resize": {
+                                    "maxPx": 768,
+                                    "quality": 0.8
+                                  },
+                                  "className": "text-center"
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "hook",
+                                  "fn": "clearSlot",
+                                  "to": "ref3",
+                                  "label": "เอาออก",
+                                  "icon": "close",
+                                  "variant": "ghost",
+                                  "className": "text-xs h-7",
+                                  "when": {
+                                    "op": "some",
+                                    "from": "project",
+                                    "slot": "ref3"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
@@ -4651,6 +4907,13 @@
                       "label": "วัตถุ",
                       "icon": "category",
                       "empty": "ยังไม่มีวัตถุ"
+                    },
+                    {
+                      "el": "switch",
+                      "field": "prevRef",
+                      "icon": "link",
+                      "label": "ต่อภาพจากช็อตก่อนหน้า",
+                      "placeholder": "แนบภาพช็อตที่แล้วเป็นรูปอ้างอิงตอนสร้างภาพช็อตนี้"
                     },
                     {
                       "el": "textarea",
