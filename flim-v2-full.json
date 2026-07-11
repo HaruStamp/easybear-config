@@ -351,6 +351,14 @@
       "follow": "ตามตัวละคร",
       "orbit": "หมุนรอบ",
       "handheld": "มือถือ (สั่นไหว)"
+    },
+    "opPhase": {
+      "genCharSheet": "1/3",
+      "genSceneRef": "1/3",
+      "genObjectRef": "1/3",
+      "genImage": "2/3",
+      "genVideo": "3/3",
+      "genCover": "3/3"
     }
   },
   "components": {
@@ -400,21 +408,24 @@
         "card": [
           {
             "el": "box",
-            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-[var(--ev-accent)]/15",
+            "className": "shrink-0",
             "card": [
               {
-                "el": "spinner",
+                "el": "box",
                 "when": {
                   "op": "eq",
                   "a": "{values.__runState}",
                   "b": "running"
-                }
+                },
+                "className": "w-12 h-12 rounded-full flex items-center justify-center bg-[var(--ev-accent)]/15",
+                "card": [
+                  {
+                    "el": "spinner"
+                  }
+                ]
               },
               {
-                "el": "icon",
-                "icon": "hourglass_top",
-                "textSize": "text-[24px]",
-                "className": "text-[var(--ev-accent)] animate-spin",
+                "el": "progress-ring",
                 "when": {
                   "op": "or",
                   "list": [
@@ -429,7 +440,32 @@
                       "b": "retrying"
                     }
                   ]
-                }
+                },
+                "value": {
+                  "op": "mul",
+                  "a": {
+                    "op": "div",
+                    "a": "{values.__runCoolLeft}",
+                    "b": "{values.__runCoolTotal}"
+                  },
+                  "b": 100
+                },
+                "className": "w-12 h-12",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "hourglass_top",
+                    "textSize": "text-[24px]",
+                    "className": "text-[var(--ev-accent)] animate-hgflip",
+                    "style": {
+                      "display": "inline-flex",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "lineHeight": "1",
+                      "transformOrigin": "center"
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -536,14 +572,21 @@
                 "value": {
                   "op": "concat",
                   "parts": [
-                    "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
+                    "เฟส ",
+                    {
+                      "op": "lookup",
+                      "table": "opPhase",
+                      "key": "{values.__runStage}",
+                      "fallback": ""
+                    },
+                    " · ",
                     {
                       "op": "lookup",
                       "table": "opNames",
                       "key": "{values.__runStage}",
                       "fallback": "{values.__runStage}"
                     },
-                    " · รายการที่ {values.__runDone}"
+                    " · รายการ {values.__runDone}/{values.__runTotal}"
                   ]
                 }
               },
@@ -720,7 +763,14 @@
                 "value": {
                   "op": "concat",
                   "parts": [
-                    "เฟส {values.__runPhaseIdx}/{values.__runPhaseTotal} · ",
+                    "เฟส ",
+                    {
+                      "op": "lookup",
+                      "table": "opPhase",
+                      "key": "{values.__runStage}",
+                      "fallback": ""
+                    },
+                    " · ",
                     {
                       "op": "lookup",
                       "table": "opNames",
