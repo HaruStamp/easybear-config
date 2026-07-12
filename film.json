@@ -5508,8 +5508,10 @@
         {
           "el": "next-button",
           "when": "autoOn=",
-          "label": "ไปหน้าสร้างวิดีโอ",
-          "className": "w-full max-w-[340px] h-[58px] justify-center rounded-2xl mx-auto"
+          "label": "OK แล้ว ไปขั้นตอนถัดไป",
+          "className": "w-full xl:max-w-[340px] h-[66px] xl:h-[64px] text-lg justify-center !rounded-2xl mx-auto font-bold",
+          "variant": "contrast",
+          "icon": " "
         }
       ]
     },
@@ -6173,8 +6175,10 @@
         {
           "el": "next-button",
           "when": "autoOn=",
-          "label": "ไปหน้ารีวิว",
-          "className": "w-full max-w-[340px] h-[58px] justify-center rounded-2xl mx-auto"
+          "label": "OK แล้ว ไปหน้าถัดไป",
+          "className": "w-full xl:max-w-[340px] h-[66px] xl:h-[64px] text-lg justify-center !rounded-2xl mx-auto font-bold",
+          "variant": "contrast",
+          "icon": " "
         }
       ]
     },
@@ -6473,31 +6477,159 @@
                       "card": [
                         {
                           "el": "box",
-                          "className": "flex flex-col sm:flex-row gap-3",
+                          "className": "flex flex-col min-[720px]:flex-row rounded-3xl border border-white/10 overflow-hidden bg-white/[0.02]",
                           "card": [
                             {
                               "el": "box",
-                              "className": "w-full sm:w-[160px] shrink-0",
+                              "className": "shrink-0 p-5 flex flex-col items-center gap-2.5 min-[720px]:border-r border-b min-[720px]:border-b-0 border-white/[0.06]",
                               "card": [
                                 {
-                                  "el": "media-slot",
-                                  "src": "{item.slots.cover}",
-                                  "aspect": "9:16"
+                                  "el": "box",
+                                  "className": "w-[150px]",
+                                  "card": [
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.cover}",
+                                      "aspect": "9:16",
+                                      "style": {
+                                        "borderRadius": "16px"
+                                      },
+                                      "className": "bg-black"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "download-button",
+                                  "to": "{item.slots.cover}",
+                                  "label": "ดาวน์โหลด",
+                                  "icon": "download",
+                                  "variant": "contrast",
+                                  "when": "item.slots.cover!=",
+                                  "className": "w-[150px] !h-[38px] justify-center !rounded-xl text-[12px] font-bold"
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "insertCover",
+                                  "coll": "shots",
+                                  "childColl": "episodes",
+                                  "childBy": "ep",
+                                  "slot": "cover",
+                                  "label": "แทรกปกลงวิดีโอ",
+                                  "icon": "movie_edit",
+                                  "variant": "outline-accent",
+                                  "when": "item.slots.cover!=",
+                                  "className": "w-[150px] !h-[38px] justify-center !rounded-xl text-[12px] font-bold"
                                 }
                               ]
                             },
                             {
                               "el": "box",
-                              "className": "flex-1 min-w-0 flex flex-col gap-2",
+                              "className": "flex-1 min-w-0 p-5 flex flex-col gap-2",
                               "card": [
+                                {
+                                  "el": "row",
+                                  "className": "items-center justify-between gap-2",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "icon": "imagesmode",
+                                      "value": {
+                                        "op": "concat",
+                                        "parts": [
+                                          "Prompt ปก (EP ",
+                                          {
+                                            "op": "add",
+                                            "a": "{index}",
+                                            "b": 1
+                                          },
+                                          ")"
+                                        ]
+                                      },
+                                      "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]"
+                                    },
+                                    {
+                                      "el": "copy-button",
+                                      "value": "{item.coverPrompt}",
+                                      "label": "Copy Prompt",
+                                      "icon": "content_copy",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "className": "text-[9px] font-bold uppercase tracking-wider opacity-40 hover:opacity-100 h-6 px-2 whitespace-nowrap"
+                                    }
+                                  ]
+                                },
                                 {
                                   "el": "textarea",
                                   "field": "coverPrompt",
-                                  "label": "Prompt ปก",
-                                  "placeholder": "กด \"เขียนคำสั่งปก AI\" หรือ \"สร้างปก\" แล้วระบบจะเขียน prompt ให้"
+                                  "placeholder": "กด \"Gen ภาพ\" หรือ \"เขียนคำสั่งปก AI\" แล้วระบบจะสร้าง prompt ให้อัตโนมัติ",
+                                  "className": "flex-1 min-h-[150px] text-[12.5px] leading-relaxed !rounded-xl !p-4"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
+                              "card": [
+                                {
+                                  "el": "gen-button",
+                                  "op": "genCover",
+                                  "label": "Gen ภาพ",
+                                  "icon": "auto_fix_high",
+                                  "variant": "outline-accent",
+                                  "style": {
+                                    "height": "52px",
+                                    "borderRadius": "16px"
+                                  },
+                                  "className": "w-full justify-center",
+                                  "disabledWhen": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "and",
+                                      "list": [
+                                        {
+                                          "op": "count",
+                                          "from": "characters"
+                                        },
+                                        {
+                                          "op": "all",
+                                          "from": "characters",
+                                          "slot": "sheet"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "reason": "ต้องมีรูป Reference ใน Step 3 ก่อน"
+                                },
+                                {
+                                  "el": "pick-button",
+                                  "into": "{item.slots.cover}",
+                                  "filter": "image",
+                                  "label": "เลือกรูป",
+                                  "icon": "photo_library",
+                                  "variant": "outline",
+                                  "style": {
+                                    "height": "52px",
+                                    "borderRadius": "16px"
+                                  },
+                                  "className": "w-full justify-center"
+                                },
+                                {
+                                  "el": "gen-button",
+                                  "op": "genCoverPrompt",
+                                  "label": "เขียนคำสั่งปก AI",
+                                  "icon": "auto_awesome",
+                                  "variant": "outline",
+                                  "style": {
+                                    "height": "52px",
+                                    "borderRadius": "16px"
+                                  },
+                                  "className": "w-full justify-center"
                                 },
                                 {
                                   "el": "note",
+                                  "tone": "danger",
+                                  "icon": "info",
+                                  "value": "กรุณา Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน (ปุ่ม \"เลือกรูป\" ยังใช้ได้)",
                                   "when": {
                                     "op": "not",
                                     "a": {
@@ -6515,80 +6647,7 @@
                                       ]
                                     }
                                   },
-                                  "tone": "danger",
-                                  "icon": "info",
-                                  "value": "กรุณา Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน (ปุ่ม \"เลือกรูป\" ยังใช้ได้)"
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "gap-2 flex-wrap",
-                                  "card": [
-                                    {
-                                      "el": "gen-button",
-                                      "op": "genCoverPrompt",
-                                      "label": "เขียนคำสั่งปก AI",
-                                      "icon": "auto_awesome",
-                                      "variant": "outline"
-                                    },
-                                    {
-                                      "el": "gen-button",
-                                      "op": "genCover",
-                                      "label": "สร้างปก (Gen ภาพ)",
-                                      "variant": "solid",
-                                      "disabledWhen": {
-                                        "op": "not",
-                                        "a": {
-                                          "op": "and",
-                                          "list": [
-                                            {
-                                              "op": "count",
-                                              "from": "characters"
-                                            },
-                                            {
-                                              "op": "all",
-                                              "from": "characters",
-                                              "slot": "sheet"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "reason": "ต้องมีรูป Reference ตัวละครครบก่อน (ขั้นตอนที่ 3)"
-                                    },
-                                    {
-                                      "el": "pick-button",
-                                      "into": "{item.slots.cover}",
-                                      "filter": "image",
-                                      "label": "เลือกรูป",
-                                      "icon": "photo_library",
-                                      "variant": "outline"
-                                    },
-                                    {
-                                      "el": "button",
-                                      "action": "insertCover",
-                                      "coll": "shots",
-                                      "childColl": "episodes",
-                                      "childBy": "ep",
-                                      "slot": "cover",
-                                      "label": "ใส่ปกในวีดีโอ",
-                                      "icon": "movie_edit",
-                                      "variant": "outline",
-                                      "when": "item.slots.cover!="
-                                    },
-                                    {
-                                      "el": "download-button",
-                                      "to": "{item.slots.cover}",
-                                      "label": "โหลดปก",
-                                      "when": "item.slots.cover!="
-                                    },
-                                    {
-                                      "el": "copy-button",
-                                      "value": "{item.coverPrompt}",
-                                      "label": "คัดลอกคำสั่งปก",
-                                      "icon": "content_copy",
-                                      "variant": "outline",
-                                      "when": "item.coverPrompt!="
-                                    }
-                                  ]
+                                  "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl"
                                 }
                               ]
                             }
