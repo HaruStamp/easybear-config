@@ -6525,6 +6525,9 @@
                                               "card": [
                                                 {
                                                   "el": "row",
+                                                  "style": {
+                                                    "flexWrap": "nowrap"
+                                                  },
                                                   "className": "gap-3 items-start p-1.5",
                                                   "card": [
                                                     {
@@ -6537,48 +6540,74 @@
                                                       "className": "opacity-10 font-black w-6 shrink-0 text-[13px]"
                                                     },
                                                     {
-                                                      "el": "text",
-                                                      "value": {
-                                                        "op": "pluck",
-                                                        "from": "lines",
-                                                        "by": "shot",
-                                                        "field": "text",
-                                                        "prefixField": "speaker",
-                                                        "sep": " · "
-                                                      },
-                                                      "when": {
-                                                        "op": "not",
-                                                        "a": {
-                                                          "op": "eq",
-                                                          "a": {
-                                                            "op": "pluck",
-                                                            "from": "lines",
-                                                            "by": "shot",
-                                                            "field": "text",
-                                                            "prefixField": "speaker",
-                                                            "sep": " · "
-                                                          },
-                                                          "b": ""
-                                                        }
-                                                      },
-                                                      "className": "text-[13px] leading-[1.5] opacity-70 flex-1 min-w-0"
-                                                    },
-                                                    {
-                                                      "el": "text",
-                                                      "value": "บรรยาย: {item.motion}",
-                                                      "when": {
-                                                        "op": "eq",
-                                                        "a": {
-                                                          "op": "pluck",
-                                                          "from": "lines",
-                                                          "by": "shot",
-                                                          "field": "text",
-                                                          "prefixField": "speaker",
-                                                          "sep": " · "
+                                                      "el": "box",
+                                                      "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                                                      "card": [
+                                                        {
+                                                          "el": "repeat",
+                                                          "coll": "lines",
+                                                          "where": "refs.shot~{item.id}",
+                                                          "card": [
+                                                            {
+                                                              "el": "row",
+                                                              "style": {
+                                                                "flexWrap": "nowrap"
+                                                              },
+                                                              "className": "gap-1.5 items-baseline",
+                                                              "card": [
+                                                                {
+                                                                  "el": "text",
+                                                                  "value": "{item.speaker}:",
+                                                                  "when": "item.speaker!=",
+                                                                  "className": "shrink-0 font-bold !text-orange-400/70 text-[13px] leading-[1.5]"
+                                                                },
+                                                                {
+                                                                  "el": "text",
+                                                                  "value": "บรรยาย:",
+                                                                  "when": "item.speaker=",
+                                                                  "className": "shrink-0 font-bold !text-orange-400/70 text-[13px] leading-[1.5]"
+                                                                },
+                                                                {
+                                                                  "el": "text",
+                                                                  "value": "{item.text}",
+                                                                  "className": "flex-1 min-w-0 text-[13px] leading-[1.5] !text-[var(--ev-text)]/70"
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
                                                         },
-                                                        "b": ""
-                                                      },
-                                                      "className": "text-[13px] leading-[1.5] opacity-50 italic flex-1 min-w-0"
+                                                        {
+                                                          "el": "row",
+                                                          "style": {
+                                                            "flexWrap": "nowrap"
+                                                          },
+                                                          "className": "gap-1.5 items-baseline",
+                                                          "when": {
+                                                            "op": "eq",
+                                                            "a": {
+                                                              "op": "pluck",
+                                                              "from": "lines",
+                                                              "by": "shot",
+                                                              "field": "text",
+                                                              "prefixField": "speaker",
+                                                              "sep": " · "
+                                                            },
+                                                            "b": ""
+                                                          },
+                                                          "card": [
+                                                            {
+                                                              "el": "text",
+                                                              "value": "บรรยาย:",
+                                                              "className": "shrink-0 font-bold !text-orange-400/40 text-[13px] leading-[1.5]"
+                                                            },
+                                                            {
+                                                              "el": "text",
+                                                              "value": "{item.motion}",
+                                                              "className": "flex-1 min-w-0 text-[13px] leading-[1.5] italic !text-[var(--ev-text)]/50"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
                                                     }
                                                   ]
                                                 }
