@@ -4982,7 +4982,8 @@
                       "icon": "table_rows",
                       "variant": "ghost",
                       "when": "sbView!=table",
-                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50"
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50",
+                      "labelClass": "hidden sm:inline"
                     },
                     {
                       "el": "button",
@@ -4993,7 +4994,8 @@
                       "icon": "table_rows",
                       "variant": "ghost",
                       "when": "sbView=table",
-                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105"
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105",
+                      "labelClass": "hidden sm:inline"
                     },
                     {
                       "el": "button",
@@ -5004,7 +5006,8 @@
                       "icon": "view_carousel",
                       "variant": "ghost",
                       "when": "sbView!=flow",
-                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50"
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50",
+                      "labelClass": "hidden sm:inline"
                     },
                     {
                       "el": "button",
@@ -5015,7 +5018,8 @@
                       "icon": "view_carousel",
                       "variant": "ghost",
                       "when": "sbView=flow",
-                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105"
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105",
+                      "labelClass": "hidden sm:inline"
                     }
                   ]
                 },
@@ -6490,11 +6494,14 @@
                       "el": "text",
                       "value": {
                         "op": "pluck",
-                        "from": "shots",
-                        "field": "dialogue",
-                        "by": "ep",
+                        "from": "lines",
+                        "by": "shot",
+                        "viaColl": "shots",
+                        "viaBy": "ep",
                         "byId": "{values.activeEp}",
-                        "sep": "\n\n"
+                        "field": "text",
+                        "prefixField": "speaker",
+                        "sep": "\n"
                       },
                       "className": "text-sm leading-relaxed rounded-2xl px-4 py-3 bg-[var(--ev-surface)] border border-[var(--ev-border)] whitespace-pre-wrap min-h-[120px]"
                     },
@@ -6502,11 +6509,14 @@
                       "el": "copy-button",
                       "value": {
                         "op": "pluck",
-                        "from": "shots",
-                        "field": "dialogue",
-                        "by": "ep",
+                        "from": "lines",
+                        "by": "shot",
+                        "viaColl": "shots",
+                        "viaBy": "ep",
                         "byId": "{values.activeEp}",
-                        "sep": "\n\n"
+                        "field": "text",
+                        "prefixField": "speaker",
+                        "sep": "\n"
                       },
                       "label": "Copy บทบรรยาย",
                       "icon": "content_copy",
@@ -6780,7 +6790,16 @@
                                                 }
                                               ]
                                             }
-                                          ]
+                                          ],
+                                          "vars": {
+                                            "used": {
+                                              "op": "refUnion",
+                                              "from": "shots",
+                                              "where": "refs.ep~{item.id}",
+                                              "key": "char"
+                                            }
+                                          },
+                                          "where": "id@{var.used}"
                                         },
                                         {
                                           "el": "repeat",
@@ -6806,7 +6825,16 @@
                                                 }
                                               ]
                                             }
-                                          ]
+                                          ],
+                                          "vars": {
+                                            "used": {
+                                              "op": "refUnion",
+                                              "from": "shots",
+                                              "where": "refs.ep~{item.id}",
+                                              "key": "scene"
+                                            }
+                                          },
+                                          "where": "id@{var.used}"
                                         },
                                         {
                                           "el": "repeat",
@@ -6832,7 +6860,16 @@
                                                 }
                                               ]
                                             }
-                                          ]
+                                          ],
+                                          "vars": {
+                                            "used": {
+                                              "op": "refUnion",
+                                              "from": "shots",
+                                              "where": "refs.ep~{item.id}",
+                                              "key": "object"
+                                            }
+                                          },
+                                          "where": "id@{var.used}"
                                         }
                                       ]
                                     },
@@ -6850,28 +6887,55 @@
                                               "className": "text-[11px] font-bold uppercase tracking-wide opacity-30"
                                             },
                                             {
-                                              "el": "button",
-                                              "action": "set",
-                                              "to": "showScript",
-                                              "value": "1",
-                                              "label": "",
-                                              "icon": "expand_more",
-                                              "variant": "ghost",
-                                              "iconOnly": true,
-                                              "when": "showScript!=1",
-                                              "className": "w-8 h-8 justify-center rounded-lg"
-                                            },
-                                            {
-                                              "el": "button",
-                                              "action": "set",
-                                              "to": "showScript",
-                                              "value": "",
-                                              "label": "",
-                                              "icon": "keyboard_arrow_up",
-                                              "variant": "ghost",
-                                              "iconOnly": true,
-                                              "when": "showScript=1",
-                                              "className": "w-8 h-8 justify-center rounded-lg !bg-white/10"
+                                              "el": "row",
+                                              "style": {
+                                                "flexWrap": "nowrap"
+                                              },
+                                              "className": "items-center gap-1",
+                                              "card": [
+                                                {
+                                                  "el": "copy-button",
+                                                  "value": {
+                                                    "op": "pluck",
+                                                    "from": "lines",
+                                                    "by": "shot",
+                                                    "viaColl": "shots",
+                                                    "viaBy": "ep",
+                                                    "byId": "{values.activeEp}",
+                                                    "field": "text",
+                                                    "prefixField": "speaker",
+                                                    "sep": "\n"
+                                                  },
+                                                  "label": "คัดลอกบท",
+                                                  "icon": "content_copy",
+                                                  "variant": "ghost",
+                                                  "size": "sm"
+                                                },
+                                                {
+                                                  "el": "button",
+                                                  "action": "set",
+                                                  "to": "showScript",
+                                                  "value": "1",
+                                                  "label": "",
+                                                  "icon": "expand_more",
+                                                  "variant": "ghost",
+                                                  "iconOnly": true,
+                                                  "when": "showScript!=1",
+                                                  "className": "w-8 h-8 justify-center rounded-lg"
+                                                },
+                                                {
+                                                  "el": "button",
+                                                  "action": "set",
+                                                  "to": "showScript",
+                                                  "value": "",
+                                                  "label": "",
+                                                  "icon": "keyboard_arrow_up",
+                                                  "variant": "ghost",
+                                                  "iconOnly": true,
+                                                  "when": "showScript=1",
+                                                  "className": "w-8 h-8 justify-center rounded-lg !bg-white/10"
+                                                }
+                                              ]
                                             }
                                           ]
                                         },
@@ -8038,7 +8102,8 @@
                           "childBy": "ep",
                           "slot": "video",
                           "aspect": "9:16",
-                          "empty": "ยังไม่มีคลิปตอนนี้"
+                          "empty": "ยังไม่มีคลิปตอนนี้",
+                          "cinema": true
                         }
                       ]
                     }
