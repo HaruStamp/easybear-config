@@ -4841,90 +4841,141 @@
           "component": "runBanner"
         },
         {
-          "el": "repeat",
-          "coll": "episodes",
+          "el": "box",
+          "className": "flex flex-col xl:flex-row xl:items-end justify-between gap-5 xl:gap-8",
           "card": [
             {
               "el": "box",
-              "when": {
-                "op": "eq",
-                "a": "{item.id}",
-                "b": "{values.activeEp}"
-              },
-              "className": "flex flex-col gap-1",
+              "className": "flex flex-col gap-6 flex-1",
               "card": [
                 {
-                  "el": "text",
-                  "value": {
-                    "op": "concat",
-                    "parts": [
-                      "EPISODE ",
-                      {
-                        "op": "add",
-                        "a": "{index}",
-                        "b": 1
-                      }
-                    ]
-                  },
-                  "className": "text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--ev-accent)]"
+                  "el": "repeat",
+                  "coll": "episodes",
+                  "card": [
+                    {
+                      "el": "box",
+                      "when": {
+                        "op": "eq",
+                        "a": "{item.id}",
+                        "b": "{values.activeEp}"
+                      },
+                      "className": "flex flex-col gap-1",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "EPISODE ",
+                              {
+                                "op": "add",
+                                "a": "{index}",
+                                "b": 1
+                              }
+                            ]
+                          },
+                          "className": "text-[10px] uppercase tracking-[0.3em] font-bold !text-[var(--ev-accent)]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "{item.title}",
+                          "className": "text-2xl sm:text-3xl xl:text-4xl font-bold tracking-tighter !text-[var(--ev-text)]"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "el": "text",
-                  "value": "{item.title}",
-                  "className": "text-2xl sm:text-3xl font-extrabold tracking-tight !text-[var(--ev-text)]"
+                  "el": "segmented",
+                  "field": "activeEp",
+                  "variant": "pill",
+                  "options": {
+                    "coll": "episodes",
+                    "labelTpl": {
+                      "op": "concat",
+                      "parts": [
+                        "EP ",
+                        {
+                          "op": "add",
+                          "a": "{index}",
+                          "b": 1
+                        }
+                      ]
+                    }
+                  }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "el": "segmented",
-          "field": "activeEp",
-          "options": {
-            "coll": "episodes",
-            "labelTpl": {
-              "op": "concat",
-              "parts": [
-                "EP ",
-                {
-                  "op": "add",
-                  "a": "{index}",
-                  "b": 1
-                }
-              ]
-            }
-          },
-          "variant": "pill"
-        },
-        {
-          "el": "gen-phase",
-          "ops": [
-            "genImage"
-          ],
-          "label": "สร้างภาพทั้งหมด",
-          "icon": "photo_library",
-          "variant": "contrast",
-          "size": "lg",
-          "className": "px-8 shrink-0 font-bold max-[1279px]:w-full max-[1279px]:justify-center",
-          "style": {
-            "height": "52px",
-            "borderRadius": "16px"
-          }
-        },
-        {
-          "el": "segmented",
-          "field": "sbView",
-          "variant": "tab",
-          "options": [
-            {
-              "value": "table",
-              "label": "ตาราง",
-              "icon": "table_rows"
             },
             {
-              "value": "flow",
-              "label": "Storyboard",
-              "icon": "view_carousel"
+              "el": "box",
+              "className": "flex flex-col xl:flex-row items-stretch xl:items-center gap-3 xl:gap-8 shrink-0 w-full xl:w-auto",
+              "card": [
+                {
+                  "el": "box",
+                  "className": "flex bg-white/5 rounded-[20px] p-1.5 w-full xl:w-auto",
+                  "card": [
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "sbView",
+                      "value": "table",
+                      "label": "ตาราง",
+                      "icon": "table_rows",
+                      "variant": "ghost",
+                      "when": "sbView!=table",
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50"
+                    },
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "sbView",
+                      "value": "table",
+                      "label": "ตาราง",
+                      "icon": "table_rows",
+                      "variant": "ghost",
+                      "when": "sbView=table",
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105"
+                    },
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "sbView",
+                      "value": "flow",
+                      "label": "Storyboard",
+                      "icon": "view_carousel",
+                      "variant": "ghost",
+                      "when": "sbView!=flow",
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-transparent !text-[var(--ev-text)]/25 hover:!text-[var(--ev-text)]/50"
+                    },
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "sbView",
+                      "value": "flow",
+                      "label": "Storyboard",
+                      "icon": "view_carousel",
+                      "variant": "ghost",
+                      "when": "sbView=flow",
+                      "className": "flex-1 xl:flex-none justify-center gap-2.5 !h-auto px-5 py-3 !rounded-2xl text-[11px] font-black uppercase tracking-widest !bg-white !text-black shadow-2xl scale-105"
+                    }
+                  ]
+                },
+                {
+                  "el": "gen-phase",
+                  "ops": [
+                    "genImage"
+                  ],
+                  "label": "Gen ภาพทั้งหมด",
+                  "icon": "photo_library",
+                  "variant": "contrast",
+                  "size": "lg",
+                  "style": {
+                    "height": "60px",
+                    "borderRadius": "16px"
+                  },
+                  "className": "px-8 shrink-0 font-bold justify-center xl:min-w-[240px] max-[1279px]:w-full"
+                }
+              ]
             }
           ]
         },
@@ -5018,227 +5069,220 @@
           ]
         },
         {
-          "el": "repeat",
-          "coll": "shots",
-          "where": "refs.ep~{values.activeEp}",
-          "empty": "ตอนนี้ยังไม่มีช็อต — เลือกตอนจากปุ่มด้านบน",
+          "el": "box",
+          "when": "sbView!=flow",
+          "className": "flex flex-col gap-6",
           "card": [
             {
-              "el": "box",
-              "className": "rounded-[26px] border border-white/[0.08] bg-gradient-to-br from-white/[0.05] to-white/[0.012] hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
+              "el": "repeat",
+              "coll": "shots",
+              "where": "refs.ep~{values.activeEp}",
+              "empty": "ตอนนี้ยังไม่มีช็อต — เลือกตอนจากปุ่มด้านบน",
               "card": [
                 {
                   "el": "box",
-                  "className": "flex flex-col min-[720px]:flex-row",
+                  "className": "rounded-[26px] border border-white/[0.08] bg-gradient-to-br from-white/[0.05] to-white/[0.012] hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
                   "card": [
                     {
                       "el": "box",
-                      "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-white/[0.015]",
+                      "className": "flex flex-col min-[720px]:flex-row",
                       "card": [
                         {
                           "el": "box",
-                          "className": "relative",
+                          "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-white/[0.015]",
                           "card": [
                             {
-                              "el": "md",
-                              "value": {
-                                "op": "add",
-                                "a": "{index}",
-                                "b": 1
-                              },
-                              "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white text-black rounded-xl flex items-center justify-center text-[15px] font-black shadow-[0_4px_12px_rgba(0,0,0,0.45)] border-[3px] border-[var(--ev-bg)]"
+                              "el": "box",
+                              "className": "relative",
+                              "card": [
+                                {
+                                  "el": "md",
+                                  "value": {
+                                    "op": "add",
+                                    "a": "{index}",
+                                    "b": 1
+                                  },
+                                  "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white text-black rounded-xl flex items-center justify-center text-[15px] font-black shadow-[0_4px_12px_rgba(0,0,0,0.45)] border-[3px] border-[var(--ev-bg)]"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-[200px] min-[720px]:w-[170px] shadow-xl shadow-black/50",
+                                  "card": [
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.image}",
+                                      "aspect": "9:16",
+                                      "style": {
+                                        "borderRadius": "20px"
+                                      },
+                                      "className": "ring-1 ring-white/[0.08] bg-black"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "relative flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3.5 border-t border-white/[0.07] min-[720px]:border-t-0",
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "absolute top-3 right-3 min-[720px]:top-5 min-[720px]:right-6 z-10",
+                              "card": [
+                                {
+                                  "el": "copy-button",
+                                  "op": "genImage",
+                                  "label": "Copy Prompt",
+                                  "icon": "content_copy",
+                                  "variant": "ghost",
+                                  "size": "sm",
+                                  "className": "text-[9px] font-bold uppercase tracking-wider opacity-40 hover:opacity-100 h-6 px-2 whitespace-nowrap"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "icon": "image",
+                              "value": "ภาพเริ่มต้น (Visual)",
+                              "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]"
+                            },
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2 flex-wrap",
+                              "card": [
+                                {
+                                  "el": "dropdown",
+                                  "variant": "pill",
+                                  "icon": "crop_free",
+                                  "field": "cameraAngle",
+                                  "label": "มุมกล้อง",
+                                  "options": [
+                                    {
+                                      "value": "xwide",
+                                      "label": "มุมกว้างพิเศษ"
+                                    },
+                                    {
+                                      "value": "wide",
+                                      "label": "ภาพกว้าง"
+                                    },
+                                    {
+                                      "value": "full",
+                                      "label": "ภาพเต็มตัว"
+                                    },
+                                    {
+                                      "value": "medium",
+                                      "label": "ภาพครึ่งตัว"
+                                    },
+                                    {
+                                      "value": "mcu",
+                                      "label": "ใกล้ครึ่งอก"
+                                    },
+                                    {
+                                      "value": "close",
+                                      "label": "ภาพใกล้"
+                                    },
+                                    {
+                                      "value": "ecu",
+                                      "label": "ภาพใกล้มาก"
+                                    },
+                                    {
+                                      "value": "ots",
+                                      "label": "ข้ามไหล่ (OTS)"
+                                    },
+                                    {
+                                      "value": "pov",
+                                      "label": "มุมมองบุคคล (POV)"
+                                    },
+                                    {
+                                      "value": "low",
+                                      "label": "มุมเงย"
+                                    },
+                                    {
+                                      "value": "high",
+                                      "label": "มุมก้ม"
+                                    },
+                                    {
+                                      "value": "topdown",
+                                      "label": "มุมสูงจากบน"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "dropdown",
+                                  "variant": "pill",
+                                  "icon": "mood",
+                                  "field": "mood",
+                                  "label": "อารมณ์",
+                                  "options": [
+                                    {
+                                      "value": "Sad",
+                                      "label": "เศร้า"
+                                    },
+                                    {
+                                      "value": "Romantic",
+                                      "label": "โรแมนติก"
+                                    },
+                                    {
+                                      "value": "Mystery",
+                                      "label": "ลึกลับ"
+                                    },
+                                    {
+                                      "value": "Tense",
+                                      "label": "ตึงเครียด"
+                                    },
+                                    {
+                                      "value": "Bright",
+                                      "label": "สดใส"
+                                    },
+                                    {
+                                      "value": "Calm",
+                                      "label": "สงบ"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "el": "textarea",
+                              "field": "imagePrompt",
+                              "placeholder": "บรรยายภาพที่ต้องการสร้าง (ภาษาไทย)...",
+                              "className": "!rounded-2xl !p-4 text-[14px] leading-relaxed min-h-[80px]"
+                            },
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "icon": "volume_up",
+                                  "value": "เสียง (Audio)",
+                                  "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40"
+                                },
+                                {
+                                  "el": "text",
+                                  "icon": "record_voice_over",
+                                  "value": "บทพูด",
+                                  "when": "item.audioType!=vo",
+                                  "className": "flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 opacity-70"
+                                },
+                                {
+                                  "el": "text",
+                                  "icon": "graphic_eq",
+                                  "value": "เสียงบรรยาย",
+                                  "when": "item.audioType=vo",
+                                  "className": "flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 opacity-70"
+                                }
+                              ]
                             },
                             {
                               "el": "box",
-                              "className": "w-[200px] min-[720px]:w-[170px] shadow-xl shadow-black/50",
+                              "className": "bg-white/[0.03] border border-white/5 p-5 rounded-[24px]",
                               "card": [
                                 {
-                                  "el": "media-slot",
-                                  "src": "{item.slots.image}",
-                                  "aspect": "9:16",
-                                  "style": {
-                                    "borderRadius": "20px"
-                                  },
-                                  "className": "ring-1 ring-white/[0.08] bg-black"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "box",
-                      "className": "relative flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3.5 border-t border-white/[0.07] min-[720px]:border-t-0",
-                      "card": [
-                        {
-                          "el": "box",
-                          "className": "absolute top-3 right-3 min-[720px]:top-5 min-[720px]:right-6 z-10",
-                          "card": [
-                            {
-                              "el": "copy-button",
-                              "op": "genImage",
-                              "label": "Copy Prompt",
-                              "icon": "content_copy",
-                              "variant": "ghost",
-                              "size": "sm",
-                              "className": "text-[9px] font-bold uppercase tracking-wider opacity-40 hover:opacity-100 h-6 px-2 whitespace-nowrap"
-                            }
-                          ]
-                        },
-                        {
-                          "el": "text",
-                          "icon": "image",
-                          "value": "ภาพเริ่มต้น (Visual)",
-                          "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]"
-                        },
-                        {
-                          "el": "row",
-                          "className": "items-center gap-2 flex-wrap",
-                          "card": [
-                            {
-                              "el": "dropdown",
-                              "variant": "pill",
-                              "icon": "crop_free",
-                              "field": "cameraAngle",
-                              "label": "มุมกล้อง",
-                              "options": [
-                                {
-                                  "value": "xwide",
-                                  "label": "มุมกว้างพิเศษ"
-                                },
-                                {
-                                  "value": "wide",
-                                  "label": "ภาพกว้าง"
-                                },
-                                {
-                                  "value": "full",
-                                  "label": "ภาพเต็มตัว"
-                                },
-                                {
-                                  "value": "medium",
-                                  "label": "ภาพครึ่งตัว"
-                                },
-                                {
-                                  "value": "mcu",
-                                  "label": "ใกล้ครึ่งอก"
-                                },
-                                {
-                                  "value": "close",
-                                  "label": "ภาพใกล้"
-                                },
-                                {
-                                  "value": "ecu",
-                                  "label": "ภาพใกล้มาก"
-                                },
-                                {
-                                  "value": "ots",
-                                  "label": "ข้ามไหล่ (OTS)"
-                                },
-                                {
-                                  "value": "pov",
-                                  "label": "มุมมองบุคคล (POV)"
-                                },
-                                {
-                                  "value": "low",
-                                  "label": "มุมเงย"
-                                },
-                                {
-                                  "value": "high",
-                                  "label": "มุมก้ม"
-                                },
-                                {
-                                  "value": "topdown",
-                                  "label": "มุมสูงจากบน"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "dropdown",
-                              "variant": "pill",
-                              "icon": "mood",
-                              "field": "mood",
-                              "label": "อารมณ์",
-                              "options": [
-                                {
-                                  "value": "Sad",
-                                  "label": "เศร้า"
-                                },
-                                {
-                                  "value": "Romantic",
-                                  "label": "โรแมนติก"
-                                },
-                                {
-                                  "value": "Mystery",
-                                  "label": "ลึกลับ"
-                                },
-                                {
-                                  "value": "Tense",
-                                  "label": "ตึงเครียด"
-                                },
-                                {
-                                  "value": "Bright",
-                                  "label": "สดใส"
-                                },
-                                {
-                                  "value": "Calm",
-                                  "label": "สงบ"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "el": "textarea",
-                          "field": "imagePrompt",
-                          "placeholder": "บรรยายภาพที่ต้องการสร้าง (ภาษาไทย)...",
-                          "className": "!rounded-2xl !p-4 text-[14px] leading-relaxed min-h-[80px]"
-                        },
-                        {
-                          "el": "row",
-                          "className": "items-center gap-2",
-                          "card": [
-                            {
-                              "el": "text",
-                              "icon": "volume_up",
-                              "value": "เสียง (Audio)",
-                              "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40"
-                            },
-                            {
-                              "el": "text",
-                              "icon": "record_voice_over",
-                              "value": "บทพูด",
-                              "when": "item.audioType!=vo",
-                              "className": "flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 opacity-70"
-                            },
-                            {
-                              "el": "text",
-                              "icon": "graphic_eq",
-                              "value": "เสียงบรรยาย",
-                              "when": "item.audioType=vo",
-                              "className": "flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 opacity-70"
-                            }
-                          ]
-                        },
-                        {
-                          "el": "box",
-                          "className": "bg-white/[0.03] border border-white/5 p-5 rounded-[24px]",
-                          "card": [
-                            {
-                              "el": "text",
-                              "value": {
-                                "op": "pluck",
-                                "from": "lines",
-                                "by": "shot",
-                                "field": "text",
-                                "prefixField": "speaker",
-                                "sep": " · "
-                              },
-                              "when": {
-                                "op": "not",
-                                "a": {
-                                  "op": "eq",
-                                  "a": {
+                                  "el": "text",
+                                  "value": {
                                     "op": "pluck",
                                     "from": "lines",
                                     "by": "shot",
@@ -5246,198 +5290,212 @@
                                     "prefixField": "speaker",
                                     "sep": " · "
                                   },
-                                  "b": ""
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": {
+                                        "op": "pluck",
+                                        "from": "lines",
+                                        "by": "shot",
+                                        "field": "text",
+                                        "prefixField": "speaker",
+                                        "sep": " · "
+                                      },
+                                      "b": ""
+                                    }
+                                  },
+                                  "className": "text-[14px] font-medium italic leading-relaxed !text-[var(--ev-text)]/80 whitespace-pre-wrap"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "...ไม่มีบทพูด...",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "pluck",
+                                      "from": "lines",
+                                      "by": "shot",
+                                      "field": "text",
+                                      "prefixField": "speaker",
+                                      "sep": " · "
+                                    },
+                                    "b": ""
+                                  },
+                                  "className": "text-[14px] italic opacity-40"
                                 }
-                              },
-                              "className": "text-[14px] font-medium italic leading-relaxed !text-[var(--ev-text)]/80 whitespace-pre-wrap"
+                              ]
                             },
                             {
-                              "el": "text",
-                              "value": "...ไม่มีบทพูด...",
-                              "when": {
-                                "op": "eq",
-                                "a": {
-                                  "op": "pluck",
-                                  "from": "lines",
-                                  "by": "shot",
-                                  "field": "text",
-                                  "prefixField": "speaker",
-                                  "sep": " · "
+                              "el": "box",
+                              "className": "flex flex-col gap-2 pt-1",
+                              "card": [
+                                {
+                                  "el": "ref-select",
+                                  "variant": "attached",
+                                  "field": "char",
+                                  "coll": "characters",
+                                  "label": "ตัวละคร",
+                                  "icon": "person",
+                                  "empty": "ยังไม่มีตัวละคร"
                                 },
-                                "b": ""
-                              },
-                              "className": "text-[14px] italic opacity-40"
+                                {
+                                  "el": "ref-select",
+                                  "variant": "attached",
+                                  "field": "scene",
+                                  "coll": "scenes",
+                                  "label": "ฉาก",
+                                  "icon": "landscape",
+                                  "empty": "ยังไม่มีฉาก",
+                                  "max": 1
+                                },
+                                {
+                                  "el": "ref-select",
+                                  "variant": "attached",
+                                  "field": "object",
+                                  "coll": "objects",
+                                  "label": "วัตถุ",
+                                  "icon": "category",
+                                  "empty": "ยังไม่มีวัตถุ"
+                                },
+                                {
+                                  "el": "dropdown",
+                                  "variant": "pill",
+                                  "icon": "link",
+                                  "field": "refShot",
+                                  "label": "Shot ref",
+                                  "options": {
+                                    "coll": "shots",
+                                    "where": "refs.ep~{values.activeEp}",
+                                    "before": true,
+                                    "empty": "ไม่ใช้",
+                                    "labelTpl": {
+                                      "op": "concat",
+                                      "parts": [
+                                        "ช็อต ",
+                                        {
+                                          "op": "add",
+                                          "a": "{index}",
+                                          "b": 1
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
                             }
                           ]
                         },
                         {
                           "el": "box",
-                          "className": "flex flex-col gap-2 pt-1",
+                          "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
                           "card": [
                             {
-                              "el": "ref-select",
-                              "variant": "attached",
-                              "field": "char",
-                              "coll": "characters",
-                              "label": "ตัวละคร",
-                              "icon": "person",
-                              "empty": "ยังไม่มีตัวละคร"
-                            },
-                            {
-                              "el": "ref-select",
-                              "variant": "attached",
-                              "field": "scene",
-                              "coll": "scenes",
-                              "label": "ฉาก",
-                              "icon": "landscape",
-                              "empty": "ยังไม่มีฉาก",
-                              "max": 1
-                            },
-                            {
-                              "el": "ref-select",
-                              "variant": "attached",
-                              "field": "object",
-                              "coll": "objects",
-                              "label": "วัตถุ",
-                              "icon": "category",
-                              "empty": "ยังไม่มีวัตถุ"
-                            },
-                            {
-                              "el": "dropdown",
-                              "variant": "pill",
-                              "icon": "link",
-                              "field": "refShot",
-                              "label": "Shot ref",
-                              "options": {
-                                "coll": "shots",
-                                "where": "refs.ep~{values.activeEp}",
-                                "before": true,
-                                "empty": "ไม่ใช้",
-                                "labelTpl": {
-                                  "op": "concat",
-                                  "parts": [
-                                    "ช็อต ",
-                                    {
-                                      "op": "add",
-                                      "a": "{index}",
-                                      "b": 1
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "box",
-                      "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
-                      "card": [
-                        {
-                          "el": "gen-button",
-                          "op": "genImage",
-                          "label": "Gen ภาพ",
-                          "icon": "auto_fix_high",
-                          "variant": "outline",
-                          "style": {
-                            "height": "52px",
-                            "borderRadius": "16px"
-                          },
-                          "className": "w-full justify-center",
-                          "when": {
-                            "op": "and",
-                            "list": [
-                              {
-                                "op": "eq",
-                                "a": "{item.slots.image}",
-                                "b": ""
+                              "el": "gen-button",
+                              "op": "genImage",
+                              "label": "Gen ภาพ",
+                              "icon": "auto_fix_high",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
                               },
-                              {
+                              "className": "w-full justify-center",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.slots.image}",
+                                    "b": ""
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.status}",
+                                      "b": "error"
+                                    }
+                                  }
+                                ]
+                              },
+                              "disabledWhen": {
                                 "op": "not",
                                 "a": {
-                                  "op": "eq",
-                                  "a": "{item.status}",
-                                  "b": "error"
+                                  "op": "refsFilled",
+                                  "key": "char",
+                                  "from": "characters",
+                                  "slot": "sheet"
                                 }
-                              }
-                            ]
-                          },
-                          "disabledWhen": {
-                            "op": "not",
-                            "a": {
-                              "op": "refsFilled",
-                              "key": "char",
-                              "from": "characters",
-                              "slot": "sheet"
+                              },
+                              "reason": "Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน"
+                            },
+                            {
+                              "el": "gen-button",
+                              "op": "genImage",
+                              "label": "Gen ใหม่",
+                              "icon": "auto_fix_high",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center",
+                              "when": "item.slots.image!=",
+                              "disabledWhen": {
+                                "op": "not",
+                                "a": {
+                                  "op": "refsFilled",
+                                  "key": "char",
+                                  "from": "characters",
+                                  "slot": "sheet"
+                                }
+                              },
+                              "reason": "Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน"
+                            },
+                            {
+                              "el": "gen-button",
+                              "op": "genImage",
+                              "label": "ลองใหม่",
+                              "icon": "refresh",
+                              "variant": "danger",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center",
+                              "when": "item.status=error"
+                            },
+                            {
+                              "el": "pick-button",
+                              "into": "{item.slots.image}",
+                              "filter": "image",
+                              "label": "เลือกรูป",
+                              "icon": "photo_library",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center"
+                            },
+                            {
+                              "el": "note",
+                              "tone": "danger",
+                              "icon": "info",
+                              "value": "กรุณา Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน",
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "refsFilled",
+                                  "key": "char",
+                                  "from": "characters",
+                                  "slot": "sheet"
+                                }
+                              },
+                              "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl"
                             }
-                          },
-                          "reason": "Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน"
-                        },
-                        {
-                          "el": "gen-button",
-                          "op": "genImage",
-                          "label": "Gen ใหม่",
-                          "icon": "auto_fix_high",
-                          "variant": "outline",
-                          "style": {
-                            "height": "52px",
-                            "borderRadius": "16px"
-                          },
-                          "className": "w-full justify-center",
-                          "when": "item.slots.image!=",
-                          "disabledWhen": {
-                            "op": "not",
-                            "a": {
-                              "op": "refsFilled",
-                              "key": "char",
-                              "from": "characters",
-                              "slot": "sheet"
-                            }
-                          },
-                          "reason": "Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน"
-                        },
-                        {
-                          "el": "gen-button",
-                          "op": "genImage",
-                          "label": "ลองใหม่",
-                          "icon": "refresh",
-                          "variant": "danger",
-                          "style": {
-                            "height": "52px",
-                            "borderRadius": "16px"
-                          },
-                          "className": "w-full justify-center",
-                          "when": "item.status=error"
-                        },
-                        {
-                          "el": "pick-button",
-                          "into": "{item.slots.image}",
-                          "filter": "image",
-                          "label": "เลือกรูป",
-                          "icon": "photo_library",
-                          "variant": "outline",
-                          "style": {
-                            "height": "52px",
-                            "borderRadius": "16px"
-                          },
-                          "className": "w-full justify-center"
-                        },
-                        {
-                          "el": "note",
-                          "tone": "danger",
-                          "icon": "info",
-                          "value": "กรุณา Gen ภาพ Reference ในขั้นตอนที่ 3 ก่อน",
-                          "when": {
-                            "op": "not",
-                            "a": {
-                              "op": "refsFilled",
-                              "key": "char",
-                              "from": "characters",
-                              "slot": "sheet"
-                            }
-                          },
-                          "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl"
+                          ]
                         }
                       ]
                     }
@@ -5445,8 +5503,7 @@
                 }
               ]
             }
-          ],
-          "when": "sbView!=flow"
+          ]
         },
         {
           "el": "next-button",
@@ -5472,325 +5529,504 @@
           "component": "runBanner"
         },
         {
-          "el": "dashboard",
-          "coll": "shots",
-          "label": "ช็อตทั้งหมด"
-        },
-        {
-          "el": "repeat",
-          "coll": "episodes",
+          "el": "box",
+          "className": "flex flex-col xl:flex-row xl:items-end justify-between gap-5 xl:gap-8",
           "card": [
             {
               "el": "box",
-              "when": {
-                "op": "eq",
-                "a": "{item.id}",
-                "b": "{values.activeEp}"
-              },
-              "className": "flex flex-col gap-1",
+              "className": "flex flex-col gap-6 flex-1",
               "card": [
                 {
-                  "el": "text",
-                  "value": {
-                    "op": "concat",
-                    "parts": [
-                      "EPISODE ",
-                      {
-                        "op": "add",
-                        "a": "{index}",
-                        "b": 1
-                      }
-                    ]
-                  },
-                  "className": "text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--ev-accent)]"
+                  "el": "repeat",
+                  "coll": "episodes",
+                  "card": [
+                    {
+                      "el": "box",
+                      "when": {
+                        "op": "eq",
+                        "a": "{item.id}",
+                        "b": "{values.activeEp}"
+                      },
+                      "className": "flex flex-col gap-1",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "PRODUCTION (EPISODE ",
+                              {
+                                "op": "add",
+                                "a": "{index}",
+                                "b": 1
+                              },
+                              ")"
+                            ]
+                          },
+                          "className": "text-[10px] uppercase tracking-[0.3em] font-bold !text-[var(--ev-accent)]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "สร้างวิดีโอ",
+                          "className": "text-2xl sm:text-3xl xl:text-4xl font-bold tracking-tighter !text-[var(--ev-text)]"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "el": "text",
-                  "value": "{item.title}",
-                  "className": "text-2xl sm:text-3xl font-extrabold tracking-tight !text-[var(--ev-text)]"
+                  "el": "segmented",
+                  "field": "activeEp",
+                  "variant": "pill",
+                  "options": {
+                    "coll": "episodes",
+                    "labelTpl": {
+                      "op": "concat",
+                      "parts": [
+                        "EP ",
+                        {
+                          "op": "add",
+                          "a": "{index}",
+                          "b": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "el": "box",
+              "className": "flex flex-col xl:flex-row items-stretch xl:items-center gap-3 xl:gap-8 shrink-0 w-full xl:w-auto",
+              "card": [
+                {
+                  "el": "gen-phase",
+                  "ops": [
+                    "genVideo"
+                  ],
+                  "label": "Gen วิดีโอทั้งหมด",
+                  "icon": "videocam",
+                  "variant": "contrast",
+                  "size": "lg",
+                  "style": {
+                    "height": "60px",
+                    "borderRadius": "16px"
+                  },
+                  "className": "px-8 shrink-0 font-bold justify-center xl:min-w-[240px] max-[1279px]:w-full"
                 }
               ]
             }
           ]
         },
         {
-          "el": "segmented",
-          "field": "activeEp",
-          "options": {
-            "coll": "episodes",
-            "labelTpl": {
-              "op": "concat",
-              "parts": [
-                "EP ",
-                {
-                  "op": "add",
-                  "a": "{index}",
-                  "b": 1
-                }
-              ]
-            }
-          },
-          "variant": "pill"
-        },
-        {
-          "el": "gen-phase",
-          "ops": [
-            "genVideo"
-          ],
-          "label": "สร้างวิดีโอทั้งหมด",
-          "icon": "videocam",
-          "variant": "solid",
-          "size": "lg",
-          "className": "w-full justify-center rounded-2xl"
-        },
-        {
-          "el": "repeat",
-          "coll": "shots",
-          "where": "refs.ep~{values.activeEp}",
-          "empty": "ตอนนี้ยังไม่มีช็อต — เลือกตอนจากปุ่มด้านบน",
+          "el": "box",
+          "className": "flex flex-col gap-6",
           "card": [
             {
-              "el": "note",
-              "when": "item.slots.image=",
-              "tone": "warn",
-              "icon": "image",
-              "value": "ช็อตนี้ยังไม่มีภาพ — กลับไปหน้า \"สตอรี่บอร์ด\" สร้างภาพก่อน แล้วค่อยสร้างวิดีโอ"
-            },
-            {
-              "el": "box",
-              "when": "item.slots.image!=",
-              "className": "flex flex-col sm:flex-row gap-3 border border-[var(--ev-border)] rounded-[26px] p-3",
+              "el": "repeat",
+              "coll": "shots",
+              "where": "refs.ep~{values.activeEp}",
+              "empty": "ตอนนี้ยังไม่มีช็อต — เลือกตอนจากปุ่มด้านบน",
               "card": [
                 {
                   "el": "box",
-                  "className": "relative w-[200px] min-[720px]:w-[170px] shrink-0",
+                  "className": "rounded-[26px] border border-white/[0.08] bg-gradient-to-br from-white/[0.05] to-white/[0.012] hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
                   "card": [
                     {
-                      "el": "md",
-                      "value": {
-                        "op": "add",
-                        "a": "{index}",
-                        "b": 1
-                      },
-                      "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white text-black rounded-xl flex items-center justify-center text-[15px] font-black shadow-[0_4px_12px_rgba(0,0,0,0.45)] border-[3px] border-[var(--ev-bg)]"
-                    },
-                    {
-                      "el": "media-slot",
-                      "src": "{item.slots.image}",
-                      "aspect": "9:16",
-                      "when": "item.slots.video=",
-                      "className": "opacity-50 grayscale"
-                    },
-                    {
-                      "el": "media-slot",
-                      "src": "{item.slots.video}",
-                      "aspect": "9:16",
-                      "when": "item.slots.video!=",
-                      "autoplay": true
-                    }
-                  ]
-                },
-                {
-                  "el": "box",
-                  "className": "flex-1 min-w-0 flex flex-col gap-2",
-                  "card": [
-                    {
-                      "el": "note",
-                      "tone": "success",
-                      "icon": "movie",
-                      "value": "ภาพพร้อม → ตั้งค่าวิดีโอ+บทพูดได้ (วิดีโอใช้ภาพเป็นเฟรมแรก)"
-                    },
-                    {
-                      "el": "row",
+                      "el": "box",
+                      "className": "flex flex-col min-[720px]:flex-row",
                       "card": [
                         {
-                          "el": "dropdown",
-                          "variant": "pill",
-                          "icon": "switch_video",
-                          "field": "cameraDirection",
-                          "label": "กำกับกล้อง",
-                          "placeholder": "อัตโนมัติ",
-                          "options": [
+                          "el": "box",
+                          "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-white/[0.015]",
+                          "card": [
                             {
-                              "value": "auto",
-                              "label": "อัตโนมัติ (นุ่มนวล)"
-                            },
-                            {
-                              "value": "static",
-                              "label": "กล้องนิ่ง"
-                            },
-                            {
-                              "value": "pushin",
-                              "label": "ดันเข้า"
-                            },
-                            {
-                              "value": "pullout",
-                              "label": "ถอยออก"
-                            },
-                            {
-                              "value": "panleft",
-                              "label": "แพนซ้าย"
-                            },
-                            {
-                              "value": "panright",
-                              "label": "แพนขวา"
-                            },
-                            {
-                              "value": "tiltup",
-                              "label": "เงยขึ้น"
-                            },
-                            {
-                              "value": "tiltdown",
-                              "label": "ก้มลง"
-                            },
-                            {
-                              "value": "riseup",
-                              "label": "เลื่อนขึ้น"
-                            },
-                            {
-                              "value": "descend",
-                              "label": "เลื่อนลง"
-                            },
-                            {
-                              "value": "follow",
-                              "label": "ตามตัวละคร"
-                            },
-                            {
-                              "value": "orbit",
-                              "label": "หมุนรอบ"
-                            },
-                            {
-                              "value": "handheld",
-                              "label": "มือถือ (สั่นไหว)"
-                            }
-                          ]
-                        },
-                        {
-                          "el": "segmented",
-                          "field": "duration",
-                          "label": "ความยาว",
-                          "options": [
-                            {
-                              "value": "8",
-                              "label": "8 วิ"
-                            },
-                            {
-                              "value": "4",
-                              "label": "4 วิ",
-                              "disabledWhen": "ultra=",
-                              "reason": "Ultra"
-                            },
-                            {
-                              "value": "6",
-                              "label": "6 วิ",
-                              "disabledWhen": "ultra=",
-                              "reason": "Ultra"
-                            },
-                            {
-                              "value": "10",
-                              "label": "10 วิ",
-                              "disabledWhen": {
-                                "op": "not",
-                                "a": {
-                                  "op": "contains",
-                                  "a": "{values.videoModel}",
-                                  "b": "Omni"
+                              "el": "box",
+                              "className": "relative",
+                              "card": [
+                                {
+                                  "el": "md",
+                                  "value": {
+                                    "op": "add",
+                                    "a": "{index}",
+                                    "b": 1
+                                  },
+                                  "className": "absolute -top-2.5 -left-2.5 z-30 w-9 h-9 bg-white text-black rounded-xl flex items-center justify-center text-[15px] font-black shadow-[0_4px_12px_rgba(0,0,0,0.45)] border-[3px] border-[var(--ev-bg)]"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-[200px] min-[720px]:w-[170px] shadow-xl shadow-black/50",
+                                  "card": [
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.video}",
+                                      "aspect": "9:16",
+                                      "autoplay": true,
+                                      "when": "item.slots.video!=",
+                                      "style": {
+                                        "borderRadius": "20px"
+                                      },
+                                      "className": "ring-1 ring-white/[0.08] bg-black"
+                                    },
+                                    {
+                                      "el": "box",
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "eq",
+                                            "a": "{item.slots.image}",
+                                            "b": ""
+                                          }
+                                        }
+                                      },
+                                      "className": "relative",
+                                      "card": [
+                                        {
+                                          "el": "media-slot",
+                                          "src": "{item.slots.image}",
+                                          "aspect": "9:16",
+                                          "style": {
+                                            "borderRadius": "20px"
+                                          },
+                                          "className": "ring-1 ring-white/[0.08] bg-black opacity-50 grayscale"
+                                        },
+                                        {
+                                          "el": "icon",
+                                          "icon": "play_circle",
+                                          "textSize": "text-3xl",
+                                          "className": "absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.video}",
+                                      "aspect": "9:16",
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        },
+                                        "b": {
+                                          "op": "eq",
+                                          "a": "{item.slots.image}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "style": {
+                                        "borderRadius": "20px"
+                                      },
+                                      "className": "ring-1 ring-white/[0.08] bg-black"
+                                    }
+                                  ]
                                 }
-                              },
-                              "reason": "ต้องใช้โมเดล Omni Flash"
+                              ]
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "textarea",
-                      "field": "motion",
-                      "label": "การเคลื่อนไหว/กล้อง"
-                    },
-                    {
-                      "el": "dropdown",
-                      "variant": "pill",
-                      "icon": "graphic_eq",
-                      "field": "audioType",
-                      "label": "รูปแบบเสียง",
-                      "placeholder": "บทพูด (Lip-sync)",
-                      "options": [
-                        {
-                          "value": "lipsync",
-                          "label": "บทพูด (Lip-sync)",
-                          "icon": "record_voice_over"
                         },
                         {
-                          "value": "vo",
-                          "label": "เสียงบรรยาย (VO)",
-                          "icon": "graphic_eq"
-                        }
-                      ]
-                    },
-                    {
-                      "el": "child-list",
-                      "childColl": "lines",
-                      "childBy": "shot",
-                      "label": "บทพูด (หลายคน)",
-                      "placeholder": "เพิ่มบรรทัด",
-                      "card": [
-                        {
-                          "el": "dropdown",
-                          "field": "speaker",
-                          "label": "ผู้พูด",
-                          "options": {
-                            "coll": "characters",
-                            "label": "name",
-                            "value": "name"
-                          }
+                          "el": "box",
+                          "className": "relative flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3.5 border-t border-white/[0.07] min-[720px]:border-t-0",
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "absolute top-3 right-3 min-[720px]:top-5 min-[720px]:right-6 z-10",
+                              "card": [
+                                {
+                                  "el": "copy-button",
+                                  "op": "genVideo",
+                                  "label": "Copy Prompt",
+                                  "icon": "content_copy",
+                                  "variant": "ghost",
+                                  "size": "sm",
+                                  "className": "text-[9px] font-bold uppercase tracking-wider opacity-40 hover:opacity-100 h-6 px-2 whitespace-nowrap"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "icon": "movie",
+                              "value": "วีดีโอ (Motion)",
+                              "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]"
+                            },
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2 flex-wrap",
+                              "card": [
+                                {
+                                  "el": "dropdown",
+                                  "variant": "pill",
+                                  "icon": "switch_video",
+                                  "field": "cameraDirection",
+                                  "label": "กำกับกล้อง",
+                                  "placeholder": "อัตโนมัติ",
+                                  "options": [
+                                    {
+                                      "value": "auto",
+                                      "label": "อัตโนมัติ (นุ่มนวล)"
+                                    },
+                                    {
+                                      "value": "static",
+                                      "label": "กล้องนิ่ง"
+                                    },
+                                    {
+                                      "value": "pushin",
+                                      "label": "ดันเข้า"
+                                    },
+                                    {
+                                      "value": "pullout",
+                                      "label": "ถอยออก"
+                                    },
+                                    {
+                                      "value": "panleft",
+                                      "label": "แพนซ้าย"
+                                    },
+                                    {
+                                      "value": "panright",
+                                      "label": "แพนขวา"
+                                    },
+                                    {
+                                      "value": "tiltup",
+                                      "label": "เงยขึ้น"
+                                    },
+                                    {
+                                      "value": "tiltdown",
+                                      "label": "ก้มลง"
+                                    },
+                                    {
+                                      "value": "riseup",
+                                      "label": "เลื่อนขึ้น"
+                                    },
+                                    {
+                                      "value": "descend",
+                                      "label": "เลื่อนลง"
+                                    },
+                                    {
+                                      "value": "follow",
+                                      "label": "ตามตัวละคร"
+                                    },
+                                    {
+                                      "value": "orbit",
+                                      "label": "หมุนรอบ"
+                                    },
+                                    {
+                                      "value": "handheld",
+                                      "label": "มือถือ (สั่นไหว)"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "segmented",
+                                  "field": "duration",
+                                  "options": [
+                                    {
+                                      "value": "4",
+                                      "label": "4s",
+                                      "disabledWhen": "ultra=",
+                                      "reason": "Ultra"
+                                    },
+                                    {
+                                      "value": "6",
+                                      "label": "6s",
+                                      "disabledWhen": "ultra=",
+                                      "reason": "Ultra"
+                                    },
+                                    {
+                                      "value": "8",
+                                      "label": "8s"
+                                    },
+                                    {
+                                      "value": "10",
+                                      "label": "10s",
+                                      "disabledWhen": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "contains",
+                                          "a": "{values.videoModel}",
+                                          "b": "Omni"
+                                        }
+                                      },
+                                      "reason": "ต้องใช้โมเดล Omni Flash"
+                                    }
+                                  ],
+                                  "variant": "accent",
+                                  "icon": "timer",
+                                  "className": "shrink-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "textarea",
+                              "field": "motion",
+                              "placeholder": "บรรยายการเคลื่อนไหวในวีดีโอ (ภาษาไทย)...",
+                              "className": "!rounded-2xl !p-4 text-[14px] leading-relaxed min-h-[80px]"
+                            },
+                            {
+                              "el": "text",
+                              "icon": "volume_up",
+                              "value": "เสียง (Audio)",
+                              "className": "flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40"
+                            },
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2 flex-wrap",
+                              "card": [
+                                {
+                                  "el": "dropdown",
+                                  "variant": "pill",
+                                  "icon": "graphic_eq",
+                                  "field": "audioType",
+                                  "label": "รูปแบบเสียง",
+                                  "placeholder": "บทพูด (Lip-sync)",
+                                  "options": [
+                                    {
+                                      "value": "lipsync",
+                                      "label": "บทพูด (Lip-sync)",
+                                      "icon": "record_voice_over"
+                                    },
+                                    {
+                                      "value": "vo",
+                                      "label": "เสียงบรรยาย (VO)",
+                                      "icon": "graphic_eq"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "el": "child-list",
+                              "childColl": "lines",
+                              "childBy": "shot",
+                              "label": "บทพูด (หลายคน)",
+                              "placeholder": "เพิ่มบรรทัด",
+                              "card": [
+                                {
+                                  "el": "dropdown",
+                                  "field": "speaker",
+                                  "label": "ผู้พูด",
+                                  "options": {
+                                    "coll": "characters",
+                                    "label": "name",
+                                    "value": "name"
+                                  }
+                                },
+                                {
+                                  "el": "input",
+                                  "field": "text",
+                                  "placeholder": "พูดว่า..."
+                                }
+                              ],
+                              "empty": "— ไม่มีบทพูด"
+                            }
+                          ]
                         },
                         {
-                          "el": "input",
-                          "field": "text",
-                          "placeholder": "พูดว่า..."
-                        }
-                      ],
-                      "empty": "— ไม่มีบทพูด"
-                    }
-                  ]
-                },
-                {
-                  "el": "box",
-                  "className": "shrink-0 min-[720px]:w-[230px] flex flex-col justify-center gap-2",
-                  "card": [
-                    {
-                      "el": "gen-button",
-                      "op": "genVideo",
-                      "label": "สร้างวิดีโอ",
-                      "variant": "solid",
-                      "className": "w-full justify-center",
-                      "disabledWhen": "item.slots.image=",
-                      "reason": "สร้างภาพในสตอรี่บอร์ดก่อน"
-                    },
-                    {
-                      "el": "pick-button",
-                      "into": "{item.slots.video}",
-                      "filter": "video",
-                      "label": "เลือกวิดีโอ",
-                      "icon": "video_library",
-                      "variant": "outline",
-                      "className": "w-full justify-center"
-                    },
-                    {
-                      "el": "row",
-                      "className": "justify-center",
-                      "card": [
-                        {
-                          "el": "download-button",
-                          "to": "{item.slots.video}",
-                          "iconOnly": true,
-                          "when": "item.slots.video!="
-                        },
-                        {
-                          "el": "copy-button",
-                          "op": "genVideo",
-                          "iconOnly": true
+                          "el": "box",
+                          "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
+                          "card": [
+                            {
+                              "el": "gen-button",
+                              "op": "genVideo",
+                              "label": "Gen วิดีโอ",
+                              "icon": "auto_fix_high",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.slots.video}",
+                                    "b": ""
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.status}",
+                                      "b": "error"
+                                    }
+                                  }
+                                ]
+                              },
+                              "disabledWhen": "item.slots.image=",
+                              "reason": "กรุณา Gen ภาพเริ่มต้นในขั้นตอนที่ 4 ก่อน"
+                            },
+                            {
+                              "el": "gen-button",
+                              "op": "genVideo",
+                              "label": "Gen ใหม่",
+                              "icon": "auto_fix_high",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center",
+                              "when": "item.slots.video!=",
+                              "disabledWhen": "item.slots.image=",
+                              "reason": "กรุณา Gen ภาพเริ่มต้นในขั้นตอนที่ 4 ก่อน"
+                            },
+                            {
+                              "el": "gen-button",
+                              "op": "genVideo",
+                              "label": "ลองใหม่",
+                              "icon": "refresh",
+                              "variant": "danger",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center",
+                              "when": "item.status=error"
+                            },
+                            {
+                              "el": "pick-button",
+                              "into": "{item.slots.video}",
+                              "filter": "video",
+                              "label": "เลือกวีดีโอ",
+                              "icon": "video_library",
+                              "variant": "outline",
+                              "style": {
+                                "height": "52px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center"
+                            },
+                            {
+                              "el": "row",
+                              "className": "justify-center",
+                              "card": [
+                                {
+                                  "el": "download-button",
+                                  "to": "{item.slots.video}",
+                                  "iconOnly": true,
+                                  "when": "item.slots.video!="
+                                }
+                              ]
+                            },
+                            {
+                              "el": "note",
+                              "tone": "danger",
+                              "icon": "info",
+                              "value": "กรุณา Gen ภาพเริ่มต้นในขั้นตอนที่ 4 ก่อน",
+                              "when": "item.slots.image=",
+                              "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl"
+                            }
+                          ]
                         }
                       ]
                     }
