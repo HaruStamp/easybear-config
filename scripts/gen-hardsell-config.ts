@@ -25,6 +25,16 @@ if (!IMAGE_MODELS.length || !VIDEO_MODELS.length) throw new Error('ดึง mod
 const DEF_IMG = (IMAGE_MODELS.find((o: any) => o.value === '🍌 Nano Banana Pro') || IMAGE_MODELS[0]).value;
 const DEF_VID = (VIDEO_MODELS.find((o: any) => o.value === 'Veo 3.1 - Fast') || VIDEO_MODELS[0]).value;
 
+// ---- runBanner popup ความคืบหน้า: derive จาก film (มาตรฐานเดียวกัน ตามธีมอยู่แล้ว) — เปลี่ยนแค่ title ---
+if (!film.components?.runBanner) throw new Error('film.json ไม่มี components.runBanner');
+const RUN_BANNER = JSON.parse(JSON.stringify(film.components.runBanner).split('Gen ทั้งหมด').join('ผลิตคลิป'));
+// ตาราง lookup ที่ banner อ้าง (opBanner = stage ไหนโชว์ popup · opNames/opPhase = ป้ายบรรทัดล่าง)
+const LOOKUPS = {
+  opBanner: { hsContent: '1', hsImage: '1', hsVideo1: '1', hsVideo2: '1' },
+  opNames: { hsQueue: 'จัดคิวผลิต', hsContent: 'เขียนบทขาย', hsPrompts: 'เตรียมพรอมพ์', hsImage: 'สร้างภาพเฟรมแรก', hsVideo1: 'สร้างวีดีโอ ช่วง 1', hsVideo2: 'ต่อฉาก ช่วง 2' },
+  opPhase: { hsContent: '1/3', hsImage: '2/3', hsVideo1: '3/3', hsVideo2: '3/3' },
+};
+
 // ---- option lists จาก pack (sync อัตโนมัติ) ----
 const TEMPLATE_OPTS = HS_SCENE_TEMPLATES.map(t => ({ value: t.id, label: t.name, desc: t.desc, icon: t.icon }));
 const TONE_OPTS = HS_TONES.map(t => ({ value: t.id, label: t.name, desc: t.desc, icon: t.icon }));
@@ -138,6 +148,8 @@ const config = {
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
   content: { item: { coll: 'tasks', label: 'คลิป' }, assets: ['products', 'characters'] },
+  lookups: LOOKUPS,
+  components: { runBanner: RUN_BANNER },
   home: {
     title: 'หมีแว่น ขายดุ', tag: 'EasyBear Hardsell',
     description: 'ปั่นคลิปขายสินค้าสไตล์ TikTok — ฮุคแรง โน้มน้าว ปิดการขาย ครบจบทีละหลายคลิป',
@@ -208,6 +220,7 @@ const config = {
     {
       id: 'setup', title: 'ตั้งค่า', navLabel: 'ตั้งค่า',
       form: [
+        { el: 'use', component: 'runBanner' },
         { el: 'section', label: 'สินค้า', icon: 'inventory_2' },
         productCard,
         { el: 'add-button', coll: 'products', label: 'เพิ่มสินค้า', icon: 'add', addDefaults: { name: '', enabled: 'true' } },
@@ -240,6 +253,7 @@ const config = {
     {
       id: 'produce', title: 'ผลิต', navLabel: 'ผลิต',
       form: [
+        { el: 'use', component: 'runBanner' },
         { el: 'row', className: 'items-center gap-2 flex-wrap', card: [
           { el: 'stat-card', label: 'คิวทั้งหมด', value: { op: 'count', from: 'tasks' }, icon: 'movie' },
           { el: 'stat-card', label: 'เสร็จแล้ว', value: { op: 'count', from: 'tasks', slot: 'video1' }, icon: 'check_circle' },
