@@ -1,6 +1,7 @@
 // gen-hardsell-config.ts — สร้าง hardsell.json จาก pack จริง (option lists sync กับ hooks-hardsell เสมอ)
 // รัน: cd easybear-starter && npx tsx ../easybear-config/scripts/gen-hardsell-config.ts
 // theme + model options ยืมจาก film.json (มาตรฐานเดียวกัน) · เขียนทับ easybear-config/hardsell.json (indent=2 ไม่มี trailing newline)
+// โครง UI = ต้นฉบับ easybear-hardsell design lock v2 (mockups/mockup.html + src/components) — หน้าเดียว 2 คอลัมน์
 import * as fs from 'fs';
 import * as path from 'path';
 import { HS_SCENE_TEMPLATES, HS_TONES, HS_TEXT_STYLES, HS_BLOCKED_DEFAULT } from '../../easybear-starter/src/framework/hooks-hardsell';
@@ -28,6 +29,12 @@ const DEF_VID = (VIDEO_MODELS.find((o: any) => o.value === 'Veo 3.1 - Fast') || 
 // ---- runBanner popup ความคืบหน้า: derive จาก film (มาตรฐานเดียวกัน ตามธีมอยู่แล้ว) — เปลี่ยนแค่ title ---
 if (!film.components?.runBanner) throw new Error('film.json ไม่มี components.runBanner');
 const RUN_BANNER = JSON.parse(JSON.stringify(film.components.runBanner).split('Gen ทั้งหมด').join('ผลิตคลิป'));
+// patch กล่อง "เสร็จ": อย่าโชว์เมื่อ stage สุดท้ายไม่มีงาน (hsVideo2 โหมด 8 วิ → total=0) — เติมเงื่อนไข __runTotal != 0
+{
+  const doneWhen = RUN_BANNER?.[1]?.when?.list?.[1]?.list?.[1]?.list;
+  if (!Array.isArray(doneWhen)) throw new Error('โครง runBanner จาก film เปลี่ยน — patch done-box ไม่เจอ');
+  doneWhen.push({ op: 'not', a: { op: 'eq', a: '{values.__runTotal}', b: '0' } });
+}
 // ตาราง lookup ที่ banner อ้าง (opBanner = stage ไหนโชว์ popup · opNames/opPhase = ป้ายบรรทัดล่าง)
 const LOOKUPS = {
   opBanner: { hsContent: '1', hsImage: '1', hsVideo1: '1', hsVideo2: '1' },
@@ -43,7 +50,34 @@ const AGE_OPTS = ['วัยรุ่น 18-25', 'วัยทำงาน 25-35
 
 // ---- UI helpers ----
 const lbl = (v: string) => ({ el: 'text', value: v, className: 'text-[11px] font-bold uppercase tracking-wide opacity-40' });
-const noteTx = (v: string) => ({ el: 'note', tone: 'info', value: v });
+
+// ---- เงื่อนไขสถานะ (ปุ่มควบคุมเดียว + จอขวา — ตรรกะตาม MainScreen.tsx ต้นฉบับ) ----
+// กำลังรัน = engine กำลังเดิน op (running/cooldown/retrying)
+const ST_RUNNING = { op: 'or', list: [
+  { op: 'eq', a: '{values.__runState}', b: 'running' },
+  { op: 'eq', a: '{values.__runState}', b: 'cooldown' },
+  { op: 'eq', a: '{values.__runState}', b: 'retrying' },
+] };
+const NOT_RUNNING = { op: 'not', a: ST_RUNNING };
+const COUNT_TASKS = { op: 'count', from: 'tasks' };
+const HAS_TASKS = { op: 'gt', a: COUNT_TASKS, b: 0 };
+const NO_TASKS = { op: 'eq', a: COUNT_TASKS, b: 0 };
+const HAS_ERROR = { op: 'gt', a: { op: 'count', from: 'tasks', where: 'status=error' }, b: 0 };
+const NO_ERROR = { op: 'not', a: HAS_ERROR };
+// เสร็จจริงต่อคลิป = มีวิดีโอช่วงสุดท้ายของโหมดนั้น (8 วิ = video1 · 16 วิ = video2) — count+slot (Engine รองรับ)
+const COUNT_DONE = { op: 'add',
+  a: { op: 'count', from: 'tasks', where: 'clipLength=8', slot: 'video1' },
+  b: { op: 'count', from: 'tasks', where: 'clipLength=16', slot: 'video2' } };
+const ALL_DONE = { op: 'and', list: [HAS_TASKS, { op: 'eq', a: COUNT_DONE, b: COUNT_TASKS }] };
+const NOT_ALL_DONE = { op: 'not', a: ALL_DONE };
+const ENABLED_PRODUCTS = { op: 'count', from: 'products', where: 'enabled=true' };
+const TOTAL_CLIPS = { op: 'mul', a: ENABLED_PRODUCTS, b: '{values.clipsPerProduct}' };
+const READY = { op: 'and', list: [
+  { op: 'gt', a: ENABLED_PRODUCTS, b: 0 },
+  { op: 'all', from: 'products', where: 'enabled=true', slot: 'image' },
+] };
+// เส้นผลิตทั้งคิว (ข้ามตัวที่เสร็จแล้วเอง + retry ตัวพลาดเอง = พฤติกรรม autoProduce ต้นฉบับ)
+const CHAIN = ['hsQueue', 'hsContent', 'hsPrompts', 'hsImage', 'hsVideo1', 'hsVideo2'];
 
 // การ์ดสินค้า (repeat products)
 const productCard = {
@@ -101,9 +135,9 @@ const characterCard = {
   }],
 };
 
-// การ์ดคลิป (repeat tasks — หน้า produce)
+// การ์ดคลิป (repeat tasks — จอขวาชั่วคราว จนกว่า M5 Run monitor จะแทน)
 const taskCard = {
-  el: 'repeat', coll: 'tasks', empty: 'ยังไม่มีคิวงาน — กลับไปหน้าตั้งค่าแล้วกด "จัดคิวผลิต"',
+  el: 'repeat', coll: 'tasks', empty: 'ยังไม่มีคิวงาน — กดปุ่ม "เริ่มผลิตคลิป" ทางซ้าย',
   card: [{
     el: 'box', className: 'border rounded-2xl p-4 flex flex-col gap-3 border-[var(--ev-border)] bg-[var(--ev-surface)]',
     card: [
@@ -138,15 +172,136 @@ const taskCard = {
   }],
 };
 
+// ---- ซ้าย: wizard ตั้งค่า (M3 จะจัดเป็น accordion ①-④ ตาม HomeScreen) ----
+const wizardForm: any[] = [
+  { el: 'section', label: 'สินค้า', icon: 'inventory_2' },
+  productCard,
+  { el: 'add-button', coll: 'products', label: 'เพิ่มสินค้า', icon: 'add', addDefaults: { name: '', enabled: 'true' } },
+  { el: 'divider' },
+  { el: 'section', label: 'คนรีวิว (ไม่บังคับ)', icon: 'person' },
+  characterCard,
+  { el: 'add-button', coll: 'characters', label: 'เพิ่มคนรีวิว', icon: 'person_add', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' } },
+  { el: 'divider' },
+  { el: 'section', label: 'สไตล์คลิป', icon: 'movie_filter' },
+  { el: 'grid-select', field: 'templateId', label: 'ฉาก (22 แบบ)', cols: 4, options: TEMPLATE_OPTS },
+  { el: 'segmented', field: 'toneId', label: 'โทนการขาย', options: TONE_OPTS },
+  { el: 'row', className: 'gap-4 flex-col md:flex-row', card: [
+    { el: 'segmented', field: 'textMode', label: 'ตัวหนังสือบนภาพ', className: 'flex-1', options: [
+      { value: 'overlay', label: 'มีพาดหัว H1/H2', icon: 'title' }, { value: 'none', label: 'ภาพสะอาด', icon: 'hide_image' },
+    ]},
+    { el: 'dropdown', field: 'textStyleId', label: 'สไตล์ตัวหนังสือ', className: 'flex-1', when: 'textMode=overlay', options: STYLE_OPTS },
+  ]},
+  { el: 'divider' },
+  { el: 'section', label: 'การผลิต', icon: 'factory' },
+  { el: 'row', className: 'gap-4 flex-col md:flex-row', card: [
+    { el: 'segmented', field: 'clipLength', label: 'ความยาวคลิป', className: 'flex-1', options: [
+      { value: '8', label: '8 วินาที', icon: 'timer' }, { value: '16', label: '16 วินาที (2 ช่วงต่อกัน)', icon: 'timer' },
+    ]},
+    { el: 'stepper', field: 'clipsPerProduct', label: 'จำนวนคลิปต่อสินค้า', min: 1, max: 100, className: 'flex-1' },
+  ]},
+];
+
+// ---- ซ้ายล่าง: ปุ่มควบคุมเดียว ปัก footer (เริ่ม → หยุด → ทำต่อ/ลองใหม่ → รีเซ็ต) + hint ใต้ปุ่ม ----
+const CTRL_BTN = 'w-full justify-center !h-12 !rounded-2xl !text-[14px]';
+const hintTx = (when: any, value: any) => ({ el: 'text', when, value, className: 'text-center text-[11px] mt-2 opacity-70' });
+const controlFooter = {
+  el: 'box', className: 'p-4 pb-5 border-t border-[var(--ev-border)] shrink-0',
+  card: [
+    { el: 'box', when: { op: 'and', list: [NO_TASKS, { op: 'gt', a: TOTAL_CLIPS, b: 100 }] },
+      className: 'mb-2.5 flex items-start gap-2 bg-amber-500/[0.08] border border-amber-500/25 rounded-xl px-3 py-2',
+      card: [
+        { el: 'icon', icon: 'warning', textSize: 'text-[15px]', className: 'text-amber-400 shrink-0 mt-px' },
+        { el: 'text', className: 'text-[11px] leading-relaxed text-amber-300/90',
+          value: { op: 'concat', parts: ['คิวนี้ ', TOTAL_CLIPS, ' คลิป (เกิน 100) — งานเยอะอาจทำให้แอปทำงานหนักหรือช้า แนะนำแบ่งทำเป็นรอบเล็กลง หรือเลือกคลิป 8 วิ เพื่อความลื่นไหล'] } },
+      ]},
+    // เริ่มผลิต (ยังไม่มีคิว) — ส้ม/แดง gradient เรืองแสงตาม accent
+    { el: 'gen-phase', ops: CHAIN, when: NO_TASKS, label: 'เริ่มผลิตคลิป', icon: 'play_arrow',
+      className: CTRL_BTN + ' font-black', style: { boxShadow: '0 0 20px color-mix(in srgb, var(--ev-accent) 35%, transparent)' },
+      disabledWhen: { op: 'not', a: READY }, reason: 'เพิ่มสินค้า + ใส่รูปให้ครบก่อนเริ่มผลิต' },
+    // หยุดชั่วคราว (กำลังรัน) — แดงโปร่ง
+    { el: 'button', action: 'stop', when: ST_RUNNING, label: 'หยุดชั่วคราว', icon: 'pause', variant: 'ghost',
+      className: CTRL_BTN + ' font-bold !text-red-300 !bg-red-500/10 !border !border-red-500/35 hover:!bg-red-500/20' },
+    // ทำงานต่อ (มีคิวค้าง ไม่พัง) — ทึบ
+    { el: 'gen-phase', ops: CHAIN, when: { op: 'and', list: [NOT_RUNNING, HAS_TASKS, NO_ERROR, NOT_ALL_DONE] },
+      label: 'ทำงานต่อ', icon: 'play_arrow', className: CTRL_BTN + ' font-black' },
+    // ลองใหม่ที่พลาด (มีตัวพัง)
+    { el: 'gen-phase', ops: CHAIN, when: { op: 'and', list: [NOT_RUNNING, HAS_ERROR] },
+      label: 'ลองใหม่ที่พลาด', icon: 'replay', className: CTRL_BTN + ' font-black' },
+    // รีเซ็ตงาน 2 จังหวะ (มีคิว + ไม่รัน) — ล้างคิวกลับไปตั้งค่า
+    { el: 'confirm-button', action: 'hook', fn: 'hsResetRun', when: { op: 'and', list: [HAS_TASKS, NOT_RUNNING] },
+      label: 'รีเซ็ตงาน', icon: 'refresh', placeholder: 'ยืนยันรีเซ็ต?', variant: 'outline',
+      className: 'w-full justify-center !h-11 mt-2 !rounded-2xl !text-[13.5px] font-bold' },
+    // hint ใต้ปุ่ม (ตรรกะตาม MainScreen ต้นฉบับ)
+    hintTx(ST_RUNNING, 'กำลังผลิตอยู่ — ดูความคืบหน้าได้ที่ฝั่งขวา'),
+    hintTx({ op: 'and', list: [NOT_RUNNING, HAS_ERROR] }, 'หยุดเพราะพบปัญหา — กดลองใหม่ที่พลาดเพื่อลองคลิปที่ล้มเหลวอีกครั้ง หรือรีเซ็ตงานเพื่อล้างคิว'),
+    hintTx({ op: 'and', list: [NOT_RUNNING, NO_ERROR, HAS_TASKS, NOT_ALL_DONE] },
+      { op: 'concat', parts: ['หยุดพักไว้ — กดทำงานต่อเพื่อรันคิวที่เหลือ ', { op: 'sub', a: COUNT_TASKS, b: COUNT_DONE }, ' คลิป'] }),
+    hintTx({ op: 'and', list: [NOT_RUNNING, ALL_DONE] },
+      { op: 'concat', parts: ['เสร็จครบ ', COUNT_DONE, ' คลิป — ดาวน์โหลดได้ทางขวา หรือกดรีเซ็ตงานเพื่อตั้งค่าผลิตรอบใหม่'] }),
+    hintTx({ op: 'and', list: [NO_TASKS, { op: 'eq', a: ENABLED_PRODUCTS, b: 0 }] }, 'ยังไม่ได้เลือกใช้สินค้า — เพิ่มสินค้าและติ๊ก "ใช้สินค้านี้" ก่อน'),
+    hintTx({ op: 'and', list: [NO_TASKS, { op: 'gt', a: ENABLED_PRODUCTS, b: 0 }, { op: 'not', a: { op: 'all', from: 'products', where: 'enabled=true', slot: 'image' } }] },
+      'มีสินค้าที่ยังไม่มีรูป — ใส่รูปก่อนเริ่มผลิต'),
+    hintTx({ op: 'and', list: [NO_TASKS, READY] },
+      { op: 'concat', parts: ['จากสินค้าที่เลือกไว้ ', ENABLED_PRODUCTS, ' ชิ้น · รวมคิว ', TOTAL_CLIPS, ' คลิป'] }),
+  ],
+};
+
+// ---- ขวา: ว่าง (idle) — empty state เงียบๆ + ขั้นตอน ①-④ จางบรรทัดเดียว ----
+const stepDot = (n: string, label: string) => ({ el: 'box', className: 'flex items-center gap-1', card: [
+  { el: 'box', className: 'w-[18px] h-[18px] rounded-full bg-[var(--ev-surface2)] flex items-center justify-center', card: [
+    { el: 'text', value: n, className: '!text-[9px] font-bold opacity-70' }] },
+  { el: 'text', value: label, className: '!text-[11px] opacity-60' },
+]});
+const stepSep = { el: 'icon', icon: 'chevron_right', textSize: 'text-[13px]', className: 'opacity-20' };
+const rightIdle = {
+  el: 'box', when: NO_TASKS, className: 'h-full flex flex-col items-center justify-center text-center px-6 py-16',
+  card: [
+    { el: 'box', className: 'w-16 h-16 rounded-full bg-[var(--ev-surface)] border border-[var(--ev-border)] flex items-center justify-center mb-5', card: [
+      { el: 'icon', icon: 'movie', textSize: 'text-[30px]', className: 'opacity-25' }] },
+    { el: 'text', value: 'ยังไม่มีคลิปที่ผลิต', className: '!text-[15px] font-bold !text-[var(--ev-text)] opacity-70' },
+    { el: 'text', value: 'ตั้งค่าสินค้าและสไตล์ทางซ้าย แล้วกดปุ่ม "เริ่มผลิตคลิป"', className: 'text-[12.5px] mt-1.5 leading-relaxed opacity-50' },
+    { el: 'row', className: 'items-center gap-2 mt-6 justify-center', style: { flexWrap: 'nowrap' }, card: [
+      stepDot('1', 'เพิ่มสินค้า'), stepSep, stepDot('2', 'ตัวละคร'), stepSep, stepDot('3', 'เลือกสไตล์'), stepSep, stepDot('4', 'เริ่มผลิต'),
+    ]},
+  ],
+};
+
+// ---- ขวา: มีคิวแล้ว (M5 จะแทนด้วย Run monitor header + grid/list) ----
+const rightWork = {
+  el: 'box', when: HAS_TASKS, className: 'p-4 flex flex-col gap-4',
+  card: [
+    { el: 'row', className: 'items-center gap-2 flex-wrap', card: [
+      { el: 'stat-card', label: 'คิวทั้งหมด', value: COUNT_TASKS, icon: 'movie' },
+      { el: 'stat-card', label: 'เสร็จแล้ว', value: COUNT_DONE, icon: 'check_circle' },
+    ]},
+    taskCard,
+  ],
+};
+
+// ---- โครงหน้าเดียว 2 คอลัมน์ (ซ้าย 460px / ขวา flex-1 · <1280 พับเป็นคอลัมน์เดียว) ----
+const mainLayout = {
+  el: 'box', className: 'flex flex-col min-[1280px]:flex-row min-[1280px]:h-[calc(100vh-70px)] w-full',
+  card: [
+    { el: 'box', className: 'flex flex-col min-h-0 w-full min-[1280px]:w-[460px] min-[1280px]:shrink-0 min-[1280px]:border-r border-[var(--ev-border)]',
+      card: [
+        { el: 'box', className: 'flex-1 min-h-0 min-[1280px]:overflow-y-auto p-4 space-y-3.5', card: wizardForm },
+        controlFooter,
+      ]},
+    { el: 'box', className: 'flex-1 min-h-0 min-[1280px]:overflow-y-auto', card: [rightIdle, rightWork] },
+  ],
+};
+
 const config = {
   schemaVersion: 1,
   title: 'หมีแว่น ขายดุ',
   icon: 'sell',
   app: { id: 'hardsell' },
   persistBar: true,
+  devBar: false,
   theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f76b6b', '--ev-accent-fg': '#ffffff' } },
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
+  chrome: { content: { className: '!max-w-none !p-0' } },   // หน้าเดียว 2 คอลัมน์เต็มจอ (ตัดกรอบ 1180 + padding กลาง)
   content: { item: { coll: 'tasks', label: 'คลิป' }, assets: ['products', 'characters'] },
   lookups: LOOKUPS,
   components: { runBanner: RUN_BANNER },
@@ -175,6 +330,8 @@ const config = {
     },
   },
   seed: { control: [{ id: 'ctl', fields: {} }] },
+  // scope "รายกลุ่ม" ยึด control (ไม่ใช่ tasks) — กัน gen-phase จำกัดงานเหลือคลิปเดียว (content.item.coll=tasks ใช้เรื่อง label/save เท่านั้น)
+  auto: { scopeColl: 'control' },
   ops: [
     { id: 'hsQueue', type: 'transform', over: 'control', out: 'queued', fn: 'hsBuildTasks' },
     { id: 'hsContent', type: 'transform', over: 'tasks', out: 'written', fn: 'hsArchitectClip' },
@@ -197,13 +354,12 @@ const config = {
   ],
   stages: [
     { op: 'hsQueue' },
-    { checkpoint: 'setup', hard: true },
     { op: 'hsContent' },
     { op: 'hsPrompts' },
     { op: 'hsImage' },
     { op: 'hsVideo1' },
     { op: 'hsVideo2' },
-    { checkpoint: 'produce', gate: { op: 'all', from: 'tasks', slot: 'video1' } },
+    { checkpoint: 'main' },
   ],
   run: { maxParallel: 1, staggerMs: 3000, maxAttempts: 3 },
   settings: {
@@ -218,48 +374,10 @@ const config = {
   },
   phases: [
     {
-      id: 'setup', title: 'ตั้งค่า', navLabel: 'ตั้งค่า',
+      id: 'main', title: '', navLabel: 'หน้าหลัก',
       form: [
         { el: 'use', component: 'runBanner' },
-        { el: 'section', label: 'สินค้า', icon: 'inventory_2' },
-        productCard,
-        { el: 'add-button', coll: 'products', label: 'เพิ่มสินค้า', icon: 'add', addDefaults: { name: '', enabled: 'true' } },
-        { el: 'divider' },
-        { el: 'section', label: 'คนรีวิว (ไม่บังคับ)', icon: 'person' },
-        characterCard,
-        { el: 'add-button', coll: 'characters', label: 'เพิ่มคนรีวิว', icon: 'person_add', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' } },
-        { el: 'divider' },
-        { el: 'section', label: 'สไตล์คลิป', icon: 'movie_filter' },
-        { el: 'grid-select', field: 'templateId', label: 'ฉาก (22 แบบ)', cols: 4, options: TEMPLATE_OPTS },
-        { el: 'segmented', field: 'toneId', label: 'โทนการขาย', options: TONE_OPTS },
-        { el: 'row', className: 'gap-4 flex-col md:flex-row', card: [
-          { el: 'segmented', field: 'textMode', label: 'ตัวหนังสือบนภาพ', className: 'flex-1', options: [
-            { value: 'overlay', label: 'มีพาดหัว H1/H2', icon: 'title' }, { value: 'none', label: 'ภาพสะอาด', icon: 'hide_image' },
-          ]},
-          { el: 'dropdown', field: 'textStyleId', label: 'สไตล์ตัวหนังสือ', className: 'flex-1', when: 'textMode=overlay', options: STYLE_OPTS },
-        ]},
-        { el: 'divider' },
-        { el: 'section', label: 'การผลิต', icon: 'factory' },
-        { el: 'row', className: 'gap-4 flex-col md:flex-row', card: [
-          { el: 'segmented', field: 'clipLength', label: 'ความยาวคลิป', className: 'flex-1', options: [
-            { value: '8', label: '8 วินาที', icon: 'timer' }, { value: '16', label: '16 วินาที (2 ช่วงต่อกัน)', icon: 'timer' },
-          ]},
-          { el: 'stepper', field: 'clipsPerProduct', label: 'จำนวนคลิปต่อสินค้า', min: 1, max: 100, className: 'flex-1' },
-        ]},
-        noteTx('กด "จัดคิวผลิต" เพื่อสร้างคิวคลิปจากสินค้าที่ติ๊กใช้ · แล้วไปหน้า "ผลิต" เพื่อสั่งเดินงานทั้งคิว'),
-        { el: 'gen-phase', ops: ['hsQueue'], label: 'จัดคิวผลิต', icon: 'playlist_add', className: 'w-full justify-center h-12' },
-      ],
-    },
-    {
-      id: 'produce', title: 'ผลิต', navLabel: 'ผลิต',
-      form: [
-        { el: 'use', component: 'runBanner' },
-        { el: 'row', className: 'items-center gap-2 flex-wrap', card: [
-          { el: 'stat-card', label: 'คิวทั้งหมด', value: { op: 'count', from: 'tasks' }, icon: 'movie' },
-          { el: 'stat-card', label: 'เสร็จแล้ว', value: { op: 'count', from: 'tasks', slot: 'video1' }, icon: 'check_circle' },
-          { el: 'run-button', label: 'เริ่มผลิตทั้งคิว' },
-        ]},
-        taskCard,
+        mainLayout,
       ],
     },
   ],
