@@ -211,7 +211,8 @@
     "epCount": "3",
     "shotsPerEp": "10",
     "dialogueLanguage": "th",
-    "activeEp": "ep_1"
+    "activeEp": "ep_1",
+    "sbView": "table"
   },
   "lookups": {
     "opBanner": {
@@ -4892,6 +4893,108 @@
           "className": "w-full justify-center rounded-2xl"
         },
         {
+          "el": "segmented",
+          "field": "sbView",
+          "variant": "tab",
+          "options": [
+            {
+              "value": "table",
+              "label": "ตาราง",
+              "icon": "table_rows"
+            },
+            {
+              "value": "flow",
+              "label": "Storyboard",
+              "icon": "view_carousel"
+            }
+          ]
+        },
+        {
+          "el": "box",
+          "when": "sbView=flow",
+          "className": "w-full overflow-x-auto pb-4",
+          "card": [
+            {
+              "el": "box",
+              "className": "flex items-center gap-4 min-w-max px-3 pt-5 pb-2",
+              "card": [
+                {
+                  "el": "repeat",
+                  "coll": "shots",
+                  "where": "refs.ep~{values.activeEp}",
+                  "empty": "ตอนนี้ยังไม่มีช็อต — เลือกตอนจากปุ่มด้านบน",
+                  "card": [
+                    {
+                      "el": "icon",
+                      "icon": "double_arrow",
+                      "textSize": "text-[32px]",
+                      "when": {
+                        "op": "gt",
+                        "a": "{index}",
+                        "b": 0
+                      },
+                      "className": "shrink-0 self-center opacity-10 select-none"
+                    },
+                    {
+                      "el": "box",
+                      "className": "relative shrink-0 group flex flex-col items-center gap-3",
+                      "card": [
+                        {
+                          "el": "md",
+                          "value": {
+                            "op": "add",
+                            "a": "{index}",
+                            "b": 1
+                          },
+                          "className": "absolute -top-3 -left-3 z-20 w-10 h-10 bg-white text-black rounded-2xl flex items-center justify-center text-[16px] font-black shadow-[0_6px_16px_rgba(0,0,0,0.45)] border-[3px] border-[var(--ev-bg)]"
+                        },
+                        {
+                          "el": "box",
+                          "className": "w-[240px]",
+                          "card": [
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.image}",
+                              "aspect": "9:16",
+                              "style": {
+                                "borderRadius": "32px"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "el": "button",
+                          "op": "genImage",
+                          "label": "Gen ภาพ",
+                          "icon": "auto_fix_high",
+                          "variant": "solid",
+                          "className": "absolute inset-x-8 bottom-16 justify-center opacity-0 group-hover:opacity-100 transition shadow-2xl z-10 rounded-2xl h-12 font-black"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "SHOT ",
+                              {
+                                "op": "add",
+                                "a": "{index}",
+                                "b": 1
+                              },
+                              " SEQUENCE"
+                            ]
+                          },
+                          "className": "text-[10px] font-black uppercase tracking-[0.3em] opacity-25"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "el": "repeat",
           "coll": "shots",
           "where": "refs.ep~{values.activeEp}",
@@ -5107,7 +5210,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "when": "sbView!=flow"
         },
         {
           "el": "next-button",
