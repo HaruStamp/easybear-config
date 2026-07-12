@@ -332,7 +332,7 @@ const stepDot = (n: string, label: string) => box('flex flex-row items-center ga
   tx(label, '!text-[11px] opacity-60'),
 ]);
 const stepSep = { el: 'icon', icon: 'chevron_right', textSize: 'text-[13px]', className: 'opacity-20' };
-const rightIdle = box('h-full flex flex-col items-center justify-center text-center px-6 py-16', [
+const rightIdle = box('h-full flex flex-col items-center justify-center text-center px-6 py-16 min-[960px]:py-6', [
   box('w-16 h-16 rounded-full bg-[var(--ev-surface)] border border-[var(--ev-border)] flex items-center justify-center mb-5', [
     { el: 'icon', icon: 'movie', textSize: 'text-[30px]', className: 'opacity-25' }]),
   tx('ยังไม่มีคลิปที่ผลิต', '!text-[15px] font-bold !text-[var(--ev-text)] opacity-70'),
@@ -406,6 +406,8 @@ const runGrid = box('grid gap-3', [{
       stateBadge('bg-amber-500/90', 'hourglass_top', 'รอลองใหม่', 'text-white'),
       { el: 'icon', icon: 'hourglass_top', textSize: 'text-[28px]', className: 'text-amber-400 animate-pulse' },
       tx('{item.meta.error}', '!text-[10px] font-bold !text-amber-400 text-center leading-snug line-clamp-3'),
+      // ตาม autoProduce ต้นฉบับ: "ลองใหม่ใน N วิ (ครั้งที่ X)" — countdown จาก __runCoolLeft/__runAttempt (global แต่ maxParallel=1 = คือใบนี้)
+      { el: 'text', value: 'ลองใหม่ใน {values.__runCoolLeft} วิ (ครั้งที่ {values.__runAttempt})', className: '!text-[10px] !text-amber-300/80 font-medium', when: NEQ('{values.__runCoolLeft}', '0') },
       bottomBar,
     ], ITEM_RETRYING, { boxShadow: 'inset 0 0 0 1.5px rgba(245,158,11,0.5)' }),
     // ล้มเหลว (แดง + ปุ่มลองใหม่ตามขั้นที่ค้าง)
@@ -419,7 +421,14 @@ const runGrid = box('grid gap-3', [{
       box('', [{ el: 'gen-button', op: 'hsVideo2', label: 'ลองต่อฉากใหม่', icon: 'replay', size: 'sm', when: 'item.clipLength=16', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' }], 'item.slots.video1!='),
       bottomBar,
     ], ITEM_ERROR, { boxShadow: 'inset 0 0 0 1.5px rgba(239,68,68,0.5)' }),
-    // ไฟล์หาย (เคยเสร็จแต่สื่อหาย — design lock finalMissing) + Gen ใหม่ตามชิ้นที่ขาด
+    // รอขั้นถัดไปตอนรัน (16 วิ: video1 เสร็จ status=done แต่ video2 ยังไม่เริ่ม — อย่าโชว์ "ไฟล์หาย" หลอกกลางคัน)
+    box(gridCardShell + ' bg-[var(--ev-surface)]', [
+      cardImageLayer,
+      { el: 'icon', icon: 'hourglass_empty', textSize: 'text-[24px]', className: 'opacity-60 relative z-[1] animate-pulse' },
+      tx('รอขั้นถัดไป...', '!text-[10px] opacity-60 font-medium relative z-[1]'),
+      bottomBar,
+    ], AND(ITEM_LEFTOVER, EQ('{item.status}', 'done'), ST_RUNNING), { boxShadow: 'inset 0 0 0 1px var(--ev-border)' }),
+    // ไฟล์หาย (เคยเสร็จแต่สื่อหาย — design lock finalMissing) + Gen ใหม่ตามชิ้นที่ขาด — เฉพาะตอนไม่ได้รันอยู่
     box(gridCardShell + ' bg-[var(--ev-surface)] gap-2 px-3', [
       cardImageLayer,
       box('absolute top-2 left-2 z-[2] px-2 py-[3px] rounded-full bg-white/30 pointer-events-none', [tx('ไฟล์หาย', '!text-[9px] font-bold !text-white')]),
@@ -429,7 +438,7 @@ const runGrid = box('grid gap-3', [{
       box('relative z-[1]', [{ el: 'gen-button', op: 'hsVideo1', label: 'Gen วีดีโอใหม่', icon: 'replay', size: 'sm', variant: 'outline', when: 'item.slots.video1=' }], 'item.slots.image!='),
       box('relative z-[1]', [box('', [{ el: 'gen-button', op: 'hsVideo2', label: 'Gen ช่วง 2 ใหม่', icon: 'replay', size: 'sm', variant: 'outline', when: 'item.clipLength=16' }], 'item.slots.video2=')], 'item.slots.video1!='),
       bottomBar,
-    ], AND(ITEM_LEFTOVER, EQ('{item.status}', 'done')), { boxShadow: 'inset 0 0 0 1px var(--ev-border)' }),
+    ], AND(ITEM_LEFTOVER, EQ('{item.status}', 'done'), { op: 'not', a: ST_RUNNING }), { boxShadow: 'inset 0 0 0 1px var(--ev-border)' }),
     // ค้างกลางทาง (โดนหยุดไว้) — โชว์ภาพหรี่ + ขั้นที่ทำถึง (ตาม RunGrid ต้นฉบับ pending-partial)
     box(gridCardShell + ' bg-[var(--ev-surface)]', [
       cardImageLayer,
@@ -600,9 +609,17 @@ const managerHeader = (title: string, loadEl: any, saveEl: any) => row('items-ce
   ], ST_RUNNING),
   box('ml-auto flex flex-row items-center gap-2', [loadEl, saveEl]),
 ]);
+// การ์ดสถิติแนวนอนตามต้นฉบับ (icon-box 12x12 ซ้าย + เลขใหญ่ 28px + label uppercase) — atom stat-card เป็นแนวตั้งเลขเล็ก ไม่ตรงสไตล์
+const statBox = (icon: string, iconCls: string, label: string, v: any) => box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5', [
+  box('w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ' + iconCls, [{ el: 'icon', icon, textSize: 'text-[22px]' }]),
+  box('min-w-0', [
+    { el: 'text', value: v, className: '!text-[28px] font-black leading-none !text-[var(--ev-text)]' },
+    tx(label, '!text-[10px] uppercase tracking-wide opacity-45 mt-1'),
+  ]),
+]);
 const statPair = (icon1: string, label1: string, v1: any, label2: string, v2: any) => box('grid grid-cols-2 gap-4 mb-5', [
-  { el: 'stat-card', label: label1, value: v1, icon: icon1, className: '!rounded-[24px]' },
-  { el: 'stat-card', label: label2, value: v2, icon: 'check_circle', tone: 'info', className: '!rounded-[24px]' },
+  statBox(icon1, 'bg-[var(--ev-accent)]/15 text-[var(--ev-accent)]', label1, v1),
+  statBox('check_circle', 'bg-sky-500/15 text-sky-400', label2, v2),
 ]);
 
 // วงกลมติ๊ก "ใช้" (circle check ตามต้นฉบับ — ปุ่ม hook ปิดเองตอนกำลังผลิต = ล็อกตามต้นฉบับ)
@@ -794,7 +811,7 @@ const charactersPage = box('max-w-[1080px] mx-auto p-6 w-full', [
         { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', variant: 'solid' },
       ]),
     ]),
-    charManagerRow,
+    box('grid grid-cols-1 sm:grid-cols-2 gap-3', [charManagerRow]),   // ต้นฉบับ CharacterManager = grid 2 คอลัมน์
     { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', className: 'w-full justify-center !h-auto py-4 !border-dashed opacity-60 hover:opacity-100' },
   ]),
 ], EQ('{values.__page}', 'characters'));
@@ -802,25 +819,25 @@ const charactersPage = box('max-w-[1080px] mx-auto p-6 w-full', [
 // ═══════════ โครงหน้าเดียว 2 คอลัมน์ ═══════════
 const wizardWrap = box('flex flex-col gap-3.5', wizardForm, NO_TASKS);
 const logPanel = { el: 'custom', fn: 'hsLog', when: HAS_TASKS };
-const mainLayout = box('flex flex-col min-[1280px]:flex-row min-[1280px]:h-[calc(100vh-70px)] w-full', [
-  box('flex flex-col min-h-0 w-full min-[1280px]:w-[460px] min-[1280px]:shrink-0 min-[1280px]:border-r border-[var(--ev-border)]', [
-    box('flex-1 min-h-0 min-[1280px]:overflow-y-auto p-4 flex flex-col gap-3.5', [wizardWrap, summaryCard, logPanel]),
+const mainLayout = box('flex flex-col min-[960px]:flex-row min-[960px]:h-[calc(100vh-70px)] w-full', [
+  box('flex flex-col min-h-0 w-full min-[960px]:w-[460px] min-[960px]:shrink-0 min-[960px]:border-r border-[var(--ev-border)]', [
+    box('flex-1 min-h-0 min-[960px]:overflow-y-auto p-4 flex flex-col gap-3.5', [wizardWrap, summaryCard, logPanel]),
     controlFooter,
   ]),
-  box('flex-1 min-h-0 min-[1280px]:overflow-y-auto', [rightIdle, rightWork]),
+  box('flex-1 min-h-0 min-[960px]:overflow-y-auto', [rightIdle, rightWork]),
 ], EQ('{values.__page}', ''));
 
 const config = {
   schemaVersion: 1,
   title: 'หมีแว่น ขายดุ',
-  icon: 'sell',
+  icon: 'pets',
   app: { id: 'hardsell' },
   persistBar: true,
   devBar: false,
   theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f76b6b', '--ev-accent-fg': '#ffffff' } },
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
-  chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: true } },   // full-bleed 2 คอลัมน์ · modal งานค้างเปิดสวิตช์ทำต่ออัตโนมัติไว้เลย (แอปเส้นเดียว)
+  chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: false } },   // full-bleed 2 คอลัมน์ · modal งานค้างไม่ pre-select อะไร (ตามต้นฉบับ — ผู้ใช้เลือกเอง)
   content: { item: { coll: 'tasks', label: 'คลิป' }, assets: ['products', 'characters'] },
   lookups: LOOKUPS,
   components: { runBanner: RUN_BANNER },
@@ -835,7 +852,7 @@ const config = {
     clipLength: '8', clipsPerProduct: '1', styleCat: 'ugc',
     imageModel: DEF_IMG, videoModel: DEF_VID,
     blocklistEnabled: 'true', blocklist: HS_BLOCKED_DEFAULT.join(','),
-    maxParallel: '1', staggerMs: '3000', maxAttempts: '3', batchDelay: '10', retryDelay: '5',
+    maxParallel: '1', staggerMs: '3000', maxAttempts: '3', batchDelay: '10', retryDelay: '8',   // retryDelay 8 = ตาม projectStore ต้นฉบับ
     __page: '', __view: 'grid', __q: '', __editId: '', __editNew: '',
   },
   collections: {
@@ -855,14 +872,16 @@ const config = {
   ops: [
     { id: 'hsQueue', type: 'transform', over: 'control', out: 'queued', fn: 'hsBuildTasks' },
     { id: 'hsContent', type: 'transform', over: 'tasks', out: 'written', fn: 'hsArchitectClip' },
-    { id: 'hsPrompts', type: 'transform', over: 'tasks', out: 'prompted', fn: 'hsBuildPrompts' },
+    // where guard ทุก op หลัง hsContent: task ที่เขียนบทพัง (h1 ว่าง) ต้องไม่ไหลไปขั้นถัดไป
+    // (กัน transform ทับ error เป็น done + กันเปลืองเควตา gen จาก prompt ขยะ — ต้นฉบับ abort ทั้งรอบ เราใช้ item-level gate แทน)
+    { id: 'hsPrompts', type: 'transform', over: 'tasks', out: 'prompted', fn: 'hsBuildPrompts', where: 'h1!=' },
     {
-      id: 'hsImage', type: 'image', over: 'tasks', out: 'image',
+      id: 'hsImage', type: 'image', over: 'tasks', out: 'image', where: 'imagePrompt!=',
       model: '{values.imageModel}', aspectRatio: '9:16', prompt: '{item.imagePrompt}',
       refs: { op: 'lookupRefs', from: 'products', by: '{item.refs.product}', slot: 'image', also: [{ from: 'characters', by: '{item.refs.char}', slot: 'image' }] },
     },
     {
-      id: 'hsVideo1', type: 'video', over: 'tasks', out: 'video1',
+      id: 'hsVideo1', type: 'video', over: 'tasks', out: 'video1', where: 'videoPrompt1!=',
       model: '{values.videoModel}', aspectRatio: '9:16', durationSeconds: 8,
       startFrame: '{item.slots.image}', prompt: '{item.videoPrompt1}',
     },
@@ -888,7 +907,7 @@ const config = {
     map: { title: 'productName', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }] },
   },
   settings: {
-    title: 'ตั้งค่า',
+    title: 'ตั้งค่า', fullPage: true,   // ต้นฉบับ SettingsPage = หน้าเต็มแยก ไม่ใช่ modal ลอย
     form: [
       { el: 'dropdown', field: 'imageModel', label: 'โมเดลภาพ', options: IMAGE_MODELS },
       { el: 'dropdown', field: 'videoModel', label: 'โมเดลวิดีโอ', options: VIDEO_MODELS },
