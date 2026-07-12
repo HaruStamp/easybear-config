@@ -1,0 +1,1206 @@
+{
+  "schemaVersion": 1,
+  "title": "หมีแว่น ขายดุ",
+  "icon": "sell",
+  "app": {
+    "id": "hardsell"
+  },
+  "persistBar": true,
+  "theme": {
+    "toggle": true,
+    "default": "dark",
+    "vars": {
+      "--ev-bg": "#0e0e0e",
+      "--ev-surface": "rgba(255,255,255,0.05)",
+      "--ev-surface2": "rgba(255,255,255,0.12)",
+      "--ev-text": "#ffffff",
+      "--ev-dim": "rgba(255,255,255,0.55)",
+      "--ev-border": "rgba(255,255,255,0.10)",
+      "--ev-accent": "#f76b6b",
+      "--ev-accent-fg": "#ffffff",
+      "--ev-modal": "#1a1a1a"
+    },
+    "modes": {
+      "light": {
+        "--ev-bg": "#faf7f2",
+        "--ev-surface": "rgba(0,0,0,0.035)",
+        "--ev-surface2": "rgba(0,0,0,0.07)",
+        "--ev-text": "#1a1410",
+        "--ev-dim": "rgba(26,20,16,0.55)",
+        "--ev-border": "rgba(0,0,0,0.12)",
+        "--ev-accent": "#f97316",
+        "--ev-accent-fg": "#ffffff",
+        "--ev-modal": "#fffdf9"
+      }
+    }
+  },
+  "style": {
+    "radius": "2xl",
+    "cardRadius": 26,
+    "cardPad": 6,
+    "cardGradient": true,
+    "shadow": true,
+    "dropdown": "custom",
+    "selectedFill": "solid"
+  },
+  "breakpoints": {
+    "mobile": 640,
+    "tablet": 1024
+  },
+  "content": {
+    "item": {
+      "coll": "tasks",
+      "label": "คลิป"
+    },
+    "assets": [
+      "products",
+      "characters"
+    ]
+  },
+  "home": {
+    "title": "หมีแว่น ขายดุ",
+    "tag": "EasyBear Hardsell",
+    "description": "ปั่นคลิปขายสินค้าสไตล์ TikTok — ฮุคแรง โน้มน้าว ปิดการขาย ครบจบทีละหลายคลิป",
+    "cta": "สร้างโปรเจกต์ใหม่",
+    "ctaContrast": true,
+    "loadLabel": "โหลดโปรเจกต์เดิม",
+    "footer": [
+      "Copyright © 2026 พี่หมีแว่น AI Refill. All Rights Reserved.",
+      "สำหรับสมาชิกเผ่าหมีเท่านั้น — ห้ามเผยแพร่ต่อ ทำซ้ำ ดัดแปลง หรือนำไปใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาต"
+    ]
+  },
+  "values": {
+    "templateId": "ugc-review",
+    "toneId": "hardsell",
+    "textMode": "overlay",
+    "textStyleId": "golden-triangle",
+    "clipLength": "8",
+    "clipsPerProduct": "1",
+    "imageModel": "🍌 Nano Banana Pro",
+    "videoModel": "Veo 3.1 - Fast",
+    "blocklistEnabled": "true",
+    "blocklist": "ส่งฟรี,ฟรีค่าส่ง,ส่งฟรีทั่วไทย,รับประกันคืนเงิน,ของแท้100%,ของแท้ 100%,รักษาโรค,หายขาด,การันตี,100%",
+    "maxParallel": "1",
+    "staggerMs": "3000",
+    "maxAttempts": "3"
+  },
+  "collections": {
+    "control": {
+      "fields": []
+    },
+    "products": {
+      "fields": [
+        "name",
+        "price",
+        "description",
+        "promotion",
+        "cta",
+        "enabled"
+      ],
+      "slots": [
+        "image"
+      ]
+    },
+    "characters": {
+      "fields": [
+        "name",
+        "gender",
+        "ageRange",
+        "enabled"
+      ],
+      "slots": [
+        "image"
+      ]
+    },
+    "tasks": {
+      "fields": [
+        "productId",
+        "productName",
+        "clipIndex",
+        "angle",
+        "characterId",
+        "clipLength",
+        "h1",
+        "h2",
+        "speech",
+        "speech2",
+        "cta",
+        "sceneIdea",
+        "reviewer",
+        "reviewerGender",
+        "imagePrompt",
+        "videoPrompt1",
+        "videoPrompt2"
+      ],
+      "slots": [
+        "image",
+        "video1",
+        "video2"
+      ]
+    }
+  },
+  "seed": {
+    "control": [
+      {
+        "id": "ctl",
+        "fields": {}
+      }
+    ]
+  },
+  "ops": [
+    {
+      "id": "hsQueue",
+      "type": "transform",
+      "over": "control",
+      "out": "queued",
+      "fn": "hsBuildTasks"
+    },
+    {
+      "id": "hsContent",
+      "type": "transform",
+      "over": "tasks",
+      "out": "written",
+      "fn": "hsArchitectClip"
+    },
+    {
+      "id": "hsPrompts",
+      "type": "transform",
+      "over": "tasks",
+      "out": "prompted",
+      "fn": "hsBuildPrompts"
+    },
+    {
+      "id": "hsImage",
+      "type": "image",
+      "over": "tasks",
+      "out": "image",
+      "model": "{values.imageModel}",
+      "aspectRatio": "9:16",
+      "prompt": "{item.imagePrompt}",
+      "refs": {
+        "op": "lookupRefs",
+        "from": "products",
+        "by": "{item.refs.product}",
+        "slot": "image",
+        "also": [
+          {
+            "from": "characters",
+            "by": "{item.refs.char}",
+            "slot": "image"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hsVideo1",
+      "type": "video",
+      "over": "tasks",
+      "out": "video1",
+      "model": "{values.videoModel}",
+      "aspectRatio": "9:16",
+      "durationSeconds": 8,
+      "startFrame": "{item.slots.image}",
+      "prompt": "{item.videoPrompt1}"
+    },
+    {
+      "id": "hsVideo2",
+      "type": "video",
+      "over": "tasks",
+      "out": "video2",
+      "where": "clipLength=16",
+      "model": "{values.videoModel}",
+      "aspectRatio": "9:16",
+      "durationSeconds": 8,
+      "startFrame": "{item.slots.video1}",
+      "tailTrim": 1,
+      "prompt": "{item.videoPrompt2}"
+    }
+  ],
+  "stages": [
+    {
+      "op": "hsQueue"
+    },
+    {
+      "checkpoint": "setup",
+      "hard": true
+    },
+    {
+      "op": "hsContent"
+    },
+    {
+      "op": "hsPrompts"
+    },
+    {
+      "op": "hsImage"
+    },
+    {
+      "op": "hsVideo1"
+    },
+    {
+      "op": "hsVideo2"
+    },
+    {
+      "checkpoint": "produce",
+      "gate": {
+        "op": "all",
+        "from": "tasks",
+        "slot": "video1"
+      }
+    }
+  ],
+  "run": {
+    "maxParallel": 1,
+    "staggerMs": 3000,
+    "maxAttempts": 3
+  },
+  "settings": {
+    "title": "ตั้งค่า",
+    "form": [
+      {
+        "el": "dropdown",
+        "field": "imageModel",
+        "label": "โมเดลภาพ",
+        "options": [
+          {
+            "value": "🍌 Nano Banana Pro",
+            "label": "🍌 Nano Banana Pro",
+            "icon": "auto_awesome"
+          },
+          {
+            "value": "🍌 Nano Banana 2",
+            "label": "🍌 Nano Banana 2",
+            "icon": "image"
+          },
+          {
+            "value": "Imagen 4",
+            "label": "Imagen 4",
+            "icon": "photo_camera"
+          }
+        ]
+      },
+      {
+        "el": "dropdown",
+        "field": "videoModel",
+        "label": "โมเดลวิดีโอ",
+        "options": [
+          {
+            "value": "Omni Flash",
+            "label": "Omni Flash",
+            "icon": "speed"
+          },
+          {
+            "value": "Veo 3.1 - Lite",
+            "label": "Veo 3.1 - Lite",
+            "icon": "electric_bolt"
+          },
+          {
+            "value": "Veo 3.1 - Fast",
+            "label": "Veo 3.1 - Fast",
+            "icon": "bolt"
+          },
+          {
+            "value": "Veo 3.1 - Quality",
+            "label": "Veo 3.1 - Quality",
+            "icon": "high_quality"
+          },
+          {
+            "value": "Veo 3.1 - Lite [Lower Priority]",
+            "label": "Veo 3.1 - Lite [Lower Priority]",
+            "icon": "trending_down"
+          }
+        ]
+      },
+      {
+        "el": "stepper",
+        "field": "maxParallel",
+        "label": "งานพร้อมกัน (1-4)",
+        "min": 1,
+        "max": 4
+      },
+      {
+        "el": "switch",
+        "field": "blocklistEnabled",
+        "label": "เปิดกรองคำต้องห้าม"
+      },
+      {
+        "el": "taginput",
+        "field": "blocklist",
+        "label": "คำต้องห้าม (แตะเพื่อลบ)"
+      }
+    ]
+  },
+  "phases": [
+    {
+      "id": "setup",
+      "title": "ตั้งค่า",
+      "navLabel": "ตั้งค่า",
+      "form": [
+        {
+          "el": "section",
+          "label": "สินค้า",
+          "icon": "inventory_2"
+        },
+        {
+          "el": "repeat",
+          "coll": "products",
+          "empty": "ยังไม่มีสินค้า — กดเพิ่มสินค้าด้านล่าง",
+          "card": [
+            {
+              "el": "box",
+              "className": "border rounded-2xl p-4 flex flex-col gap-3 border-[var(--ev-border)] bg-[var(--ev-surface)]",
+              "card": [
+                {
+                  "el": "row",
+                  "className": "gap-4 items-start flex-col sm:flex-row",
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "w-full sm:w-[140px] shrink-0 flex flex-col gap-2",
+                      "card": [
+                        {
+                          "el": "media-slot",
+                          "slot": "image",
+                          "aspect": "1:1"
+                        },
+                        {
+                          "el": "upload",
+                          "label": "รูปสินค้า",
+                          "into": "image",
+                          "resize": {
+                            "maxPx": 400,
+                            "quality": 0.7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex-1 min-w-0 flex flex-col gap-2",
+                      "card": [
+                        {
+                          "el": "input",
+                          "field": "name",
+                          "label": "ชื่อสินค้า *",
+                          "placeholder": "เช่น ครีมหมีขาว"
+                        },
+                        {
+                          "el": "row",
+                          "className": "gap-2",
+                          "card": [
+                            {
+                              "el": "input",
+                              "field": "price",
+                              "label": "ราคา",
+                              "placeholder": "฿390",
+                              "className": "flex-1"
+                            },
+                            {
+                              "el": "input",
+                              "field": "promotion",
+                              "label": "โปรโมชั่น",
+                              "placeholder": "ลด 50% วันนี้เท่านั้น",
+                              "className": "flex-1"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "textarea",
+                          "field": "description",
+                          "label": "จุดขาย",
+                          "placeholder": "จุดเด่นของสินค้า ใช้แล้วได้อะไร"
+                        },
+                        {
+                          "el": "input",
+                          "field": "cta",
+                          "label": "CTA (ว่าง = AI คิดเอง)",
+                          "placeholder": "กดสั่งเลย",
+                          "maxLength": 30
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center justify-between",
+                  "card": [
+                    {
+                      "el": "switch",
+                      "field": "enabled",
+                      "label": "ใช้สินค้านี้"
+                    },
+                    {
+                      "el": "delete-button",
+                      "label": "ลบ",
+                      "size": "sm"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "el": "add-button",
+          "coll": "products",
+          "label": "เพิ่มสินค้า",
+          "icon": "add",
+          "addDefaults": {
+            "name": "",
+            "enabled": "true"
+          }
+        },
+        {
+          "el": "divider"
+        },
+        {
+          "el": "section",
+          "label": "คนรีวิว (ไม่บังคับ)",
+          "icon": "person"
+        },
+        {
+          "el": "repeat",
+          "coll": "characters",
+          "empty": "ไม่บังคับ — ไม่เพิ่ม = AI สุ่มคนรีวิวเอง",
+          "card": [
+            {
+              "el": "box",
+              "className": "border rounded-2xl p-4 flex flex-col gap-3 border-[var(--ev-border)] bg-[var(--ev-surface)]",
+              "card": [
+                {
+                  "el": "row",
+                  "className": "gap-4 items-start flex-col sm:flex-row",
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "w-full sm:w-[120px] shrink-0 flex flex-col gap-2",
+                      "card": [
+                        {
+                          "el": "media-slot",
+                          "slot": "image",
+                          "aspect": "1:1"
+                        },
+                        {
+                          "el": "upload",
+                          "label": "รูปคนรีวิว",
+                          "into": "image",
+                          "resize": {
+                            "maxPx": 400,
+                            "quality": 0.7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex-1 min-w-0 flex flex-col gap-2",
+                      "card": [
+                        {
+                          "el": "input",
+                          "field": "name",
+                          "label": "ชื่อ (ไว้จำเอง)"
+                        },
+                        {
+                          "el": "segmented",
+                          "field": "gender",
+                          "label": "เพศ (คุมคำลงท้าย ค่ะ/ครับ + เสียง)",
+                          "options": [
+                            {
+                              "value": "female",
+                              "label": "หญิง",
+                              "icon": "female"
+                            },
+                            {
+                              "value": "male",
+                              "label": "ชาย",
+                              "icon": "male"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "dropdown",
+                          "field": "ageRange",
+                          "label": "ช่วงวัย",
+                          "options": [
+                            {
+                              "value": "วัยรุ่น 18-25",
+                              "label": "วัยรุ่น 18-25"
+                            },
+                            {
+                              "value": "วัยทำงาน 25-35",
+                              "label": "วัยทำงาน 25-35"
+                            },
+                            {
+                              "value": "กลางคน 35-50",
+                              "label": "กลางคน 35-50"
+                            },
+                            {
+                              "value": "สูงวัย 50+",
+                              "label": "สูงวัย 50+"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center justify-between",
+                  "card": [
+                    {
+                      "el": "switch",
+                      "field": "enabled",
+                      "label": "อยู่ใน pool สุ่ม"
+                    },
+                    {
+                      "el": "delete-button",
+                      "label": "ลบ",
+                      "size": "sm"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "el": "add-button",
+          "coll": "characters",
+          "label": "เพิ่มคนรีวิว",
+          "icon": "person_add",
+          "addDefaults": {
+            "name": "",
+            "gender": "female",
+            "ageRange": "วัยทำงาน 25-35",
+            "enabled": "true"
+          }
+        },
+        {
+          "el": "divider"
+        },
+        {
+          "el": "section",
+          "label": "สไตล์คลิป",
+          "icon": "movie_filter"
+        },
+        {
+          "el": "grid-select",
+          "field": "templateId",
+          "label": "ฉาก (22 แบบ)",
+          "cols": 4,
+          "options": [
+            {
+              "value": "ugc-review",
+              "label": "UGC รีวิว",
+              "desc": "คนถือสินค้า รีวิวจริง",
+              "icon": "reviews"
+            },
+            {
+              "value": "ugc-live",
+              "label": "ไลฟ์สด",
+              "desc": "ขายไลฟ์ ringlight",
+              "icon": "sensors"
+            },
+            {
+              "value": "ugc-hand",
+              "label": "มือ POV",
+              "desc": "รีวิว ไม่เห็นหน้า",
+              "icon": "back_hand"
+            },
+            {
+              "value": "ugc-using",
+              "label": "สาธิตใช้จริง",
+              "desc": "โชว์การใช้งาน",
+              "icon": "touch_app"
+            },
+            {
+              "value": "ugc-compare",
+              "label": "ก่อน-หลัง",
+              "desc": "เทียบผลลัพธ์",
+              "icon": "compare"
+            },
+            {
+              "value": "ugc-feeling",
+              "label": "ความรู้สึก",
+              "desc": "รีแอคหลังใช้ ประทับใจ",
+              "icon": "sentiment_satisfied"
+            },
+            {
+              "value": "ugc-closeup",
+              "label": "ซูมสินค้า",
+              "desc": "โชว์รายละเอียดใกล้ๆ",
+              "icon": "zoom_in"
+            },
+            {
+              "value": "ugc-recommend",
+              "label": "แนะนำ",
+              "desc": "พูดแนะนำให้เพื่อน",
+              "icon": "thumb_up"
+            },
+            {
+              "value": "ugc-warehouse",
+              "label": "โกดัง",
+              "desc": "ส่งตรงจากคลัง",
+              "icon": "warehouse"
+            },
+            {
+              "value": "ugc-factory",
+              "label": "โรงงาน",
+              "desc": "ข้างสายพานผลิต",
+              "icon": "factory"
+            },
+            {
+              "value": "ugc-mall",
+              "label": "ห้างฯ",
+              "desc": "ช้อปปิ้งในห้างหรู",
+              "icon": "storefront"
+            },
+            {
+              "value": "ugc-market",
+              "label": "ตลาดสด",
+              "desc": "แผงตลาดไทย",
+              "icon": "local_grocery_store"
+            },
+            {
+              "value": "pro-studio",
+              "label": "โฆษณาสตูดิโอ",
+              "desc": "มืออาชีพ สวยงาม",
+              "icon": "photo_camera"
+            },
+            {
+              "value": "product-only",
+              "label": "สินค้าอย่างเดียว",
+              "desc": "ไม่มีคน",
+              "icon": "inventory_2"
+            },
+            {
+              "value": "lifestyle",
+              "label": "Lifestyle",
+              "desc": "ใช้งานจริง สถานการณ์จริง",
+              "icon": "cottage"
+            },
+            {
+              "value": "social-viral",
+              "label": "Social Viral",
+              "desc": "สะดุดตา เหมาะ TikTok/IG",
+              "icon": "trending_up"
+            },
+            {
+              "value": "d3-person",
+              "label": "3D คน",
+              "desc": "การ์ตูนคนน่ารัก",
+              "icon": "face"
+            },
+            {
+              "value": "d3-animal",
+              "label": "3D สัตว์",
+              "desc": "สัตว์น่ารัก",
+              "icon": "pets"
+            },
+            {
+              "value": "d3-fruit",
+              "label": "3D ผลไม้",
+              "desc": "ผัก/ผลไม้",
+              "icon": "nutrition"
+            },
+            {
+              "value": "d3-object",
+              "label": "3D สิ่งของ",
+              "desc": "สิ่งของน่ารัก",
+              "icon": "category"
+            },
+            {
+              "value": "d3-car",
+              "label": "3D รถ",
+              "desc": "รถแบบ Cars",
+              "icon": "directions_car"
+            },
+            {
+              "value": "d3-organ",
+              "label": "3D อวัยวะ",
+              "desc": "เกี่ยวกับสินค้า",
+              "icon": "favorite"
+            }
+          ]
+        },
+        {
+          "el": "segmented",
+          "field": "toneId",
+          "label": "โทนการขาย",
+          "options": [
+            {
+              "value": "hardsell",
+              "label": "ขายดุ (ดุดัน)",
+              "desc": "ฮุคแรง โน้มน้าว ปิดการขาย",
+              "icon": "local_fire_department"
+            },
+            {
+              "value": "excite",
+              "label": "ตื่นเต้น ว้าว",
+              "desc": "พลังงานสูง น่าตื่นเต้น",
+              "icon": "celebration"
+            },
+            {
+              "value": "friendly",
+              "label": "เป็นกันเอง",
+              "desc": "ชวนคุย เหมือนเพื่อนแนะนำ",
+              "icon": "sentiment_satisfied"
+            },
+            {
+              "value": "trust",
+              "label": "น่าเชื่อถือ",
+              "desc": "จริงจัง รีวิวจริง ไม่โอเวอร์",
+              "icon": "verified"
+            },
+            {
+              "value": "fun",
+              "label": "สนุก ตลก",
+              "desc": "อารมณ์ขัน สดใส",
+              "icon": "mood"
+            },
+            {
+              "value": "soft",
+              "label": "นุ่มนวล ละมุน",
+              "desc": "โทนอ่อน เหมาะบิวตี้/สุขภาพ",
+              "icon": "spa"
+            }
+          ]
+        },
+        {
+          "el": "row",
+          "className": "gap-4 flex-col md:flex-row",
+          "card": [
+            {
+              "el": "segmented",
+              "field": "textMode",
+              "label": "ตัวหนังสือบนภาพ",
+              "className": "flex-1",
+              "options": [
+                {
+                  "value": "overlay",
+                  "label": "มีพาดหัว H1/H2",
+                  "icon": "title"
+                },
+                {
+                  "value": "none",
+                  "label": "ภาพสะอาด",
+                  "icon": "hide_image"
+                }
+              ]
+            },
+            {
+              "el": "dropdown",
+              "field": "textStyleId",
+              "label": "สไตล์ตัวหนังสือ",
+              "className": "flex-1",
+              "when": "textMode=overlay",
+              "options": [
+                {
+                  "value": "golden-triangle",
+                  "label": "ขายดุ",
+                  "desc": "ตัวหนา ฉูดฉาด · เหลือง+ขาว+แดง",
+                  "colors": [
+                    "#FFD700",
+                    "#FFFFFF",
+                    "#FF1744"
+                  ]
+                },
+                {
+                  "value": "promo-hot",
+                  "label": "โปรแรง",
+                  "desc": "ตัวหนา เร่งด่วน · เหลือง+แดง",
+                  "colors": [
+                    "#FFD700",
+                    "#FF0000"
+                  ]
+                },
+                {
+                  "value": "minimal",
+                  "label": "มินิมอล",
+                  "desc": "เรียบสะอาด ตัวบาง · ขาว+เทา",
+                  "colors": [
+                    "#FFFFFF",
+                    "#9AA0A6"
+                  ]
+                },
+                {
+                  "value": "cute-sweet",
+                  "label": "น่ารักหวานๆ",
+                  "desc": "ฟอนต์มน ชมพูหวาน",
+                  "colors": [
+                    "#FF8FC7",
+                    "#FFFFFF"
+                  ]
+                },
+                {
+                  "value": "premium-lux",
+                  "label": "พรีเมียมหรู",
+                  "desc": "ตัวเซริฟ ดำ+ทอง",
+                  "colors": [
+                    "#111111",
+                    "#D4AF37"
+                  ]
+                },
+                {
+                  "value": "neon-teen",
+                  "label": "วัยรุ่นนีออน",
+                  "desc": "ตัวหนาเอียง · ฟ้า+ม่วงนีออน",
+                  "colors": [
+                    "#00E5FF",
+                    "#B14BFF"
+                  ]
+                },
+                {
+                  "value": "pop-bright",
+                  "label": "สดใสป๊อป",
+                  "desc": "ฟอนต์กลม · ส้ม+เหลือง",
+                  "colors": [
+                    "#FF6D00",
+                    "#FFD700"
+                  ]
+                },
+                {
+                  "value": "health-clean",
+                  "label": "สายสุขภาพ",
+                  "desc": "สะอาด โทนเขียว · มินต์+ขาว",
+                  "colors": [
+                    "#2EE6C5",
+                    "#FFFFFF"
+                  ]
+                },
+                {
+                  "value": "cartoon-pop",
+                  "label": "การ์ตูนป๊อป",
+                  "desc": "ฟอนต์เด้ง หลากสี",
+                  "colors": [
+                    "#FF1744",
+                    "#FFD700",
+                    "#00B0FF"
+                  ]
+                },
+                {
+                  "value": "jp-clean",
+                  "label": "คลีนญี่ปุ่น",
+                  "desc": "มินิมอล โทนครีม-น้ำตาล",
+                  "colors": [
+                    "#F0E6D2",
+                    "#A6795A"
+                  ]
+                },
+                {
+                  "value": "bw-cool",
+                  "label": "เท่ดำขาว",
+                  "desc": "คอนทราสต์ เท่ · ดำ+ขาว",
+                  "colors": [
+                    "#111111",
+                    "#FFFFFF"
+                  ]
+                },
+                {
+                  "value": "random",
+                  "label": "สุ่มสไตล์",
+                  "desc": "สลับสไตล์ใหม่ทุกคลิป",
+                  "icon": "shuffle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "el": "divider"
+        },
+        {
+          "el": "section",
+          "label": "การผลิต",
+          "icon": "factory"
+        },
+        {
+          "el": "row",
+          "className": "gap-4 flex-col md:flex-row",
+          "card": [
+            {
+              "el": "segmented",
+              "field": "clipLength",
+              "label": "ความยาวคลิป",
+              "className": "flex-1",
+              "options": [
+                {
+                  "value": "8",
+                  "label": "8 วินาที",
+                  "icon": "timer"
+                },
+                {
+                  "value": "16",
+                  "label": "16 วินาที (2 ช่วงต่อกัน)",
+                  "icon": "timer"
+                }
+              ]
+            },
+            {
+              "el": "stepper",
+              "field": "clipsPerProduct",
+              "label": "จำนวนคลิปต่อสินค้า",
+              "min": 1,
+              "max": 100,
+              "className": "flex-1"
+            }
+          ]
+        },
+        {
+          "el": "note",
+          "tone": "info",
+          "value": "กด \"จัดคิวผลิต\" เพื่อสร้างคิวคลิปจากสินค้าที่ติ๊กใช้ · แล้วไปหน้า \"ผลิต\" เพื่อสั่งเดินงานทั้งคิว"
+        },
+        {
+          "el": "gen-phase",
+          "ops": [
+            "hsQueue"
+          ],
+          "label": "จัดคิวผลิต",
+          "icon": "playlist_add",
+          "className": "w-full justify-center h-12"
+        }
+      ]
+    },
+    {
+      "id": "produce",
+      "title": "ผลิต",
+      "navLabel": "ผลิต",
+      "form": [
+        {
+          "el": "row",
+          "className": "items-center gap-2 flex-wrap",
+          "card": [
+            {
+              "el": "stat-card",
+              "label": "คิวทั้งหมด",
+              "value": {
+                "op": "count",
+                "from": "tasks"
+              },
+              "icon": "movie"
+            },
+            {
+              "el": "stat-card",
+              "label": "เสร็จแล้ว",
+              "value": {
+                "op": "count",
+                "from": "tasks",
+                "slot": "video1"
+              },
+              "icon": "check_circle"
+            },
+            {
+              "el": "run-button",
+              "label": "เริ่มผลิตทั้งคิว"
+            }
+          ]
+        },
+        {
+          "el": "repeat",
+          "coll": "tasks",
+          "empty": "ยังไม่มีคิวงาน — กลับไปหน้าตั้งค่าแล้วกด \"จัดคิวผลิต\"",
+          "card": [
+            {
+              "el": "box",
+              "className": "border rounded-2xl p-4 flex flex-col gap-3 border-[var(--ev-border)] bg-[var(--ev-surface)]",
+              "card": [
+                {
+                  "el": "row",
+                  "className": "items-center gap-2",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "text",
+                      "value": "{item.productName}",
+                      "className": "font-bold text-sm truncate flex-1"
+                    },
+                    {
+                      "el": "stat-chip",
+                      "value": "คลิป {item.clipIndex}",
+                      "icon": "movie"
+                    },
+                    {
+                      "el": "stat-chip",
+                      "value": "{item.clipLength} วิ",
+                      "icon": "timer"
+                    },
+                    {
+                      "el": "stat-chip",
+                      "value": "{item.angle}",
+                      "icon": "campaign"
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "gap-3 flex-col md:flex-row",
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "flex-1 flex flex-col gap-1.5",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "ภาพเฟรมแรก",
+                          "className": "text-[11px] font-bold uppercase tracking-wide opacity-40"
+                        },
+                        {
+                          "el": "media-slot",
+                          "slot": "image",
+                          "aspect": "9:16"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex-1 flex flex-col gap-1.5",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "วิดีโอช่วง 1 (0-8 วิ)",
+                          "className": "text-[11px] font-bold uppercase tracking-wide opacity-40"
+                        },
+                        {
+                          "el": "media-slot",
+                          "slot": "video1",
+                          "aspect": "9:16"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex-1 flex flex-col gap-1.5",
+                      "when": "item.clipLength=16",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "วิดีโอช่วง 2 (8-16 วิ)",
+                          "className": "text-[11px] font-bold uppercase tracking-wide opacity-40"
+                        },
+                        {
+                          "el": "media-slot",
+                          "slot": "video2",
+                          "aspect": "9:16"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "box",
+                  "when": "item.h1!=",
+                  "className": "rounded-xl p-3 bg-black/20 border border-[var(--ev-border)] flex flex-col gap-1",
+                  "card": [
+                    {
+                      "el": "text",
+                      "value": "H1 {item.h1} · H2 {item.h2}",
+                      "className": "text-[13px] font-bold"
+                    },
+                    {
+                      "el": "text",
+                      "value": "พูด: {item.speech}",
+                      "className": "text-xs opacity-80 whitespace-pre-wrap"
+                    },
+                    {
+                      "el": "text",
+                      "value": "พูดต่อ: {item.speech2}",
+                      "when": "item.speech2!=",
+                      "className": "text-xs opacity-80 whitespace-pre-wrap"
+                    },
+                    {
+                      "el": "text",
+                      "value": "CTA: {item.cta}",
+                      "className": "text-xs opacity-60"
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "gap-2 flex-wrap",
+                  "card": [
+                    {
+                      "el": "gen-button",
+                      "op": "hsContent",
+                      "label": "เขียนบทใหม่",
+                      "icon": "edit_note",
+                      "size": "sm"
+                    },
+                    {
+                      "el": "gen-button",
+                      "op": "hsImage",
+                      "label": "สร้างภาพ",
+                      "icon": "image",
+                      "size": "sm",
+                      "disabledWhen": {
+                        "op": "eq",
+                        "a": "{item.h1}",
+                        "b": ""
+                      },
+                      "reason": "เขียนบทก่อน"
+                    },
+                    {
+                      "el": "gen-button",
+                      "op": "hsVideo1",
+                      "label": "วิดีโอช่วง 1",
+                      "icon": "movie",
+                      "size": "sm",
+                      "disabledWhen": {
+                        "op": "not",
+                        "a": {
+                          "op": "refsFilled",
+                          "key": "product",
+                          "from": "products",
+                          "slot": "image"
+                        }
+                      }
+                    },
+                    {
+                      "el": "gen-button",
+                      "op": "hsVideo2",
+                      "label": "วิดีโอช่วง 2",
+                      "icon": "movie_filter",
+                      "size": "sm",
+                      "when": "item.clipLength=16"
+                    },
+                    {
+                      "el": "download-button",
+                      "to": "video1",
+                      "label": "โหลดช่วง 1",
+                      "size": "sm"
+                    },
+                    {
+                      "el": "download-button",
+                      "to": "video2",
+                      "label": "โหลดช่วง 2",
+                      "size": "sm",
+                      "when": "item.clipLength=16"
+                    },
+                    {
+                      "el": "open-editor",
+                      "coll": "tasks",
+                      "label": "ตัดต่อ/รวมคลิป",
+                      "size": "sm"
+                    },
+                    {
+                      "el": "save-button",
+                      "scope": "tree",
+                      "label": "เซฟคลิปนี้",
+                      "icon": "save",
+                      "size": "sm",
+                      "variant": "outline"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "brain": {}
+}
