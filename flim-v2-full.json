@@ -1071,7 +1071,7 @@
         "field": "autoPrevRef",
         "icon": "link",
         "label": "ภาพต่อเนื่องอัตโนมัติ",
-        "placeholder": "ทุกช็อตแนบภาพช็อตก่อนหน้าเป็นรูปอ้างอิงให้เอง (ช็อตแรกไม่มี = ข้าม)"
+        "placeholder": "ช็อตที่ไม่ได้เลือก Shot ref จะแนบภาพช็อตก่อนหน้าให้อัตโนมัติ"
       },
       {
         "el": "segmented",
@@ -1286,7 +1286,8 @@
         "mood",
         "motion",
         "audioType",
-        "duration"
+        "duration",
+        "refShot"
       ],
       "slots": [
         "image",
@@ -1423,20 +1424,34 @@
           },
           {
             "from": "shots",
+            "by": "{item.refShot}",
+            "slot": "image",
+            "when": "item.refShot!="
+          },
+          {
+            "from": "shots",
             "by": {
               "op": "prevId",
               "from": "shots"
             },
             "slot": "image",
             "when": {
-              "op": "or",
-              "a": "{item.prevRef}",
-              "b": "{values.autoPrevRef}"
+              "op": "and",
+              "a": "{values.autoPrevRef}",
+              "b": {
+                "op": "eq",
+                "a": "{item.refShot}",
+                "b": ""
+              }
             }
           }
         ]
       },
-      "prompt": "{item.imagePrompt}. Camera: {item.cameraAngle}. Mood: {item.mood}. Style: {values.style}."
+      "prompt": "{item.imagePrompt}. Camera: {item.cameraAngle}. Mood: {item.mood}. Style: {values.style}.",
+      "after": {
+        "field": "refShot",
+        "prev": "{values.autoPrevRef}"
+      }
     },
     {
       "id": "genVideo",
@@ -4825,11 +4840,6 @@
           "component": "runBanner"
         },
         {
-          "el": "dashboard",
-          "coll": "shots",
-          "label": "ช็อตทั้งหมด"
-        },
-        {
           "el": "repeat",
           "coll": "episodes",
           "card": [
@@ -4882,9 +4892,13 @@
           ],
           "label": "สร้างภาพทั้งหมด",
           "icon": "photo_library",
-          "variant": "solid",
+          "variant": "contrast",
           "size": "lg",
-          "className": "w-full justify-center rounded-2xl"
+          "className": "px-8 shrink-0 font-bold max-[1279px]:w-full max-[1279px]:justify-center",
+          "style": {
+            "height": "52px",
+            "borderRadius": "16px"
+          }
         },
         {
           "el": "segmented",
@@ -5278,11 +5292,28 @@
                               "empty": "ยังไม่มีวัตถุ"
                             },
                             {
-                              "el": "switch",
-                              "field": "prevRef",
+                              "el": "dropdown",
+                              "variant": "pill",
                               "icon": "link",
-                              "label": "ต่อภาพจากช็อตก่อนหน้า",
-                              "placeholder": "แนบภาพช็อตที่แล้วเป็นรูปอ้างอิงตอนสร้างภาพช็อตนี้"
+                              "field": "refShot",
+                              "label": "Shot ref",
+                              "options": {
+                                "coll": "shots",
+                                "where": "refs.ep~{values.activeEp}",
+                                "before": true,
+                                "empty": "ไม่ใช้",
+                                "labelTpl": {
+                                  "op": "concat",
+                                  "parts": [
+                                    "ช็อต ",
+                                    {
+                                      "op": "add",
+                                      "a": "{index}",
+                                      "b": 1
+                                    }
+                                  ]
+                                }
+                              }
                             }
                           ]
                         }
@@ -5290,7 +5321,7 @@
                     },
                     {
                       "el": "box",
-                      "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col justify-center gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
+                      "className": "min-[720px]:w-[230px] shrink-0 p-5 min-[720px]:p-6 flex flex-col gap-3 border-t border-white/[0.07] min-[720px]:border-t-0 min-[720px]:border-l min-[720px]:border-white/[0.06] min-[720px]:bg-white/[0.015]",
                       "card": [
                         {
                           "el": "gen-button",
