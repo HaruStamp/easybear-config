@@ -4848,6 +4848,39 @@
               ]
             }
           ]
+        },
+        {
+          "el": "row",
+          "className": "gap-3 flex-col md:flex-row pt-2",
+          "card": [
+            {
+              "el": "save-button",
+              "scope": [
+                "characters",
+                "scenes",
+                "objects"
+              ],
+              "values": [
+                "style"
+              ],
+              "label": "เซฟชุดโลก",
+              "icon": "public",
+              "variant": "outline",
+              "style": {
+                "height": "48px",
+                "borderRadius": "12px"
+              },
+              "className": "w-full justify-center font-bold flex-1"
+            },
+            {
+              "el": "load-button",
+              "label": "โหลดชุดโลก",
+              "icon": "upload_file",
+              "expect": "characters",
+              "mode": "append",
+              "className": "w-full justify-center font-bold flex-1 !h-12 !rounded-xl"
+            }
+          ]
         }
       ]
     },
@@ -7725,7 +7758,61 @@
                         },
                         {
                           "el": "zip-export",
-                          "label": "ดาวน์โหลดไฟล์แยก (รูป + คลิป)",
+                          "label": "ดาวน์โหลดตอนนี้ (รูป + คลิป)",
+                          "icon": "folder_zip",
+                          "variant": "outline",
+                          "value": "{values.title}",
+                          "coll": "shots",
+                          "groupColl": "episodes",
+                          "childBy": "ep",
+                          "folder": "Episode_{index}",
+                          "prefix": "shot",
+                          "slot": "video",
+                          "imageSlot": "image",
+                          "header": [
+                            {
+                              "label": "PROJECT",
+                              "value": "{values.title}"
+                            },
+                            {
+                              "label": "PLOT",
+                              "value": "{values.plot}"
+                            }
+                          ],
+                          "groupLine": "EP {index}: {item.title}",
+                          "line": "Shot {index}: {item.imagePrompt}",
+                          "style": {
+                            "height": "48px",
+                            "borderRadius": "12px"
+                          },
+                          "className": "w-full justify-center",
+                          "disabledWhen": {
+                            "op": "not",
+                            "a": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "count",
+                                  "from": "shots",
+                                  "where": "refs.ep~{item.id}"
+                                },
+                                {
+                                  "op": "all",
+                                  "from": "shots",
+                                  "where": "refs.ep~{item.id}",
+                                  "slot": "video"
+                                }
+                              ]
+                            }
+                          },
+                          "reason": "รอวิดีโอครบทุกช็อตก่อน",
+                          "perItem": true,
+                          "assetsFolder": "Assets",
+                          "includeSave": true
+                        },
+                        {
+                          "el": "zip-export",
+                          "label": "ดาวน์โหลดทั้งเรื่อง (รูป + คลิป)",
                           "icon": "folder_zip",
                           "variant": "outline",
                           "value": "{values.title}",
@@ -7761,7 +7848,35 @@
                               "slot": "video"
                             }
                           },
-                          "reason": "รอวิดีโอครบทุกช็อตก่อน"
+                          "reason": "รอวิดีโอครบทุกช็อตก่อน",
+                          "assetsFolder": "Assets",
+                          "includeSave": true
+                        },
+                        {
+                          "el": "row",
+                          "className": "gap-4 flex-col md:flex-row",
+                          "card": [
+                            {
+                              "el": "save-button",
+                              "scope": "tree",
+                              "label": "เซฟตอนนี้",
+                              "icon": "save",
+                              "variant": "outline",
+                              "style": {
+                                "height": "48px",
+                                "borderRadius": "12px"
+                              },
+                              "className": "w-full justify-center flex-1"
+                            },
+                            {
+                              "el": "load-button",
+                              "label": "เพิ่มตอนจากไฟล์",
+                              "icon": "upload_file",
+                              "expect": "episodes",
+                              "mode": "append",
+                              "className": "w-full justify-center flex-1 !h-12 !rounded-xl"
+                            }
+                          ]
                         },
                         {
                           "el": "row",
