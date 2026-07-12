@@ -213,7 +213,8 @@
     "dialogueLanguage": "th",
     "activeEp": "ep_1",
     "sbView": "table",
-    "showScript": ""
+    "showScript": "",
+    "covGpt": ""
   },
   "lookups": {
     "opBanner": {
@@ -6200,7 +6201,7 @@
         },
         {
           "el": "box",
-          "className": "flex flex-col lg:flex-row gap-8 items-start",
+          "className": "flex flex-col xl:flex-row gap-8 items-start",
           "card": [
             {
               "el": "box",
@@ -6925,6 +6926,36 @@
                                               "className": "w-full justify-center"
                                             },
                                             {
+                                              "el": "button",
+                                              "action": "set",
+                                              "to": "covGpt",
+                                              "value": "1",
+                                              "label": "ทำปกด้วย ChatGPT",
+                                              "icon": "smart_toy",
+                                              "variant": "outline",
+                                              "style": {
+                                                "height": "52px",
+                                                "borderRadius": "16px"
+                                              },
+                                              "className": "w-full justify-center",
+                                              "when": "covGpt!=1"
+                                            },
+                                            {
+                                              "el": "button",
+                                              "action": "set",
+                                              "to": "covGpt",
+                                              "value": "",
+                                              "label": "ทำปกด้วย ChatGPT",
+                                              "icon": "smart_toy",
+                                              "variant": "outline",
+                                              "style": {
+                                                "height": "52px",
+                                                "borderRadius": "16px"
+                                              },
+                                              "className": "w-full justify-center !border-green-500/50 !bg-green-500/10 !text-green-300",
+                                              "when": "covGpt=1"
+                                            },
+                                            {
                                               "el": "note",
                                               "tone": "danger",
                                               "icon": "info",
@@ -6947,6 +6978,254 @@
                                                 }
                                               },
                                               "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "box",
+                                      "when": "covGpt=1",
+                                      "className": "rounded-2xl border border-green-500/25 bg-green-500/[0.05] p-4 flex flex-col gap-3.5",
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "value": "วิธีทำปกต่อใน ChatGPT",
+                                          "className": "text-[10px] font-bold uppercase tracking-wider !text-green-300"
+                                        },
+                                        {
+                                          "el": "row",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "className": "gap-2.5 items-start",
+                                          "card": [
+                                            {
+                                              "el": "text",
+                                              "value": "1",
+                                              "className": "shrink-0 w-5 h-5 rounded-full bg-green-500/20 !text-green-300 text-[11px] font-extrabold flex items-center justify-center mt-0.5"
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "flex-1 min-w-0 flex flex-row items-center justify-between gap-2",
+                                              "card": [
+                                                {
+                                                  "el": "box",
+                                                  "className": "flex flex-col",
+                                                  "card": [
+                                                    {
+                                                      "el": "text",
+                                                      "value": "คัดลอก prompt",
+                                                      "className": "text-[12.5px] font-bold !text-[var(--ev-text)]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "prompt ตัวเต็มที่ใช้สั่งสร้างปก (อ้าง \"รูป N\" ตามลำดับรูปด้านล่าง)",
+                                                      "className": "text-[11px] opacity-40"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "el": "copy-button",
+                                                  "op": "genCover",
+                                                  "label": "คัดลอก",
+                                                  "icon": "content_copy",
+                                                  "variant": "outline",
+                                                  "size": "sm",
+                                                  "className": "shrink-0 !text-green-300 !border-green-500/40"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "row",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "className": "gap-2.5 items-start",
+                                          "card": [
+                                            {
+                                              "el": "text",
+                                              "value": "2",
+                                              "className": "shrink-0 w-5 h-5 rounded-full bg-green-500/20 !text-green-300 text-[11px] font-extrabold flex items-center justify-center mt-0.5"
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "flex-1 min-w-0 flex flex-col gap-1",
+                                              "card": [
+                                                {
+                                                  "el": "text",
+                                                  "value": "โหลดรูป ref แล้วแนบเข้า ChatGPT ตามลำดับ",
+                                                  "className": "text-[12.5px] font-bold !text-[var(--ev-text)]"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "เลขชื่อไฟล์ = \"รูป N\" ใน prompt",
+                                                  "className": "text-[11px] opacity-40"
+                                                },
+                                                {
+                                                  "el": "box",
+                                                  "className": "flex flex-col gap-1.5 mt-1.5",
+                                                  "card": [
+                                                    {
+                                                      "el": "repeat",
+                                                      "coll": "characters",
+                                                      "where": "id@{item.coverChars}",
+                                                      "card": [
+                                                        {
+                                                          "el": "row",
+                                                          "style": {
+                                                            "flexWrap": "nowrap"
+                                                          },
+                                                          "className": "items-center gap-2.5 bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 px-2",
+                                                          "card": [
+                                                            {
+                                                              "el": "box",
+                                                              "className": "w-[30px] shrink-0",
+                                                              "card": [
+                                                                {
+                                                                  "el": "media-slot",
+                                                                  "src": "{item.slots.sheet}",
+                                                                  "aspect": "3:4",
+                                                                  "style": {
+                                                                    "borderRadius": "6px"
+                                                                  }
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "el": "text",
+                                                              "value": {
+                                                                "op": "concat",
+                                                                "parts": [
+                                                                  {
+                                                                    "op": "add",
+                                                                    "a": "{index}",
+                                                                    "b": 1
+                                                                  },
+                                                                  "_{item.name}.png"
+                                                                ]
+                                                              },
+                                                              "className": "flex-1 min-w-0 truncate text-[12px] !text-[var(--ev-text)]/85 font-bold"
+                                                            },
+                                                            {
+                                                              "el": "text",
+                                                              "value": "ตัวละคร",
+                                                              "className": "shrink-0 text-[11px] opacity-40"
+                                                            },
+                                                            {
+                                                              "el": "download-button",
+                                                              "to": "{item.slots.sheet}",
+                                                              "label": "โหลด",
+                                                              "icon": "download",
+                                                              "variant": "ghost",
+                                                              "size": "sm",
+                                                              "className": "shrink-0 !text-[var(--ev-text)] !bg-white/10 rounded-lg"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "el": "repeat",
+                                                      "coll": "scenes",
+                                                      "where": "id={item.coverScene}",
+                                                      "card": [
+                                                        {
+                                                          "el": "row",
+                                                          "style": {
+                                                            "flexWrap": "nowrap"
+                                                          },
+                                                          "className": "items-center gap-2.5 bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 px-2",
+                                                          "card": [
+                                                            {
+                                                              "el": "box",
+                                                              "className": "w-[30px] shrink-0",
+                                                              "card": [
+                                                                {
+                                                                  "el": "media-slot",
+                                                                  "src": "{item.slots.ref}",
+                                                                  "aspect": "3:4",
+                                                                  "style": {
+                                                                    "borderRadius": "6px"
+                                                                  }
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "el": "text",
+                                                              "value": {
+                                                                "op": "concat",
+                                                                "parts": [
+                                                                  "ฉาก_{item.name}.png"
+                                                                ]
+                                                              },
+                                                              "className": "flex-1 min-w-0 truncate text-[12px] !text-[var(--ev-text)]/85 font-bold"
+                                                            },
+                                                            {
+                                                              "el": "text",
+                                                              "value": "ฉากหลัง",
+                                                              "className": "shrink-0 text-[11px] opacity-40"
+                                                            },
+                                                            {
+                                                              "el": "download-button",
+                                                              "to": "{item.slots.ref}",
+                                                              "label": "โหลด",
+                                                              "icon": "download",
+                                                              "variant": "ghost",
+                                                              "size": "sm",
+                                                              "className": "shrink-0 !text-[var(--ev-text)] !bg-white/10 rounded-lg"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "el": "note",
+                                                  "tone": "danger",
+                                                  "icon": "info",
+                                                  "when": "item.coverChars=",
+                                                  "value": "ยังไม่ได้เลือกรูป ref — กด \"เขียนคำสั่งปก AI\" ก่อน ระบบจะเลือกตัวละครเด่น+ฉากให้อัตโนมัติ",
+                                                  "className": "text-[10px] leading-tight !bg-red-400/5 border border-red-400/10 rounded-xl mt-1"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "row",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "className": "gap-2.5 items-start",
+                                          "card": [
+                                            {
+                                              "el": "text",
+                                              "value": "3",
+                                              "className": "shrink-0 w-5 h-5 rounded-full bg-green-500/20 !text-green-300 text-[11px] font-extrabold flex items-center justify-center mt-0.5"
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "flex-1 min-w-0 flex flex-row items-center justify-between gap-2",
+                                              "card": [
+                                                {
+                                                  "el": "text",
+                                                  "value": "เปิด ChatGPT → วาง prompt + แนบรูป → สั่งสร้าง แล้วกลับมา \"เลือกรูป\"",
+                                                  "className": "text-[12.5px] font-bold !text-[var(--ev-text)]"
+                                                },
+                                                {
+                                                  "el": "link",
+                                                  "value": "https://chatgpt.com",
+                                                  "label": "เปิด ChatGPT",
+                                                  "icon": "open_in_new",
+                                                  "size": "sm",
+                                                  "variant": "outline",
+                                                  "className": "shrink-0 !text-[var(--ev-text)] !bg-white/10"
+                                                }
+                                              ]
                                             }
                                           ]
                                         }
@@ -7031,8 +7310,21 @@
                         },
                         {
                           "el": "row",
-                          "className": "gap-4",
+                          "className": "gap-4 flex-col md:flex-row",
                           "card": [
+                            {
+                              "el": "button",
+                              "action": "nav",
+                              "to": "filming",
+                              "label": "กลับไปสร้างวิดีโอ",
+                              "icon": "videocam",
+                              "variant": "outline",
+                              "style": {
+                                "height": "56px",
+                                "borderRadius": "16px"
+                              },
+                              "className": "w-full justify-center font-bold flex-1"
+                            },
                             {
                               "el": "open-editor",
                               "coll": "shots",
@@ -7045,7 +7337,7 @@
                                 "height": "56px",
                                 "borderRadius": "16px"
                               },
-                              "className": "w-full justify-center font-bold"
+                              "className": "w-full justify-center font-bold flex-1"
                             }
                           ]
                         }
@@ -7057,7 +7349,7 @@
             },
             {
               "el": "box",
-              "className": "w-full lg:w-[38%] shrink-0 lg:sticky lg:top-4 bg-[#050505] border border-white/10 rounded-[24px] overflow-hidden flex flex-col",
+              "className": "w-full xl:w-[38%] shrink-0 xl:sticky xl:top-4 bg-[#050505] border border-white/10 rounded-[24px] overflow-hidden flex flex-col",
               "card": [
                 {
                   "el": "repeat",
