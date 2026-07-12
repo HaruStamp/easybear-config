@@ -3,7 +3,7 @@
 # ใช้: ./push-gcs.sh [ไฟล์]   (default flim-v2-full.json)
 set -e
 BUCKET="${GCS_BUCKET:-easybear-config-578946198765}"
-FILE="${1:-flim-v2-full.json}"
+FILE="${1:-film.json}"
 gcloud storage cp "$FILE" "gs://$BUCKET/$FILE" \
   --cache-control="no-cache, max-age=0" \
   --content-type="application/json"
