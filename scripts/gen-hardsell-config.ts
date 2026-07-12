@@ -837,7 +837,7 @@ const config = {
   theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f76b6b', '--ev-accent-fg': '#ffffff' } },
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
-  chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: false } },   // full-bleed 2 คอลัมน์ · modal งานค้างไม่ pre-select อะไร (ตามต้นฉบับ — ผู้ใช้เลือกเอง)
+  chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: false, restartFn: 'hsResetRun', restartLabel: 'ล้างคิว เริ่มใหม่' } },   // full-bleed 2 คอลัมน์ · modal งานค้าง: ไม่ pre-select + มีปุ่มล้างคิว (3 ทางเลือกตาม ResumeModal ต้นฉบับ)
   content: { item: { coll: 'tasks', label: 'คลิป' }, assets: ['products', 'characters'] },
   lookups: LOOKUPS,
   components: { runBanner: RUN_BANNER },
@@ -870,11 +870,12 @@ const config = {
   // scope "รายกลุ่ม" ยึด control (ไม่ใช่ tasks) — กัน gen-phase จำกัดงานเหลือคลิปเดียว (content.item.coll=tasks ใช้เรื่อง label/save เท่านั้น)
   auto: { scopeColl: 'control' },
   ops: [
-    { id: 'hsQueue', type: 'transform', over: 'control', out: 'queued', fn: 'hsBuildTasks' },
+    // pace:false = string-builder ล้วนไม่ยิง API — ไม่ต้องพักระหว่างชุด (hsContent เป็น transform แต่เรียก LLM = ต้อง pace ปกติ)
+    { id: 'hsQueue', type: 'transform', over: 'control', out: 'queued', fn: 'hsBuildTasks', pace: false },
     { id: 'hsContent', type: 'transform', over: 'tasks', out: 'written', fn: 'hsArchitectClip' },
     // where guard ทุก op หลัง hsContent: task ที่เขียนบทพัง (h1 ว่าง) ต้องไม่ไหลไปขั้นถัดไป
     // (กัน transform ทับ error เป็น done + กันเปลืองเควตา gen จาก prompt ขยะ — ต้นฉบับ abort ทั้งรอบ เราใช้ item-level gate แทน)
-    { id: 'hsPrompts', type: 'transform', over: 'tasks', out: 'prompted', fn: 'hsBuildPrompts', where: 'h1!=' },
+    { id: 'hsPrompts', type: 'transform', over: 'tasks', out: 'prompted', fn: 'hsBuildPrompts', where: 'h1!=', pace: false },
     {
       id: 'hsImage', type: 'image', over: 'tasks', out: 'image', where: 'imagePrompt!=',
       model: '{values.imageModel}', aspectRatio: '9:16', prompt: '{item.imagePrompt}',
