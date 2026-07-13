@@ -208,7 +208,7 @@ const wizardForm: any[] = [
         ]),
         box('', [
           fieldLabel('content_copy', 'จำนวนคลิป/สินค้า'),
-          { el: 'stepper', field: 'clipsPerProduct', min: 1, max: 100, className: 'bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-xl px-2 py-1.5' },
+          { el: 'stepper', field: 'clipsPerProduct', label: '', min: 1, max: 100, className: 'bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-xl px-2 py-1.5' },   // label:'' = กล่อง [− n +] เปล่า (หัวข้ออยู่บรรทัดบนแล้ว — เดิม fallback โชว์ชื่อ field CLIPSPERPRODUCT)
           tx('ต่างมุมขาย/บทพูด แต่ละคลิป', '!text-[11px] opacity-40 mt-2 px-1'),
         ]),
       ]),
