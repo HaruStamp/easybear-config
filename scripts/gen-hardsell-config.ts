@@ -108,7 +108,7 @@ const productRow = {
   el: 'repeat', coll: 'products', where: 'enabled=true', empty: 'ยังไม่ได้เลือกใช้สินค้า — กด "จัดการสินค้า" เพื่อเพิ่ม/ติ๊กใช้',
   card: [box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-2.5 flex flex-row items-center gap-2.5', [
     box('w-5 h-5 rounded-full bg-[var(--ev-surface2)] flex items-center justify-center shrink-0', [tx({ op: 'add', a: { op: 'index' }, b: 1 }, '!text-[11px] font-bold opacity-70 tabular-nums')]),
-    { el: 'media-slot', slot: 'image', aspect: '1:1', className: '!w-11 shrink-0 !rounded-lg' },
+    { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!w-11 shrink-0 !rounded-lg' },
     box('flex-1 min-w-0', [
       tx('{item.name}', 'font-medium !text-[14px] truncate !text-[var(--ev-text)]'),
       row('gap-1.5 items-center', [
@@ -124,7 +124,7 @@ const productRow = {
 const charChips = (wrapCls: string) => box(wrapCls, [{
   el: 'repeat', coll: 'characters', where: 'enabled=true',
   card: [box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-xl pl-2 pr-3.5 py-2 flex flex-row items-center gap-2.5 min-w-0', [
-    { el: 'media-slot', slot: 'image', aspect: '1:1', className: '!w-9 shrink-0 !rounded-lg' },
+    { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!w-9 shrink-0 !rounded-lg' },
     box('min-w-0', [
       tx('{item.name}', '!text-[12px] font-bold !text-[var(--ev-text)] leading-tight truncate'),
       { el: 'text', value: CONCAT(LK('genderTh', '{item.gender}', '{item.gender}'), ' · {item.ageRange}'), className: '!text-[10px] opacity-50 mt-0.5 truncate' },
@@ -366,12 +366,12 @@ const stateBadge = (bg: string, icon: string, label: any, iconCls = 'text-[var(-
   ]);
 // ชั้นภาพพื้นหลังของการ์ด (ต้นฉบับ style={bg} + overlay ดำ) — media-slot ปิด interaction แล้วหรี่ด้วย overlay
 const cardImageLayer = box('absolute inset-0 pointer-events-none', [
-  { el: 'media-slot', slot: 'image', aspect: '9:16', className: '!absolute !inset-0 !h-full !border-0 !rounded-none' },
+  { el: 'media-slot', src: '{item.slots.image}', aspect: '9:16', className: '!absolute !inset-0 !h-full !border-0 !rounded-none' },
   box('absolute inset-0 bg-black/55', []),
 ], 'item.slots.image!=');
 // การ์ดเสร็จ (คลิกดู = lightbox วิดีโอ · hover ปุ่มโหลด/ตัดต่อ) — เงื่อนไขความยาว+มีไฟล์รวมที่การ์ดเดียว (กัน cell เปล่าใน grid)
 const doneCard = (len: string, slot: string) => box('relative aspect-[9/16] rounded-2xl overflow-hidden group', [
-  { el: 'media-slot', slot, aspect: '9:16', className: '!rounded-2xl !border-0 !h-full' },
+  { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full' },
   box('absolute top-2 left-2 z-[2] px-2 py-[3px] rounded-full bg-green-500 pointer-events-none', [tx('เสร็จ', '!text-[9px] font-bold !text-white')]),
   { el: 'download-button', to: slot, iconOnly: true, label: 'โหลดคลิป', icon: 'download', size: 'sm',
     className: '!absolute top-[7px] right-[7px] z-[3] !w-7 !h-7 !p-0 !rounded-[9px] !bg-black/60 !border-0 !text-white opacity-0 group-hover:opacity-100 hover:!bg-[var(--ev-accent)]' },
@@ -491,7 +491,7 @@ const runList = box('flex flex-col gap-2', [{
       box('flex flex-row items-center gap-3 py-2.5 px-3 w-full min-w-0', [
         tx({ op: 'add', a: { op: 'index' }, b: 1 }, '!text-[15px] font-extrabold opacity-40 w-7 text-center shrink-0 tabular-nums'),
         // thumb: ตอนกำลังสร้าง = สปินเนอร์เล็ก (media-slot overlay ใหญ่เกิน 52px) · ปกติ = รูป
-        box('w-[52px] shrink-0', [{ el: 'media-slot', slot: 'image', aspect: '1:1', className: '!rounded-[10px]' }], { op: 'not', a: ITEM_RUNNING }),
+        box('w-[52px] shrink-0', [{ el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-[10px]' }], { op: 'not', a: ITEM_RUNNING }),
         box('w-[52px] h-[52px] shrink-0 rounded-[10px] bg-black/30 border border-[var(--ev-border)] flex items-center justify-center', [{ el: 'spinner', className: '!text-[20px]' }], ITEM_RUNNING),
         box('flex-1 min-w-0', [
           row('items-center gap-1.5', [tx('{item.productName}', '!text-[14px] font-medium truncate !text-[var(--ev-text)]'), clipBadge]),
@@ -638,7 +638,7 @@ const productManagerRow = {
   card: [{
     ...box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 pr-4 flex flex-row items-center gap-3.5', [
       useCheck(),
-      { el: 'media-slot', slot: 'image', aspect: '1:1', className: '!w-[54px] shrink-0 !rounded-xl' },
+      { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!w-[54px] shrink-0 !rounded-xl' },
       box('flex-1 min-w-0', [
         row('items-center gap-1.5', [
           tx('{item.name}', 'font-bold !text-[14px] truncate !text-[var(--ev-text)]'),
@@ -690,7 +690,7 @@ const refImageBox = (headLabel: string, warnTitle: string, warnSub: string) => b
     ]),
   ], 'item.slots.image='),
   row('gap-6 items-stretch', [
-    box('w-[140px] shrink-0', [{ el: 'media-slot', slot: 'image', aspect: '1:1', className: '!rounded-2xl' }]),
+    box('w-[140px] shrink-0', [{ el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-2xl' }]),
     box('flex-1 flex flex-col justify-center gap-3 p-4 rounded-2xl bg-green-500/5 border border-green-500/20', [
       row('items-center gap-3', [
         { el: 'icon', icon: 'check_circle', textSize: 'text-[22px]', className: 'text-green-400 shrink-0' },
@@ -779,7 +779,7 @@ const charManagerRow = {
   card: [{
     ...box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 pr-4 flex flex-row items-center gap-3.5', [
       useCheck(),
-      { el: 'media-slot', slot: 'image', aspect: '1:1', className: '!w-[64px] shrink-0 !rounded-xl' },
+      { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!w-[64px] shrink-0 !rounded-xl' },
       box('flex-1 min-w-0', [
         tx('{item.name}', 'font-bold !text-[14px] truncate !text-[var(--ev-text)]'),
         { el: 'text', value: CONCAT(LK('genderTh', '{item.gender}', '{item.gender}'), ' · {item.ageRange}'), className: '!text-[12px] opacity-40 mt-0.5' },
