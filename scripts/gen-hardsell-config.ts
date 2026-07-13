@@ -675,7 +675,7 @@ const editHead = (addTitle: string, editTitle: string, backTo: string, coll: str
 const refImageBox = (headLabel: string, warnTitle: string, warnSub: string) => box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-5 flex flex-col gap-3', [
   edLbl(headLabel),
   row('gap-6 items-stretch', [
-    box('w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2', [
+    box('w-[140px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2', [
       { el: 'upload', label: '', placeholder: 'อัพโหลด', icon: 'upload', into: 'image', resize: { maxPx: 400, quality: 0.7 },
         className: 'flex-1 w-full justify-center !rounded-xl !bg-[var(--ev-text)] !text-[var(--ev-bg)] !border-0 font-black !text-[11px] uppercase' },
       { el: 'pick-button', label: 'เลือกภาพ', icon: 'photo_library', filter: 'image', into: 'image', resize: { maxPx: 400, quality: 0.7 },
@@ -689,22 +689,27 @@ const refImageBox = (headLabel: string, warnTitle: string, warnSub: string) => b
       ]),
     ]),
   ], 'item.slots.image='),
+  // มีรูปแล้ว (ตาม ProductEditor ต้นฉบับ): thumb = ตัวลบเอง (hover ขึ้น X · คลิกลบ กลับไปหน้าปุ่มอัพโหลด) · กล่องเขียวไม่มีปุ่ม — แค่ชื่อไฟล์ + แถว SOURCE
   row('gap-6 items-stretch', [
-    box('w-[140px] shrink-0', [{ el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-2xl' }]),
+    box('w-[140px] shrink-0 relative group rounded-2xl overflow-hidden cursor-pointer', [
+      { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-2xl' },
+      { el: 'button', action: 'hook', fn: 'clearSlot', to: 'image', iconOnly: true, icon: 'close', label: 'ลบรูป',
+        className: '!absolute !inset-0 !w-full !h-full !p-0 !rounded-2xl !border-0 !bg-black/60 !text-white opacity-0 group-hover:opacity-100 transition-opacity justify-center' },
+    ]),
     box('flex-1 flex flex-col justify-center gap-3 p-4 rounded-2xl bg-green-500/5 border border-green-500/20', [
       row('items-center gap-3', [
         { el: 'icon', icon: 'check_circle', textSize: 'text-[22px]', className: 'text-green-400 shrink-0' },
         box('flex flex-col min-w-0', [
           tx('ASSET ACTIVE', '!text-[11px] font-black !text-green-400 uppercase tracking-widest'),
           tx('{item.imageName}', '!text-[10px] opacity-40 truncate', 'item.imageName!='),
-          tx('ฝัง base64 ในโปรเจกต์', '!text-[10px] opacity-40', 'item.imageName='),
+          tx('จากคลัง Flow', '!text-[10px] opacity-40', 'item.imageName='),
         ]),
       ]),
       box('h-px bg-white/5 w-full', []),
-      row('items-center gap-2', [
-        { el: 'upload', label: '', placeholder: 'เปลี่ยนรูป', icon: 'upload', into: 'image', resize: { maxPx: 400, quality: 0.7 }, className: '!text-[11px]' },
-        { el: 'pick-button', label: 'เลือกจากคลัง', icon: 'photo_library', filter: 'image', into: 'image', resize: { maxPx: 400, quality: 0.7 }, size: 'sm' },
-        { el: 'button', action: 'hook', fn: 'clearSlot', to: 'image', label: 'ลบรูป', icon: 'delete', size: 'sm', variant: 'danger' },
+      row('items-center justify-between', [
+        tx('SOURCE', '!text-[9px] opacity-20 font-black uppercase tracking-widest'),
+        tx('อัพโหลด · ฝัง base64', '!text-[9px] opacity-40', 'item.imageName!='),
+        tx('คลัง Flow · ฝัง base64', '!text-[9px] opacity-40', 'item.imageName='),
       ]),
     ]),
   ], 'item.slots.image!='),
