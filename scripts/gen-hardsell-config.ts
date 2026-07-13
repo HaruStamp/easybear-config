@@ -41,7 +41,7 @@ const RUN_BANNER = JSON.parse(JSON.stringify(film.components.runBanner).split('G
 const TEMPLATE_OPTS = (cat?: string) => HS_SCENE_TEMPLATES.filter(t => !cat || t.category === cat).map(t => ({ value: t.id, label: t.name, desc: t.desc, icon: t.icon }));
 const TONE_OPTS = HS_TONES.map(t => ({ value: t.id, label: t.name, desc: t.desc, icon: t.icon }));
 const STYLE_OPTS = HS_TEXT_STYLES.map(s => ({ value: s.id, label: s.name, desc: s.desc, ...(s.colors.length ? { colors: s.colors } : { icon: 'shuffle' }) }));
-const AGE_OPTS = ['วัยรุ่น 18-25', 'วัยทำงาน 25-35', 'กลางคน 35-50', 'สูงวัย 50+'].map(a => ({ value: a, label: a }));
+const AGE_OPTS = ['วัยรุ่น (18-25)', 'วัยทำงาน (25-35)', 'กลางคน (35-50)', 'สูงวัย (50+)'].map(a => ({ value: a, label: a }));   // string ตรง CharacterEditor ต้นฉบับ (มีวงเล็บ)
 const catCount = (c: string) => HS_SCENE_TEMPLATES.filter(t => t.category === c).length;
 
 // ---- ตาราง lookup (banner + ป้ายสรุป/การ์ด) ----
@@ -72,6 +72,8 @@ const LK = (table: string, key: any, fallback?: any) => ({ op: 'lookup', table, 
 
 // ---- เงื่อนไขสถานะ (ปุ่มควบคุมเดียว + จอขวา — ตรรกะตาม MainScreen.tsx ต้นฉบับ) ----
 const ST_RUNNING = OR(EQ('{values.__runState}', 'running'), EQ('{values.__runState}', 'cooldown'), EQ('{values.__runState}', 'retrying'));
+// มีงาน gen วิ่งอยู่ทางไหนก็ตาม (batch ทั้งคิว หรือ retry รายคลิปที่ไม่แตะ __runState) — ใช้ล็อกปุ่มลบคลัง (ต้นฉบับล็อก manager ทั้ง 2 เคสเหมือนกัน)
+const ANY_GEN = OR(ST_RUNNING, { op: 'some', from: 'tasks', where: 'status=running' });
 const NOT_RUNNING = { op: 'not', a: ST_RUNNING };
 const COUNT_TASKS = { op: 'count', from: 'tasks' };
 const HAS_TASKS = { op: 'gt', a: COUNT_TASKS, b: 0 };
@@ -101,7 +103,7 @@ const cardTitle = (t: string) => tx(t, 'font-bold !text-[15px] !text-[var(--ev-t
 const manageBtn = (label: string, page: string) => box('ml-auto shrink-0', [
   { el: 'button', action: 'set', to: '__page', value: page, label, icon: 'tune', size: 'sm', variant: 'outline-accent', className: '!h-8 font-bold !text-[12px] !bg-[var(--ev-accent)]/10' },
 ]);
-const WIZ_CARD = '!rounded-[24px] !p-5 bg-[var(--ev-surface)]';
+const WIZ_CARD = '!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]';   // การ์ดระดับบนสุดขอบเข้ม #595959 ตามต้นฉบับ (แยกลำดับชั้นจากการ์ดย่อย --ev-border)
 
 // แถวสินค้าอ่านอย่างเดียว (ใช้ทั้ง wizard ① และ SummaryCard)
 const productRow = {
@@ -200,7 +202,7 @@ const wizardForm: any[] = [
       box('grid grid-cols-2 gap-3', [
         box('', [
           fieldLabel('timer', 'ความยาวคลิป'),
-          { el: 'segmented', field: 'clipLength', variant: 'tab', options: [{ value: '8', label: '8 วิ' }, { value: '16', label: '16 วิ' }] },
+          { el: 'segmented', field: 'clipLength', variant: 'tab', selClass: 'bg-gradient-to-br from-orange-400 to-orange-600 text-white', options: [{ value: '8', label: '8 วิ' }, { value: '16', label: '16 วิ' }] },   // เลือกแล้ว = gradient ส้มตาม HomeScreen ต้นฉบับ (ไม่ใช่ขาว)
           tx('พูด 1 ช่วง · ฮุค → ปิดการขาย', '!text-[11px] opacity-40 mt-2 px-1', 'values.clipLength=8'),
           tx('พูด 2 ช่วง · ฮุค → โปร → ชวนซื้อ', '!text-[11px] opacity-40 mt-2 px-1', 'values.clipLength=16'),
         ]),
@@ -301,13 +303,13 @@ const controlFooter = box('p-4 pb-5 border-t border-[var(--ev-border)] shrink-0'
     { el: 'icon', icon: 'warning', textSize: 'text-[15px]', className: 'text-amber-400 shrink-0 mt-px' },
     tx(CONCAT('คิวนี้ ', TOTAL_CLIPS, ' คลิป (เกิน 100) — งานเยอะอาจทำให้แอปทำงานหนักหรือช้า แนะนำแบ่งทำเป็นรอบเล็กลง หรือเลือกคลิป 8 วิ เพื่อความลื่นไหล'), '!text-[11px] leading-relaxed !text-amber-300/90'),
   ], AND(NO_TASKS, { op: 'gt', a: TOTAL_CLIPS, b: 100 })),
-  { el: 'gen-phase', ops: CHAIN, when: NO_TASKS, label: 'เริ่มผลิตคลิป', icon: 'play_arrow',
+  { el: 'gen-phase', ops: CHAIN, when: NO_TASKS, label: CONCAT('เริ่มผลิตคลิป · ', TOTAL_CLIPS, ' คลิป') as any, icon: 'play_arrow',   // ตัวเลขฝังในป้ายปุ่มตาม MainScreen ต้นฉบับ (Btn label ผ่าน resolveStr แล้ว)
     className: CTRL_BTN + ' font-black shadow-[0_0_20px_rgba(247,107,107,0.35)] disabled:!shadow-none disabled:!opacity-30',
     disabledWhen: { op: 'not', a: READY }, reason: 'เพิ่มสินค้า + ใส่รูปให้ครบก่อนเริ่มผลิต' },
   { el: 'button', action: 'stop', when: ST_RUNNING, label: 'หยุดชั่วคราว', icon: 'pause', variant: 'ghost',
     className: CTRL_BTN + ' font-bold !text-red-300 !bg-red-500/10 !border !border-red-500/35 hover:!bg-red-500/20' },
   { el: 'gen-phase', ops: CHAIN, when: AND(NOT_RUNNING, HAS_TASKS, NO_ERROR, NOT_ALL_DONE),
-    label: 'ทำงานต่อ', icon: 'play_arrow', className: CTRL_BTN + ' font-black' },
+    label: CONCAT('ทำงานต่อ · เหลือ ', { op: 'sub', a: COUNT_TASKS, b: COUNT_DONE }, ' คลิป') as any, icon: 'play_arrow', className: CTRL_BTN + ' font-black' },
   { el: 'gen-phase', ops: CHAIN, when: AND(NOT_RUNNING, HAS_ERROR),
     label: 'ลองใหม่ที่พลาด', icon: 'replay', className: CTRL_BTN + ' font-black' },
   { el: 'confirm-button', action: 'hook', fn: 'hsResetRun', when: AND(HAS_TASKS, NOT_RUNNING),
@@ -384,7 +386,7 @@ const ITEM_ERROR = AND(EQ('{item.status}', 'error'), NEQ('{item.meta.retrying}',
 const ITEM_RETRYING = AND(NEQ('{item.status}', 'running'), EQ('{item.meta.retrying}', '1'));
 const ITEM_LEFTOVER = AND(NEQ('{item.status}', 'running'), NEQ('{item.status}', 'error'), NEQ('{item.meta.retrying}', '1'),
   { op: 'not', a: OR(AND(EQ('{item.clipLength}', '8'), NEQ('{item.slots.video1}', '')), AND(EQ('{item.clipLength}', '16'), NEQ('{item.slots.video2}', ''))) });
-const runGrid = box('grid gap-3', [{
+const runGrid = box('grid gap-3 grid-cols-4 lg:grid-cols-5', [{
   el: 'repeat', coll: 'tasks',
   card: [
     doneCard('8', 'video1'),
@@ -461,7 +463,7 @@ const runGrid = box('grid gap-3', [{
       bottomBar,
     ], AND(ITEM_LEFTOVER, NEQ('{item.status}', 'done'), EQ('{item.slots.image}', ''), EQ('{item.h1}', '')), { boxShadow: 'inset 0 0 0 1px var(--ev-border)' }),
   ],
-}], { op: 'not', a: EQ('{values.__view}', 'list') }, { gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' });
+}], { op: 'not', a: EQ('{values.__view}', 'list') });   // คอลัมน์ตายตัว 4/5 ตาม RunGrid ต้นฉบับ (เดิม auto-fill ขนาดการ์ดไหลตามจอ)
 
 // ═══ list view — แถวกดกางดู timeline ละเอียด (ตาม RunList ต้นฉบับ) ═══
 const CUR = (op: string) => AND(ITEM_RUNNING, EQ('{values.__runStage}', op));
@@ -516,7 +518,8 @@ const runList = box('flex flex-col gap-2', [{
       box('pl-[60px] pr-4 pb-3.5', [
         box('relative flex flex-col ml-[5px] pl-0', [
           box('absolute left-[5px] top-[10px] bottom-[10px] w-[2px] bg-white/10', []),
-          tlRow('คิดบทขาย', NEQ('{item.h1}', ''), CUR('hsContent')),
+          tlRow('คิดบทขาย', NEQ('{item.h1}', ''), CUR('hsContent'),
+            { el: 'text', value: '"{item.h1}"', className: '!text-[11px] opacity-45 italic truncate max-w-[260px]', when: 'item.h1!=' }),   // โชว์ h1 หลังเขียนบทเสร็จ (RunList ต้นฉบับ)
           tlRow('ภาพเฟรมเริ่ม', NEQ('{item.slots.image}', ''), CUR('hsImage')),
           tlRow('วีดีโอ ช่วง 1 · 0-8 วิ', NEQ('{item.slots.video1}', ''), CUR('hsVideo1'),
             { el: 'download-button', to: 'video1', label: 'โหลดช่วงนี้', size: 'sm', variant: 'ghost', when: NEQ('{item.slots.video1}', '') }),
@@ -571,7 +574,7 @@ const runHeader = box(WIZ_CARD.replace('!p-5', 'p-5') + ' border border-[var(--e
         // ตัดต่อจาก header = เปิดโปรแกรมตัดต่อเปล่า (ต้นฉบับไม่ pre-load — ใช้ control ที่ไม่มีสื่อเป็น source ว่าง)
         { el: 'open-editor', coll: 'control', label: 'ตัดต่อคลิป', icon: 'movie_edit', size: 'sm', variant: 'outline-accent', className: 'font-bold' },
         { el: 'zip-export', label: 'ดาวน์โหลดทั้งหมด', icon: 'download', size: 'sm', variant: 'contrast', className: 'font-bold',
-          coll: 'tasks', mediaSlots: ['video1', 'video2'], prefix: 'clip', assetsFolder: 'assets',
+          coll: 'tasks', where: 'status=done', mediaSlots: ['video1', 'video2'], prefix: 'clip', assetsFolder: 'assets',   // กรองเฉพาะงานเสร็จตาม downloadAll ต้นฉบับ (กันคลิปพัง/ครึ่งทางปน zip)
           header: [{ label: 'แอป', value: 'หมีแว่น ขายดุ' }],
           line: '{index}. {item.productName} · คลิป {item.clipIndex} ({item.clipLength} วิ) · H1: {item.h1} · H2: {item.h2} · พูด: {item.speech} {item.speech2} · CTA: {item.cta}' },
       ], AND(NOT_RUNNING, NO_ERROR, ALL_DONE)),
@@ -610,7 +613,7 @@ const managerHeader = (title: string, loadEl: any, saveEl: any) => row('items-ce
   box('ml-auto flex flex-row items-center gap-2', [loadEl, saveEl]),
 ]);
 // การ์ดสถิติแนวนอนตามต้นฉบับ (icon-box 12x12 ซ้าย + เลขใหญ่ 28px + label uppercase) — atom stat-card เป็นแนวตั้งเลขเล็ก ไม่ตรงสไตล์
-const statBox = (icon: string, iconCls: string, label: string, v: any) => box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5', [
+const statBox = (icon: string, iconCls: string, label: string, v: any) => box('bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-4 flex flex-row items-center gap-3.5', [
   box('w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ' + iconCls, [{ el: 'icon', icon, textSize: 'text-[22px]' }]),
   box('min-w-0', [
     { el: 'text', value: v, className: '!text-[28px] font-black leading-none !text-[var(--ev-text)]' },
@@ -618,8 +621,8 @@ const statBox = (icon: string, iconCls: string, label: string, v: any) => box('b
   ]),
 ]);
 const statPair = (icon1: string, label1: string, v1: any, label2: string, v2: any) => box('grid grid-cols-2 gap-4 mb-5', [
-  statBox(icon1, 'bg-[var(--ev-accent)]/15 text-[var(--ev-accent)]', label1, v1),
-  statBox('check_circle', 'bg-sky-500/15 text-sky-400', label2, v2),
+  statBox(icon1, 'bg-white/5', label1, v1),   // ต้นฉบับ: ใบซ้าย (ทั้งหมด) icon-box เทากลาง · ใบขวา (เลือกใช้) accent
+  statBox('check_circle', 'bg-[var(--ev-accent)]/[0.12] text-[var(--ev-accent)]', label2, v2),
 ]);
 
 // วงกลมติ๊ก "ใช้" (circle check ตามต้นฉบับ — ปุ่ม hook ปิดเองตอนกำลังผลิต = ล็อกตามต้นฉบับ)
@@ -634,7 +637,7 @@ const useCheck = (cls = '!w-6 !h-6 !p-0 !rounded-full shrink-0') => ({
 
 // แถวคลังสินค้า (ตามต้นฉบับ ProductManager: check วงกลม · รูป · ชื่อ+คำอธิบาย · ราคา/โปร · ดินสอไปหน้าแก้ไข · ถังขยะ)
 const productManagerRow = {
-  el: 'repeat', coll: 'products', where: 'name~{values.__q}', empty: 'ยังไม่มีสินค้า — กดเพิ่มสินค้า หรือโหลดลิสต์เดิม',
+  el: 'repeat', coll: 'products', where: 'name,description~{values.__q}', empty: 'ยังไม่มีสินค้า — กดเพิ่มสินค้า หรือโหลดลิสต์เดิม',   // ค้นชื่อ+คำอธิบายตามต้นฉบับ (where LHS หลาย field = OR)
   card: [{
     ...box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 pr-4 flex flex-row items-center gap-3.5', [
       useCheck(),
@@ -652,7 +655,7 @@ const productManagerRow = {
         box('!text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[var(--ev-accent)]/[0.14] inline-block mt-0.5', [tx('{item.promotion}', '!text-[10px] font-bold !text-[var(--ev-accent)]')], 'item.promotion!='),
       ]),
       { el: 'button', action: 'hook', fn: 'hsOpenEdit', to: 'productEdit', iconOnly: true, icon: 'edit', label: 'แก้ไข', variant: 'ghost', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0' },
-      { el: 'delete-button', iconOnly: true, label: 'ลบ', size: 'sm', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0' },
+      { el: 'delete-button', iconOnly: true, label: 'ลบ', size: 'sm', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0', disabledWhen: ANY_GEN, reason: 'กำลังผลิตอยู่ — ลบไม่ได้ (คลิปอ้างอิงตัวนี้อยู่)' },
     ]),
     classWhen: [{ when: 'item.enabled!=true', class: 'opacity-45' }],
   }],
@@ -716,11 +719,11 @@ const refImageBox = (headLabel: string, warnTitle: string, warnSub: string) => b
 ]);
 const editFooter = (backTo: string, coll: string, saveLabel: string, saveGate?: any) => row('gap-3 pt-2', [
   { el: 'button', action: 'hook', fn: 'hsCancelEdit', to: backTo, coll, label: 'ยกเลิก', className: 'flex-1 justify-center !h-12 !rounded-xl !text-[14px]' },
-  { el: 'button', action: 'hook', fn: 'hsCloseEdit', to: backTo, coll, label: saveLabel, variant: 'solid', className: 'flex-[2] justify-center !h-12 !rounded-xl !text-[14px] font-bold', ...(saveGate ? { disabledWhen: saveGate, reason: 'กรอกชื่อก่อนบันทึก' } : {}) },
+  { el: 'button', action: 'hook', fn: 'hsCloseEdit', to: backTo, label: saveLabel, variant: 'solid', className: 'flex-[2] justify-center !h-12 !rounded-xl !text-[14px] font-bold', ...(saveGate ? { disabledWhen: saveGate, reason: 'กรอกชื่อก่อนบันทึก' } : {}) },
 ]);
 const productEditPage = box('max-w-[680px] mx-auto p-6 w-full', [{
   el: 'repeat', coll: 'products', where: 'id={values.__editId}',
-  card: [box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 flex flex-col gap-4', [
+  card: [box('bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-6 flex flex-col gap-4', [
     editHead('เพิ่มสินค้า', 'แก้ไขสินค้า', 'products', 'products', 'ใช้สินค้านี้'),
     refImageBox('รูปสินค้า * (ใช้เป็น REFERENCE — ระบบล็อกหน้าตาสินค้าตามรูปนี้)', 'ต้องเพิ่มรูปสินค้า', 'อัพโหลด หรือ เลือกจากคลัง Flow เพื่อใช้เป็น reference'),
     box('grid grid-cols-3 gap-3', [
@@ -743,7 +746,7 @@ const productEditPage = box('max-w-[680px] mx-auto p-6 w-full', [{
 }], EQ('{values.__page}', 'productEdit'));
 const characterEditPage = box('max-w-[680px] mx-auto p-6 w-full', [{
   el: 'repeat', coll: 'characters', where: 'id={values.__editId}',
-  card: [box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 flex flex-col gap-4', [
+  card: [box('bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-6 flex flex-col gap-4', [
     editHead('เพิ่มตัวละคร', 'แก้ไขตัวละคร', 'characters', 'characters', 'ใช้ตัวละครนี้'),
     refImageBox('รูปตัวละคร * (reference ใบหน้าคนรีวิว — ระบบล็อกหน้าตามรูปนี้)', 'ต้องเพิ่มรูปตัวละคร', 'อัพโหลด หรือ เลือกจากคลัง Flow เพื่อใช้เป็น reference คนรีวิว'),
     box('', [edLbl('ชื่อเรียก (ไม่บังคับ)'), { el: 'input', field: 'name', placeholder: 'เช่น พี่หมวย, น้องบีม', className: '!h-[44px] !px-4 !rounded-xl' }]),
@@ -774,6 +777,7 @@ const productsPage = box('max-w-[1080px] mx-auto p-6 w-full', [
       ]),
     ]),
     tx('ติ๊ก "ใช้" = สินค้าที่จะเอาไปปั่นคลิป · ปิด = ข้ามตัวนี้ · สินค้าต้องมีรูปจึงจะเข้าคิวผลิต', '!text-[11px] opacity-40 px-1', undefined, 'info'),
+    { el: 'text', value: CONCAT('แสดง ', { op: 'count', from: 'products', where: 'name,description~{values.__q}' }, ' จาก ', { op: 'count', from: 'products' }, ' รายการ'), className: '!text-[11px] opacity-35 px-1' },   // "แสดง N จาก M" ตาม ProductManager ต้นฉบับ
     productManagerRow,
     { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'products', to: 'productEdit', addDefaults: { name: '', enabled: 'true' }, label: 'เพิ่มสินค้าใหม่', icon: 'add', className: 'w-full justify-center !h-auto py-4 !border-dashed opacity-60 hover:opacity-100' },
   ]),
@@ -790,7 +794,7 @@ const charManagerRow = {
         { el: 'text', value: CONCAT(LK('genderTh', '{item.gender}', '{item.gender}'), ' · {item.ageRange}'), className: '!text-[12px] opacity-40 mt-0.5' },
       ]),
       { el: 'button', action: 'hook', fn: 'hsOpenEdit', to: 'characterEdit', iconOnly: true, icon: 'edit', label: 'แก้ไข', variant: 'ghost', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0' },
-      { el: 'delete-button', iconOnly: true, label: 'ลบ', size: 'sm', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0' },
+      { el: 'delete-button', iconOnly: true, label: 'ลบ', size: 'sm', className: '!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0', disabledWhen: ANY_GEN, reason: 'กำลังผลิตอยู่ — ลบไม่ได้ (คลิปอ้างอิงตัวนี้อยู่)' },
     ]),
     classWhen: [{ when: 'item.enabled!=true', class: 'opacity-45' }],
   }],
@@ -813,11 +817,11 @@ const charactersPage = box('max-w-[1080px] mx-auto p-6 w-full', [
       box('ml-auto flex flex-row items-center gap-2', [
         { el: 'button', action: 'hook', fn: 'hsToggleAll', coll: 'characters', value: 'true', label: 'ใช้ทั้งหมด', icon: 'done_all', size: 'sm' },
         { el: 'button', action: 'hook', fn: 'hsToggleAll', coll: 'characters', value: '', label: 'ปิดทั้งหมด', icon: 'close', size: 'sm' },
-        { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', variant: 'solid' },
+        { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน (25-35)', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', variant: 'solid' },
       ]),
     ]),
     box('grid grid-cols-1 sm:grid-cols-2 gap-3', [charManagerRow]),   // ต้นฉบับ CharacterManager = grid 2 คอลัมน์
-    { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน 25-35', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', className: 'w-full justify-center !h-auto py-4 !border-dashed opacity-60 hover:opacity-100' },
+    { el: 'button', action: 'hook', fn: 'hsAddItem', coll: 'characters', to: 'characterEdit', addDefaults: { name: '', gender: 'female', ageRange: 'วัยทำงาน (25-35)', enabled: 'true' }, label: 'เพิ่มตัวละคร', icon: 'person_add', className: 'w-full justify-center !h-auto py-4 !border-dashed opacity-60 hover:opacity-100' },
   ]),
 ], EQ('{values.__page}', 'characters'));
 
@@ -848,7 +852,7 @@ const config = {
   components: { runBanner: RUN_BANNER },
   home: {
     title: 'หมีแว่น ขายดุ', tag: 'EasyBear Hardsell',
-    description: 'ปั่นคลิปขายสินค้าสไตล์ TikTok — ฮุคแรง โน้มน้าว ปิดการขาย ครบจบทีละหลายคลิป',
+    description: 'ใส่สินค้าเข้าลิสต์ แล้วปล่อยให้หมีปั่นคลิปรีวิวขายดุให้ทีละหลายคลิป',   // คำโปรยตรง LandingScreen ต้นฉบับ
     cta: 'สร้างโปรเจกต์ใหม่', ctaContrast: true, loadLabel: 'โหลดโปรเจกต์เดิม',
     footer: film.home?.footer || [],
   },
@@ -913,8 +917,15 @@ const config = {
     map: { title: 'productName', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }] },
   },
   settings: {
-    title: 'ตั้งค่า', fullPage: true,   // ต้นฉบับ SettingsPage = หน้าเต็มแยก ไม่ใช่ modal ลอย
-    form: [
+    title: 'Settings', fullPage: true,   // ต้นฉบับ SettingsPage = หน้าเต็มแยก + หัวข้อ "Settings" (อังกฤษ)
+    form: [box('bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-5 flex flex-col gap-3', [   // ต้นฉบับห่อฟอร์มในการ์ด + แถวหัว icon "ตั้งค่าการผลิต"
+      row('items-center gap-3 mb-1', [
+        box('w-10 h-10 rounded-xl bg-[var(--ev-accent)]/15 text-[var(--ev-accent)] flex items-center justify-center shrink-0', [{ el: 'icon', icon: 'tune', textSize: 'text-[20px]' }]),
+        box('min-w-0', [
+          tx('ตั้งค่าการผลิต', 'font-bold !text-[15px] !text-[var(--ev-text)]'),
+          tx('โมเดล AI · จังหวะการหน่วง · กรองคำต้องห้าม', '!text-[11px] opacity-40'),
+        ]),
+      ]),
       { el: 'dropdown', field: 'imageModel', label: 'โมเดลภาพ', options: IMAGE_MODELS },
       { el: 'dropdown', field: 'videoModel', label: 'โมเดลวิดีโอ', options: VIDEO_MODELS },
       { el: 'stepper', field: 'maxParallel', label: 'ผลิตพร้อมกันสูงสุด', placeholder: '1 = ทีละคลิป เสถียรสุด', icon: 'layers', unit: 'งาน', min: 1, max: 4 },
@@ -925,7 +936,7 @@ const config = {
       { el: 'switch', field: 'blocklistEnabled', label: 'เปิดกรองคำต้องห้าม' },
       { el: 'taginput', field: 'blocklist', label: 'คำต้องห้าม (แตะเพื่อลบ)' },
       { el: 'button', action: 'set', to: 'blocklist', value: HS_BLOCKED_DEFAULT.join(','), label: 'รีเซ็ตคำต้องห้ามเป็นค่าเริ่มต้น', icon: 'restart_alt', size: 'sm', variant: 'ghost' },
-    ],
+    ])],
   },
   phases: [
     {

@@ -803,7 +803,7 @@
   "home": {
     "title": "หมีแว่น ขายดุ",
     "tag": "EasyBear Hardsell",
-    "description": "ปั่นคลิปขายสินค้าสไตล์ TikTok — ฮุคแรง โน้มน้าว ปิดการขาย ครบจบทีละหลายคลิป",
+    "description": "ใส่สินค้าเข้าลิสต์ แล้วปล่อยให้หมีปั่นคลิปรีวิวขายดุให้ทีละหลายคลิป",
     "cta": "สร้างโปรเจกต์ใหม่",
     "ctaContrast": true,
     "loadLabel": "โหลดโปรเจกต์เดิม",
@@ -1021,135 +1021,177 @@
     }
   },
   "settings": {
-    "title": "ตั้งค่า",
+    "title": "Settings",
     "fullPage": true,
     "form": [
       {
-        "el": "dropdown",
-        "field": "imageModel",
-        "label": "โมเดลภาพ",
-        "options": [
+        "el": "box",
+        "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-5 flex flex-col gap-3",
+        "card": [
           {
-            "value": "🍌 Nano Banana Pro",
-            "label": "🍌 Nano Banana Pro",
-            "icon": "auto_awesome"
+            "el": "row",
+            "className": "items-center gap-3 mb-1",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "card": [
+              {
+                "el": "box",
+                "className": "w-10 h-10 rounded-xl bg-[var(--ev-accent)]/15 text-[var(--ev-accent)] flex items-center justify-center shrink-0",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "tune",
+                    "textSize": "text-[20px]"
+                  }
+                ]
+              },
+              {
+                "el": "box",
+                "className": "min-w-0",
+                "card": [
+                  {
+                    "el": "text",
+                    "value": "ตั้งค่าการผลิต",
+                    "className": "font-bold !text-[15px] !text-[var(--ev-text)]"
+                  },
+                  {
+                    "el": "text",
+                    "value": "โมเดล AI · จังหวะการหน่วง · กรองคำต้องห้าม",
+                    "className": "!text-[11px] opacity-40"
+                  }
+                ]
+              }
+            ]
           },
           {
-            "value": "🍌 Nano Banana 2",
-            "label": "🍌 Nano Banana 2",
-            "icon": "image"
+            "el": "dropdown",
+            "field": "imageModel",
+            "label": "โมเดลภาพ",
+            "options": [
+              {
+                "value": "🍌 Nano Banana Pro",
+                "label": "🍌 Nano Banana Pro",
+                "icon": "auto_awesome"
+              },
+              {
+                "value": "🍌 Nano Banana 2",
+                "label": "🍌 Nano Banana 2",
+                "icon": "image"
+              },
+              {
+                "value": "Imagen 4",
+                "label": "Imagen 4",
+                "icon": "photo_camera"
+              }
+            ]
           },
           {
-            "value": "Imagen 4",
-            "label": "Imagen 4",
-            "icon": "photo_camera"
+            "el": "dropdown",
+            "field": "videoModel",
+            "label": "โมเดลวิดีโอ",
+            "options": [
+              {
+                "value": "Omni Flash",
+                "label": "Omni Flash",
+                "icon": "speed"
+              },
+              {
+                "value": "Veo 3.1 - Lite",
+                "label": "Veo 3.1 - Lite",
+                "icon": "electric_bolt"
+              },
+              {
+                "value": "Veo 3.1 - Fast",
+                "label": "Veo 3.1 - Fast",
+                "icon": "bolt"
+              },
+              {
+                "value": "Veo 3.1 - Quality",
+                "label": "Veo 3.1 - Quality",
+                "icon": "high_quality"
+              },
+              {
+                "value": "Veo 3.1 - Lite [Lower Priority]",
+                "label": "Veo 3.1 - Lite [Lower Priority]",
+                "icon": "trending_down"
+              }
+            ]
+          },
+          {
+            "el": "stepper",
+            "field": "maxParallel",
+            "label": "ผลิตพร้อมกันสูงสุด",
+            "placeholder": "1 = ทีละคลิป เสถียรสุด",
+            "icon": "layers",
+            "unit": "งาน",
+            "min": 1,
+            "max": 4
+          },
+          {
+            "el": "stepper",
+            "field": "staggerMs",
+            "label": "พักระหว่างงาน",
+            "placeholder": "เหลื่อมเวลาปล่อยงานขนาน",
+            "icon": "bolt",
+            "unit": "วิ",
+            "min": 0,
+            "max": 30000,
+            "step": 1000,
+            "divisor": 1000
+          },
+          {
+            "el": "stepper",
+            "field": "batchDelay",
+            "label": "พักระหว่างชุด",
+            "placeholder": "จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)",
+            "icon": "restart_alt",
+            "unit": "วิ",
+            "min": 0,
+            "max": 120,
+            "step": 5
+          },
+          {
+            "el": "stepper",
+            "field": "retryDelay",
+            "label": "พักก่อนลองใหม่",
+            "placeholder": "ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่",
+            "icon": "replay",
+            "unit": "วิ",
+            "min": 0,
+            "max": 60
+          },
+          {
+            "el": "stepper",
+            "field": "maxAttempts",
+            "label": "ลองใหม่สูงสุด",
+            "placeholder": "ต่อชิ้นงาน รวมครั้งแรก",
+            "icon": "repeat",
+            "unit": "ครั้ง",
+            "min": 1,
+            "max": 5
+          },
+          {
+            "el": "switch",
+            "field": "blocklistEnabled",
+            "label": "เปิดกรองคำต้องห้าม"
+          },
+          {
+            "el": "taginput",
+            "field": "blocklist",
+            "label": "คำต้องห้าม (แตะเพื่อลบ)"
+          },
+          {
+            "el": "button",
+            "action": "set",
+            "to": "blocklist",
+            "value": "ส่งฟรี,ฟรีค่าส่ง,ส่งฟรีทั่วไทย,รับประกันคืนเงิน,ของแท้100%,ของแท้ 100%,รักษาโรค,หายขาด,การันตี,100%",
+            "label": "รีเซ็ตคำต้องห้ามเป็นค่าเริ่มต้น",
+            "icon": "restart_alt",
+            "size": "sm",
+            "variant": "ghost"
           }
         ]
-      },
-      {
-        "el": "dropdown",
-        "field": "videoModel",
-        "label": "โมเดลวิดีโอ",
-        "options": [
-          {
-            "value": "Omni Flash",
-            "label": "Omni Flash",
-            "icon": "speed"
-          },
-          {
-            "value": "Veo 3.1 - Lite",
-            "label": "Veo 3.1 - Lite",
-            "icon": "electric_bolt"
-          },
-          {
-            "value": "Veo 3.1 - Fast",
-            "label": "Veo 3.1 - Fast",
-            "icon": "bolt"
-          },
-          {
-            "value": "Veo 3.1 - Quality",
-            "label": "Veo 3.1 - Quality",
-            "icon": "high_quality"
-          },
-          {
-            "value": "Veo 3.1 - Lite [Lower Priority]",
-            "label": "Veo 3.1 - Lite [Lower Priority]",
-            "icon": "trending_down"
-          }
-        ]
-      },
-      {
-        "el": "stepper",
-        "field": "maxParallel",
-        "label": "ผลิตพร้อมกันสูงสุด",
-        "placeholder": "1 = ทีละคลิป เสถียรสุด",
-        "icon": "layers",
-        "unit": "งาน",
-        "min": 1,
-        "max": 4
-      },
-      {
-        "el": "stepper",
-        "field": "staggerMs",
-        "label": "พักระหว่างงาน",
-        "placeholder": "เหลื่อมเวลาปล่อยงานขนาน",
-        "icon": "bolt",
-        "unit": "วิ",
-        "min": 0,
-        "max": 30000,
-        "step": 1000,
-        "divisor": 1000
-      },
-      {
-        "el": "stepper",
-        "field": "batchDelay",
-        "label": "พักระหว่างชุด",
-        "placeholder": "จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)",
-        "icon": "restart_alt",
-        "unit": "วิ",
-        "min": 0,
-        "max": 120,
-        "step": 5
-      },
-      {
-        "el": "stepper",
-        "field": "retryDelay",
-        "label": "พักก่อนลองใหม่",
-        "placeholder": "ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่",
-        "icon": "replay",
-        "unit": "วิ",
-        "min": 0,
-        "max": 60
-      },
-      {
-        "el": "stepper",
-        "field": "maxAttempts",
-        "label": "ลองใหม่สูงสุด",
-        "placeholder": "ต่อชิ้นงาน รวมครั้งแรก",
-        "icon": "repeat",
-        "unit": "ครั้ง",
-        "min": 1,
-        "max": 5
-      },
-      {
-        "el": "switch",
-        "field": "blocklistEnabled",
-        "label": "เปิดกรองคำต้องห้าม"
-      },
-      {
-        "el": "taginput",
-        "field": "blocklist",
-        "label": "คำต้องห้าม (แตะเพื่อลบ)"
-      },
-      {
-        "el": "button",
-        "action": "set",
-        "to": "blocklist",
-        "value": "ส่งฟรี,ฟรีค่าส่ง,ส่งฟรีทั่วไทย,รับประกันคืนเงิน,ของแท้100%,ของแท้ 100%,รักษาโรค,หายขาด,การันตี,100%",
-        "label": "รีเซ็ตคำต้องห้ามเป็นค่าเริ่มต้น",
-        "icon": "restart_alt",
-        "size": "sm",
-        "variant": "ghost"
       }
     ]
   },
@@ -1183,7 +1225,7 @@
                           "el": "group",
                           "collapsible": true,
                           "startOpen": true,
-                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)]",
+                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]",
                           "head": [
                             {
                               "el": "box",
@@ -1338,7 +1380,7 @@
                           "el": "group",
                           "collapsible": true,
                           "startOpen": true,
-                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)]",
+                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]",
                           "head": [
                             {
                               "el": "box",
@@ -1534,7 +1576,7 @@
                           "el": "group",
                           "collapsible": true,
                           "startOpen": true,
-                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)]",
+                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]",
                           "head": [
                             {
                               "el": "box",
@@ -2011,7 +2053,7 @@
                           "el": "group",
                           "collapsible": true,
                           "startOpen": true,
-                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)]",
+                          "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]",
                           "head": [
                             {
                               "el": "box",
@@ -2053,6 +2095,7 @@
                                       "el": "segmented",
                                       "field": "clipLength",
                                       "variant": "tab",
+                                      "selClass": "bg-gradient-to-br from-orange-400 to-orange-600 text-white",
                                       "options": [
                                         {
                                           "value": "8",
@@ -2300,7 +2343,7 @@
                     },
                     {
                       "el": "box",
-                      "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] border border-[var(--ev-border)] flex flex-col gap-2",
+                      "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959] border border-[var(--ev-border)] flex flex-col gap-2",
                       "card": [
                         {
                           "el": "row",
@@ -3167,7 +3210,22 @@
                         },
                         "b": 0
                       },
-                      "label": "เริ่มผลิตคลิป",
+                      "label": {
+                        "op": "concat",
+                        "parts": [
+                          "เริ่มผลิตคลิป · ",
+                          {
+                            "op": "mul",
+                            "a": {
+                              "op": "count",
+                              "from": "products",
+                              "where": "enabled=true"
+                            },
+                            "b": "{values.clipsPerProduct}"
+                          },
+                          " คลิป"
+                        ]
+                      },
                       "icon": "play_arrow",
                       "className": "w-full justify-center !h-12 !rounded-2xl !text-[14px] font-black shadow-[0_0_20px_rgba(247,107,107,0.35)] disabled:!shadow-none disabled:!opacity-30",
                       "disabledWhen": {
@@ -3319,7 +3377,35 @@
                           }
                         ]
                       },
-                      "label": "ทำงานต่อ",
+                      "label": {
+                        "op": "concat",
+                        "parts": [
+                          "ทำงานต่อ · เหลือ ",
+                          {
+                            "op": "sub",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": {
+                              "op": "add",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "where": "clipLength=8",
+                                "slot": "video1"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks",
+                                "where": "clipLength=16",
+                                "slot": "video2"
+                              }
+                            }
+                          },
+                          " คลิป"
+                        ]
+                      },
                       "icon": "play_arrow",
                       "className": "w-full justify-center !h-12 !rounded-2xl !text-[14px] font-black"
                     },
@@ -3996,7 +4082,7 @@
                   "card": [
                     {
                       "el": "box",
-                      "className": "!rounded-[24px] p-5 bg-[var(--ev-surface)] border border-[var(--ev-border)] flex flex-col gap-3",
+                      "className": "!rounded-[24px] p-5 bg-[var(--ev-surface)] !border-[#595959] border border-[var(--ev-border)] flex flex-col gap-3",
                       "card": [
                         {
                           "el": "row",
@@ -4619,6 +4705,7 @@
                                       "variant": "contrast",
                                       "className": "font-bold",
                                       "coll": "tasks",
+                                      "where": "status=done",
                                       "mediaSlots": [
                                         "video1",
                                         "video2"
@@ -4985,7 +5072,7 @@
                     },
                     {
                       "el": "box",
-                      "className": "grid gap-3",
+                      "className": "grid gap-3 grid-cols-4 lg:grid-cols-5",
                       "card": [
                         {
                           "el": "repeat",
@@ -6612,9 +6699,6 @@
                           "a": "{values.__view}",
                           "b": "list"
                         }
-                      },
-                      "style": {
-                        "gridTemplateColumns": "repeat(auto-fill, minmax(150px, 1fr))"
                       }
                     },
                     {
@@ -7561,6 +7645,18 @@
                                                   }
                                                 ]
                                               }
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "ml-auto",
+                                              "card": [
+                                                {
+                                                  "el": "text",
+                                                  "value": "\"{item.h1}\"",
+                                                  "className": "!text-[11px] opacity-45 italic truncate max-w-[260px]",
+                                                  "when": "item.h1!="
+                                                }
+                                              ]
                                             }
                                           ]
                                         },
@@ -8406,11 +8502,11 @@
               "card": [
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
                   "card": [
                     {
                       "el": "box",
-                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/15 text-[var(--ev-accent)]",
+                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-white/5",
                       "card": [
                         {
                           "el": "icon",
@@ -8442,11 +8538,11 @@
                 },
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
                   "card": [
                     {
                       "el": "box",
-                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-sky-500/15 text-sky-400",
+                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/[0.12] text-[var(--ev-accent)]",
                       "card": [
                         {
                           "el": "icon",
@@ -8481,7 +8577,7 @@
             },
             {
               "el": "box",
-              "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] border border-[var(--ev-border)] flex flex-col gap-3",
+              "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959] border border-[var(--ev-border)] flex flex-col gap-3",
               "card": [
                 {
                   "el": "row",
@@ -8557,9 +8653,30 @@
                   "icon": "info"
                 },
                 {
+                  "el": "text",
+                  "value": {
+                    "op": "concat",
+                    "parts": [
+                      "แสดง ",
+                      {
+                        "op": "count",
+                        "from": "products",
+                        "where": "name,description~{values.__q}"
+                      },
+                      " จาก ",
+                      {
+                        "op": "count",
+                        "from": "products"
+                      },
+                      " รายการ"
+                    ]
+                  },
+                  "className": "!text-[11px] opacity-35 px-1"
+                },
+                {
                   "el": "repeat",
                   "coll": "products",
-                  "where": "name~{values.__q}",
+                  "where": "name,description~{values.__q}",
                   "empty": "ยังไม่มีสินค้า — กดเพิ่มสินค้า หรือโหลดลิสต์เดิม",
                   "card": [
                     {
@@ -8670,7 +8787,38 @@
                           "iconOnly": true,
                           "label": "ลบ",
                           "size": "sm",
-                          "className": "!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0"
+                          "className": "!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0",
+                          "disabledWhen": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "running"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "cooldown"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "retrying"
+                                  }
+                                ]
+                              },
+                              {
+                                "op": "some",
+                                "from": "tasks",
+                                "where": "status=running"
+                              }
+                            ]
+                          },
+                          "reason": "กำลังผลิตอยู่ — ลบไม่ได้ (คลิปอ้างอิงตัวนี้อยู่)"
                         }
                       ],
                       "classWhen": [
@@ -8796,11 +8944,11 @@
               "card": [
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
                   "card": [
                     {
                       "el": "box",
-                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/15 text-[var(--ev-accent)]",
+                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-white/5",
                       "card": [
                         {
                           "el": "icon",
@@ -8832,11 +8980,11 @@
                 },
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-4 flex flex-row items-center gap-3.5",
                   "card": [
                     {
                       "el": "box",
-                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-sky-500/15 text-sky-400",
+                      "className": "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/[0.12] text-[var(--ev-accent)]",
                       "card": [
                         {
                           "el": "icon",
@@ -8908,7 +9056,7 @@
             },
             {
               "el": "box",
-              "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] border border-[var(--ev-border)] flex flex-col gap-3",
+              "className": "!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959] border border-[var(--ev-border)] flex flex-col gap-3",
               "card": [
                 {
                   "el": "row",
@@ -8955,7 +9103,7 @@
                           "addDefaults": {
                             "name": "",
                             "gender": "female",
-                            "ageRange": "วัยทำงาน 25-35",
+                            "ageRange": "วัยทำงาน (25-35)",
                             "enabled": "true"
                           },
                           "label": "เพิ่มตัวละคร",
@@ -9047,7 +9195,38 @@
                               "iconOnly": true,
                               "label": "ลบ",
                               "size": "sm",
-                              "className": "!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0"
+                              "className": "!w-[34px] !h-[34px] !p-0 !rounded-[10px] shrink-0",
+                              "disabledWhen": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "cooldown"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "retrying"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "op": "some",
+                                    "from": "tasks",
+                                    "where": "status=running"
+                                  }
+                                ]
+                              },
+                              "reason": "กำลังผลิตอยู่ — ลบไม่ได้ (คลิปอ้างอิงตัวนี้อยู่)"
                             }
                           ],
                           "classWhen": [
@@ -9070,7 +9249,7 @@
                   "addDefaults": {
                     "name": "",
                     "gender": "female",
-                    "ageRange": "วัยทำงาน 25-35",
+                    "ageRange": "วัยทำงาน (25-35)",
                     "enabled": "true"
                   },
                   "label": "เพิ่มตัวละคร",
@@ -9097,7 +9276,7 @@
               "card": [
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 flex flex-col gap-4",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-6 flex flex-col gap-4",
                   "card": [
                     {
                       "el": "row",
@@ -9501,7 +9680,6 @@
                           "action": "hook",
                           "fn": "hsCloseEdit",
                           "to": "products",
-                          "coll": "products",
                           "label": "บันทึกสินค้า",
                           "variant": "solid",
                           "className": "flex-[2] justify-center !h-12 !rounded-xl !text-[14px] font-bold",
@@ -9536,7 +9714,7 @@
               "card": [
                 {
                   "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 flex flex-col gap-4",
+                  "className": "bg-[var(--ev-surface)] border border-[#595959] rounded-[24px] p-6 flex flex-col gap-4",
                   "card": [
                     {
                       "el": "row",
@@ -9857,20 +10035,20 @@
                               "field": "ageRange",
                               "options": [
                                 {
-                                  "value": "วัยรุ่น 18-25",
-                                  "label": "วัยรุ่น 18-25"
+                                  "value": "วัยรุ่น (18-25)",
+                                  "label": "วัยรุ่น (18-25)"
                                 },
                                 {
-                                  "value": "วัยทำงาน 25-35",
-                                  "label": "วัยทำงาน 25-35"
+                                  "value": "วัยทำงาน (25-35)",
+                                  "label": "วัยทำงาน (25-35)"
                                 },
                                 {
-                                  "value": "กลางคน 35-50",
-                                  "label": "กลางคน 35-50"
+                                  "value": "กลางคน (35-50)",
+                                  "label": "กลางคน (35-50)"
                                 },
                                 {
-                                  "value": "สูงวัย 50+",
-                                  "label": "สูงวัย 50+"
+                                  "value": "สูงวัย (50+)",
+                                  "label": "สูงวัย (50+)"
                                 }
                               ]
                             }
@@ -9899,7 +10077,6 @@
                           "action": "hook",
                           "fn": "hsCloseEdit",
                           "to": "characters",
-                          "coll": "characters",
                           "label": "บันทึกตัวละคร",
                           "variant": "solid",
                           "className": "flex-[2] justify-center !h-12 !rounded-xl !text-[14px] font-bold"
