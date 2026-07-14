@@ -62,7 +62,7 @@ const LOOKUPS: Record<string, Record<string, string>> = {
 const tx = (value: any, className: string, when?: any, icon?: string): any => ({ el: 'text', value, className, ...(when != null ? { when } : {}), ...(icon ? { icon } : {}) });
 const box = (className: string, card: any[], when?: any, style?: any): any => ({ el: 'box', className, card, ...(when != null ? { when } : {}), ...(style ? { style } : {}) });
 const row = (className: string, card: any[], when?: any): any => ({ el: 'row', className, style: { flexWrap: 'nowrap' }, card, ...(when != null ? { when } : {}) });
-const fieldLabel = (icon: string, label: string) => tx(label, '!text-[10px] uppercase tracking-[0.06em] font-semibold opacity-50 px-1', undefined, icon);
+const fieldLabel = (icon: string, label: string) => tx(label, 'flex items-center gap-1 !text-[10px] uppercase tracking-[0.06em] font-semibold opacity-50 px-1 mb-1.5', undefined, icon);   // flex items-center = icon กึ่งกลางแนวตั้งกับข้อความ (ตาม FieldLabel ต้นฉบับ HomeScreen.tsx:24)
 const EQ = (a: any, b: any) => ({ op: 'eq', a, b });
 const NEQ = (a: any, b: any) => ({ op: 'not', a: { op: 'eq', a, b } });
 const AND = (...list: any[]) => ({ op: 'and', list });
