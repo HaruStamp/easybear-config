@@ -825,9 +825,10 @@
     "blocklistEnabled": "true",
     "blocklist": "ส่งฟรี,ฟรีค่าส่ง,ส่งฟรีทั่วไทย,รับประกันคืนเงิน,ของแท้100%,ของแท้ 100%,รักษาโรค,หายขาด,การันตี,100%",
     "maxParallel": "1",
-    "staggerMs": "3000",
     "maxAttempts": "3",
-    "batchDelay": "10",
+    "taskDelay": "3",
+    "clipDelay": "10",
+    "productDelay": "30",
     "retryDelay": "8",
     "__page": "",
     "__view": "grid",
@@ -1000,7 +1001,6 @@
   ],
   "run": {
     "maxParallel": 1,
-    "staggerMs": 3000,
     "maxAttempts": 3
   },
   "editor": {
@@ -1130,22 +1130,30 @@
           },
           {
             "el": "stepper",
-            "field": "staggerMs",
+            "field": "taskDelay",
             "label": "พักระหว่างงาน",
-            "placeholder": "เหลื่อมเวลาปล่อยงานขนาน",
+            "placeholder": "หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)",
             "icon": "bolt",
             "unit": "วิ",
             "min": 0,
-            "max": 30000,
-            "step": 1000,
-            "divisor": 1000
+            "max": 30
           },
           {
             "el": "stepper",
-            "field": "batchDelay",
-            "label": "พักระหว่างชุด",
-            "placeholder": "จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)",
+            "field": "clipDelay",
+            "label": "พักระหว่างคลิป",
+            "placeholder": "จบ 1 คลิป ก่อนคลิปถัดไป (สินค้าเดิม)",
             "icon": "restart_alt",
+            "unit": "วิ",
+            "min": 0,
+            "max": 60
+          },
+          {
+            "el": "stepper",
+            "field": "productDelay",
+            "label": "พักระหว่างสินค้า",
+            "placeholder": "จบทุกคลิป ก่อนขึ้นสินค้าใหม่ (กันโดนลิมิต)",
+            "icon": "inventory_2",
             "unit": "วิ",
             "min": 0,
             "max": 120,
@@ -2244,23 +2252,32 @@
                                     },
                                     {
                                       "el": "stepper",
-                                      "field": "staggerMs",
+                                      "field": "taskDelay",
                                       "label": "พักระหว่างงาน",
-                                      "placeholder": "เหลื่อมเวลาปล่อยงานขนาน",
+                                      "placeholder": "หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)",
                                       "icon": "bolt",
                                       "unit": "วิ",
                                       "min": 0,
-                                      "max": 30000,
-                                      "step": 1000,
-                                      "divisor": 1000,
+                                      "max": 30,
                                       "className": "py-3.5"
                                     },
                                     {
                                       "el": "stepper",
-                                      "field": "batchDelay",
-                                      "label": "พักระหว่างชุด",
-                                      "placeholder": "จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)",
+                                      "field": "clipDelay",
+                                      "label": "พักระหว่างคลิป",
+                                      "placeholder": "จบ 1 คลิป ก่อนคลิปถัดไป (สินค้าเดิม)",
                                       "icon": "restart_alt",
+                                      "unit": "วิ",
+                                      "min": 0,
+                                      "max": 60,
+                                      "className": "py-3.5"
+                                    },
+                                    {
+                                      "el": "stepper",
+                                      "field": "productDelay",
+                                      "label": "พักระหว่างสินค้า",
+                                      "placeholder": "จบทุกคลิป ก่อนขึ้นสินค้าใหม่ (กันโดนลิมิต)",
+                                      "icon": "inventory_2",
                                       "unit": "วิ",
                                       "min": 0,
                                       "max": 120,
@@ -3208,13 +3225,21 @@
                     {
                       "el": "gen-phase",
                       "ops": [
-                        "hsQueue",
+                        "hsQueue"
+                      ],
+                      "chain": [
                         "hsContent",
                         "hsPrompts",
                         "hsImage",
                         "hsVideo1",
                         "hsVideo2"
                       ],
+                      "chainBy": "productId",
+                      "chainPace": {
+                        "step": "taskDelay",
+                        "item": "clipDelay",
+                        "group": "productDelay"
+                      },
                       "when": {
                         "op": "eq",
                         "a": {
@@ -3297,13 +3322,21 @@
                     {
                       "el": "gen-phase",
                       "ops": [
-                        "hsQueue",
+                        "hsQueue"
+                      ],
+                      "chain": [
                         "hsContent",
                         "hsPrompts",
                         "hsImage",
                         "hsVideo1",
                         "hsVideo2"
                       ],
+                      "chainBy": "productId",
+                      "chainPace": {
+                        "step": "taskDelay",
+                        "item": "clipDelay",
+                        "group": "productDelay"
+                      },
                       "when": {
                         "op": "and",
                         "list": [
@@ -3425,13 +3458,21 @@
                     {
                       "el": "gen-phase",
                       "ops": [
-                        "hsQueue",
+                        "hsQueue"
+                      ],
+                      "chain": [
                         "hsContent",
                         "hsPrompts",
                         "hsImage",
                         "hsVideo1",
                         "hsVideo2"
                       ],
+                      "chainBy": "productId",
+                      "chainPace": {
+                        "step": "taskDelay",
+                        "item": "clipDelay",
+                        "group": "productDelay"
+                      },
                       "when": {
                         "op": "and",
                         "list": [

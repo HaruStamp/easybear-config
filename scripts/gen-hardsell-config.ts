@@ -93,7 +93,14 @@ const TOTAL_CLIPS = { op: 'mul', a: ENABLED_PRODUCTS, b: '{values.clipsPerProduc
 const READY = AND({ op: 'gt', a: ENABLED_PRODUCTS, b: 0 }, { op: 'all', from: 'products', where: 'enabled=true', slot: 'image' });
 const ENABLED_CHARS = { op: 'count', from: 'characters', where: 'enabled=true' };
 // เส้นผลิตทั้งคิว (ข้ามตัวที่เสร็จแล้วเอง + retry ตัวพลาดเอง = พฤติกรรม autoProduce ต้นฉบับ)
-const CHAIN = ['hsQueue', 'hsContent', 'hsPrompts', 'hsImage', 'hsVideo1', 'hsVideo2'];
+// CH1 item-major ตาม runProduction ต้นฉบับ: จัดคิวก่อน (ops) แล้ว "บท→ภาพ→วิดีโอ จบทีละคลิป" (chain) ค่อยขึ้นคลิปถัดไป — ไม่ใช่ไล่ทีละขั้นทับทุกคลิปแบบ film
+// chainBy=productId → จังหวะ 3 ชั้น: taskDelay หลังขั้น media ใน chain · clipDelay ก่อนคลิปถัดไปสินค้าเดิม · productDelay ก่อนขึ้นสินค้าใหม่
+const CHAIN = {
+  ops: ['hsQueue'],
+  chain: ['hsContent', 'hsPrompts', 'hsImage', 'hsVideo1', 'hsVideo2'],
+  chainBy: 'productId',
+  chainPace: { step: 'taskDelay', item: 'clipDelay', group: 'productDelay' },
+};
 
 // ═══════════ ซ้าย: WIZARD ①-④ (accordion ตาม HomeScreen.tsx) ═══════════
 const stepBadge = (n: string) => box('w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0',
@@ -220,8 +227,9 @@ const wizardForm: any[] = [
           { el: 'dropdown', field: 'videoModel', label: 'โมเดลสร้างวีดีโอ', options: VIDEO_MODELS },
           box('bg-black/20 border border-[var(--ev-border)] rounded-xl px-4 divide-y divide-[var(--ev-border)]', [
             { el: 'stepper', field: 'maxParallel', label: 'ผลิตพร้อมกันสูงสุด', placeholder: '1 = ทีละคลิป เสถียรสุด', icon: 'layers', unit: 'งาน', min: 1, max: 4, className: 'py-3.5' },
-            { el: 'stepper', field: 'staggerMs', label: 'พักระหว่างงาน', placeholder: 'เหลื่อมเวลาปล่อยงานขนาน', icon: 'bolt', unit: 'วิ', min: 0, max: 30000, step: 1000, divisor: 1000, className: 'py-3.5' },
-            { el: 'stepper', field: 'batchDelay', label: 'พักระหว่างชุด', placeholder: 'จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)', icon: 'restart_alt', unit: 'วิ', min: 0, max: 120, step: 5, className: 'py-3.5' },
+            { el: 'stepper', field: 'taskDelay', label: 'พักระหว่างงาน', placeholder: 'หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)', icon: 'bolt', unit: 'วิ', min: 0, max: 30, className: 'py-3.5' },
+            { el: 'stepper', field: 'clipDelay', label: 'พักระหว่างคลิป', placeholder: 'จบ 1 คลิป ก่อนคลิปถัดไป (สินค้าเดิม)', icon: 'restart_alt', unit: 'วิ', min: 0, max: 60, className: 'py-3.5' },
+            { el: 'stepper', field: 'productDelay', label: 'พักระหว่างสินค้า', placeholder: 'จบทุกคลิป ก่อนขึ้นสินค้าใหม่ (กันโดนลิมิต)', icon: 'inventory_2', unit: 'วิ', min: 0, max: 120, step: 5, className: 'py-3.5' },
             { el: 'stepper', field: 'retryDelay', label: 'พักก่อนลองใหม่', placeholder: 'ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่', icon: 'replay', unit: 'วิ', min: 0, max: 60, className: 'py-3.5' },
             { el: 'stepper', field: 'maxAttempts', label: 'ลองใหม่สูงสุด', placeholder: 'ต่อชิ้นงาน รวมครั้งแรก', icon: 'repeat', unit: 'ครั้ง', min: 1, max: 5, className: 'py-3.5' },
           ]),
@@ -303,14 +311,14 @@ const controlFooter = box('p-4 pb-5 border-t border-[var(--ev-border)] shrink-0'
     { el: 'icon', icon: 'warning', textSize: 'text-[15px]', className: 'text-amber-400 shrink-0 mt-px' },
     tx(CONCAT('คิวนี้ ', TOTAL_CLIPS, ' คลิป (เกิน 100) — งานเยอะอาจทำให้แอปทำงานหนักหรือช้า แนะนำแบ่งทำเป็นรอบเล็กลง หรือเลือกคลิป 8 วิ เพื่อความลื่นไหล'), '!text-[11px] leading-relaxed !text-amber-300/90'),
   ], AND(NO_TASKS, { op: 'gt', a: TOTAL_CLIPS, b: 100 })),
-  { el: 'gen-phase', ops: CHAIN, when: NO_TASKS, label: CONCAT('เริ่มผลิตคลิป · ', TOTAL_CLIPS, ' คลิป') as any, icon: 'play_arrow',   // ตัวเลขฝังในป้ายปุ่มตาม MainScreen ต้นฉบับ (Btn label ผ่าน resolveStr แล้ว)
+  { el: 'gen-phase', ...CHAIN, when: NO_TASKS, label: CONCAT('เริ่มผลิตคลิป · ', TOTAL_CLIPS, ' คลิป') as any, icon: 'play_arrow',   // ตัวเลขฝังในป้ายปุ่มตาม MainScreen ต้นฉบับ (Btn label ผ่าน resolveStr แล้ว)
     className: CTRL_BTN + ' font-black shadow-[0_0_20px_rgba(247,107,107,0.35)] disabled:!shadow-none disabled:!opacity-30',
     disabledWhen: { op: 'not', a: READY }, reason: 'เพิ่มสินค้า + ใส่รูปให้ครบก่อนเริ่มผลิต' },
   { el: 'button', action: 'stop', when: ST_RUNNING, label: 'หยุดชั่วคราว', icon: 'pause', variant: 'ghost',
     className: CTRL_BTN + ' font-bold !text-red-300 !bg-red-500/10 !border !border-red-500/35 hover:!bg-red-500/20' },
-  { el: 'gen-phase', ops: CHAIN, when: AND(NOT_RUNNING, HAS_TASKS, NO_ERROR, NOT_ALL_DONE),
+  { el: 'gen-phase', ...CHAIN, when: AND(NOT_RUNNING, HAS_TASKS, NO_ERROR, NOT_ALL_DONE),
     label: CONCAT('ทำงานต่อ · เหลือ ', { op: 'sub', a: COUNT_TASKS, b: COUNT_DONE }, ' คลิป') as any, icon: 'play_arrow', className: CTRL_BTN + ' font-black' },
-  { el: 'gen-phase', ops: CHAIN, when: AND(NOT_RUNNING, HAS_ERROR),
+  { el: 'gen-phase', ...CHAIN, when: AND(NOT_RUNNING, HAS_ERROR),
     label: 'ลองใหม่ที่พลาด', icon: 'replay', className: CTRL_BTN + ' font-black' },
   { el: 'confirm-button', action: 'hook', fn: 'hsResetRun', when: AND(HAS_TASKS, NOT_RUNNING),
     label: 'รีเซ็ตงาน', icon: 'refresh', placeholder: 'ยืนยันรีเซ็ต?', variant: 'outline',
@@ -870,7 +878,7 @@ const config = {
     clipLength: '8', clipsPerProduct: '1', styleCat: 'ugc',
     imageModel: DEF_IMG, videoModel: DEF_VID,
     blocklistEnabled: 'true', blocklist: HS_BLOCKED_DEFAULT.join(','),
-    maxParallel: '1', staggerMs: '3000', maxAttempts: '3', batchDelay: '10', retryDelay: '8',   // retryDelay 8 = ตาม projectStore ต้นฉบับ
+    maxParallel: '1', maxAttempts: '3', taskDelay: '3', clipDelay: '10', productDelay: '30', retryDelay: '8',   // จังหวะ 3 ชั้น + retryDelay = default ตาม projectStore ต้นฉบับ (3/10/30/8)
     __page: '', __view: 'grid', __q: '', __editId: '', __editNew: '',
   },
   collections: {
@@ -919,7 +927,7 @@ const config = {
     { op: 'hsVideo2' },
     { checkpoint: 'main' },
   ],
-  run: { maxParallel: 1, staggerMs: 3000, maxAttempts: 3 },
+  run: { maxParallel: 1, maxAttempts: 3 },   // chain mode: จังหวะมาจาก values (taskDelay/clipDelay/productDelay) — stagger/batchDelay ไม่ใช้ในสายผลิตต่อคลิป
   // ตัดต่อ: task 1 ใบ = คลิป 1 ตัว (16 วิ = 2 ช่วง fan-out + trim รอยต่อ 8-TAIL_TRIM=7 ตาม editorBridge ต้นฉบับ)
   editor: {
     sourceColl: 'tasks', defaultAspect: '9:16', defaultDuration: 8,
@@ -938,8 +946,9 @@ const config = {
       { el: 'dropdown', field: 'imageModel', label: 'โมเดลภาพ', options: IMAGE_MODELS },
       { el: 'dropdown', field: 'videoModel', label: 'โมเดลวิดีโอ', options: VIDEO_MODELS },
       { el: 'stepper', field: 'maxParallel', label: 'ผลิตพร้อมกันสูงสุด', placeholder: '1 = ทีละคลิป เสถียรสุด', icon: 'layers', unit: 'งาน', min: 1, max: 4 },
-      { el: 'stepper', field: 'staggerMs', label: 'พักระหว่างงาน', placeholder: 'เหลื่อมเวลาปล่อยงานขนาน', icon: 'bolt', unit: 'วิ', min: 0, max: 30000, step: 1000, divisor: 1000 },
-      { el: 'stepper', field: 'batchDelay', label: 'พักระหว่างชุด', placeholder: 'จบชุดหนึ่ง พักก่อนชุดถัดไป (กันโดนลิมิต)', icon: 'restart_alt', unit: 'วิ', min: 0, max: 120, step: 5 },
+      { el: 'stepper', field: 'taskDelay', label: 'พักระหว่างงาน', placeholder: 'หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)', icon: 'bolt', unit: 'วิ', min: 0, max: 30 },
+      { el: 'stepper', field: 'clipDelay', label: 'พักระหว่างคลิป', placeholder: 'จบ 1 คลิป ก่อนคลิปถัดไป (สินค้าเดิม)', icon: 'restart_alt', unit: 'วิ', min: 0, max: 60 },
+      { el: 'stepper', field: 'productDelay', label: 'พักระหว่างสินค้า', placeholder: 'จบทุกคลิป ก่อนขึ้นสินค้าใหม่ (กันโดนลิมิต)', icon: 'inventory_2', unit: 'วิ', min: 0, max: 120, step: 5 },
       { el: 'stepper', field: 'retryDelay', label: 'พักก่อนลองใหม่', placeholder: 'ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่', icon: 'replay', unit: 'วิ', min: 0, max: 60 },
       { el: 'stepper', field: 'maxAttempts', label: 'ลองใหม่สูงสุด', placeholder: 'ต่อชิ้นงาน รวมครั้งแรก', icon: 'repeat', unit: 'ครั้ง', min: 1, max: 5 },
       { el: 'switch', field: 'blocklistEnabled', label: 'เปิดกรองคำต้องห้าม' },
