@@ -373,7 +373,15 @@ const cardImageLayer = box('absolute inset-0 pointer-events-none', [
 ], 'item.slots.image!=');
 // การ์ดเสร็จ (คลิกดู = lightbox วิดีโอ · hover ปุ่มโหลด/ตัดต่อ) — เงื่อนไขความยาว+มีไฟล์รวมที่การ์ดเดียว (กัน cell เปล่าใน grid)
 const doneCard = (len: string, slot: string) => box('relative aspect-[9/16] rounded-2xl overflow-hidden group', [
-  { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full' },
+  { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full',
+    segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }],   // คลิกดู = คลิปเต็ม (16 วิ merge รอยต่อเนียน)
+    lightboxActions: [   // ใต้วิดีโอ (parity PreviewModal ต้นฉบับ: ชื่อสินค้า + [ตัดต่อคลิป][ดาวน์โหลด])
+      { el: 'text', value: CONCAT('{item.productName} · คลิป {item.clipIndex} · {item.clipLength} วิ'), className: '!text-[13px] font-bold !text-white text-center' },
+      box('flex flex-row gap-2', [
+        { el: 'open-editor', coll: 'tasks', only: true, label: 'ตัดต่อคลิป', icon: 'movie_edit', variant: 'outline-accent', className: 'flex-1 justify-center !h-11 !rounded-xl font-bold' },
+        { el: 'download-button', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }], label: 'ดาวน์โหลด', icon: 'download', variant: 'contrast', className: 'flex-1 justify-center !h-11 !rounded-xl font-bold' },
+      ]),
+    ] },
   box('absolute top-2 left-2 z-[2] px-2 py-[3px] rounded-full bg-green-500 pointer-events-none', [tx('เสร็จ', '!text-[9px] font-bold !text-white')]),
   // 16 วิ = merge video1(trim 7)+video2 เป็นไฟล์เดียวก่อนโหลด (parity downloads ต้นฉบับ — รอยต่อเนียน) · 8 วิ = โหลดตรง
   { el: 'download-button', iconOnly: true, label: 'โหลดคลิป', icon: 'download', size: 'sm',
@@ -495,7 +503,7 @@ const runList = box('flex flex-col gap-2', [{
       box('flex flex-row items-center gap-3 py-2.5 px-3 w-full min-w-0', [
         tx({ op: 'add', a: { op: 'index' }, b: 1 }, '!text-[15px] font-extrabold opacity-40 w-7 text-center shrink-0 tabular-nums'),
         // thumb: ตอนกำลังสร้าง = สปินเนอร์เล็ก (media-slot overlay ใหญ่เกิน 52px) · ปกติ = รูป
-        box('w-[52px] shrink-0', [{ el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-[10px]' }], { op: 'not', a: ITEM_RUNNING }),
+        box('w-[52px] shrink-0', [{ el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!rounded-[10px]', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }] }], { op: 'not', a: ITEM_RUNNING }),   // คลิก thumb = เล่นวิดีโอเต็ม (parity RunList เปิด PreviewModal)
         box('w-[52px] h-[52px] shrink-0 rounded-[10px] bg-black/30 border border-[var(--ev-border)] flex items-center justify-center', [{ el: 'spinner', className: '!text-[20px]' }], ITEM_RUNNING),
         box('flex-1 min-w-0', [
           row('items-center gap-1.5', [tx('{item.productName}', '!text-[14px] font-medium truncate !text-[var(--ev-text)]'), clipBadge]),
@@ -512,7 +520,7 @@ const runList = box('flex flex-col gap-2', [{
           tx('{item.meta.error}', '!text-[11px] font-bold !text-red-400/80 max-w-[180px] truncate', ITEM_ERROR),
           tx('รอคิว', '!text-[12px] opacity-40', AND(EQ('{item.status}', 'idle'), EQ('{item.h1}', ''))),
           { el: 'download-button', to: 'video1', iconOnly: true, icon: 'download', label: 'ดาวน์โหลด', size: 'sm', variant: 'ghost', when: AND(EQ('{item.clipLength}', '8'), NEQ('{item.slots.video1}', '')) },
-          { el: 'download-button', to: 'video2', iconOnly: true, icon: 'download', label: 'ดาวน์โหลด', size: 'sm', variant: 'ghost', when: AND(EQ('{item.clipLength}', '16'), NEQ('{item.slots.video2}', '')) },
+          { el: 'download-button', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }], iconOnly: true, icon: 'download', label: 'ดาวน์โหลด', size: 'sm', variant: 'ghost', when: AND(EQ('{item.clipLength}', '16'), NEQ('{item.slots.video2}', '')) },   // 16 วิ = merge เต็มคลิปก่อนโหลด (เดิมได้ครึ่งหลัง)
         ]),
       ]),
     ],
