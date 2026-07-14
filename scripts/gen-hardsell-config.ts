@@ -258,14 +258,14 @@ const summaryCard = box(WIZ_CARD + ' border border-[var(--ev-border)] flex flex-
       [{ el: 'icon', icon: 'lock', textSize: 'text-[12px]', className: 'text-amber-400' }, tx('ล็อกระหว่างผลิต', '!text-[10px] font-bold !text-amber-400/90')], NOT_ALL_DONE),
   ]),
   subHead('shopping_cart', 'สินค้า'),
-  { el: 'group', collapsible: true, className: '!rounded-xl bg-[var(--ev-surface)] !p-3',
+  { el: 'group', collapsible: true, className: '!rounded-xl bg-[var(--ev-surface)] !p-3', chevClass: '!text-[var(--ev-accent)]',
     head: [
       { el: 'text', value: CONCAT('เลือกใช้ ', ENABLED_PRODUCTS, ' สินค้า · รวมคิวผลิต ', COUNT_TASKS, ' คลิป'), className: '!text-[12.5px] font-bold !text-[var(--ev-text)] truncate' },
       box('ml-auto shrink-0 !text-[11px] font-bold text-[var(--ev-accent)] px-2 py-1 rounded-lg border border-[var(--ev-accent)]/30 bg-[var(--ev-accent)]/[0.08]', [tx('ดูสินค้า', '!text-[11px] font-bold !text-[var(--ev-accent)]')]),
     ],
     card: [box('max-h-[170px] overflow-y-auto pr-1 flex flex-col gap-1.5', [productRow])] },
   subHead('group', 'ตัวละคร'),
-  { el: 'group', collapsible: true, className: '!rounded-xl bg-[var(--ev-surface)] !p-3',
+  { el: 'group', collapsible: true, className: '!rounded-xl bg-[var(--ev-surface)] !p-3', chevClass: '!text-[var(--ev-accent)]',
     head: [
       { el: 'text', value: LK('zeroChar', ENABLED_CHARS, CONCAT('เลือกใช้ ', ENABLED_CHARS, ' ตัวละคร · AI สุ่มให้แต่ละคลิป')), className: '!text-[12.5px] font-bold !text-[var(--ev-text)] truncate' },
       box('ml-auto shrink-0 !text-[11px] font-bold text-[var(--ev-accent)] px-2 py-1 rounded-lg border border-[var(--ev-accent)]/30 bg-[var(--ev-accent)]/[0.08]', [tx('ดูตัวละคร', '!text-[11px] font-bold !text-[var(--ev-accent)]')]),
@@ -290,7 +290,7 @@ const summaryCard = box(WIZ_CARD + ' border border-[var(--ev-border)] flex flex-
     tx(LK('modelShort', '{values.videoModel}', '{values.videoModel}'), '!text-[12px] opacity-70 truncate', undefined, 'movie'),
   ]),
   valueRow('shield', 'กรองคำต้องห้าม', [
-    box('flex flex-row items-center gap-1.5', [box('w-1.5 h-1.5 rounded-full bg-green-400', []), tx('เปิด', '!text-[12px] !text-green-400/90')], 'values.blocklistEnabled=true'),
+    box('flex flex-row items-center gap-1.5', [box('w-1.5 h-1.5 rounded-full bg-green-400', []), { el: 'text', value: CONCAT('เปิด · ', { op: 'listLen', value: '{values.blocklist}' }, ' คำ'), className: '!text-[12px] !text-green-400/90' }], 'values.blocklistEnabled=true'),   // "เปิด · N คำ" ตาม SummaryCard ต้นฉบับ
     tx('ปิด', '!text-[12px] opacity-40', 'values.blocklistEnabled!=true'),
   ]),
 ], HAS_TASKS);
@@ -375,7 +375,9 @@ const cardImageLayer = box('absolute inset-0 pointer-events-none', [
 const doneCard = (len: string, slot: string) => box('relative aspect-[9/16] rounded-2xl overflow-hidden group', [
   { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full' },
   box('absolute top-2 left-2 z-[2] px-2 py-[3px] rounded-full bg-green-500 pointer-events-none', [tx('เสร็จ', '!text-[9px] font-bold !text-white')]),
-  { el: 'download-button', to: slot, iconOnly: true, label: 'โหลดคลิป', icon: 'download', size: 'sm',
+  // 16 วิ = merge video1(trim 7)+video2 เป็นไฟล์เดียวก่อนโหลด (parity downloads ต้นฉบับ — รอยต่อเนียน) · 8 วิ = โหลดตรง
+  { el: 'download-button', iconOnly: true, label: 'โหลดคลิป', icon: 'download', size: 'sm',
+    ...(len === '16' ? { segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }] } : { to: slot }),
     className: '!absolute top-[7px] right-[7px] z-[3] !w-7 !h-7 !p-0 !rounded-[9px] !bg-black/60 !border-0 !text-white opacity-0 group-hover:opacity-100 hover:!bg-[var(--ev-accent)]' },
   { el: 'open-editor', coll: 'tasks', only: true, iconOnly: true, icon: 'movie_edit', label: 'ตัดต่อคลิปนี้', size: 'sm',
     className: '!absolute top-[7px] right-[42px] z-[3] !w-7 !h-7 !p-0 !rounded-[9px] !bg-black/60 !border-0 !text-white opacity-0 group-hover:opacity-100 hover:!bg-[var(--ev-accent)]' },
@@ -569,6 +571,7 @@ const runHeader = box(WIZ_CARD.replace('!p-5', 'p-5') + ' border border-[var(--e
       ]),
     ]),
     box('shrink-0 flex flex-col items-end gap-0.5', [
+      { el: 'text', value: CONCAT('เริ่มเมื่อ ', { op: 'clock', value: '{values.__runStartedAt}' }), className: '!text-[11.5px] opacity-50', when: AND(ST_RUNNING, NEQ('{values.__runStartedAt}', '')) },   // นาฬิกาเริ่มรอบ ตาม RunScreen ต้นฉบับ
       { el: 'timer', value: '{values.__runStartedAt}', label: 'ผ่านไป', icon: 'schedule', className: '!text-[11.5px] opacity-70', when: ST_RUNNING },
       box('flex flex-row items-center gap-2', [
         // ตัดต่อจาก header = เปิดโปรแกรมตัดต่อเปล่า (ต้นฉบับไม่ pre-load — ใช้ control ที่ไม่มีสื่อเป็น source ว่าง)

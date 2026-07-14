@@ -2436,6 +2436,7 @@
                           "el": "group",
                           "collapsible": true,
                           "className": "!rounded-xl bg-[var(--ev-surface)] !p-3",
+                          "chevClass": "!text-[var(--ev-accent)]",
                           "head": [
                             {
                               "el": "text",
@@ -2575,6 +2576,7 @@
                           "el": "group",
                           "collapsible": true,
                           "className": "!rounded-xl bg-[var(--ev-surface)] !p-3",
+                          "chevClass": "!text-[var(--ev-accent)]",
                           "head": [
                             {
                               "el": "text",
@@ -3091,7 +3093,17 @@
                                     },
                                     {
                                       "el": "text",
-                                      "value": "เปิด",
+                                      "value": {
+                                        "op": "concat",
+                                        "parts": [
+                                          "เปิด · ",
+                                          {
+                                            "op": "listLen",
+                                            "value": "{values.blocklist}"
+                                          },
+                                          " คำ"
+                                        ]
+                                      },
                                       "className": "!text-[12px] !text-green-400/90"
                                     }
                                   ],
@@ -4659,6 +4671,53 @@
                               "className": "shrink-0 flex flex-col items-end gap-0.5",
                               "card": [
                                 {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "เริ่มเมื่อ ",
+                                      {
+                                        "op": "clock",
+                                        "value": "{values.__runStartedAt}"
+                                      }
+                                    ]
+                                  },
+                                  "className": "!text-[11.5px] opacity-50",
+                                  "when": {
+                                    "op": "and",
+                                    "list": [
+                                      {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "cooldown"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "retrying"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{values.__runStartedAt}",
+                                          "b": ""
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
                                   "el": "timer",
                                   "value": "{values.__runStartedAt}",
                                   "label": "ผ่านไป",
@@ -5102,11 +5161,11 @@
                                 },
                                 {
                                   "el": "download-button",
-                                  "to": "video1",
                                   "iconOnly": true,
                                   "label": "โหลดคลิป",
                                   "icon": "download",
                                   "size": "sm",
+                                  "to": "video1",
                                   "className": "!absolute top-[7px] right-[7px] z-[3] !w-7 !h-7 !p-0 !rounded-[9px] !bg-black/60 !border-0 !text-white opacity-0 group-hover:opacity-100 hover:!bg-[var(--ev-accent)]"
                                 },
                                 {
@@ -5204,11 +5263,19 @@
                                 },
                                 {
                                   "el": "download-button",
-                                  "to": "video2",
                                   "iconOnly": true,
                                   "label": "โหลดคลิป",
                                   "icon": "download",
                                   "size": "sm",
+                                  "segments": [
+                                    {
+                                      "slot": "video1",
+                                      "trimEndIfNext": 7
+                                    },
+                                    {
+                                      "slot": "video2"
+                                    }
+                                  ],
                                   "className": "!absolute top-[7px] right-[7px] z-[3] !w-7 !h-7 !p-0 !rounded-[9px] !bg-black/60 !border-0 !text-white opacity-0 group-hover:opacity-100 hover:!bg-[var(--ev-accent)]"
                                 },
                                 {
