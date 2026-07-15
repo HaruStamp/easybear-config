@@ -105,7 +105,7 @@ const CHAIN = {
 // ═══════════ ซ้าย: WIZARD ①-④ (accordion ตาม HomeScreen.tsx) ═══════════
 const stepBadge = (n: string) => box('w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0',
   [tx(n, '!text-[15px] font-black !text-white')], undefined,
-  { background: 'linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 75%, #7f1d1d))' });
+  { background: 'linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 75%, #7c2d12))' });
 const cardTitle = (t: string) => tx(t, 'font-bold !text-[15px] !text-[var(--ev-text)]');
 const manageBtn = (label: string, page: string) => box('ml-auto shrink-0', [
   { el: 'button', action: 'set', to: '__page', value: page, label, icon: 'tune', size: 'sm', variant: 'outline-accent', className: '!h-8 font-bold !text-[12px] !bg-[var(--ev-accent)]/10' },
@@ -223,8 +223,10 @@ const wizardForm: any[] = [
       { el: 'group', collapsible: true, label: 'ตั้งค่าการผลิต', icon: 'tune', className: '!rounded-2xl bg-[var(--ev-surface)]',
         summary: CONCAT(LK('modelShort', '{values.imageModel}', '{values.imageModel}'), ' · ', LK('modelShort', '{values.videoModel}', '{values.videoModel}')),
         card: [
+          tx('โมเดล & ภาพ', '!text-[10px] font-bold uppercase tracking-widest opacity-40', undefined, 'palette'),   // หัวหมวดตาม GroupLabel ต้นฉบับ
           { el: 'dropdown', field: 'imageModel', label: 'โมเดลสร้างภาพ', options: IMAGE_MODELS },
           { el: 'dropdown', field: 'videoModel', label: 'โมเดลสร้างวีดีโอ', options: VIDEO_MODELS },
+          tx('ความเร็ว / จังหวะ', '!text-[10px] font-bold uppercase tracking-widest opacity-40 mt-1', undefined, 'speed'),
           box('bg-black/20 border border-[var(--ev-border)] rounded-xl px-4 divide-y divide-[var(--ev-border)]', [
             { el: 'stepper', field: 'maxParallel', label: 'ผลิตพร้อมกันสูงสุด', placeholder: '1 = ทีละคลิป เสถียรสุด', icon: 'layers', unit: 'งาน', min: 1, max: 4, className: 'py-3.5' },
             { el: 'stepper', field: 'taskDelay', label: 'พักระหว่างงาน', placeholder: 'หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)', icon: 'bolt', unit: 'วิ', min: 0, max: 30, className: 'py-3.5' },
@@ -312,7 +314,7 @@ const controlFooter = box('p-4 pb-5 border-t border-[var(--ev-border)] shrink-0'
     tx(CONCAT('คิวนี้ ', TOTAL_CLIPS, ' คลิป (เกิน 100) — งานเยอะอาจทำให้แอปทำงานหนักหรือช้า แนะนำแบ่งทำเป็นรอบเล็กลง หรือเลือกคลิป 8 วิ เพื่อความลื่นไหล'), '!text-[11px] leading-relaxed !text-amber-300/90'),
   ], AND(NO_TASKS, { op: 'gt', a: TOTAL_CLIPS, b: 100 })),
   { el: 'gen-phase', ...CHAIN, when: NO_TASKS, label: CONCAT('เริ่มผลิตคลิป · ', TOTAL_CLIPS, ' คลิป') as any, icon: 'play_arrow',   // ตัวเลขฝังในป้ายปุ่มตาม MainScreen ต้นฉบับ (Btn label ผ่าน resolveStr แล้ว)
-    className: CTRL_BTN + ' font-black shadow-[0_0_20px_rgba(247,107,107,0.35)] disabled:!shadow-none disabled:!opacity-30',
+    className: CTRL_BTN + ' font-black shadow-[0_0_20px_rgba(249,115,22,0.35)] disabled:!shadow-none disabled:!opacity-30',
     disabledWhen: { op: 'not', a: READY }, reason: 'เพิ่มสินค้า + ใส่รูปให้ครบก่อนเริ่มผลิต' },
   { el: 'button', action: 'stop', when: ST_RUNNING, label: 'หยุดชั่วคราว', icon: 'pause', variant: 'ghost',
     className: CTRL_BTN + ' font-bold !text-red-300 !bg-red-500/10 !border !border-red-500/35 hover:!bg-red-500/20' },
@@ -384,7 +386,8 @@ const doneCard = (len: string, slot: string) => box('relative aspect-[9/16] roun
   { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full',
     segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }],   // คลิกดู = คลิปเต็ม (16 วิ merge รอยต่อเนียน)
     lightboxActions: [   // ใต้วิดีโอ (parity PreviewModal ต้นฉบับ: ชื่อสินค้า + [ตัดต่อคลิป][ดาวน์โหลด])
-      { el: 'text', value: '{item.productName} · คลิป {item.clipIndex} · {item.clipLength} วิ', className: '!text-[13px] font-bold !text-white text-center whitespace-nowrap' },
+      { el: 'text', value: '{item.productName} · คลิป {item.clipIndex} · 8 วิ', className: '!text-[13px] font-bold !text-white text-center whitespace-nowrap', when: 'item.clipLength=8' },
+      { el: 'text', value: '{item.productName} · คลิป {item.clipIndex} · 15 วิ', className: '!text-[13px] font-bold !text-white text-center whitespace-nowrap', when: 'item.clipLength=16' },   // 16 วิ จริง = 7+8 = 15 วิ (หักรอยต่อ) ตาม PreviewModal ต้นฉบับ
       { el: 'open-editor', coll: 'tasks', only: true, label: 'ตัดต่อคลิป', icon: 'movie_edit', variant: 'outline-accent', className: '!h-11 !rounded-xl font-bold' },
       { el: 'download-button', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }], label: 'ดาวน์โหลด', icon: 'download', variant: 'contrast', className: '!h-11 !rounded-xl font-bold' },
     ] },
@@ -433,10 +436,7 @@ const runGrid = box('grid gap-3 grid-cols-4 lg:grid-cols-5', [{
       stateBadge('bg-red-500/90', 'error', 'ล้มเหลว', 'text-white'),
       { el: 'icon', icon: 'error', textSize: 'text-[26px]', className: 'text-red-400' },
       tx('{item.meta.error}', '!text-[10px] font-bold !text-red-300 text-center leading-snug line-clamp-3'),
-      { el: 'gen-button', op: 'hsContent', label: 'ลองเขียนบทใหม่', icon: 'replay', size: 'sm', when: 'item.h1=', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' },
-      box('', [{ el: 'gen-button', op: 'hsImage', label: 'ลองสร้างภาพใหม่', icon: 'replay', size: 'sm', when: 'item.slots.image=', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' }], 'item.h1!='),
-      box('', [box('', [{ el: 'gen-button', op: 'hsVideo1', label: 'ลองสร้างวีดีโอใหม่', icon: 'replay', size: 'sm', when: 'item.slots.video1=', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' }], 'item.slots.image!=')], 'item.h1!='),
-      box('', [{ el: 'gen-button', op: 'hsVideo2', label: 'ลองต่อฉากใหม่', icon: 'replay', size: 'sm', when: 'item.clipLength=16', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' }], 'item.slots.video1!='),
+      { el: 'button', chain: CHAIN.chain, label: 'ลองใหม่', icon: 'replay', size: 'sm', className: '!text-[10px] !border-red-500/40 !text-red-300 !bg-red-500/[0.18]' },   // 1 คลิกไหลต่อจนจบสาย (ข้ามขั้นที่เสร็จแล้ว) — parity handleRetryTask ต้นฉบับ
       bottomBar,
     ], ITEM_ERROR, { boxShadow: 'inset 0 0 0 1.5px rgba(239,68,68,0.5)' }),
     // รอขั้นถัดไปตอนรัน (16 วิ: video1 เสร็จ status=done แต่ video2 ยังไม่เริ่ม — อย่าโชว์ "ไฟล์หาย" หลอกกลางคัน)
@@ -452,9 +452,7 @@ const runGrid = box('grid gap-3 grid-cols-4 lg:grid-cols-5', [{
       box('absolute top-2 left-2 z-[2] px-2 py-[3px] rounded-full bg-white/30 pointer-events-none', [tx('ไฟล์หาย', '!text-[9px] font-bold !text-white')]),
       { el: 'icon', icon: 'hide_image', textSize: 'text-[30px]', className: 'opacity-55 relative z-[1]' },
       tx('ภาพ/วีดีโอหาย — Gen ใหม่ได้เลย', '!text-[10px] opacity-55 font-medium text-center leading-snug relative z-[1]'),
-      box('relative z-[1]', [{ el: 'gen-button', op: 'hsImage', label: 'Gen ภาพใหม่', icon: 'replay', size: 'sm', variant: 'outline', when: 'item.slots.image=' }]),
-      box('relative z-[1]', [{ el: 'gen-button', op: 'hsVideo1', label: 'Gen วีดีโอใหม่', icon: 'replay', size: 'sm', variant: 'outline', when: 'item.slots.video1=' }], 'item.slots.image!='),
-      box('relative z-[1]', [box('', [{ el: 'gen-button', op: 'hsVideo2', label: 'Gen ช่วง 2 ใหม่', icon: 'replay', size: 'sm', variant: 'outline', when: 'item.clipLength=16' }], 'item.slots.video2=')], 'item.slots.video1!='),
+      box('relative z-[1]', [{ el: 'button', chain: CHAIN.chain, label: 'ลองใหม่', icon: 'replay', size: 'sm', variant: 'outline' }]),   // 1 คลิกไหลต่อจนจบสาย — parity ต้นฉบับ
       bottomBar,
     ], AND(ITEM_LEFTOVER, EQ('{item.status}', 'done'), { op: 'not', a: ST_RUNNING }), { boxShadow: 'inset 0 0 0 1px var(--ev-border)' }),
     // ค้างกลางทาง (โดนหยุดไว้) — โชว์ภาพหรี่ + ขั้นที่ทำถึง (ตาม RunGrid ต้นฉบับ pending-partial)
@@ -493,7 +491,7 @@ const chipArrow = { el: 'icon', icon: 'arrow_right_alt', textSize: 'text-[15px]'
 const tlRow = (label: string, doneWhen: any, actWhen: any, extra?: any) => box('relative flex flex-row items-center gap-2.5 py-1 pl-5', [
   { el: 'box', className: 'absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full shrink-0', card: [], classWhen: [
     { when: doneWhen, class: 'bg-green-500' },
-    { when: AND({ op: 'not', a: doneWhen }, actWhen), class: 'bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(247,107,107,0.25)]' },
+    { when: AND({ op: 'not', a: doneWhen }, actWhen), class: 'bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(249,115,22,0.25)]' },
     { when: AND({ op: 'not', a: doneWhen }, { op: 'not', a: actWhen }), class: 'border-2 border-white/20' },
   ] },
   tx(label, '!text-[12px] opacity-70', doneWhen),
@@ -523,7 +521,10 @@ const runList = box('flex flex-col gap-2', [{
         box('shrink-0 flex flex-row items-center gap-2', [
           box('flex flex-row items-center gap-1.5 whitespace-nowrap', [{ el: 'spinner', className: '!text-[17px]' }, { el: 'text', value: LK('opNames', '{values.__runStage}', 'กำลังทำ'), className: '!text-[12px] font-bold !text-[var(--ev-accent)] whitespace-nowrap' }], ITEM_RUNNING),
           box('flex flex-row items-center gap-1.5 whitespace-nowrap', [{ el: 'icon', icon: 'hourglass_top', textSize: 'text-[16px]', className: 'text-amber-400 animate-pulse' }, tx('{item.meta.error}', '!text-[11px] font-bold !text-amber-300 max-w-[180px] truncate')], ITEM_RETRYING),
-          tx('{item.meta.error}', '!text-[11px] font-bold !text-red-400/80 max-w-[180px] truncate', ITEM_ERROR),
+          box('flex flex-row items-center gap-2 whitespace-nowrap', [
+            tx('{item.meta.error}', '!text-[11px] font-bold !text-red-400/80 max-w-[180px] truncate'),
+            { el: 'button', chain: CHAIN.chain, label: 'ลองใหม่', icon: 'replay', size: 'sm', className: '!text-[11px] !border-red-500/35 !text-red-300 !bg-red-500/[0.15] hover:!bg-red-500/[0.25]' },
+          ], ITEM_ERROR),   // แถว error มีปุ่มลองใหม่ในบรรทัดเดียว — parity RunList ต้นฉบับ
           tx('รอคิว', '!text-[12px] opacity-40', AND(EQ('{item.status}', 'idle'), EQ('{item.h1}', ''))),
           { el: 'download-button', to: 'video1', iconOnly: true, icon: 'download', label: 'ดาวน์โหลด', size: 'sm', variant: 'ghost', when: AND(EQ('{item.clipLength}', '8'), NEQ('{item.slots.video1}', '')) },
           { el: 'download-button', segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }], iconOnly: true, icon: 'download', label: 'ดาวน์โหลด', size: 'sm', variant: 'ghost', when: AND(EQ('{item.clipLength}', '16'), NEQ('{item.slots.video2}', '')) },   // 16 วิ = merge เต็มคลิปก่อนโหลด (เดิมได้ครึ่งหลัง)
@@ -542,15 +543,14 @@ const runList = box('flex flex-col gap-2', [{
           box('', [tlRow('ต่อฉาก ช่วง 2 · 8-16 วิ', NEQ('{item.slots.video2}', ''), CUR('hsVideo2'),
             { el: 'download-button', to: 'video2', label: 'โหลดช่วงนี้', size: 'sm', variant: 'ghost', when: NEQ('{item.slots.video2}', '') })], 'item.clipLength=16'),
           box('flex flex-row gap-2 mt-2 pl-5', [
-            { el: 'open-editor', coll: 'tasks', only: true, label: 'ตัดต่อคลิปนี้', icon: 'movie_edit', size: 'sm', variant: 'outline-accent' },
-            { el: 'gen-button', op: 'hsContent', label: 'เขียนบทใหม่', icon: 'edit_note', size: 'sm', variant: 'ghost' },
+            { el: 'open-editor', coll: 'tasks', only: true, label: 'ตัดต่อคลิปนี้', icon: 'movie_edit', size: 'sm', variant: 'outline-accent', when: 'item.slots.video1!=' },   // โชว์เมื่อมีวิดีโอให้ตัดจริง (เดิมโชว์ตลอด · "เขียนบทใหม่" ตัดออก — ไม่มีในต้นฉบับ)
           ]),
         ]),
       ]),
     ],
     classWhen: [
       { when: OR(AND(EQ('{item.clipLength}', '8'), NEQ('{item.slots.video1}', '')), AND(EQ('{item.clipLength}', '16'), NEQ('{item.slots.video2}', ''))), class: '!bg-green-500/[0.06] shadow-[inset_0_0_0_1px_rgba(34,197,94,0.2)]' },
-      { when: ITEM_RUNNING, class: '!bg-[var(--ev-accent)]/[0.08] shadow-[inset_0_0_0_1px_rgba(247,107,107,0.6)]' },
+      { when: ITEM_RUNNING, class: '!bg-[var(--ev-accent)]/[0.08] shadow-[inset_0_0_0_1px_rgba(249,115,22,0.6)]' },
       { when: ITEM_RETRYING, class: '!bg-amber-500/[0.08] shadow-[inset_0_0_0_1px_rgba(245,158,11,0.4)]' },
       { when: ITEM_ERROR, class: '!bg-red-500/[0.07] shadow-[inset_0_0_0_1px_rgba(239,68,68,0.4)]' },
     ],
@@ -585,7 +585,7 @@ const runHeader = box(WIZ_CARD.replace('!p-5', 'p-5') + ' border border-[var(--e
       ]),
     ]),
     box('shrink-0 flex flex-col items-end gap-0.5', [
-      { el: 'text', value: CONCAT('เริ่มเมื่อ ', { op: 'clock', value: '{values.__runStartedAt}' }), className: '!text-[11.5px] opacity-50', when: AND(ST_RUNNING, NEQ('{values.__runStartedAt}', '')) },   // นาฬิกาเริ่มรอบ ตาม RunScreen ต้นฉบับ
+      { el: 'text', value: CONCAT('เริ่มเมื่อ ', { op: 'clock', value: '{values.__runStartedAt}' }, ' น.'), className: '!text-[11.5px] opacity-50', when: AND(ST_RUNNING, NEQ('{values.__runStartedAt}', '')) },   // นาฬิกาเริ่มรอบ + หน่วย น. ตาม RunScreen ต้นฉบับ
       { el: 'timer', value: '{values.__runStartedAt}', label: 'ผ่านไป', icon: 'schedule', className: '!text-[11.5px] opacity-70', when: ST_RUNNING },
       box('flex flex-row items-center gap-2', [
         // ตัดต่อจาก header = เปิดโปรแกรมตัดต่อเปล่า (ต้นฉบับไม่ pre-load — ใช้ control ที่ไม่มีสื่อเป็น source ว่าง)
@@ -860,7 +860,7 @@ const config = {
   app: { id: 'hardsell' },
   persistBar: true,
   devBar: false,
-  theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f76b6b', '--ev-accent-fg': '#ffffff' } },
+  theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f97316', '--ev-accent-fg': '#ffffff' } },
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
   chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: false, restartFn: 'hsResetRun', restartLabel: 'ล้างคิว เริ่มใหม่' } },   // full-bleed 2 คอลัมน์ · modal งานค้าง: ไม่ pre-select + มีปุ่มล้างคิว (3 ทางเลือกตาม ResumeModal ต้นฉบับ)
@@ -869,7 +869,7 @@ const config = {
   components: { runBanner: RUN_BANNER },
   home: {
     title: 'หมีแว่น ขายดุ', tag: 'EasyBear Hardsell',
-    description: 'ใส่สินค้าเข้าลิสต์ แล้วปล่อยให้หมีปั่นคลิปรีวิวขายดุให้ทีละหลายคลิป',   // คำโปรยตรง LandingScreen ต้นฉบับ
+    description: 'หมีผู้ช่วยปั่นคลิปขายของ AI — ใส่สินค้าเข้าลิสต์ แล้วปล่อยให้หมีปั่นคลิปรีวิวขายดุให้ทีละหลายคลิป',   // คำโปรยตรง LandingScreen ต้นฉบับ
     cta: 'สร้างโปรเจกต์ใหม่', ctaContrast: true, loadLabel: 'โหลดโปรเจกต์เดิม',
     footer: film.home?.footer || [],
   },
@@ -898,22 +898,26 @@ const config = {
   ops: [
     // pace:false = string-builder ล้วนไม่ยิง API — ไม่ต้องพักระหว่างชุด (hsContent เป็น transform แต่เรียก LLM = ต้อง pace ปกติ)
     { id: 'hsQueue', type: 'transform', over: 'control', out: 'queued', fn: 'hsBuildTasks', pace: false },
-    { id: 'hsContent', type: 'transform', over: 'tasks', out: 'written', fn: 'hsArchitectClip' },
+    { id: 'hsContent', type: 'transform', over: 'tasks', out: 'written', fn: 'hsArchitectClip',
+      logRun: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] AI เขียนบทขายดุ (มุม: {item.angle})', logDone: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] ได้บทขาย: "{item.h1}"' },   // B2b: log RUN/DONE ตาม pushLog ต้นฉบับ
     // where guard ทุก op หลัง hsContent: task ที่เขียนบทพัง (h1 ว่าง) ต้องไม่ไหลไปขั้นถัดไป
     // (กัน transform ทับ error เป็น done + กันเปลืองเควตา gen จาก prompt ขยะ — ต้นฉบับ abort ทั้งรอบ เราใช้ item-level gate แทน)
     { id: 'hsPrompts', type: 'transform', over: 'tasks', out: 'prompted', fn: 'hsBuildPrompts', where: 'h1!=', pace: false },
     {
       id: 'hsImage', type: 'image', over: 'tasks', out: 'image', where: 'imagePrompt!=',
+      logRun: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] สร้างภาพเฟรมเริ่ม (9:16)', logDone: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] สร้างภาพเฟรมเริ่ม สำเร็จ',
       model: '{values.imageModel}', aspectRatio: '9:16', prompt: '{item.imagePrompt}',
       refs: { op: 'lookupRefs', from: 'products', by: '{item.refs.product}', slot: 'image', also: [{ from: 'characters', by: '{item.refs.char}', slot: 'image' }] },
     },
     {
       id: 'hsVideo1', type: 'video', over: 'tasks', out: 'video1', where: 'videoPrompt1!=',
+      logRun: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] สร้างวีดีโอ ช่วง 1 (0-8 วิ)', logDone: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] วีดีโอ ช่วง 1 สำเร็จ',
       model: '{values.videoModel}', aspectRatio: '9:16', durationSeconds: 8,
       startFrame: '{item.slots.image}', prompt: '{item.videoPrompt1}',
     },
     {
       id: 'hsVideo2', type: 'video', over: 'tasks', out: 'video2', where: 'clipLength=16',
+      logRun: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] ต่อฉาก ช่วง 2 (8-16 วิ)', logDone: '[{item.productName} คลิป {item.clipIndex}/{values.clipsPerProduct}] ผลิตครบ วีดีโอ 16 วิ (2 ช่วง พร้อมตัดต่อ)',
       model: '{values.videoModel}', aspectRatio: '9:16', durationSeconds: 8,
       startFrame: '{item.slots.video1}', tailTrim: 1, prompt: '{item.videoPrompt2}',
     },
@@ -943,14 +947,17 @@ const config = {
           tx('โมเดล AI · จังหวะการหน่วง · กรองคำต้องห้าม', '!text-[11px] opacity-40'),
         ]),
       ]),
+      tx('โมเดล & ภาพ', '!text-[10px] font-bold uppercase tracking-widest opacity-40', undefined, 'palette'),   // หัวหมวดตาม GroupLabel ต้นฉบับ
       { el: 'dropdown', field: 'imageModel', label: 'โมเดลภาพ', options: IMAGE_MODELS },
       { el: 'dropdown', field: 'videoModel', label: 'โมเดลวิดีโอ', options: VIDEO_MODELS },
+      tx('ความเร็ว / จังหวะ', '!text-[10px] font-bold uppercase tracking-widest opacity-40 mt-2', undefined, 'speed'),
       { el: 'stepper', field: 'maxParallel', label: 'ผลิตพร้อมกันสูงสุด', placeholder: '1 = ทีละคลิป เสถียรสุด', icon: 'layers', unit: 'งาน', min: 1, max: 4 },
       { el: 'stepper', field: 'taskDelay', label: 'พักระหว่างงาน', placeholder: 'หลัง gen แต่ละชิ้น (ภาพ-วีดีโอ)', icon: 'bolt', unit: 'วิ', min: 0, max: 30 },
       { el: 'stepper', field: 'clipDelay', label: 'พักระหว่างคลิป', placeholder: 'จบ 1 คลิป ก่อนคลิปถัดไป (สินค้าเดิม)', icon: 'restart_alt', unit: 'วิ', min: 0, max: 60 },
       { el: 'stepper', field: 'productDelay', label: 'พักระหว่างสินค้า', placeholder: 'จบทุกคลิป ก่อนขึ้นสินค้าใหม่ (กันโดนลิมิต)', icon: 'inventory_2', unit: 'วิ', min: 0, max: 120, step: 5 },
       { el: 'stepper', field: 'retryDelay', label: 'พักก่อนลองใหม่', placeholder: 'ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่', icon: 'replay', unit: 'วิ', min: 0, max: 60 },
       { el: 'stepper', field: 'maxAttempts', label: 'ลองใหม่สูงสุด', placeholder: 'ต่อชิ้นงาน รวมครั้งแรก', icon: 'repeat', unit: 'ครั้ง', min: 1, max: 5 },
+      tx('กรองคำต้องห้าม', '!text-[10px] font-bold uppercase tracking-widest opacity-40 mt-2', undefined, 'shield'),
       { el: 'switch', field: 'blocklistEnabled', label: 'เปิดกรองคำต้องห้าม' },
       { el: 'taginput', field: 'blocklist', label: 'คำต้องห้าม (แตะเพื่อลบ)' },
       { el: 'button', action: 'set', to: 'blocklist', value: HS_BLOCKED_DEFAULT.join(','), label: 'รีเซ็ตคำต้องห้ามเป็นค่าเริ่มต้น', icon: 'restart_alt', size: 'sm', variant: 'ghost' },
