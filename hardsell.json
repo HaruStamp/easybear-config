@@ -53,7 +53,9 @@
       "className": "!max-w-none !p-0"
     },
     "resume": {
-      "defaultAuto": false,
+      "variant": "simple",
+      "unit": "คลิป",
+      "coll": "tasks",
       "restartFn": "hsResetRun",
       "restartLabel": "ล้างคิว เริ่มใหม่"
     }
@@ -1206,14 +1208,63 @@
             "icon": "shield"
           },
           {
-            "el": "switch",
-            "field": "blocklistEnabled",
-            "label": "เปิดกรองคำต้องห้าม"
+            "el": "row",
+            "className": "items-center justify-between",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "card": [
+              {
+                "el": "text",
+                "value": "เปิดกรองคำ",
+                "className": "!text-[13px] font-medium"
+              },
+              {
+                "el": "segmented",
+                "field": "blocklistEnabled",
+                "options": [
+                  {
+                    "value": "true",
+                    "label": "เปิด"
+                  },
+                  {
+                    "value": "",
+                    "label": "ปิด"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "el": "row",
+            "className": "items-center justify-between",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "card": [
+              {
+                "el": "text",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "คำที่กรองอยู่ · ",
+                    {
+                      "op": "listLen",
+                      "value": "{values.blocklist}"
+                    },
+                    " คำ"
+                  ]
+                },
+                "className": "!text-[11px] font-bold opacity-60"
+              }
+            ],
+            "when": "blocklistEnabled=true"
           },
           {
             "el": "taginput",
             "field": "blocklist",
-            "label": "คำต้องห้าม (แตะเพื่อลบ)"
+            "label": "คำต้องห้าม (แตะเพื่อลบ)",
+            "when": "blocklistEnabled=true"
           },
           {
             "el": "button",
@@ -1337,6 +1388,7 @@
                               "el": "repeat",
                               "coll": "products",
                               "where": "enabled=true",
+                              "sortable": true,
                               "empty": "ยังไม่ได้เลือกใช้สินค้า — กด \"จัดการสินค้า\" เพื่อเพิ่ม/ติ๊กใช้",
                               "card": [
                                 {
@@ -1688,6 +1740,7 @@
                               "field": "templateId",
                               "cols": 3,
                               "contained": false,
+                              "horizontal": true,
                               "options": [
                                 {
                                   "value": "ugc-review",
@@ -1769,6 +1822,7 @@
                               "field": "templateId",
                               "cols": 3,
                               "contained": false,
+                              "horizontal": true,
                               "options": [
                                 {
                                   "value": "pro-studio",
@@ -1802,6 +1856,7 @@
                               "field": "templateId",
                               "cols": 3,
                               "contained": false,
+                              "horizontal": true,
                               "options": [
                                 {
                                   "value": "d3-person",
@@ -1898,7 +1953,9 @@
                                   "desc": "โทนอ่อน เหมาะบิวตี้/สุขภาพ",
                                   "icon": "spa"
                                 }
-                              ]
+                              ],
+                              "showDesc": true,
+                              "className": "[&_button]:!bg-[var(--ev-accent)]/10 [&_button]:!border-[var(--ev-accent)]/35"
                             },
                             {
                               "el": "spacer",
@@ -2360,9 +2417,18 @@
                                       "icon": "shield"
                                     },
                                     {
-                                      "el": "switch",
+                                      "el": "segmented",
                                       "field": "blocklistEnabled",
-                                      "label": "เปิด"
+                                      "options": [
+                                        {
+                                          "value": "true",
+                                          "label": "เปิด"
+                                        },
+                                        {
+                                          "value": "",
+                                          "label": "ปิด"
+                                        }
+                                      ]
                                     }
                                   ]
                                 },
@@ -2535,6 +2601,7 @@
                                   "el": "repeat",
                                   "coll": "products",
                                   "where": "enabled=true",
+                                  "sortable": true,
                                   "empty": "ยังไม่ได้เลือกใช้สินค้า — กด \"จัดการสินค้า\" เพื่อเพิ่ม/ติ๊กใช้",
                                   "card": [
                                     {
@@ -5226,7 +5293,8 @@
                                   "el": "media-slot",
                                   "src": "{item.slots.video1}",
                                   "aspect": "9:16",
-                                  "className": "!rounded-2xl !border-0 !h-full",
+                                  "showPlay": true,
+                                  "className": "!rounded-2xl !border-0 !h-full transition-transform hover:-translate-y-0.5",
                                   "segments": [
                                     {
                                       "slot": "video1",
@@ -5376,7 +5444,8 @@
                                   "el": "media-slot",
                                   "src": "{item.slots.video2}",
                                   "aspect": "9:16",
-                                  "className": "!rounded-2xl !border-0 !h-full",
+                                  "showPlay": true,
+                                  "className": "!rounded-2xl !border-0 !h-full transition-transform hover:-translate-y-0.5",
                                   "segments": [
                                     {
                                       "slot": "video1",

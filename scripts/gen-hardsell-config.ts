@@ -114,7 +114,7 @@ const WIZ_CARD = '!rounded-[24px] !p-5 bg-[var(--ev-surface)] !border-[#595959]'
 
 // แถวสินค้าอ่านอย่างเดียว (ใช้ทั้ง wizard ① และ SummaryCard)
 const productRow = {
-  el: 'repeat', coll: 'products', where: 'enabled=true', empty: 'ยังไม่ได้เลือกใช้สินค้า — กด "จัดการสินค้า" เพื่อเพิ่ม/ติ๊กใช้',
+  el: 'repeat', coll: 'products', where: 'enabled=true', sortable: true, empty: 'ยังไม่ได้เลือกใช้สินค้า — กด "จัดการสินค้า" เพื่อเพิ่ม/ติ๊กใช้',   // ลากสลับลำดับได้ตาม HomeScreen ต้นฉบับ
   card: [box('bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-2.5 flex flex-row items-center gap-2.5', [
     box('w-5 h-5 rounded-full bg-[var(--ev-surface2)] flex items-center justify-center shrink-0', [tx({ op: 'add', a: { op: 'index' }, b: 1 }, '!text-[11px] font-bold opacity-70 tabular-nums')]),
     { el: 'media-slot', src: '{item.slots.image}', aspect: '1:1', className: '!w-11 shrink-0 !rounded-lg' },
@@ -177,13 +177,13 @@ const wizardForm: any[] = [
         { value: 'style', label: `สไตล์อื่น ${catCount('style')}` },
         { value: 'd3', label: `การ์ตูน 3D ${catCount('d3')}` },
       ]},
-      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, options: TEMPLATE_OPTS('ugc'), when: 'styleCat=ugc' },
-      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, options: TEMPLATE_OPTS('style'), when: 'styleCat=style' },
-      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, options: TEMPLATE_OPTS('d3'), when: 'styleCat=d3' },
+      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, horizontal: true, options: TEMPLATE_OPTS('ugc'), when: 'styleCat=ugc' },
+      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, horizontal: true, options: TEMPLATE_OPTS('style'), when: 'styleCat=style' },
+      { el: 'grid-select', field: 'templateId', cols: 3, contained: false, horizontal: true, options: TEMPLATE_OPTS('d3'), when: 'styleCat=d3' },
       tx('การ์ตูน 3D = เกริ่นปัญหา → สินค้าช่วยฉากท้าย · ทุกเทมเพลตกัน claims เสี่ยงแบนเหมือนกัน', '!text-[11px] opacity-40', undefined, 'info'),
       { el: 'spacer', className: 'h-1' },
       fieldLabel('mood', 'โทน / อารมณ์'),
-      { el: 'dropdown', field: 'toneId', options: TONE_OPTS },
+      { el: 'dropdown', field: 'toneId', options: TONE_OPTS, showDesc: true, className: '[&_button]:!bg-[var(--ev-accent)]/10 [&_button]:!border-[var(--ev-accent)]/35' },   // กล่องใหญ่ 2 บรรทัด + ไฮไลต์ส้มตลอด (parity ต้นฉบับ)
       { el: 'spacer', className: 'h-1' },
       tx('ข้อความบนภาพ', '!text-[10px] font-black uppercase tracking-[0.12em] opacity-40'),
       box('grid grid-cols-2 gap-3', [
@@ -237,7 +237,7 @@ const wizardForm: any[] = [
           ]),
           row('items-center justify-between', [
             tx('กรองคำต้องห้าม', '!text-[10px] font-bold uppercase tracking-widest opacity-40', undefined, 'shield'),
-            { el: 'switch', field: 'blocklistEnabled', label: 'เปิด' },
+            { el: 'segmented', field: 'blocklistEnabled', options: [{ value: 'true', label: 'เปิด' }, { value: '', label: 'ปิด' }] },   // pill 2 ปุ่มตาม ProductionConfig ต้นฉบับ
           ]),
           { el: 'taginput', field: 'blocklist', placeholder: 'พิมพ์คำที่ต้องการกรอง แล้ว Enter...', when: 'blocklistEnabled=true' },
           { el: 'button', action: 'set', to: 'blocklist', value: HS_BLOCKED_DEFAULT.join(','), label: 'รีเซ็ตค่าเริ่มต้น', icon: 'restart_alt', size: 'sm', variant: 'ghost', when: 'blocklistEnabled=true' },
@@ -383,7 +383,7 @@ const cardImageLayer = box('absolute inset-0 pointer-events-none', [
 ], 'item.slots.image!=');
 // การ์ดเสร็จ (คลิกดู = lightbox วิดีโอ · hover ปุ่มโหลด/ตัดต่อ) — เงื่อนไขความยาว+มีไฟล์รวมที่การ์ดเดียว (กัน cell เปล่าใน grid)
 const doneCard = (len: string, slot: string) => box('relative aspect-[9/16] rounded-2xl overflow-hidden group', [
-  { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', className: '!rounded-2xl !border-0 !h-full',
+  { el: 'media-slot', src: '{item.slots.' + slot + '}', aspect: '9:16', showPlay: true, className: '!rounded-2xl !border-0 !h-full transition-transform hover:-translate-y-0.5',
     segments: [{ slot: 'video1', trimEndIfNext: 7 }, { slot: 'video2' }],   // คลิกดู = คลิปเต็ม (16 วิ merge รอยต่อเนียน)
     lightboxActions: [   // ใต้วิดีโอ (parity PreviewModal ต้นฉบับ: ชื่อสินค้า + [ตัดต่อคลิป][ดาวน์โหลด])
       { el: 'text', value: '{item.productName} · คลิป {item.clipIndex} · 8 วิ', className: '!text-[13px] font-bold !text-white text-center whitespace-nowrap', when: 'item.clipLength=8' },
@@ -863,7 +863,7 @@ const config = {
   theme: { ...film.theme, vars: { ...film.theme.vars, '--ev-accent': '#f97316', '--ev-accent-fg': '#ffffff' } },
   style: film.style || undefined,
   breakpoints: film.breakpoints || undefined,
-  chrome: { content: { className: '!max-w-none !p-0' }, resume: { defaultAuto: false, restartFn: 'hsResetRun', restartLabel: 'ล้างคิว เริ่มใหม่' } },   // full-bleed 2 คอลัมน์ · modal งานค้าง: ไม่ pre-select + มีปุ่มล้างคิว (3 ทางเลือกตาม ResumeModal ต้นฉบับ)
+  chrome: { content: { className: '!max-w-none !p-0' }, resume: { variant: 'simple', unit: 'คลิป', coll: 'tasks', restartFn: 'hsResetRun', restartLabel: 'ล้างคิว เริ่มใหม่' } },   // full-bleed 2 คอลัมน์ · modal งานค้าง: ไม่ pre-select + มีปุ่มล้างคิว (3 ทางเลือกตาม ResumeModal ต้นฉบับ)
   content: { item: { coll: 'tasks', label: 'คลิป' }, assets: ['products', 'characters'] },
   lookups: LOOKUPS,
   components: { runBanner: RUN_BANNER },
@@ -958,8 +958,11 @@ const config = {
       { el: 'stepper', field: 'retryDelay', label: 'พักก่อนลองใหม่', placeholder: 'ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่', icon: 'replay', unit: 'วิ', min: 0, max: 60 },
       { el: 'stepper', field: 'maxAttempts', label: 'ลองใหม่สูงสุด', placeholder: 'ต่อชิ้นงาน รวมครั้งแรก', icon: 'repeat', unit: 'ครั้ง', min: 1, max: 5 },
       tx('กรองคำต้องห้าม', '!text-[10px] font-bold uppercase tracking-widest opacity-40 mt-2', undefined, 'shield'),
-      { el: 'switch', field: 'blocklistEnabled', label: 'เปิดกรองคำต้องห้าม' },
-      { el: 'taginput', field: 'blocklist', label: 'คำต้องห้าม (แตะเพื่อลบ)' },
+      row('items-center justify-between', [tx('เปิดกรองคำ', '!text-[13px] font-medium'), { el: 'segmented', field: 'blocklistEnabled', options: [{ value: 'true', label: 'เปิด' }, { value: '', label: 'ปิด' }] }]),
+      row('items-center justify-between', [
+        tx({ op: 'concat', parts: ['คำที่กรองอยู่ · ', { op: 'listLen', value: '{values.blocklist}' }, ' คำ'] }, '!text-[11px] font-bold opacity-60'),
+      ], 'blocklistEnabled=true'),
+      { el: 'taginput', field: 'blocklist', label: 'คำต้องห้าม (แตะเพื่อลบ)', when: 'blocklistEnabled=true' },
       { el: 'button', action: 'set', to: 'blocklist', value: HS_BLOCKED_DEFAULT.join(','), label: 'รีเซ็ตคำต้องห้ามเป็นค่าเริ่มต้น', icon: 'restart_alt', size: 'sm', variant: 'ghost' },
     ])],
   },
