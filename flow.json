@@ -113,12 +113,44 @@
                 { "el": "add-button", "coll": "uploads", "icon": "add", "variant": "ghost", "iconOnly": true }
               ] },
               { "el": "repeat", "coll": "uploads", "empty": "NO INPUTS DEFINED", "card": [
-                { "el": "row", "style": { "alignItems": "center" }, "card": [
-                  { "el": "media-slot", "src": "{item.slots.media}", "aspect": "1:1", "style": { "maxWidth": "72px" } },
-                  { "el": "input", "field": "name", "placeholder": "ชื่อ (ไม่บังคับ)" },
-                  { "el": "upload", "into": "{item.slots.media}", "label": "", "accept": "image/*,video/mp4", "variant": "outline" },
-                  { "el": "pick-button", "into": "{item.slots.media}", "filter": "image" },
-                  { "el": "delete-button" }
+                { "el": "box", "className": "border border-white/[0.07] rounded-[24px] p-6 bg-white/[0.015] flex flex-col gap-5", "card": [
+                  { "el": "row", "style": { "alignItems": "center", "justifyContent": "space-between" }, "card": [
+                    { "el": "row", "style": { "alignItems": "center", "gap": "10px" }, "card": [
+                      { "el": "text", "value": "ID:", "className": "text-[10px] font-bold uppercase tracking-widest text-white/30" },
+                      { "el": "text", "value": "{item.id}", "className": "text-[13px] font-black px-3 py-1.5 rounded-lg bg-white/5 border border-white/8" }
+                    ] },
+                    { "el": "delete-button" }
+                  ] },
+                  { "el": "row", "style": { "alignItems": "flex-start", "gap": "24px" }, "card": [
+                    { "el": "box", "style": { "width": "140px" }, "className": "flex flex-col gap-2.5 shrink-0", "card": [
+                      { "el": "text", "value": "ASSET SOURCE", "className": "text-[9px] font-bold uppercase tracking-[2px] text-white/30" },
+                      { "el": "media-slot", "src": "{item.slots.media}", "aspect": "1:1", "when": "item.slots.media!=" },
+                      { "el": "box", "when": "item.slots.media=", "className": "flex flex-col gap-2", "card": [
+                        { "el": "upload", "into": "{item.slots.media}", "label": "อัพโหลด", "accept": "image/*,video/mp4", "variant": "solid", "icon": "file_upload" },
+                        { "el": "pick-button", "into": "{item.slots.media}", "filter": "image", "label": "เลือกภาพ", "variant": "outline", "icon": "photo_library" }
+                      ] }
+                    ] },
+                    { "el": "box", "style": { "flex": "1" }, "className": "flex flex-col gap-2.5", "card": [
+                      { "el": "text", "value": "STATUS INFORMATION", "className": "text-[9px] font-bold uppercase tracking-[2px] text-white/30" },
+                      { "el": "box", "when": "item.slots.media!=", "className": "border border-green-500/25 bg-green-500/[0.06] rounded-2xl p-4 flex flex-col gap-3", "card": [
+                        { "el": "row", "style": { "alignItems": "center", "gap": "8px" }, "card": [
+                          { "el": "icon", "value": "check_circle", "className": "text-green-400 text-[20px]" },
+                          { "el": "text", "value": "ASSET ACTIVE", "className": "text-green-400 font-black text-[12px] tracking-wide" }
+                        ] },
+                        { "el": "row", "style": { "justifyContent": "space-between", "borderTop": "1px solid rgba(255,255,255,0.06)", "paddingTop": "8px" }, "card": [
+                          { "el": "text", "value": "MEDIA", "className": "text-[9px] uppercase tracking-widest text-white/30" },
+                          { "el": "text", "value": "จากคลัง / อัพโหลด", "className": "text-[10px] text-white/50" }
+                        ] }
+                      ] },
+                      { "el": "box", "when": "item.slots.media=", "className": "border border-amber-500/30 bg-amber-500/[0.06] rounded-2xl p-4 flex flex-row items-center gap-3", "card": [
+                        { "el": "icon", "value": "warning", "className": "text-amber-400 text-[22px]" },
+                        { "el": "box", "card": [
+                          { "el": "text", "value": "ต้องอัพโหลดรูป", "className": "text-amber-300 font-bold text-[12px]" },
+                          { "el": "text", "value": "Please select a media file to activate this reference.", "className": "text-amber-400/60 text-[10px]" }
+                        ] }
+                      ] }
+                    ] }
+                  ] }
                 ] }
               ] },
               { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(255,255,255,0.06)", "paddingBottom": "10px" }, "card": [
