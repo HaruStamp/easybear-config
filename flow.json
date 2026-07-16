@@ -1,40 +1,32 @@
 {
   "schemaVersion": 1,
   "title": "หมีทำแทน Flow",
-  "icon": "account_tree",
+  "icon": "pets",
   "app": { "id": "flow", "name": "flow" },
   "persistBar": true,
-  "run": { "maxParallel": 1, "staggerMs": 0, "maxAttempts": 3, "retryDelayMs": 15000, "batchDelayMs": 15000 },
   "devBar": false,
   "chrome": { "content": { "className": "!max-w-none !p-0" } },
-  "theme": { "vars": { "--ev-accent": "#f97316", "--ev-bg": "#0e0e0e", "--ev-surface": "rgba(255,255,255,0.04)", "--ev-surface2": "rgba(255,255,255,0.09)" } },
+  "run": { "maxParallel": 1, "staggerMs": 0, "maxAttempts": 3, "retryDelayMs": 15000, "batchDelayMs": 15000 },
+  "theme": { "vars": { "--ev-accent": "#f97316", "--ev-bg": "#050505", "--ev-surface": "rgba(255,255,255,0.03)", "--ev-surface2": "rgba(255,255,255,0.08)", "--ev-border": "rgba(255,255,255,0.08)" } },
   "home": {
-    "title": "หมีทำแทน Flow",
-    "subtitle": "ออกแบบงาน gen ภาพ/วิดีโอบน Flow Labs → รันเป็นชุดอัตโนมัติ",
-    "tag": "easybear flow",
-    "hero": "🐻",
-    "cta": "สร้างโปรเจกต์ใหม่"
+    "title": "หมีทำแทน Flow", "subtitle": "ออกแบบงาน gen ภาพ/วิดีโอบน Flow Labs → รันเป็นชุดอัตโนมัติ",
+    "tag": "easybear flow", "hero": "🐻", "cta": "สร้างโปรเจกต์ใหม่"
   },
   "editor": { "sourceColl": "shots", "map": { "image": "startFrame", "motion": "motion", "duration": "duration" }, "defaultAspect": "9:16" },
   "settings": {
     "title": "ตั้งค่าการผลิต", "fullPage": true,
     "form": [
-      { "el": "segmented", "field": "genMode", "label": "โหมด", "options": [ { "value": "video", "label": "วิดีโอ", "icon": "videocam" }, { "value": "image", "label": "ภาพ", "icon": "image" } ] },
-      { "el": "segmented", "field": "aspect", "label": "สัดส่วน", "options": [ { "value": "9:16", "label": "9:16" }, { "value": "16:9", "label": "16:9" } ] },
-      { "el": "dropdown", "field": "imageModel", "label": "โมเดลภาพ", "options": { "table": "imageModels" } },
-      { "el": "dropdown", "field": "videoModel", "label": "โมเดลวิดีโอ", "options": { "table": "videoModels" }, "when": "genMode=video" }
+      { "el": "stepper", "field": "maxParallelUi", "label": "จำนวนงานพร้อมกัน", "min": 1, "max": 8 },
+      { "el": "stepper", "field": "staggerUi", "label": "พักระหว่างงาน (วิ)", "min": 0, "max": 30 },
+      { "el": "stepper", "field": "batchUi", "label": "พักระหว่างรอบ (วิ)", "min": 0, "max": 60 },
+      { "el": "stepper", "field": "phaseUi", "label": "พักระหว่างขั้นตอน (วิ)", "min": 0, "max": 120 }
     ]
   },
   "lookups": {
     "imageModels": { "🍌 Nano Banana Pro": "🍌 Nano Banana Pro", "🍌 Nano Banana 2": "🍌 Nano Banana 2", "Imagen 4": "Imagen 4" },
     "videoModels": { "Omni Flash": "Omni Flash", "Veo 3.1 - Lite": "Veo 3.1 - Lite", "Veo 3.1 - Fast": "Veo 3.1 - Fast", "Veo 3.1 - Quality": "Veo 3.1 - Quality" }
   },
-  "values": {
-    "genMode": "video",
-    "imageModel": "🍌 Nano Banana Pro",
-    "videoModel": "Veo 3.1 - Fast",
-    "aspect": "9:16"
-  },
+  "values": { "genMode": "video", "imageModel": "🍌 Nano Banana Pro", "videoModel": "Veo 3.1 - Fast", "aspect": "9:16", "viewMode": "visual" },
   "collections": {
     "uploads": { "fields": ["name"], "slots": ["media"] },
     "assets": { "fields": ["prompt"], "slots": ["image"] },
@@ -43,143 +35,164 @@
   },
   "seed": {},
   "ops": [
-    {
-      "id": "genAsset", "type": "image", "over": "assets", "out": "image",
-      "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
-      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media",
-        "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" } ] }
-    },
-    {
-      "id": "genStart", "type": "image", "over": "shots", "out": "startFrame", "where": "hasStart=true",
-      "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.startPrompt}",
-      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.startUp}", "slot": "media",
-        "also": [
-          { "from": "assets", "by": "{item.refs.startAsset}", "slot": "image" },
-          { "from": "shots", "by": "{item.refs.startFromEnd}", "slot": "endFrame" },
-          { "from": "shots", "by": "{item.refs.startFromStart}", "slot": "startFrame" }
-        ] }
-    },
-    {
-      "id": "genEnd", "type": "image", "over": "shots", "out": "endFrame", "where": "hasEnd=true",
-      "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.endPrompt}",
-      "refs": { "op": "lookupRefs", "from": "assets", "by": "{item.refs.endAsset}", "slot": "image",
-        "also": [ { "from": "shots", "by": "{item.refs.endFromEnd}", "slot": "endFrame" } ] }
-    },
-    {
-      "id": "genMotion", "type": "video", "over": "shots", "out": "motion",
-      "model": "{values.videoModel}", "aspectRatio": "{values.aspect}", "durationSeconds": "{item.duration}", "prompt": "{item.videoPrompt}",
-      "startFrame": "{item.slots.startFrame}", "endFrame": "{item.slots.endFrame}",
-      "refs": { "op": "lookupRefs", "from": "shots", "by": "{item.refs.motionFromEnd}", "slot": "endFrame" }
-    },
-    {
-      "id": "genImage", "type": "image", "over": "images", "out": "image",
-      "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
-      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media",
-        "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" } ] }
-    }
+    { "id": "genAsset", "type": "image", "over": "assets", "out": "image", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
+      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" } ] } },
+    { "id": "genStart", "type": "image", "over": "shots", "out": "startFrame", "where": "hasStart=true", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.startPrompt}",
+      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.startUp}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.startAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.startFromEnd}", "slot": "endFrame" }, { "from": "shots", "by": "{item.refs.startFromStart}", "slot": "startFrame" } ] } },
+    { "id": "genEnd", "type": "image", "over": "shots", "out": "endFrame", "where": "hasEnd=true", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.endPrompt}",
+      "refs": { "op": "lookupRefs", "from": "assets", "by": "{item.refs.endAsset}", "slot": "image", "also": [ { "from": "shots", "by": "{item.refs.endFromEnd}", "slot": "endFrame" } ] } },
+    { "id": "genMotion", "type": "video", "over": "shots", "out": "motion", "model": "{values.videoModel}", "aspectRatio": "{values.aspect}", "durationSeconds": "{item.duration}", "prompt": "{item.videoPrompt}",
+      "startFrame": "{item.slots.startFrame}", "endFrame": "{item.slots.endFrame}", "refs": { "op": "lookupRefs", "from": "shots", "by": "{item.refs.motionFromEnd}", "slot": "endFrame" } },
+    { "id": "genImage", "type": "image", "over": "images", "out": "image", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
+      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" } ] } }
   ],
-  "stages": [
-    { "op": "genAsset" },
-    { "checkpoint": "build" }
-  ],
+  "stages": [ { "op": "genAsset" }, { "checkpoint": "build" } ],
   "phases": [
     {
-      "id": "build", "title": "ออกแบบงาน", "subtitle": "อัพโหลด → asset → ช็อต · ต่อ ref กันเอง แล้วกดสร้าง", "navLabel": "ออกแบบ",
+      "id": "build", "title": "ออกแบบงาน", "hideTitle": true, "navLabel": "ออกแบบ",
       "form": [
-        { "el": "split", "sidebarWidth": 340, "mainClass": "p-6", "style": { "background": "rgba(255,255,255,0.02)", "borderRight": "1px solid rgba(255,255,255,0.06)", "padding": "20px 16px", "maxHeight": "none", "top": "0" }, "sidebar": [
-          { "el": "row", "style": { "alignItems": "center", "gap": "8px" }, "card": [
-            { "el": "icon", "value": "dashboard_customize", "className": "text-[var(--ev-accent)]" },
-            { "el": "text", "value": "Visual Job Designer", "className": "text-[13px] font-black uppercase tracking-widest" }
-          ] },
-          { "el": "gen-phase", "label": "เริ่มสร้างทั้งหมด", "ops": ["genAsset"], "chain": ["genStart", "genEnd", "genMotion"], "variant": "solid", "icon": "play_arrow", "when": "genMode=video" },
-          { "el": "gen-phase", "label": "เริ่มสร้างทั้งหมด", "ops": ["genAsset", "genImage"], "variant": "solid", "icon": "play_arrow", "when": "genMode=image" },
-          { "el": "zip-export", "label": "ดาวน์โหลดทั้งหมด (.ZIP)", "variant": "outline", "icon": "folder_zip" },
-          { "el": "divider" },
-          { "el": "segmented", "field": "genMode", "label": "โหมด", "variant": "tab", "options": [ { "value": "video", "label": "วิดีโอ", "icon": "videocam" }, { "value": "image", "label": "ภาพ", "icon": "image" } ] },
-          { "el": "segmented", "field": "aspect", "label": "สัดส่วน", "options": [ { "value": "9:16", "label": "9:16" }, { "value": "16:9", "label": "16:9" } ] },
-          { "el": "group", "label": "ดู Job JSON", "collapsible": true, "card": [ { "el": "custom", "fn": "flowJson" } ] }
-        ], "main": [
-          { "el": "box", "className": "max-w-[860px] mx-auto w-full flex flex-col gap-5", "card": [
-          { "el": "section", "label": "1 · Uploads", "icon": "cloud_upload" },
-          { "el": "note", "value": "ภาพตั้งต้น — อัพโหลดจากเครื่อง หรือเลือกจากคลัง Flow", "tone": "info" },
-          { "el": "repeat", "coll": "uploads", "card": [
-            { "el": "row", "style": { "alignItems": "center" }, "card": [
-              { "el": "media-slot", "src": "{item.slots.media}", "aspect": "1:1", "style": { "maxWidth": "72px" } },
-              { "el": "input", "field": "name", "placeholder": "ชื่อ (ไม่บังคับ)" },
-              { "el": "upload", "into": "{item.slots.media}", "label": "", "accept": "image/*,video/mp4", "variant": "outline" },
-              { "el": "pick-button", "into": "{item.slots.media}", "filter": "image" },
-              { "el": "delete-button" }
+        { "el": "split", "sidebarWidth": 300, "mainClass": "p-8 min-h-[calc(100vh-56px)]",
+          "style": { "background": "rgba(255,255,255,0.015)", "borderRight": "1px solid rgba(255,255,255,0.07)", "padding": "18px 16px", "maxHeight": "none", "top": "0", "minHeight": "calc(100vh - 56px)" },
+          "sidebar": [
+            { "el": "box", "className": "border border-white/10 rounded-2xl p-3.5 flex flex-col gap-3.5", "card": [
+              { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "flex-start" }, "card": [
+                { "el": "box", "style": { "flex": "1" }, "card": [
+                  { "el": "text", "value": "Video Pipeline", "className": "text-[13px] font-black leading-none", "when": "genMode=video" },
+                  { "el": "text", "value": "Image Pipeline", "className": "text-[13px] font-black leading-none", "when": "genMode=image" },
+                  { "el": "text", "value": { "op": "concat", "parts": [ { "op": "count", "from": "assets" }, " assets · ", { "op": "count", "from": "images" }, " images · ", { "op": "count", "from": "shots" }, " videos" ] }, "className": "text-[9px] text-white/40 mt-1" }
+                ] },
+                { "el": "text", "value": { "op": "concat", "parts": [ { "op": "count", "from": "shots" }, " tasks" ] }, "className": "text-[9px] text-white/40" }
+              ] },
+              { "el": "row", "style": { "alignItems": "center", "gap": "4px" }, "card": [
+                { "el": "box", "className": "flex flex-col items-center gap-1.5 flex-1", "card": [
+                  { "el": "box", "className": "w-11 h-11 rounded-xl border border-white/10 flex items-center justify-center bg-white/[0.03]", "card": [ { "el": "icon", "value": "inventory_2", "className": "text-white/50" } ] },
+                  { "el": "text", "value": "ASSETS", "className": "text-[8px] font-bold uppercase tracking-[1.5px] text-white/35" },
+                  { "el": "text", "value": { "op": "count", "from": "assets" }, "className": "text-[13px] font-black" }
+                ] },
+                { "el": "text", "value": "—", "className": "text-white/15" },
+                { "el": "box", "className": "flex flex-col items-center gap-1.5 flex-1", "card": [
+                  { "el": "box", "className": "w-11 h-11 rounded-xl border border-white/10 flex items-center justify-center bg-white/[0.03]", "card": [ { "el": "icon", "value": "image", "className": "text-white/50" } ] },
+                  { "el": "text", "value": "IMAGE", "className": "text-[8px] font-bold uppercase tracking-[1.5px] text-white/35" },
+                  { "el": "text", "value": { "op": "count", "from": "shots", "slot": "startFrame" }, "className": "text-[13px] font-black" }
+                ] },
+                { "el": "text", "value": "—", "className": "text-white/15" },
+                { "el": "box", "className": "flex flex-col items-center gap-1.5 flex-1", "card": [
+                  { "el": "box", "className": "w-11 h-11 rounded-xl border border-white/10 flex items-center justify-center bg-white/[0.03]", "card": [ { "el": "icon", "value": "movie", "className": "text-white/50" } ] },
+                  { "el": "text", "value": "VIDEO", "className": "text-[8px] font-bold uppercase tracking-[1.5px] text-white/35" },
+                  { "el": "text", "value": { "op": "count", "from": "shots", "slot": "motion" }, "className": "text-[13px] font-black" }
+                ] }
+              ] }
+            ] },
+            { "el": "text", "value": "OUTPUT CONFIG", "className": "text-[9px] font-black uppercase tracking-[2px] text-white/35 mt-2" },
+            { "el": "segmented", "field": "genMode", "variant": "tab", "options": [ { "value": "video", "label": "VIDEO", "icon": "videocam" }, { "value": "image", "label": "IMAGE", "icon": "image" } ] },
+            { "el": "segmented", "field": "aspect", "variant": "tab", "options": [ { "value": "9:16", "label": "9:16" }, { "value": "16:9", "label": "16:9" } ] },
+            { "el": "dropdown", "field": "imageModel", "label": "IMAGE MODEL", "variant": "pill", "options": { "table": "imageModels" } },
+            { "el": "dropdown", "field": "videoModel", "label": "VIDEO MODEL", "variant": "pill", "options": { "table": "videoModels" }, "when": "genMode=video" },
+            { "el": "gen-phase", "label": "เริ่มรันงาน", "ops": ["genAsset"], "chain": ["genStart", "genEnd", "genMotion"], "variant": "solid", "icon": "play_arrow", "when": "genMode=video" },
+            { "el": "gen-phase", "label": "เริ่มรันงาน", "ops": ["genAsset", "genImage"], "variant": "solid", "icon": "play_arrow", "when": "genMode=image" },
+            { "el": "text", "value": "ACTIVITY STREAM", "className": "text-[9px] font-black uppercase tracking-[2px] text-white/35 mt-2" },
+            { "el": "custom", "fn": "flowLog" },
+            { "el": "divider" },
+            { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center" }, "card": [
+              { "el": "text", "value": "● READY", "className": "text-[9px] font-bold uppercase tracking-widest text-green-400/70" },
+              { "el": "text", "value": "flow v0.2", "className": "text-[9px] text-white/25" }
             ] }
-          ] },
-          { "el": "add-button", "coll": "uploads", "label": "เพิ่มอัพโหลด", "variant": "outline", "icon": "add" },
-          { "el": "section", "label": "2 · Assets", "icon": "inventory_2" },
-          { "el": "note", "value": "ภาพหลักใช้ซ้ำ — gen จาก prompt + อ้าง upload", "tone": "info" },
-          { "el": "repeat", "coll": "assets", "card": [
-            { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
-              { "el": "media-slot", "src": "{item.slots.image}", "aspect": "1:1", "style": { "maxWidth": "72px" } },
-              { "el": "box", "style": { "flex": "1" }, "card": [
-                { "el": "textarea", "field": "prompt", "placeholder": "อธิบายภาพ asset...", "maxLength": 400 },
-                { "el": "row", "card": [
-                  { "el": "ref-select", "field": "up", "coll": "uploads", "label": "อ้างอิงอัพโหลด", "icon": "cloud_upload" },
-                  { "el": "ai-fill-button", "field": "prompt", "prompt": "ปรับ prompt สร้างภาพให้ละเอียดสวยขึ้น (ภาษาอังกฤษ): ", "label": "แต่ง prompt", "variant": "ghost", "icon": "auto_fix_high" }
+          ],
+          "main": [
+            { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(255,255,255,0.06)", "paddingBottom": "14px" }, "card": [
+              { "el": "text", "value": "VISUAL JOB DESIGNER", "className": "text-[11px] font-black uppercase tracking-[3px] text-white/40" },
+              { "el": "row", "style": { "gap": "8px" }, "card": [
+                { "el": "load-button", "label": "Import", "icon": "upload_file", "variant": "outline" },
+                { "el": "segmented", "field": "viewMode", "variant": "tab", "options": [ { "value": "visual", "label": "Visual", "icon": "visibility" }, { "value": "json", "label": "JSON", "icon": "data_object" } ] }
+              ] }
+            ] },
+            { "el": "box", "when": "viewMode=json", "className": "max-w-[860px] mx-auto w-full mt-6", "card": [ { "el": "custom", "fn": "flowJson" } ] },
+            { "el": "box", "when": "viewMode=visual", "className": "max-w-[880px] mx-auto w-full flex flex-col gap-11 pt-8 pb-20", "card": [
+              { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(255,255,255,0.06)", "paddingBottom": "10px" }, "card": [
+                { "el": "text", "value": "UPLOADS", "className": "text-[13px] font-black uppercase tracking-[3px] text-white/30" },
+                { "el": "add-button", "coll": "uploads", "icon": "add", "variant": "ghost", "iconOnly": true }
+              ] },
+              { "el": "repeat", "coll": "uploads", "empty": "NO INPUTS DEFINED", "card": [
+                { "el": "row", "style": { "alignItems": "center" }, "card": [
+                  { "el": "media-slot", "src": "{item.slots.media}", "aspect": "1:1", "style": { "maxWidth": "72px" } },
+                  { "el": "input", "field": "name", "placeholder": "ชื่อ (ไม่บังคับ)" },
+                  { "el": "upload", "into": "{item.slots.media}", "label": "", "accept": "image/*,video/mp4", "variant": "outline" },
+                  { "el": "pick-button", "into": "{item.slots.media}", "filter": "image" },
+                  { "el": "delete-button" }
                 ] }
               ] },
-              { "el": "gen-button", "label": "เจน", "op": "genAsset", "target": "{item}", "variant": "solid", "icon": "auto_awesome" },
-              { "el": "delete-button" }
-            ] }
-          ] },
-          { "el": "add-button", "coll": "assets", "label": "เพิ่ม asset", "variant": "outline", "icon": "add" },
-          { "el": "section", "label": "3 · Videos", "icon": "movie", "when": "genMode=video" },
-          { "el": "repeat", "coll": "shots", "when": "genMode=video", "card": [
-            { "el": "group", "collapsible": true, "startOpen": true, "label": "{item.title}", "summary": "{item.title}", "card": [
-              { "el": "input", "field": "title", "label": "ชื่อช็อต", "style": { "fontWeight": "700" } },
-              { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
-                { "el": "media-slot", "src": "{item.slots.startFrame}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
-                { "el": "media-slot", "src": "{item.slots.endFrame}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
-                { "el": "media-slot", "src": "{item.slots.motion}", "aspect": "9:16", "style": { "maxWidth": "104px" } }
+              { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(255,255,255,0.06)", "paddingBottom": "10px" }, "card": [
+                { "el": "text", "value": "ASSETS", "className": "text-[13px] font-black uppercase tracking-[3px] text-white/30" },
+                { "el": "add-button", "coll": "assets", "icon": "add", "variant": "ghost", "iconOnly": true }
               ] },
-              { "el": "switch", "field": "hasStart", "label": "มีภาพเปิด (start frame)" },
-              { "el": "textarea", "field": "startPrompt", "label": "ภาพเปิด", "when": "hasStart=true", "maxLength": 400 },
-              { "el": "row", "when": "hasStart=true", "card": [
-                { "el": "ref-select", "field": "startAsset", "coll": "assets", "label": "อ้าง asset", "icon": "inventory_2" },
-                { "el": "ref-select", "field": "startFromEnd", "coll": "shots", "label": "ต่อเฟรมจบช็อตก่อน", "icon": "link", "before": true }
+              { "el": "repeat", "coll": "assets", "empty": "NO MASTER ASSETS", "card": [
+                { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
+                  { "el": "media-slot", "src": "{item.slots.image}", "aspect": "1:1", "style": { "maxWidth": "72px" } },
+                  { "el": "box", "style": { "flex": "1" }, "card": [
+                    { "el": "textarea", "field": "prompt", "placeholder": "อธิบายภาพ asset...", "maxLength": 400 },
+                    { "el": "row", "card": [
+                      { "el": "ref-select", "field": "up", "coll": "uploads", "label": "อ้างอิงอัพโหลด", "icon": "cloud_upload" },
+                      { "el": "ai-fill-button", "field": "prompt", "prompt": "ปรับ prompt สร้างภาพให้ละเอียดสวยขึ้น (ภาษาอังกฤษ): ", "label": "แต่ง prompt", "variant": "ghost", "icon": "auto_fix_high" }
+                    ] }
+                  ] },
+                  { "el": "gen-button", "label": "เจน", "op": "genAsset", "target": "{item}", "variant": "solid", "icon": "auto_awesome" },
+                  { "el": "delete-button" }
+                ] }
               ] },
-              { "el": "switch", "field": "hasEnd", "label": "มีภาพจบ (end frame)" },
-              { "el": "textarea", "field": "endPrompt", "label": "ภาพจบ", "when": "hasEnd=true", "maxLength": 400 },
-              { "el": "note", "value": "การเคลื่อนไหว (motion)", "tone": "info", "icon": "animation" },
-              { "el": "textarea", "field": "videoPrompt", "label": "อธิบายการเคลื่อนไหว", "maxLength": 400 },
-              { "el": "segmented", "field": "duration", "label": "ความยาว", "options": [ { "value": "4", "label": "4ว" }, { "value": "6", "label": "6ว" }, { "value": "8", "label": "8ว" } ] },
-              { "el": "row", "card": [
-                { "el": "gen-button", "label": "เปิด", "op": "genStart", "target": "{item}", "variant": "outline", "icon": "image" },
-                { "el": "gen-button", "label": "จบ", "op": "genEnd", "target": "{item}", "variant": "outline", "icon": "image" },
-                { "el": "gen-button", "label": "วิดีโอ", "op": "genMotion", "target": "{item}", "variant": "solid", "icon": "movie" },
-                { "el": "download-button", "to": "{item.slots.motion}" },
-                { "el": "open-editor", "coll": "shots", "label": "ตัดต่อ", "variant": "ghost", "icon": "movie_edit" },
-                { "el": "delete-button" }
+              { "el": "row", "style": { "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(255,255,255,0.06)", "paddingBottom": "10px" }, "card": [
+                { "el": "text", "value": "VIDEOS", "className": "text-[13px] font-black uppercase tracking-[3px] text-white/30", "when": "genMode=video" },
+                { "el": "text", "value": "IMAGES", "className": "text-[13px] font-black uppercase tracking-[3px] text-white/30", "when": "genMode=image" },
+                { "el": "add-button", "coll": "shots", "icon": "add", "variant": "ghost", "iconOnly": true, "when": "genMode=video" },
+                { "el": "add-button", "coll": "images", "icon": "add", "variant": "ghost", "iconOnly": true, "when": "genMode=image" }
+              ] },
+              { "el": "repeat", "coll": "shots", "when": "genMode=video", "empty": "NO FINAL OUTPUTS", "card": [
+                { "el": "group", "collapsible": true, "startOpen": true, "label": "{item.title}", "summary": "{item.title}", "card": [
+                  { "el": "input", "field": "title", "label": "ชื่อช็อต", "style": { "fontWeight": "700" } },
+                  { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
+                    { "el": "media-slot", "src": "{item.slots.startFrame}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
+                    { "el": "media-slot", "src": "{item.slots.endFrame}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
+                    { "el": "media-slot", "src": "{item.slots.motion}", "aspect": "9:16", "style": { "maxWidth": "104px" } }
+                  ] },
+                  { "el": "switch", "field": "hasStart", "label": "มีภาพเปิด (start frame)" },
+                  { "el": "textarea", "field": "startPrompt", "label": "ภาพเปิด", "when": "hasStart=true", "maxLength": 400 },
+                  { "el": "row", "when": "hasStart=true", "card": [
+                    { "el": "ref-select", "field": "startAsset", "coll": "assets", "label": "อ้าง asset", "icon": "inventory_2" },
+                    { "el": "ref-select", "field": "startFromEnd", "coll": "shots", "label": "ต่อเฟรมจบช็อตก่อน", "icon": "link", "before": true }
+                  ] },
+                  { "el": "switch", "field": "hasEnd", "label": "มีภาพจบ (end frame)" },
+                  { "el": "textarea", "field": "endPrompt", "label": "ภาพจบ", "when": "hasEnd=true", "maxLength": 400 },
+                  { "el": "note", "value": "การเคลื่อนไหว (motion)", "tone": "info", "icon": "animation" },
+                  { "el": "textarea", "field": "videoPrompt", "label": "อธิบายการเคลื่อนไหว", "maxLength": 400 },
+                  { "el": "segmented", "field": "duration", "label": "ความยาว", "options": [ { "value": "4", "label": "4ว" }, { "value": "6", "label": "6ว" }, { "value": "8", "label": "8ว" } ] },
+                  { "el": "row", "card": [
+                    { "el": "gen-button", "label": "เปิด", "op": "genStart", "target": "{item}", "variant": "outline", "icon": "image" },
+                    { "el": "gen-button", "label": "จบ", "op": "genEnd", "target": "{item}", "variant": "outline", "icon": "image" },
+                    { "el": "gen-button", "label": "วิดีโอ", "op": "genMotion", "target": "{item}", "variant": "solid", "icon": "movie" },
+                    { "el": "download-button", "to": "{item.slots.motion}" },
+                    { "el": "open-editor", "coll": "shots", "label": "ตัดต่อ", "variant": "ghost", "icon": "movie_edit" },
+                    { "el": "delete-button" }
+                  ] }
+                ] }
+              ] },
+              { "el": "repeat", "coll": "images", "when": "genMode=image", "empty": "NO FINAL OUTPUTS", "card": [
+                { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
+                  { "el": "media-slot", "src": "{item.slots.image}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
+                  { "el": "box", "style": { "flex": "1" }, "card": [
+                    { "el": "textarea", "field": "prompt", "placeholder": "อธิบายภาพ...", "maxLength": 400 },
+                    { "el": "row", "card": [
+                      { "el": "ref-select", "field": "up", "coll": "uploads", "label": "อ้างอิงอัพโหลด", "icon": "cloud_upload" },
+                      { "el": "ref-select", "field": "asset", "coll": "assets", "label": "อ้าง asset", "icon": "inventory_2" },
+                      { "el": "ai-fill-button", "field": "prompt", "prompt": "ปรับ prompt สร้างภาพให้ละเอียดสวยขึ้น (ภาษาอังกฤษ): ", "label": "แต่ง prompt", "variant": "ghost", "icon": "auto_fix_high" }
+                    ] }
+                  ] },
+                  { "el": "gen-button", "label": "เจน", "op": "genImage", "target": "{item}", "variant": "solid", "icon": "image" },
+                  { "el": "download-button", "to": "{item.slots.image}" },
+                  { "el": "delete-button" }
+                ] }
               ] }
             ] }
-          ] },
-          { "el": "add-button", "coll": "shots", "label": "เพิ่มช็อต", "variant": "outline", "icon": "add", "when": "genMode=video" },
-          { "el": "section", "label": "3 · Images", "icon": "image", "when": "genMode=image" },
-          { "el": "repeat", "coll": "images", "when": "genMode=image", "card": [
-            { "el": "row", "style": { "alignItems": "flex-start" }, "card": [
-              { "el": "media-slot", "src": "{item.slots.image}", "aspect": "9:16", "style": { "maxWidth": "104px" } },
-              { "el": "box", "style": { "flex": "1" }, "card": [
-                { "el": "textarea", "field": "prompt", "placeholder": "อธิบายภาพ...", "maxLength": 400 },
-                { "el": "row", "card": [
-                  { "el": "ref-select", "field": "up", "coll": "uploads", "label": "อ้างอิงอัพโหลด", "icon": "cloud_upload" },
-                  { "el": "ref-select", "field": "asset", "coll": "assets", "label": "อ้าง asset", "icon": "inventory_2" },
-                  { "el": "ai-fill-button", "field": "prompt", "prompt": "ปรับ prompt สร้างภาพให้ละเอียดสวยขึ้น (ภาษาอังกฤษ): ", "label": "แต่ง prompt", "variant": "ghost", "icon": "auto_fix_high" }
-                ] }
-              ] },
-              { "el": "gen-button", "label": "เจน", "op": "genImage", "target": "{item}", "variant": "solid", "icon": "image" },
-              { "el": "download-button", "to": "{item.slots.image}" },
-              { "el": "delete-button" }
-            ] }
-          ] },
-          { "el": "add-button", "coll": "images", "label": "เพิ่มภาพ", "variant": "outline", "icon": "add", "when": "genMode=image" }
-          ] }
-        ] }
+          ]
+        }
       ]
     },
     {
