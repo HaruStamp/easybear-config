@@ -6,7 +6,7 @@
   "persistBar": true,
   "devBar": false,
   "chrome": { "content": { "className": "!max-w-none !p-0" } },
-  "run": { "maxParallel": 1, "staggerMs": 0, "maxAttempts": 3, "retryDelayMs": 15000, "batchDelayMs": 15000 },
+  "run": { "maxParallel": 2, "staggerMs": 0, "maxAttempts": 3, "retryDelayMs": 15000, "batchDelayMs": 15000 },
   "theme": { "vars": { "--ev-accent": "#f97316", "--ev-bg": "#050505", "--ev-surface": "rgba(255,255,255,0.03)", "--ev-surface2": "rgba(255,255,255,0.08)", "--ev-border": "rgba(255,255,255,0.08)" } },
   "home": {
     "title": "หมีทำแทน Flow", "subtitle": "ออกแบบงาน gen ภาพ/วิดีโอบน Flow Labs → รันเป็นชุดอัตโนมัติ",
@@ -46,7 +46,7 @@
     ]
   },
   "ops": [
-    { "id": "genAsset", "type": "image", "over": "assets", "out": "image", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
+    { "id": "genAsset", "type": "image", "over": "assets", "out": "image", "orderBy": "refs", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" } ] } },
     { "id": "genStart", "type": "image", "over": "shots", "out": "startFrame", "where": "hasStart=true", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.startPrompt}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.startUp}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.startAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.startFromEnd}", "slot": "endFrame" }, { "from": "shots", "by": "{item.refs.startFromStart}", "slot": "startFrame" } ] } },
@@ -55,7 +55,7 @@
     { "id": "genMotion", "type": "video", "over": "shots", "out": "motion", "model": "{values.videoModel}", "aspectRatio": "{values.aspect}", "durationSeconds": "{item.duration}", "prompt": "{item.videoPrompt}",
       "startFrame": "{item.slots.startFrame}", "endFrame": "{item.slots.endFrame}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.vsUp}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.vsAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.vsStart}", "slot": "startFrame" }, { "from": "shots", "by": "{item.refs.vsEnd}", "slot": "endFrame" }, { "from": "uploads", "by": "{item.refs.veUp}", "slot": "media" }, { "from": "assets", "by": "{item.refs.veAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.veStart}", "slot": "startFrame" }, { "from": "shots", "by": "{item.refs.veEnd}", "slot": "endFrame" } ] } },
-    { "id": "genImage", "type": "image", "over": "images", "out": "image", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
+    { "id": "genImage", "type": "image", "over": "images", "out": "image", "orderBy": "refs", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" }, { "from": "images", "by": "{item.refs.img}", "slot": "image" } ] } }
   ],
   "stages": [ { "op": "genAsset" }, { "checkpoint": "build" } ],
@@ -100,7 +100,7 @@
             { "el": "segmented", "field": "aspect", "variant": "tab", "options": [ { "value": "9:16", "label": "9:16" }, { "value": "16:9", "label": "16:9" } ] },
             { "el": "dropdown", "field": "imageModel", "label": "IMAGE MODEL", "variant": "pill", "options": { "table": "imageModels" } },
             { "el": "dropdown", "field": "videoModel", "label": "VIDEO MODEL", "variant": "pill", "options": { "table": "videoModels" }, "when": "genMode=video" },
-            { "el": "gen-phase", "label": "เริ่มรันงาน", "ops": ["genAsset"], "chain": ["genStart", "genEnd", "genMotion"], "variant": "solid", "icon": "play_arrow", "when": "genMode=video" },
+            { "el": "gen-phase", "label": "เริ่มรันงาน", "ops": ["genAsset"], "chain": ["genStart", "genEnd", "genMotion"], "orderBy": "refs", "variant": "solid", "icon": "play_arrow", "when": "genMode=video" },
             { "el": "gen-phase", "label": "เริ่มรันงาน", "ops": ["genAsset", "genImage"], "variant": "solid", "icon": "play_arrow", "when": "genMode=image" },
             { "el": "text", "value": "ACTIVITY STREAM", "className": "text-[9px] font-black uppercase tracking-[2px] text-white/35 mt-2" },
             { "el": "custom", "fn": "flowLog" },
