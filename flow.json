@@ -53,7 +53,8 @@
     { "id": "genEnd", "type": "image", "over": "shots", "out": "endFrame", "where": "hasEnd=true", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.endPrompt}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.endUp}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.endAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.endFromEnd}", "slot": "endFrame" }, { "from": "shots", "by": "{item.refs.endFromStart}", "slot": "startFrame" } ] } },
     { "id": "genMotion", "type": "video", "over": "shots", "out": "motion", "model": "{values.videoModel}", "aspectRatio": "{values.aspect}", "durationSeconds": "{item.duration}", "prompt": "{item.videoPrompt}",
-      "startFrame": "{item.slots.startFrame}", "endFrame": "{item.slots.endFrame}", "refs": { "op": "lookupRefs", "from": "shots", "by": "{item.refs.motionFromEnd}", "slot": "endFrame" } },
+      "startFrame": "{item.slots.startFrame}", "endFrame": "{item.slots.endFrame}",
+      "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.vsUp}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.vsAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.vsStart}", "slot": "startFrame" }, { "from": "shots", "by": "{item.refs.vsEnd}", "slot": "endFrame" }, { "from": "uploads", "by": "{item.refs.veUp}", "slot": "media" }, { "from": "assets", "by": "{item.refs.veAsset}", "slot": "image" }, { "from": "shots", "by": "{item.refs.veStart}", "slot": "startFrame" }, { "from": "shots", "by": "{item.refs.veEnd}", "slot": "endFrame" } ] } },
     { "id": "genImage", "type": "image", "over": "images", "out": "image", "model": "{values.imageModel}", "aspectRatio": "{values.aspect}", "prompt": "{item.prompt}",
       "refs": { "op": "lookupRefs", "from": "uploads", "by": "{item.refs.up}", "slot": "media", "also": [ { "from": "assets", "by": "{item.refs.asset}", "slot": "image" }, { "from": "images", "by": "{item.refs.img}", "slot": "image" } ] } }
   ],
@@ -217,7 +218,7 @@
                         { "el": "box", "className": "flex flex-col gap-2", "card": [
                           { "el": "text", "value": "References", "className": "!text-[11px] font-black !text-white/40 tracking-[1px] uppercase px-1" },
                           { "el": "box", "className": "flex flex-wrap gap-2 items-center min-h-[44px] bg-black/40 border border-white/5 rounded-xl p-2 px-3", "card": [
-                            { "el": "ref-select", "variant": "combined", "placeholder": "Add Ref",
+                            { "el": "ref-select", "variant": "combined", "placeholder": "Add Ref", "search": true, "searchPlaceholder": "Search references...", "empty": "No matching refs",
                               "addClass": "!rounded-lg !border-solid h-7 !px-3 !bg-white/5 !border-white/10 !text-[10px] font-bold !text-white/40 hover:!bg-white/10 hover:!text-white uppercase tracking-widest !gap-1.5 transition-all",
                               "groups": [
                                 { "field": "up", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload", "chipClass": "!rounded-lg h-7 !pl-3 !text-[11px] font-medium !bg-orange-500/10 !border-orange-500/20 !text-orange-400" },
@@ -287,7 +288,7 @@
                                 { "el": "box", "className": "flex flex-col gap-2", "card": [
                                   { "el": "text", "value": "References", "className": "!text-[10px] !text-white/30 font-bold uppercase tracking-widest ml-1" },
                                   { "el": "box", "className": "flex flex-wrap gap-2 items-center min-h-[44px] bg-black/20 border border-white/5 rounded-xl p-2 px-3", "card": [
-                                    { "el": "ref-select", "variant": "combined", "placeholder": "Add",
+                                    { "el": "ref-select", "variant": "combined", "placeholder": "Add", "search": true, "searchPlaceholder": "Search references...", "empty": "No matching refs",
                                       "addClass": "!rounded-lg !border-solid h-7 !px-3 !bg-white/5 !border-white/10 !text-[10px] font-bold !text-white/40 hover:!bg-white/10 hover:!text-white uppercase tracking-widest !gap-1.5 transition-all",
                                       "groups": [
                                         { "field": "startUp", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload", "chipClass": "!rounded-lg h-7 !pl-3 !text-[11px] font-medium !bg-orange-500/10 !border-orange-500/20 !text-orange-400" },
@@ -326,7 +327,7 @@
                                 { "el": "box", "className": "flex flex-col gap-2", "card": [
                                   { "el": "text", "value": "References", "className": "!text-[10px] !text-white/30 font-bold uppercase tracking-widest ml-1" },
                                   { "el": "box", "className": "flex flex-wrap gap-2 items-center min-h-[44px] bg-black/20 border border-white/5 rounded-xl p-2 px-3", "card": [
-                                    { "el": "ref-select", "variant": "combined", "placeholder": "Add",
+                                    { "el": "ref-select", "variant": "combined", "placeholder": "Add", "search": true, "searchPlaceholder": "Search references...", "empty": "No matching refs",
                                       "addClass": "!rounded-lg !border-solid h-7 !px-3 !bg-white/5 !border-white/10 !text-[10px] font-bold !text-white/40 hover:!bg-white/10 hover:!text-white uppercase tracking-widest !gap-1.5 transition-all",
                                       "groups": [
                                         { "field": "endUp", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload", "chipClass": "!rounded-lg h-7 !pl-3 !text-[11px] font-medium !bg-orange-500/10 !border-orange-500/20 !text-orange-400" },
@@ -355,27 +356,22 @@
                             ] },
                             { "el": "box", "className": "flex flex-col gap-2", "card": [
                               { "el": "box", "className": "flex gap-4 w-full", "card": [
-                                { "el": "box", "className": "flex-1 flex flex-col gap-1.5", "card": [
-                                  { "el": "box", "when": "item.hasStart=true", "className": "h-14 rounded-xl border border-white/10 bg-black/40 flex items-center px-4 gap-3", "card": [
-                                    { "el": "icon", "icon": "link", "className": "text-purple-400", "textSize": "text-[18px]" },
-                                    { "el": "text", "value": "{item.id}.start_frame", "className": "!text-[12px] font-bold !text-white/80" }
+                                { "el": "ref-select", "variant": "slot", "label": "Start", "icon": "link", "selClass": "!text-purple-400", "searchPlaceholder": "Search references...", "empty": "No matching refs",
+                                  "groups": [
+                                    { "field": "vsUp", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload" },
+                                    { "field": "vsAsset", "coll": "assets", "label": "Assets", "icon": "inventory_2" },
+                                    { "field": "vsStart", "coll": "shots", "label": "Start Frames", "icon": "movie", "upto": true, "where": "hasStart=true", "labelTpl": "{item.id}.start_frame" },
+                                    { "field": "vsEnd", "coll": "shots", "label": "End Frames", "icon": "movie", "upto": true, "where": "hasEnd=true", "labelTpl": "{item.id}.end_frame" }
                                   ] },
-                                  { "el": "box", "when": "item.hasStart!=true", "className": "h-14 rounded-xl border border-dashed border-white/10 bg-white/[0.02] flex items-center justify-center gap-2", "card": [
-                                    { "el": "icon", "icon": "add", "className": "text-white/10", "textSize": "text-[18px]" },
-                                    { "el": "text", "value": "Start", "className": "!text-[10px] font-black !text-white/10 uppercase tracking-widest" }
+                                { "el": "ref-select", "variant": "slot", "label": "End", "icon": "link", "selClass": "!text-purple-400", "searchPlaceholder": "Search references...", "empty": "No matching refs",
+                                  "groups": [
+                                    { "field": "veUp", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload" },
+                                    { "field": "veAsset", "coll": "assets", "label": "Assets", "icon": "inventory_2" },
+                                    { "field": "veStart", "coll": "shots", "label": "Start Frames", "icon": "movie", "upto": true, "where": "hasStart=true", "labelTpl": "{item.id}.start_frame" },
+                                    { "field": "veEnd", "coll": "shots", "label": "End Frames", "icon": "movie", "upto": true, "where": "hasEnd=true", "labelTpl": "{item.id}.end_frame" }
                                   ] }
-                                ] },
-                                { "el": "box", "className": "flex-1 flex flex-col gap-1.5", "card": [
-                                  { "el": "box", "when": "item.hasEnd=true", "className": "h-14 rounded-xl border border-white/10 bg-black/40 flex items-center px-4 gap-3", "card": [
-                                    { "el": "icon", "icon": "link", "className": "text-purple-400", "textSize": "text-[18px]" },
-                                    { "el": "text", "value": "{item.id}.end_frame", "className": "!text-[12px] font-bold !text-white/80" }
-                                  ] },
-                                  { "el": "box", "when": "item.hasEnd!=true", "className": "h-14 rounded-xl border border-dashed border-white/10 bg-white/[0.02] flex items-center justify-center gap-2", "card": [
-                                    { "el": "icon", "icon": "add", "className": "text-white/10", "textSize": "text-[18px]" },
-                                    { "el": "text", "value": "End", "className": "!text-[10px] font-black !text-white/10 uppercase tracking-widest" }
-                                  ] }
-                                ] }
                               ] },
+                              { "el": "text", "value": "ใช้เมื่อไม่ติ๊ก start frame — วิดีโอ gen จากภาพอ้างอิงเหล่านี้แทน", "className": "!text-[9px] !text-white/25 px-1" },
                               { "el": "use", "component": "alertWarn", "when": "item.videoPrompt=", "params": { "title": "ต้องใส่ Prompt", "msg": "Describe the motion or transformation for this shot." } }
                             ] }
                           ] }
@@ -407,7 +403,7 @@
                           { "el": "box", "className": "flex flex-col gap-2", "card": [
                             { "el": "text", "value": "References", "className": "!text-[11px] font-black !text-white/40 tracking-[1px] uppercase px-1" },
                             { "el": "box", "className": "flex flex-wrap gap-2 items-center min-h-[44px] bg-black/40 border border-white/5 rounded-xl p-2 px-3", "card": [
-                              { "el": "ref-select", "variant": "combined", "placeholder": "Add Ref",
+                              { "el": "ref-select", "variant": "combined", "placeholder": "Add Ref", "search": true, "searchPlaceholder": "Search references...", "empty": "No matching refs",
                                 "addClass": "!rounded-lg !border-solid h-7 !px-3 !bg-white/5 !border-white/10 !text-[10px] font-bold !text-white/40 hover:!bg-white/10 hover:!text-white uppercase tracking-widest !gap-1.5 transition-all",
                                 "groups": [
                                   { "field": "up", "coll": "uploads", "label": "Uploads", "icon": "cloud_upload", "chipClass": "!rounded-lg h-7 !pl-3 !text-[11px] font-medium !bg-orange-500/10 !border-orange-500/20 !text-orange-400" },
