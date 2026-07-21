@@ -4,7 +4,10 @@
   "icon": "pets",
   "app": {
     "id": "flow",
-    "name": "flow"
+    "name": "flow",
+    "hooksPacks": [
+      "flow"
+    ]
   },
   "persistBar": true,
   "devBar": false,
@@ -292,6 +295,114 @@
           "goDone": "preview"
         },
         {
+          "el": "button",
+          "action": "stop",
+          "label": "หยุด",
+          "icon": "stop_circle",
+          "variant": "ghost",
+          "when": {
+            "op": "or",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.__runState}",
+                "b": "running"
+              },
+              {
+                "op": "eq",
+                "a": "{values.__runState}",
+                "b": "cooldown"
+              },
+              {
+                "op": "eq",
+                "a": "{values.__runState}",
+                "b": "retrying"
+              }
+            ]
+          },
+          "style": {
+            "borderRadius": "9999px",
+            "height": "42px",
+            "backgroundColor": "rgba(255,255,255,0.08)"
+          },
+          "className": "w-full font-bold text-[var(--ev-text)]"
+        },
+        {
+          "el": "zip-export",
+          "label": "ดาวน์โหลดทั้งหมด (.ZIP)",
+          "icon": "folder_zip",
+          "variant": "outline",
+          "value": "flow_job",
+          "coll": "shots",
+          "slot": "motion",
+          "imageSlot": "startFrame",
+          "prefix": "shot",
+          "where": "status=done",
+          "assetsFolder": "assets",
+          "when": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.genMode}",
+                "b": "video"
+              },
+              {
+                "op": "or",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "done"
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "fail"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "el": "zip-export",
+          "label": "ดาวน์โหลดทั้งหมด (.ZIP)",
+          "icon": "folder_zip",
+          "variant": "outline",
+          "value": "flow_job",
+          "coll": "images",
+          "slot": "image",
+          "prefix": "img",
+          "where": "status=done",
+          "assetsFolder": "assets",
+          "when": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.genMode}",
+                "b": "image"
+              },
+              {
+                "op": "or",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "done"
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "fail"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "el": "text",
           "value": "ACTIVITY STREAM",
           "className": "text-[9px] font-black uppercase tracking-[2px] text-white/35 mt-2"
@@ -368,31 +479,59 @@
     "form": [
       {
         "el": "stepper",
-        "field": "maxParallelUi",
+        "field": "maxParallel",
+        "icon": "stacks",
         "label": "จำนวนงานพร้อมกัน",
+        "placeholder": "สร้างพร้อมกันสูงสุดกี่ชิ้น",
+        "unit": "งาน",
         "min": 1,
-        "max": 8
+        "max": 8,
+        "step": 1
       },
       {
         "el": "stepper",
-        "field": "staggerUi",
-        "label": "พักระหว่างงาน (วิ)",
+        "field": "staggerMs",
+        "icon": "timer",
+        "label": "พักระหว่างงาน",
+        "placeholder": "เว้นเวลาก่อนเริ่มสร้างชิ้นถัดไป",
+        "unit": "วินาที",
         "min": 0,
-        "max": 30
+        "max": 30000,
+        "step": 1000,
+        "divisor": 1000
       },
       {
         "el": "stepper",
-        "field": "batchUi",
-        "label": "พักระหว่างรอบ (วิ)",
+        "field": "batchDelay",
+        "icon": "schedule",
+        "label": "พักระหว่างรอบ",
+        "placeholder": "พักหลังสร้างพร้อมกันครบ 1 ชุด ก่อนเริ่มชุดถัดไป (กันโดนลิมิต)",
+        "unit": "วินาที",
         "min": 0,
-        "max": 60
+        "max": 60,
+        "step": 5
       },
       {
         "el": "stepper",
-        "field": "phaseUi",
-        "label": "พักระหว่างขั้นตอน (วิ)",
+        "field": "phaseDelay",
+        "icon": "hourglass_empty",
+        "label": "พักระหว่างขั้นตอน",
+        "placeholder": "พักก่อนขยับไปขั้นถัดไป Asset→ภาพ→วิดีโอ (กันโดนลิมิต)",
+        "unit": "วินาที",
         "min": 0,
-        "max": 120
+        "max": 120,
+        "step": 10
+      },
+      {
+        "el": "stepper",
+        "field": "retryDelay",
+        "icon": "replay",
+        "label": "พักก่อนลองใหม่",
+        "placeholder": "ตอน task พลาด รอเท่านี้ก่อนยิงใหม่ (ไม่ยิงทันที)",
+        "unit": "วินาที",
+        "min": 0,
+        "max": 60,
+        "step": 5
       }
     ]
   },
@@ -414,7 +553,12 @@
     "imageModel": "🍌 Nano Banana Pro",
     "videoModel": "Veo 3.1 - Fast",
     "aspect": "9:16",
-    "viewMode": "visual"
+    "viewMode": "visual",
+    "maxParallel": "2",
+    "staggerMs": "0",
+    "batchDelay": "15",
+    "phaseDelay": "0",
+    "retryDelay": "15"
   },
   "collections": {
     "uploads": {
