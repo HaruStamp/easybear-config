@@ -1247,7 +1247,8 @@
         "personality"
       ],
       "slots": [
-        "sheet"
+        "sheet",
+        "srcRef"
       ]
     },
     "scenes": {
@@ -1256,7 +1257,8 @@
         "description"
       ],
       "slots": [
-        "ref"
+        "ref",
+        "srcRef"
       ]
     },
     "objects": {
@@ -1265,7 +1267,8 @@
         "description"
       ],
       "slots": [
-        "ref"
+        "ref",
+        "srcRef"
       ]
     },
     "episodes": {
@@ -1383,7 +1386,13 @@
       "out": "sheet",
       "model": "{values.imageModel}",
       "aspectRatio": "9:16",
-      "prompt": "character reference sheet, full body turnaround, {item.name}. Appearance: {item.appearance}. Personality: {item.personality}. Style: {values.style}. clean neutral background."
+      "prompt": "character reference sheet, full body turnaround, {item.name}. Appearance: {item.appearance}. Personality: {item.personality}. Style: {values.style}. clean neutral background.",
+      "refs": {
+        "op": "lookupRefs",
+        "from": "characters",
+        "by": "{item.id}",
+        "slot": "srcRef"
+      }
     },
     {
       "id": "genSceneRef",
@@ -1393,7 +1402,13 @@
       "out": "ref",
       "model": "{values.imageModel}",
       "aspectRatio": "16:9",
-      "prompt": "establishing background plate of location: {item.name}. {item.description}. Style: {values.style}. no characters."
+      "prompt": "establishing background plate of location: {item.name}. {item.description}. Style: {values.style}. no characters.",
+      "refs": {
+        "op": "lookupRefs",
+        "from": "scenes",
+        "by": "{item.id}",
+        "slot": "srcRef"
+      }
     },
     {
       "id": "genObjectRef",
@@ -1403,7 +1418,13 @@
       "out": "ref",
       "model": "{values.imageModel}",
       "aspectRatio": "1:1",
-      "prompt": "product/prop reference of {item.name}. {item.description}. Style: {values.style}. isolated on clean background."
+      "prompt": "product/prop reference of {item.name}. {item.description}. Style: {values.style}. isolated on clean background.",
+      "refs": {
+        "op": "lookupRefs",
+        "from": "objects",
+        "by": "{item.id}",
+        "slot": "srcRef"
+      }
     },
     {
       "id": "genImage",
@@ -4284,6 +4305,51 @@
                           "className": "w-full justify-center"
                         },
                         {
+                          "el": "upload",
+                          "into": "srcRef",
+                          "label": "",
+                          "placeholder": "รูปต้นฉบับ",
+                          "icon": "add_photo_alternate",
+                          "resize": {
+                            "maxPx": 768,
+                            "quality": 0.82
+                          },
+                          "when": "item.slots.srcRef=",
+                          "className": "w-full justify-center h-[38px] rounded-full opacity-60 hover:opacity-100 text-[11px] border border-dashed border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "row",
+                          "when": "item.slots.srcRef!=",
+                          "className": "items-center gap-2 rounded-full border border-[var(--ev-accent)]/30 bg-[var(--ev-accent)]/5 p-1.5",
+                          "card": [
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.srcRef}",
+                              "aspect": "1:1",
+                              "style": {
+                                "borderRadius": "9999px"
+                              },
+                              "className": "w-8 shrink-0 ring-1 ring-[var(--ev-accent)]/40"
+                            },
+                            {
+                              "el": "text",
+                              "value": "อิงรูปต้นฉบับ",
+                              "className": "text-[11px] opacity-70 flex-1 min-w-0"
+                            },
+                            {
+                              "el": "button",
+                              "action": "hook",
+                              "fn": "clearSlot",
+                              "to": "srcRef",
+                              "label": "เอาออก",
+                              "variant": "ghost",
+                              "size": "sm",
+                              "textSize": "text-[10px]",
+                              "className": "shrink-0 opacity-60 hover:opacity-100"
+                            }
+                          ]
+                        },
+                        {
                           "el": "note",
                           "tone": "danger",
                           "icon": "error",
@@ -4486,6 +4552,51 @@
                           "className": "w-full justify-center"
                         },
                         {
+                          "el": "upload",
+                          "into": "srcRef",
+                          "label": "",
+                          "placeholder": "รูปต้นฉบับ",
+                          "icon": "add_photo_alternate",
+                          "resize": {
+                            "maxPx": 768,
+                            "quality": 0.82
+                          },
+                          "when": "item.slots.srcRef=",
+                          "className": "w-full justify-center h-[38px] rounded-full opacity-60 hover:opacity-100 text-[11px] border border-dashed border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "row",
+                          "when": "item.slots.srcRef!=",
+                          "className": "items-center gap-2 rounded-full border border-[var(--ev-accent)]/30 bg-[var(--ev-accent)]/5 p-1.5",
+                          "card": [
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.srcRef}",
+                              "aspect": "1:1",
+                              "style": {
+                                "borderRadius": "9999px"
+                              },
+                              "className": "w-8 shrink-0 ring-1 ring-[var(--ev-accent)]/40"
+                            },
+                            {
+                              "el": "text",
+                              "value": "อิงรูปต้นฉบับ",
+                              "className": "text-[11px] opacity-70 flex-1 min-w-0"
+                            },
+                            {
+                              "el": "button",
+                              "action": "hook",
+                              "fn": "clearSlot",
+                              "to": "srcRef",
+                              "label": "เอาออก",
+                              "variant": "ghost",
+                              "size": "sm",
+                              "textSize": "text-[10px]",
+                              "className": "shrink-0 opacity-60 hover:opacity-100"
+                            }
+                          ]
+                        },
+                        {
                           "el": "note",
                           "tone": "danger",
                           "icon": "error",
@@ -4686,6 +4797,51 @@
                             "borderRadius": "9999px"
                           },
                           "className": "w-full justify-center"
+                        },
+                        {
+                          "el": "upload",
+                          "into": "srcRef",
+                          "label": "",
+                          "placeholder": "รูปต้นฉบับ",
+                          "icon": "add_photo_alternate",
+                          "resize": {
+                            "maxPx": 768,
+                            "quality": 0.82
+                          },
+                          "when": "item.slots.srcRef=",
+                          "className": "w-full justify-center h-[38px] rounded-full opacity-60 hover:opacity-100 text-[11px] border border-dashed border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "row",
+                          "when": "item.slots.srcRef!=",
+                          "className": "items-center gap-2 rounded-full border border-[var(--ev-accent)]/30 bg-[var(--ev-accent)]/5 p-1.5",
+                          "card": [
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.srcRef}",
+                              "aspect": "1:1",
+                              "style": {
+                                "borderRadius": "9999px"
+                              },
+                              "className": "w-8 shrink-0 ring-1 ring-[var(--ev-accent)]/40"
+                            },
+                            {
+                              "el": "text",
+                              "value": "อิงรูปต้นฉบับ",
+                              "className": "text-[11px] opacity-70 flex-1 min-w-0"
+                            },
+                            {
+                              "el": "button",
+                              "action": "hook",
+                              "fn": "clearSlot",
+                              "to": "srcRef",
+                              "label": "เอาออก",
+                              "variant": "ghost",
+                              "size": "sm",
+                              "textSize": "text-[10px]",
+                              "className": "shrink-0 opacity-60 hover:opacity-100"
+                            }
+                          ]
                         },
                         {
                           "el": "note",
@@ -8444,7 +8600,10 @@
       "envOnly": "ENVIRONMENT ONLY. ABSOLUTELY NO PEOPLE, NO HUMANS, NO CHARACTERS, NO FACES IN THIS SHOT.",
       "qPhotoreal": "4K UHD, masterpiece, highly detailed, film grain",
       "qDrawn": "4K, masterpiece, highly detailed, crisp clean lines",
-      "negative": "image-in-image, picture-in-picture, inset, panel border, frame divider, comic panels, photo collage, multiple exposures, split screen, multiple panels, collage, grid layout, storyboard frames, multiple frames, diptych, triptych, side-by-side images, text, watermark, UI, app interface, caption, dialogue bubbles, blurry, low resolution, extra people, duplicate characters, background characters (unless requested), ugly, deformed face, asymmetric eyes, distorted face, extra fingers, mutated hands", "wardrobe": "★ความต่อเนื่องของเครื่องแต่งกาย: {parts} — ใส่ชุดเดิมนี้ให้เหมือนกันทุกช็อต (ทรง สี ลาย รายละเอียดเดียวกัน) ห้ามเปลี่ยนชุดเอง เว้นแต่คำบรรยายช็อตนี้ระบุชุดอื่นไว้ชัดเจน (เช่น เปลี่ยนชุด อาบน้ำ ว่ายน้ำ ข้ามวัน) จึงเปลี่ยนตามนั้นได้", "wardrobeOutfit": "ชุดประจำตัว: {list}", "wardrobeRef": "{names} ใช้ชุดตามรูป ref"
+      "negative": "image-in-image, picture-in-picture, inset, panel border, frame divider, comic panels, photo collage, multiple exposures, split screen, multiple panels, collage, grid layout, storyboard frames, multiple frames, diptych, triptych, side-by-side images, text, watermark, UI, app interface, caption, dialogue bubbles, blurry, low resolution, extra people, duplicate characters, background characters (unless requested), ugly, deformed face, asymmetric eyes, distorted face, extra fingers, mutated hands",
+      "wardrobe": "★ความต่อเนื่องของเครื่องแต่งกาย: {parts} — ใส่ชุดเดิมนี้ให้เหมือนกันทุกช็อต (ทรง สี ลาย รายละเอียดเดียวกัน) ห้ามเปลี่ยนชุดเอง เว้นแต่คำบรรยายช็อตนี้ระบุชุดอื่นไว้ชัดเจน (เช่น เปลี่ยนชุด อาบน้ำ ว่ายน้ำ ข้ามวัน) จึงเปลี่ยนตามนั้นได้",
+      "wardrobeOutfit": "ชุดประจำตัว: {list}",
+      "wardrobeRef": "{names} ใช้ชุดตามรูป ref"
     },
     "vid": {
       "motionCam": "Camera movement: {camMove}. Character action: {actionText}.",
