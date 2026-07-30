@@ -2061,7 +2061,7 @@
                 {
                   "el": "group",
                   "label": "ใส่สินค้าในเรื่อง",
-                  "className": "transition-colors",
+                  "className": "relative transition-colors",
                   "classWhen": [
                     {
                       "when": "values.productOn=true",
@@ -2198,6 +2198,16 @@
                           "class": "[&>button]:!bg-emerald-400"
                         }
                       ]
+                    },
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "productOn",
+                      "value": "true",
+                      "when": "values.productOn!=true",
+                      "iconOnly": true,
+                      "label": "",
+                      "className": "absolute inset-0 w-full !h-full opacity-0"
                     }
                   ],
                   "card": [
@@ -2238,7 +2248,7 @@
                         },
                         {
                           "el": "box",
-                          "className": "relative bg-white/[0.025] border border-white/10 rounded-2xl p-3 flex gap-3 items-stretch",
+                          "className": "group relative bg-white/[0.025] hover:bg-white/[0.045] border border-white/10 hover:border-white/20 rounded-2xl p-3 flex gap-3 items-stretch transition-colors",
                           "card": [
                             {
                               "el": "repeat",
@@ -2249,13 +2259,32 @@
                                   "className": "shrink-0 w-24 flex flex-col gap-1.5",
                                   "card": [
                                     {
-                                      "el": "media-slot",
-                                      "src": "{item.slots.productRef}",
-                                      "aspect": "1:1",
-                                      "className": "ring-1 ring-white/10",
-                                      "style": {
-                                        "borderRadius": "12px"
-                                      }
+                                      "el": "box",
+                                      "className": "relative",
+                                      "card": [
+                                        {
+                                          "el": "media-slot",
+                                          "src": "{item.slots.productRef}",
+                                          "aspect": "1:1",
+                                          "className": "ring-1 ring-white/10",
+                                          "style": {
+                                            "borderRadius": "12px"
+                                          },
+                                          "classWhen": [
+                                            {
+                                              "when": "item.slots.productRef!=",
+                                              "class": "!ring-orange-500/40"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "icon",
+                                          "icon": "inventory_2",
+                                          "textSize": "text-[44px]",
+                                          "when": "item.slots.productRef=",
+                                          "className": "absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none"
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "upload",
@@ -2327,7 +2356,11 @@
                                   "values": true,
                                   "label": "",
                                   "placeholder": "หน้าตาสินค้า เช่น กระป๋องสีเขียวมินต์ ฉลากรูปหมี ฝาทอง (ใช้เขียนบทและสร้างรูป)",
-                                  "maxLength": 200
+                                  "maxLength": 200,
+                                  "className": "leading-relaxed",
+                                  "style": {
+                                    "fontSize": "12px"
+                                  }
                                 }
                               ]
                             },
@@ -2404,28 +2437,239 @@
                           }
                         },
                         {
-                          "el": "grid-select",
-                          "field": "productLevel",
-                          "values": true,
-                          "cols": 3,
-                          "options": [
+                          "el": "box",
+                          "className": "grid grid-cols-1 sm:grid-cols-3 gap-1.5",
+                          "card": [
                             {
-                              "value": "ambient",
-                              "label": "แฝงเนียน",
-                              "desc": "อยู่ในชีวิตตัวละคร ไม่มีใครเอ่ยชื่อ",
-                              "icon": "blur_on"
+                              "el": "box",
+                              "className": "relative rounded-2xl px-3 py-3.5 border border-white/10 transition-all",
+                              "classWhen": [
+                                {
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{values.productLevel}",
+                                    "b": "ambient"
+                                  },
+                                  "class": "bg-emerald-400/15 !border-emerald-400/60"
+                                }
+                              ],
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "blur_on",
+                                  "textSize": "text-[21px]",
+                                  "className": "opacity-40",
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "ambient"
+                                      },
+                                      "class": "text-emerald-300 !opacity-100"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "แฝงเนียน",
+                                  "className": "font-bold mt-1",
+                                  "style": {
+                                    "fontSize": "13.5px"
+                                  },
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "ambient"
+                                      },
+                                      "style": {
+                                        "color": "var(--ev-text)"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "อยู่ในชีวิตตัวละคร ไม่มีใครเอ่ยชื่อ",
+                                  "className": "leading-snug mt-0.5",
+                                  "style": {
+                                    "fontSize": "10.5px"
+                                  }
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "set",
+                                  "to": "productLevel",
+                                  "value": "ambient",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.productLevel}",
+                                      "b": "ambient"
+                                    }
+                                  },
+                                  "iconOnly": true,
+                                  "label": "",
+                                  "className": "absolute inset-0 w-full !h-full opacity-0"
+                                }
+                              ]
                             },
                             {
-                              "value": "story",
-                              "label": "มีบทบาท",
-                              "desc": "เป็นของขวัญ เป็นความห่วงใย เอ่ยชื่อได้",
-                              "icon": "favorite"
+                              "el": "box",
+                              "className": "relative rounded-2xl px-3 py-3.5 border border-white/10 transition-all",
+                              "classWhen": [
+                                {
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{values.productLevel}",
+                                    "b": "story"
+                                  },
+                                  "class": "bg-emerald-400/15 !border-emerald-400/60"
+                                }
+                              ],
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "favorite",
+                                  "textSize": "text-[21px]",
+                                  "className": "opacity-40",
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "story"
+                                      },
+                                      "class": "text-emerald-300 !opacity-100"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "มีบทบาท",
+                                  "className": "font-bold mt-1",
+                                  "style": {
+                                    "fontSize": "13.5px"
+                                  },
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "story"
+                                      },
+                                      "style": {
+                                        "color": "var(--ev-text)"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "เป็นของขวัญ เป็นความห่วงใย เอ่ยชื่อได้",
+                                  "className": "leading-snug mt-0.5",
+                                  "style": {
+                                    "fontSize": "10.5px"
+                                  }
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "set",
+                                  "to": "productLevel",
+                                  "value": "story",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.productLevel}",
+                                      "b": "story"
+                                    }
+                                  },
+                                  "iconOnly": true,
+                                  "label": "",
+                                  "className": "absolute inset-0 w-full !h-full opacity-0"
+                                }
+                              ]
                             },
                             {
-                              "value": "promo",
-                              "label": "ขายชัด",
-                              "desc": "พูดจุดขาย ปิดท้ายด้วยโฆษณา",
-                              "icon": "campaign"
+                              "el": "box",
+                              "className": "relative rounded-2xl px-3 py-3.5 border border-white/10 transition-all",
+                              "classWhen": [
+                                {
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{values.productLevel}",
+                                    "b": "promo"
+                                  },
+                                  "class": "bg-emerald-400/15 !border-emerald-400/60"
+                                }
+                              ],
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "campaign",
+                                  "textSize": "text-[21px]",
+                                  "className": "opacity-40",
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "promo"
+                                      },
+                                      "class": "text-emerald-300 !opacity-100"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "ขายชัด",
+                                  "className": "font-bold mt-1",
+                                  "style": {
+                                    "fontSize": "13.5px"
+                                  },
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "promo"
+                                      },
+                                      "style": {
+                                        "color": "var(--ev-text)"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "พูดจุดขาย ปิดท้ายด้วยโฆษณา",
+                                  "className": "leading-snug mt-0.5",
+                                  "style": {
+                                    "fontSize": "10.5px"
+                                  }
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "set",
+                                  "to": "productLevel",
+                                  "value": "promo",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.productLevel}",
+                                      "b": "promo"
+                                    }
+                                  },
+                                  "iconOnly": true,
+                                  "label": "",
+                                  "className": "absolute inset-0 w-full !h-full opacity-0"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -2437,7 +2681,7 @@
                               "el": "text",
                               "when": "values.productLevel=ambient",
                               "value": "สินค้าอยู่ในชีวิตประจำวันของตัวละคร โผล่ซ้ำจนคนดูจำได้ แต่ไม่มีใครเอ่ยชื่อ และไม่เกี่ยวกับปมหลัก",
-                              "className": "leading-relaxed opacity-60",
+                              "className": "leading-relaxed",
                               "style": {
                                 "fontSize": "12px"
                               }
@@ -2446,7 +2690,7 @@
                               "el": "text",
                               "when": "values.productLevel=story",
                               "value": "สินค้ามีความหมายกับความสัมพันธ์ในเรื่อง เอ่ยชื่อได้ 1 ครั้งต่อตอนแบบที่คนสั่งของกันจริง",
-                              "className": "leading-relaxed opacity-60",
+                              "className": "leading-relaxed",
                               "style": {
                                 "fontSize": "12px"
                               }
@@ -2455,7 +2699,7 @@
                               "el": "text",
                               "when": "values.productLevel=promo",
                               "value": "ตัวละครพูดถึงข้อดีของสินค้าได้ 1 ประโยค และปิดท้ายตอนด้วยช็อตสินค้าเต็มจอ",
-                              "className": "leading-relaxed opacity-60",
+                              "className": "leading-relaxed",
                               "style": {
                                 "fontSize": "12px"
                               }
@@ -2561,21 +2805,6 @@
                             {
                               "el": "text",
                               "value": "ตั้งให้แล้วตามระดับ",
-                              "when": {
-                                "op": "and",
-                                "list": [
-                                  {
-                                    "op": "eq",
-                                    "a": "{values.productShots}",
-                                    "b": ""
-                                  },
-                                  {
-                                    "op": "eq",
-                                    "a": "{values.productEndCard}",
-                                    "b": ""
-                                  }
-                                ]
-                              },
                               "className": "ml-auto font-mono opacity-40",
                               "style": {
                                 "fontSize": "10.5px"
@@ -2987,7 +3216,11 @@
                                   "field": "productSelling",
                                   "values": true,
                                   "maxLength": 120,
-                                  "placeholder": "เช่น หอมกลมกล่อม ไม่ต้องใส่น้ำตาลก็อร่อย"
+                                  "placeholder": "เช่น หอมกลมกล่อม ไม่ต้องใส่น้ำตาลก็อร่อย",
+                                  "className": "h-[42px] !rounded-xl !px-3.5",
+                                  "style": {
+                                    "fontSize": "12.5px"
+                                  }
                                 }
                               ]
                             },
@@ -3033,11 +3266,16 @@
                                   "field": "productCta",
                                   "values": true,
                                   "maxLength": 90,
-                                  "placeholder": "เช่น กาแฟหมีคาเฟ่ — เริ่มเช้าที่ดีของคุณ"
+                                  "placeholder": "เช่น กาแฟหมีคาเฟ่ — เริ่มเช้าที่ดีของคุณ",
+                                  "className": "h-[42px] !rounded-xl !px-3.5",
+                                  "style": {
+                                    "fontSize": "12.5px"
+                                  }
                                 }
                               ]
                             }
-                          ]
+                          ],
+                          "className": "!border-0 !p-0"
                         },
                         {
                           "el": "md",
@@ -3118,10 +3356,7 @@
                         {
                           "el": "text",
                           "value": {
-                            "op": "pluck",
-                            "from": "customCast",
-                            "field": "name",
-                            "sep": " · "
+                            "op": "castSummary"
                           },
                           "style": {
                             "fontSize": "11px"
@@ -3138,10 +3373,7 @@
                                 "a": {
                                   "op": "eq",
                                   "a": {
-                                    "op": "pluck",
-                                    "from": "customCast",
-                                    "field": "name",
-                                    "sep": " · "
+                                    "op": "castSummary"
                                   },
                                   "b": ""
                                 }
@@ -3166,10 +3398,7 @@
                               {
                                 "op": "eq",
                                 "a": {
-                                  "op": "pluck",
-                                  "from": "customCast",
-                                  "field": "name",
-                                  "sep": " · "
+                                  "op": "castSummary"
                                 },
                                 "b": ""
                               }
@@ -3196,8 +3425,14 @@
                       "size": "sm",
                       "icon": "save",
                       "when": {
-                        "op": "count",
-                        "from": "customCast"
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": {
+                            "op": "castSummary"
+                          },
+                          "b": ""
+                        }
                       },
                       "className": "shrink-0"
                     },
@@ -3219,20 +3454,39 @@
                       "card": [
                         {
                           "el": "box",
-                          "className": "flex gap-3 items-start rounded-2xl bg-white/[0.025] border border-white/10 p-3 mb-2",
+                          "className": "group relative flex gap-3 items-start rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/10 hover:border-white/20 p-3 mb-2 transition-colors",
                           "card": [
                             {
                               "el": "box",
-                              "className": "w-20 shrink-0 flex flex-col gap-1.5",
+                              "className": "w-32 shrink-0 flex flex-col gap-1.5",
                               "card": [
                                 {
-                                  "el": "media-slot",
-                                  "src": "{item.slots.srcRef}",
-                                  "aspect": "1:1",
-                                  "style": {
-                                    "borderRadius": "12px"
-                                  },
-                                  "className": "ring-1 ring-white/10"
+                                  "el": "box",
+                                  "className": "relative",
+                                  "card": [
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.srcRef}",
+                                      "aspect": "9:16",
+                                      "style": {
+                                        "borderRadius": "12px"
+                                      },
+                                      "className": "ring-1 ring-white/10",
+                                      "classWhen": [
+                                        {
+                                          "when": "item.slots.srcRef!=",
+                                          "class": "!ring-orange-500/40"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "icon",
+                                      "icon": "person",
+                                      "textSize": "text-[44px]",
+                                      "when": "item.slots.srcRef=",
+                                      "className": "absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none"
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "upload",
@@ -3289,42 +3543,43 @@
                                       ]
                                     },
                                     {
+                                      "el": "dropdown",
+                                      "field": "role",
+                                      "options": [
+                                        {
+                                          "value": "lead",
+                                          "label": "ตัวเอก",
+                                          "desc": "พระเอก/นางเอก — คนขับเรื่อง"
+                                        },
+                                        {
+                                          "value": "support",
+                                          "label": "ตัวรอง",
+                                          "desc": "พระรอง/นางรอง/เพื่อนสนิท"
+                                        },
+                                        {
+                                          "value": "villain",
+                                          "label": "ตัวร้าย",
+                                          "desc": "ฝ่ายตรงข้ามของตัวเอก"
+                                        },
+                                        {
+                                          "value": "elder",
+                                          "label": "ผู้ใหญ่",
+                                          "desc": "พ่อแม่/ผู้สูงวัย"
+                                        },
+                                        {
+                                          "value": "extra",
+                                          "label": "ตัวประกอบ",
+                                          "desc": "คนทั่วไปในเรื่อง"
+                                        }
+                                      ],
+                                      "placeholder": "บทบาท",
+                                      "className": "shrink-0 w-28"
+                                    },
+                                    {
                                       "el": "delete-button",
                                       "iconOnly": true,
                                       "variant": "ghost",
                                       "className": "shrink-0 opacity-40 hover:opacity-100"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "dropdown",
-                                  "field": "role",
-                                  "label": "บทบาท",
-                                  "options": [
-                                    {
-                                      "value": "lead",
-                                      "label": "ตัวเอก",
-                                      "desc": "พระเอก/นางเอก — คนขับเรื่อง"
-                                    },
-                                    {
-                                      "value": "support",
-                                      "label": "ตัวรอง",
-                                      "desc": "พระรอง/นางรอง/เพื่อนสนิท"
-                                    },
-                                    {
-                                      "value": "villain",
-                                      "label": "ตัวร้าย",
-                                      "desc": "ฝ่ายตรงข้ามของตัวเอก"
-                                    },
-                                    {
-                                      "value": "elder",
-                                      "label": "ผู้ใหญ่",
-                                      "desc": "พ่อแม่/ผู้สูงวัย"
-                                    },
-                                    {
-                                      "value": "extra",
-                                      "label": "ตัวประกอบ",
-                                      "desc": "คนทั่วไปในเรื่อง"
                                     }
                                   ]
                                 },
@@ -3339,7 +3594,75 @@
                                   "field": "appearance",
                                   "label": "",
                                   "maxLength": 200,
-                                  "placeholder": "รูปลักษณ์ (ใช้สร้างรูป) เช่น หญิงไทยวัย 28 ผมยาวสีน้ำตาล ตาคม ลักยิ้มข้างขวา สวมเสื้อเชิ้ตขาว"
+                                  "placeholder": "รูปลักษณ์ (ใช้สร้างรูป) เช่น หญิงไทยวัย 28 ผมยาวสีน้ำตาล ตาคม ลักยิ้มข้างขวา สวมเสื้อเชิ้ตขาว",
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "eq",
+                                        "a": {
+                                          "op": "castLookState"
+                                        },
+                                        "b": "thin"
+                                      },
+                                      "class": "!border-amber-400/50"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "row",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "castLookState"
+                                    },
+                                    "b": "thin"
+                                  },
+                                  "className": "items-start gap-1.5 flex-nowrap",
+                                  "card": [
+                                    {
+                                      "el": "icon",
+                                      "icon": "info",
+                                      "textSize": "text-[13px]",
+                                      "className": "text-amber-300 shrink-0 mt-px"
+                                    },
+                                    {
+                                      "el": "md",
+                                      "value": "รูปลักษณ์สั้นไป — **AI จะคิดหน้าตาและเสื้อผ้าเองทุกช็อต ชุดจะไม่เหมือนกัน** · เขียนเพิ่มอีกนิด (วัย ผม ตา จุดเด่น **และชุดที่ใส่**)",
+                                      "className": "leading-relaxed",
+                                      "style": {
+                                        "fontSize": "10.5px",
+                                        "color": "rgba(254,243,199,0.7)"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "row",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "castLookState"
+                                    },
+                                    "b": "noOutfit"
+                                  },
+                                  "className": "items-start gap-1.5 flex-nowrap",
+                                  "card": [
+                                    {
+                                      "el": "icon",
+                                      "icon": "info",
+                                      "textSize": "text-[13px]",
+                                      "className": "text-amber-300 shrink-0 mt-px"
+                                    },
+                                    {
+                                      "el": "md",
+                                      "value": "ยังไม่ได้บอก**ชุดที่ใส่** — เติมท้ายว่า \"สวม...\" เพื่อให้ตัวละครใส่ชุดเดิมทุกช็อต",
+                                      "className": "leading-relaxed",
+                                      "style": {
+                                        "fontSize": "10.5px",
+                                        "color": "rgba(254,243,199,0.7)"
+                                      }
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "input",
