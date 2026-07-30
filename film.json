@@ -226,7 +226,8 @@
     "productShots": "",
     "productEndCard": "",
     "productSelling": "",
-    "productCta": ""
+    "productCta": "",
+    "narrationPov": "god"
   },
   "lookups": {
     "opBanner": {
@@ -380,6 +381,17 @@
       "ambient": "แฝงเนียน",
       "story": "มีบทบาท",
       "promo": "ขายชัด"
+    },
+    "povNarration": {
+      "god": "มุมมองพระเจ้า",
+      "third": "บุคคลที่ 3 ตามตัวเอก",
+      "first": "บุคคลที่ 1 ตัวเอกเล่าเอง",
+      "second": "บุคคลที่ 2 พูดกับคนดู",
+      "host": "ตัวละครเล่าหน้ากล้อง (พิธีกร)"
+    },
+    "povDialogue": {
+      "god": "มุมมองพระเจ้า",
+      "third": "มุมมองตัวเอก"
     }
   },
   "components": {
@@ -1383,7 +1395,68 @@
       "over": "project",
       "out": "revised",
       "parse": "json",
-      "when": "mode!=follow",
+      "when": {
+        "op": "and",
+        "list": [
+          {
+            "op": "not",
+            "a": {
+              "op": "eq",
+              "a": "{values.mode}",
+              "b": "follow"
+            }
+          },
+          {
+            "op": "not",
+            "a": {
+              "op": "or",
+              "list": [
+                {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.narration}",
+                      "b": "narration"
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.narrationPov}",
+                        "b": "god"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.narrationPov}",
+                        "b": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.narration}",
+                      "b": "dialogue"
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.narrationPov}",
+                      "b": "third"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
       "systemInstruction": "{brain.revise.sys}",
       "prompt": "{brain.revise.prompt}",
       "interpFrom": "item.data.rv",
@@ -1394,7 +1467,68 @@
       "type": "transform",
       "over": "project",
       "out": "applied",
-      "when": "mode!=follow",
+      "when": {
+        "op": "and",
+        "list": [
+          {
+            "op": "not",
+            "a": {
+              "op": "eq",
+              "a": "{values.mode}",
+              "b": "follow"
+            }
+          },
+          {
+            "op": "not",
+            "a": {
+              "op": "or",
+              "list": [
+                {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.narration}",
+                      "b": "narration"
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.narrationPov}",
+                        "b": "god"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.narrationPov}",
+                        "b": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.narration}",
+                      "b": "dialogue"
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.narrationPov}",
+                      "b": "third"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
       "fn": "applyRevise"
     },
     {
@@ -3821,6 +3955,68 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "el": "dropdown",
+                          "field": "narrationPov",
+                          "label": "มุมมองการเล่าเรื่อง",
+                          "values": true,
+                          "showDesc": true,
+                          "when": "narration=narration",
+                          "options": [
+                            {
+                              "value": "god",
+                              "label": "มุมมองพระเจ้า",
+                              "desc": "ผู้เล่ารู้ทุกอย่าง เห็นเหตุการณ์และความคิดของทุกตัวละคร (ค่าเริ่มต้น)",
+                              "icon": "visibility"
+                            },
+                            {
+                              "value": "third",
+                              "label": "บุคคลที่ 3 ตามตัวเอก",
+                              "desc": "ผู้เล่าตามติดตัวเอก รู้เท่าที่ตัวเอกเห็น — เก็บความลับไว้หักมุมได้",
+                              "icon": "person_search"
+                            },
+                            {
+                              "value": "first",
+                              "label": "บุคคลที่ 1 ตัวเอกเล่าเอง",
+                              "desc": "เล่าด้วย \"ฉัน/ผม\" เหมือนตัวเอกเล่าชีวิตตัวเองให้ฟัง",
+                              "icon": "face"
+                            },
+                            {
+                              "value": "second",
+                              "label": "บุคคลที่ 2 พูดกับคนดู",
+                              "desc": "ผู้เล่าพูดกับคนดูว่า \"คุณ...\" — สายเรื่องเล่า/สยองขวัญ",
+                              "icon": "campaign"
+                            },
+                            {
+                              "value": "host",
+                              "label": "ตัวละครเล่าหน้ากล้อง (พิธีกร)",
+                              "desc": "ตัวละครหันหน้าพูดกับคนดูโดยตรง — คลิปสอน สารคดี เล่าเรื่อง",
+                              "icon": "co_present"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "dropdown",
+                          "field": "narrationPov",
+                          "label": "มุมมองการเล่าเรื่อง",
+                          "values": true,
+                          "showDesc": true,
+                          "when": "narration=dialogue",
+                          "options": [
+                            {
+                              "value": "god",
+                              "label": "มุมมองพระเจ้า",
+                              "desc": "เห็นหมดทุกตัวละครทุกฉาก — ใครพูด ใครแอบทำอะไรลับหลัง คนดูเห็นครบ (ค่าเริ่มต้น)",
+                              "icon": "visibility"
+                            },
+                            {
+                              "value": "third",
+                              "label": "มุมมองตัวเอก",
+                              "desc": "คนดูเห็นและรู้เท่าที่ตัวเอกเห็น — ทุกฉากมีตัวเอกอยู่ เสียงในใจมีเฉพาะตัวเอก เหมาะสายหักมุม/สืบสวน",
+                              "icon": "person_search"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -3958,6 +4154,9 @@
                                 "table": "narrationLabels",
                                 "key": "{narration}",
                                 "fallback": "{narration}"
+                              },
+                              {
+                                "op": "povGemLine"
                               },
                               "\nภาษา: ",
                               {
@@ -4167,6 +4366,37 @@
                     "fallback": "{values.narration}"
                   },
                   "label": "การเล่าเรื่อง"
+                },
+                {
+                  "el": "stat-card",
+                  "icon": "visibility",
+                  "label": "มุมมองการเล่าเรื่อง",
+                  "when": "narration=narration",
+                  "value": {
+                    "op": "lookup",
+                    "table": "povNarration",
+                    "key": "{narrationPov}",
+                    "fallback": "มุมมองพระเจ้า"
+                  }
+                },
+                {
+                  "el": "stat-card",
+                  "icon": "visibility",
+                  "label": "มุมมองการเล่าเรื่อง",
+                  "when": "narration=dialogue",
+                  "value": {
+                    "op": "lookup",
+                    "table": "povDialogue",
+                    "key": "{narrationPov}",
+                    "fallback": "มุมมองพระเจ้า"
+                  }
+                },
+                {
+                  "el": "stat-card",
+                  "icon": "visibility",
+                  "label": "มุมมองการเล่าเรื่อง",
+                  "when": "narration=silent",
+                  "value": "—"
                 },
                 {
                   "el": "stat-card",
