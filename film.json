@@ -375,6 +375,11 @@
       "genImage": "2/3",
       "genVideo": "3/3",
       "genCover": "3/3"
+    },
+    "productLevelName": {
+      "ambient": "แฝงเนียน",
+      "story": "มีบทบาท",
+      "promo": "ขายชัด"
     }
   },
   "components": {
@@ -2054,95 +2059,285 @@
                   ]
                 },
                 {
-                  "el": "section",
-                  "icon": "shopping_bag",
+                  "el": "group",
                   "label": "ใส่สินค้าในเรื่อง",
-                  "summary": "{values.productName}",
-                  "card": [
+                  "className": "transition-colors",
+                  "classWhen": [
                     {
-                      "el": "note",
-                      "tone": "info",
-                      "value": "ใส่สินค้าของคุณลงในละครแบบเนียน ๆ — ระบบคุมให้สินค้าอยู่ฝั่งอารมณ์บวกเสมอ ไม่ไปอยู่ในฉากตบตี/จับผิด/ของตัวร้าย"
-                    },
+                      "when": "values.productOn=true",
+                      "class": "!border-emerald-400/30 bg-emerald-400/[0.045]"
+                    }
+                  ],
+                  "head": [
                     {
-                      "el": "switch",
-                      "field": "productOn",
-                      "label": "เปิดใช้",
-                      "values": true
+                      "el": "icon",
+                      "icon": "shopping_bag",
+                      "textSize": "text-[20px]",
+                      "className": "text-emerald-300"
                     },
                     {
                       "el": "box",
-                      "when": "values.productOn=true",
-                      "className": "flex flex-col gap-3",
+                      "className": "flex-1 min-w-0 flex flex-col gap-0.5",
                       "card": [
                         {
-                          "el": "input",
-                          "field": "productName",
-                          "label": "ชื่อสินค้า",
-                          "values": true,
-                          "placeholder": "เช่น ครีมกันแดดหมีขาว",
-                          "maxLength": 60
-                        },
-                        {
-                          "el": "textarea",
-                          "field": "productLook",
-                          "label": "หน้าตาสินค้า",
-                          "values": true,
-                          "placeholder": "หลอดสีขาวฝาฟ้า ฉลากรูปหมีใส่แว่น",
-                          "maxLength": 200
-                        },
-                        {
                           "el": "row",
-                          "className": "items-end gap-3",
+                          "className": "gap-2",
                           "card": [
                             {
-                              "el": "media-slot",
-                              "src": "{item.slots.productRef}",
-                              "aspect": "1:1",
-                              "className": "w-24 shrink-0 ring-1 ring-white/10",
+                              "el": "text",
+                              "value": "ใส่สินค้าในเรื่อง",
+                              "className": "font-bold",
                               "style": {
-                                "borderRadius": "16px"
+                                "fontSize": "13.5px",
+                                "color": "var(--ev-text)"
                               }
                             },
                             {
-                              "el": "box",
-                              "className": "flex flex-col gap-2 flex-1",
-                              "card": [
-                                {
-                                  "el": "upload",
-                                  "into": "productRef",
-                                  "label": "รูปสินค้าจริง",
-                                  "placeholder": "เลือกรูป",
-                                  "icon": "add_photo_alternate",
-                                  "resize": {
-                                    "maxPx": 768,
-                                    "quality": 0.82
-                                  },
-                                  "className": "w-full justify-center h-[38px] rounded-full"
-                                },
-                                {
-                                  "el": "button",
-                                  "action": "hook",
-                                  "fn": "clearSlot",
-                                  "to": "productRef",
-                                  "label": "เอารูปออก",
-                                  "variant": "ghost",
-                                  "size": "sm",
-                                  "when": "item.slots.productRef!=",
-                                  "className": "opacity-60 hover:opacity-100"
-                                }
-                              ]
+                              "el": "text",
+                              "value": "ใหม่",
+                              "className": "font-mono tracking-wider px-1.5 py-0.5 rounded bg-emerald-400/20",
+                              "style": {
+                                "fontSize": "9.5px",
+                                "color": "#6ee7b7"
+                              }
                             }
                           ]
                         },
                         {
+                          "el": "text",
+                          "value": "ทำละครที่มีสินค้าของคุณอยู่ในนั้น — ปิดอยู่",
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": "values.productOn!=true",
+                          "className": "truncate"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "ยังไม่ตั้งชื่อสินค้า · ",
+                              {
+                                "op": "lookup",
+                                "table": "productLevelName",
+                                "key": "{values.productLevel}",
+                                "fallback": "มีบทบาท"
+                              }
+                            ]
+                          },
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.productOn}",
+                                "b": "true"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.productName}",
+                                "b": ""
+                              }
+                            ]
+                          },
+                          "className": "truncate"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "{values.productName}",
+                              " · ",
+                              {
+                                "op": "lookup",
+                                "table": "productLevelName",
+                                "key": "{values.productLevel}",
+                                "fallback": "มีบทบาท"
+                              }
+                            ]
+                          },
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.productOn}",
+                                "b": "true"
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{values.productName}",
+                                  "b": ""
+                                }
+                              }
+                            ]
+                          },
+                          "className": "truncate"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "switch",
+                      "field": "productOn",
+                      "label": " ",
+                      "values": true,
+                      "className": "shrink-0",
+                      "classWhen": [
+                        {
+                          "when": "values.productOn=true",
+                          "class": "[&>button]:!bg-emerald-400"
+                        }
+                      ]
+                    }
+                  ],
+                  "card": [
+                    {
+                      "el": "box",
+                      "when": "values.productOn=true",
+                      "className": "flex flex-col gap-4",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "สินค้าของคุณ",
+                          "className": "font-bold uppercase tracking-[0.1em] opacity-60",
+                          "style": {
+                            "fontSize": "10.5px"
+                          }
+                        },
+                        {
+                          "el": "box",
+                          "className": "relative bg-white/[0.025] border border-white/10 rounded-2xl p-3 flex gap-3 items-stretch",
+                          "card": [
+                            {
+                              "el": "repeat",
+                              "coll": "project",
+                              "card": [
+                                {
+                                  "el": "box",
+                                  "className": "shrink-0 w-24 flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "media-slot",
+                                      "src": "{item.slots.productRef}",
+                                      "aspect": "1:1",
+                                      "className": "ring-1 ring-white/10",
+                                      "style": {
+                                        "borderRadius": "12px"
+                                      }
+                                    },
+                                    {
+                                      "el": "upload",
+                                      "into": "productRef",
+                                      "label": "",
+                                      "placeholder": "เลือกรูป",
+                                      "icon": "add_photo_alternate",
+                                      "resize": {
+                                        "maxPx": 768,
+                                        "quality": 0.82
+                                      },
+                                      "when": "item.slots.productRef=",
+                                      "className": "w-full justify-center h-[26px] rounded-lg text-[10px]"
+                                    },
+                                    {
+                                      "el": "upload",
+                                      "into": "productRef",
+                                      "label": "",
+                                      "placeholder": "เปลี่ยนรูป",
+                                      "icon": "cached",
+                                      "resize": {
+                                        "maxPx": 768,
+                                        "quality": 0.82
+                                      },
+                                      "when": "item.slots.productRef!=",
+                                      "className": "w-full justify-center h-[26px] rounded-lg text-[10px]"
+                                    },
+                                    {
+                                      "el": "button",
+                                      "action": "hook",
+                                      "fn": "clearSlot",
+                                      "to": "productRef",
+                                      "label": "เอารูปออก",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[10px]",
+                                      "when": "item.slots.productRef!=",
+                                      "className": "opacity-60 hover:opacity-100"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "className": "flex-1 min-w-0 flex flex-col gap-2",
+                              "card": [
+                                {
+                                  "el": "input",
+                                  "field": "productName",
+                                  "values": true,
+                                  "variant": "bare",
+                                  "placeholder": "ตั้งชื่อสินค้า...",
+                                  "maxLength": 60,
+                                  "className": "font-bold pr-16",
+                                  "style": {
+                                    "fontSize": "15px"
+                                  },
+                                  "classWhen": [
+                                    {
+                                      "when": "values.productName=",
+                                      "class": "!border-b !border-amber-400/50"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "textarea",
+                                  "field": "productLook",
+                                  "values": true,
+                                  "label": "",
+                                  "placeholder": "หน้าตาสินค้า เช่น กระป๋องสีเขียวมินต์ ฉลากรูปหมี ฝาทอง (ใช้เขียนบทและสร้างรูป)",
+                                  "maxLength": 200
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": "สินค้า",
+                              "className": "absolute top-1.5 right-1.5 h-[26px] flex items-center gap-1 px-2 rounded-lg bg-emerald-400/15 font-bold pointer-events-none",
+                              "style": {
+                                "fontSize": "10.5px",
+                                "color": "#6ee7b7"
+                              },
+                              "icon": "lock"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "border-t border-white/[0.07]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "สินค้าจะอยู่ในเรื่องแบบไหน",
+                          "className": "font-bold uppercase tracking-[0.1em] opacity-60",
+                          "style": {
+                            "fontSize": "10.5px"
+                          }
+                        },
+                        {
                           "el": "grid-select",
                           "field": "productLevel",
-                          "label": "ระดับการขาย",
                           "values": true,
-                          "horizontal": true,
-                          "cols": 1,
-                          "contained": true,
+                          "cols": 3,
                           "options": [
                             {
                               "value": "ambient",
@@ -2165,20 +2360,8 @@
                           ]
                         },
                         {
-                          "el": "textarea",
-                          "field": "productSelling",
-                          "label": "จุดขาย (ไม่ใส่ก็ได้)",
-                          "values": true,
-                          "when": "values.productLevel=promo",
-                          "maxLength": 120
-                        },
-                        {
-                          "el": "input",
-                          "field": "productCta",
-                          "label": "ประโยคปิดท้าย (ไม่ใส่ = ระบบเขียนให้)",
-                          "values": true,
-                          "when": "values.productLevel=promo",
-                          "maxLength": 90
+                          "el": "box",
+                          "className": "border-t border-white/[0.07]"
                         },
                         {
                           "el": "row",
@@ -2237,67 +2420,202 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "el": "textarea",
+                          "field": "productSelling",
+                          "label": "จุดขาย 1 บรรทัด",
+                          "values": true,
+                          "placeholder": "เช่น หอมกลมกล่อม ไม่ต้องใส่น้ำตาลก็อร่อย",
+                          "when": "values.productLevel=promo",
+                          "maxLength": 120
+                        },
+                        {
+                          "el": "box",
+                          "when": "values.productLevel=promo",
+                          "className": "flex flex-col gap-2",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "ประโยคปิดการขาย",
+                              "className": "font-bold opacity-60",
+                              "style": {
+                                "fontSize": "11.5px"
+                              }
+                            },
+                            {
+                              "el": "input",
+                              "field": "productCta",
+                              "values": true,
+                              "maxLength": 90,
+                              "placeholder": "เช่น กาแฟหมีคาเฟ่ — เริ่มเช้าที่ดีของคุณ"
+                            }
+                          ]
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "el": "section",
-                  "icon": "groups",
+                  "el": "group",
                   "label": "ตัวละครที่กำหนดเอง",
-                  "summary": "ล็อกชื่อ/หน้าตาไว้เอง AI ห้ามเปลี่ยน",
-                  "card": [
+                  "className": "transition-colors",
+                  "classWhen": [
                     {
-                      "el": "note",
-                      "tone": "info",
-                      "value": "ใส่ตัวละครประจำเพจ/มาสคอต/ตัวคุณเอง — AI จะปรับ \"เรื่อง\" ให้เข้ากับตัวละคร ไม่ใช่ปรับตัวละครให้เข้ากับเรื่อง"
+                      "when": {
+                        "op": "count",
+                        "from": "customCast"
+                      },
+                      "class": "!border-sky-400/30 bg-sky-400/[0.045]"
+                    }
+                  ],
+                  "head": [
+                    {
+                      "el": "icon",
+                      "icon": "groups",
+                      "textSize": "text-[20px]",
+                      "className": "text-sky-300"
                     },
                     {
-                      "el": "row",
-                      "className": "justify-between items-center",
+                      "el": "box",
+                      "className": "flex-1 min-w-0 flex flex-col gap-0.5",
                       "card": [
                         {
-                          "el": "text",
-                          "value": "CUSTOM CAST",
-                          "className": "text-[11px] font-medium tracking-wider opacity-50 uppercase"
-                        },
-                        {
                           "el": "row",
-                          "className": "gap-1.5",
+                          "className": "gap-2",
                           "card": [
                             {
-                              "el": "save-button",
-                              "scope": "customCast",
-                              "label": "บันทึกคลัง",
-                              "variant": "ghost",
-                              "size": "sm",
-                              "icon": "download",
-                              "when": {
-                                "op": "count",
-                                "from": "customCast"
+                              "el": "text",
+                              "value": "ตัวละครที่กำหนดเอง",
+                              "className": "font-bold",
+                              "style": {
+                                "fontSize": "13.5px",
+                                "color": "var(--ev-text)"
                               }
                             },
                             {
-                              "el": "load-button",
-                              "label": "โหลดคลัง",
-                              "expect": "customCast",
-                              "mode": "append",
-                              "into": "customCast",
-                              "icon": "upload_file"
-                            },
-                            {
-                              "el": "add-button",
-                              "coll": "customCast",
-                              "label": "เพิ่มตัวละคร",
-                              "variant": "ghost",
-                              "size": "sm",
-                              "icon": "person_add"
+                              "el": "text",
+                              "value": "ใหม่",
+                              "className": "font-mono tracking-wider px-1.5 py-0.5 rounded bg-sky-400/20",
+                              "style": {
+                                "fontSize": "9.5px",
+                                "color": "#7dd3fc"
+                              }
                             }
                           ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "มีตัวละครที่ทำไว้แล้ว? ล็อกไว้ให้ AI ใช้ตัวนี้ ไม่ต้องสร้างใหม่",
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": {
+                            "op": "not",
+                            "a": {
+                              "op": "count",
+                              "from": "customCast"
+                            }
+                          },
+                          "className": "truncate"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "pluck",
+                            "from": "customCast",
+                            "field": "name",
+                            "sep": " · "
+                          },
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "count",
+                                "from": "customCast"
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": {
+                                    "op": "pluck",
+                                    "from": "customCast",
+                                    "field": "name",
+                                    "sep": " · "
+                                  },
+                                  "b": ""
+                                }
+                              }
+                            ]
+                          },
+                          "className": "truncate"
+                        },
+                        {
+                          "el": "text",
+                          "value": "ยังไม่ตั้งชื่อตัวละคร",
+                          "style": {
+                            "fontSize": "11px"
+                          },
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "count",
+                                "from": "customCast"
+                              },
+                              {
+                                "op": "eq",
+                                "a": {
+                                  "op": "pluck",
+                                  "from": "customCast",
+                                  "field": "name",
+                                  "sep": " · "
+                                },
+                                "b": ""
+                              }
+                            ]
+                          },
+                          "className": "truncate"
                         }
                       ]
                     },
+                    {
+                      "el": "load-button",
+                      "label": "โหลด",
+                      "expect": "customCast",
+                      "mode": "append",
+                      "into": "customCast",
+                      "icon": "folder_open",
+                      "className": "shrink-0"
+                    },
+                    {
+                      "el": "save-button",
+                      "scope": "customCast",
+                      "label": "บันทึก",
+                      "variant": "ghost",
+                      "size": "sm",
+                      "icon": "save",
+                      "when": {
+                        "op": "count",
+                        "from": "customCast"
+                      },
+                      "className": "shrink-0"
+                    },
+                    {
+                      "el": "add-button",
+                      "coll": "customCast",
+                      "label": "เพิ่มตัวละคร",
+                      "variant": "ghost",
+                      "size": "sm",
+                      "icon": "add",
+                      "className": "shrink-0 !border !border-sky-400/40 text-sky-300"
+                    }
+                  ],
+                  "card": [
                     {
                       "el": "repeat",
                       "coll": "customCast",
@@ -2305,7 +2623,7 @@
                       "card": [
                         {
                           "el": "box",
-                          "className": "flex gap-3 items-start rounded-2xl border border-[var(--ev-border)] p-3 mb-2",
+                          "className": "flex gap-3 items-start rounded-2xl bg-white/[0.025] border border-white/10 p-3 mb-2",
                           "card": [
                             {
                               "el": "box",
@@ -2362,11 +2680,17 @@
                                       "el": "input",
                                       "field": "name",
                                       "variant": "bare",
-                                      "placeholder": "ชื่อตัวละคร (สะกดแบบที่อยากให้ใช้)",
+                                      "placeholder": "ชื่อตัวละคร...",
                                       "className": "flex-1 min-w-0",
                                       "style": {
                                         "fontWeight": "700"
-                                      }
+                                      },
+                                      "classWhen": [
+                                        {
+                                          "when": "item.name=",
+                                          "class": "!border-b !border-amber-400/50"
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "delete-button",
@@ -2409,26 +2733,47 @@
                                   ]
                                 },
                                 {
-                                  "el": "textarea",
-                                  "field": "appearance",
-                                  "label": "หน้าตา/รูปลักษณ์",
-                                  "maxLength": 200
+                                  "el": "input",
+                                  "field": "description",
+                                  "maxLength": 150,
+                                  "placeholder": "บุคลิก เช่น สุขุม เก็บความรู้สึก แต่ใจอ่อนกับครอบครัว"
                                 },
                                 {
                                   "el": "textarea",
-                                  "field": "description",
-                                  "label": "บุคลิก",
-                                  "maxLength": 150
+                                  "field": "appearance",
+                                  "label": "",
+                                  "maxLength": 200,
+                                  "placeholder": "รูปลักษณ์ (ใช้สร้างรูป) เช่น หญิงไทยวัย 28 ผมยาวสีน้ำตาล ตาคม ลักยิ้มข้างขวา สวมเสื้อเชิ้ตขาว"
                                 },
                                 {
                                   "el": "input",
                                   "field": "voice",
-                                  "label": "วิธีพูด (ไม่ใส่ = AI เติมให้)",
+                                  "placeholder": "วิธีพูด (ไม่ใส่ = AI เติมให้)",
                                   "maxLength": 60
                                 }
                               ]
                             }
                           ]
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-start gap-2 flex-nowrap",
+                      "card": [
+                        {
+                          "el": "icon",
+                          "icon": "info",
+                          "textSize": "text-[15px]",
+                          "className": "text-sky-300 shrink-0"
+                        },
+                        {
+                          "el": "md",
+                          "value": "AI จะ**ใช้ตัวละครเหล่านี้เป็นตัวตั้งและปรับเรื่องให้เข้ากับพวกเขา** (ไม่ใช่เปลี่ยนตัวละครให้เข้ากับเรื่อง) · ตัวละครอื่นที่เรื่องต้องใช้เพิ่ม AI ออกแบบเองตามปกติ · ไม่ใส่รูปก็ได้ AI จะสร้างให้จากคำบรรยาย",
+                          "className": "opacity-50 leading-relaxed",
+                          "style": {
+                            "fontSize": "11px"
+                          }
                         }
                       ]
                     }
