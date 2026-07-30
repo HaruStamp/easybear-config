@@ -2546,91 +2546,496 @@
                           "className": "border-t border-white/[0.07]"
                         },
                         {
-                          "el": "row",
-                          "className": "gap-3 flex-wrap",
-                          "card": [
-                            {
-                              "el": "dropdown",
-                              "field": "productShots",
-                              "label": "ช็อตที่มีสินค้า/ตอน",
-                              "values": true,
-                              "options": [
-                                {
-                                  "value": "",
-                                  "label": "อัตโนมัติตามระดับ"
-                                },
-                                {
-                                  "value": "1",
-                                  "label": "1"
-                                },
-                                {
-                                  "value": "2",
-                                  "label": "2"
-                                },
-                                {
-                                  "value": "3",
-                                  "label": "3"
-                                },
-                                {
-                                  "value": "4",
-                                  "label": "4"
-                                },
-                                {
-                                  "value": "5",
-                                  "label": "5"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "dropdown",
-                              "field": "productEndCard",
-                              "label": "ช็อตขายปิดท้าย",
-                              "values": true,
-                              "options": [
-                                {
-                                  "value": "",
-                                  "label": "อัตโนมัติตามระดับ"
-                                },
-                                {
-                                  "value": "on",
-                                  "label": "มี"
-                                },
-                                {
-                                  "value": "off",
-                                  "label": "ไม่มี"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "el": "textarea",
-                          "field": "productSelling",
-                          "label": "จุดขาย 1 บรรทัด",
-                          "values": true,
-                          "placeholder": "เช่น หอมกลมกล่อม ไม่ต้องใส่น้ำตาลก็อร่อย",
-                          "when": "values.productLevel=promo",
-                          "maxLength": 120
-                        },
-                        {
-                          "el": "box",
-                          "when": "values.productLevel=promo",
-                          "className": "flex flex-col gap-2",
-                          "card": [
+                          "el": "group",
+                          "collapsible": true,
+                          "startOpen": false,
+                          "head": [
                             {
                               "el": "text",
-                              "value": "ประโยคปิดการขาย",
+                              "value": "ตั้งค่าละเอียด",
                               "className": "font-bold opacity-60",
                               "style": {
-                                "fontSize": "11.5px"
+                                "fontSize": "12.5px"
                               }
                             },
                             {
-                              "el": "input",
-                              "field": "productCta",
-                              "values": true,
-                              "maxLength": 90,
-                              "placeholder": "เช่น กาแฟหมีคาเฟ่ — เริ่มเช้าที่ดีของคุณ"
+                              "el": "text",
+                              "value": "ตั้งให้แล้วตามระดับ",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.productShots}",
+                                    "b": ""
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.productEndCard}",
+                                    "b": ""
+                                  }
+                                ]
+                              },
+                              "className": "ml-auto font-mono opacity-40",
+                              "style": {
+                                "fontSize": "10.5px"
+                              }
+                            }
+                          ],
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "flex flex-col gap-2",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "สินค้าโผล่กี่ช็อตต่อตอน",
+                                  "className": "font-bold opacity-60",
+                                  "style": {
+                                    "fontSize": "11.5px"
+                                  }
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "grid grid-cols-4 gap-2",
+                                  "card": [
+                                    {
+                                      "el": "button",
+                                      "action": "set",
+                                      "to": "productShots",
+                                      "value": "1",
+                                      "label": "1 ช็อต",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[12px]",
+                                      "className": "w-full justify-center rounded-xl border border-white/10 font-bold",
+                                      "classWhen": [
+                                        {
+                                          "when": {
+                                            "op": "eq",
+                                            "a": "{values.productShots}",
+                                            "b": "1"
+                                          },
+                                          "class": "!bg-emerald-400 !border-emerald-400 !text-[#08130d]"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "button",
+                                      "action": "set",
+                                      "to": "productShots",
+                                      "value": "2",
+                                      "label": "2 ช็อต",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[12px]",
+                                      "className": "w-full justify-center rounded-xl border border-white/10 font-bold",
+                                      "classWhen": [
+                                        {
+                                          "when": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productShots}",
+                                                "b": "2"
+                                              },
+                                              {
+                                                "op": "and",
+                                                "list": [
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{values.productShots}",
+                                                    "b": ""
+                                                  },
+                                                  {
+                                                    "op": "not",
+                                                    "a": {
+                                                      "op": "eq",
+                                                      "a": "{values.productLevel}",
+                                                      "b": "promo"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "class": "!bg-emerald-400 !border-emerald-400 !text-[#08130d]"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "button",
+                                      "action": "set",
+                                      "to": "productShots",
+                                      "value": "3",
+                                      "label": "3 ช็อต",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[12px]",
+                                      "className": "w-full justify-center rounded-xl border border-white/10 font-bold",
+                                      "classWhen": [
+                                        {
+                                          "when": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productShots}",
+                                                "b": "3"
+                                              },
+                                              {
+                                                "op": "and",
+                                                "list": [
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{values.productShots}",
+                                                    "b": ""
+                                                  },
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{values.productLevel}",
+                                                    "b": "promo"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "class": "!bg-emerald-400 !border-emerald-400 !text-[#08130d]"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "button",
+                                      "action": "set",
+                                      "to": "productShots",
+                                      "value": "5",
+                                      "label": "5 ช็อต",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[12px]",
+                                      "className": "w-full justify-center rounded-xl border border-white/10 font-bold",
+                                      "classWhen": [
+                                        {
+                                          "when": {
+                                            "op": "eq",
+                                            "a": "{values.productShots}",
+                                            "b": "5"
+                                          },
+                                          "class": "!bg-emerald-400 !border-emerald-400 !text-[#08130d]"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "className": "relative w-full flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.025] p-4 transition-colors",
+                              "classWhen": [
+                                {
+                                  "when": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.productEndCard}",
+                                        "b": "on"
+                                      },
+                                      {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productEndCard}",
+                                            "b": ""
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productLevel}",
+                                            "b": "promo"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "class": "!border-emerald-400/45 bg-emerald-400/[0.10]"
+                                }
+                              ],
+                              "card": [
+                                {
+                                  "el": "box",
+                                  "className": "w-[26px] h-[26px] rounded-lg border-2 border-white/25 flex items-center justify-center shrink-0",
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productEndCard}",
+                                            "b": "on"
+                                          },
+                                          {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productEndCard}",
+                                                "b": ""
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productLevel}",
+                                                "b": "promo"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "class": "!bg-emerald-400 !border-emerald-400"
+                                    }
+                                  ],
+                                  "card": [
+                                    {
+                                      "el": "icon",
+                                      "icon": "check",
+                                      "textSize": "text-[18px]",
+                                      "className": "text-[#08130d]",
+                                      "when": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productEndCard}",
+                                            "b": "on"
+                                          },
+                                          {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productEndCard}",
+                                                "b": ""
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.productLevel}",
+                                                "b": "promo"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex-1 min-w-0 flex flex-col gap-1",
+                                  "card": [
+                                    {
+                                      "el": "row",
+                                      "className": "gap-1.5 flex-nowrap",
+                                      "card": [
+                                        {
+                                          "el": "icon",
+                                          "icon": "campaign",
+                                          "textSize": "text-[17px]",
+                                          "className": "opacity-40",
+                                          "classWhen": [
+                                            {
+                                              "when": {
+                                                "op": "or",
+                                                "list": [
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{values.productEndCard}",
+                                                    "b": "on"
+                                                  },
+                                                  {
+                                                    "op": "and",
+                                                    "list": [
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{values.productEndCard}",
+                                                        "b": ""
+                                                      },
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{values.productLevel}",
+                                                        "b": "promo"
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              "class": "text-emerald-300 !opacity-100"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": "ปิดท้ายตอนด้วยช็อตขาย",
+                                          "className": "font-bold",
+                                          "style": {
+                                            "fontSize": "13.5px",
+                                            "color": "var(--ev-text)"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "เพิ่มช็อตสุดท้ายของตอนสุดท้าย = สินค้าเต็มจอ + ประโยคปิดการขาย",
+                                      "className": "opacity-50 leading-relaxed",
+                                      "style": {
+                                        "fontSize": "11px"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "set",
+                                  "to": "productEndCard",
+                                  "value": "off",
+                                  "when": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.productEndCard}",
+                                        "b": "on"
+                                      },
+                                      {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productEndCard}",
+                                            "b": ""
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.productLevel}",
+                                            "b": "promo"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "iconOnly": true,
+                                  "label": "",
+                                  "className": "absolute inset-0 w-full !h-full rounded-2xl opacity-0"
+                                },
+                                {
+                                  "el": "button",
+                                  "action": "set",
+                                  "to": "productEndCard",
+                                  "value": "on",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.productEndCard}",
+                                          "b": "on"
+                                        },
+                                        {
+                                          "op": "and",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.productEndCard}",
+                                              "b": ""
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.productLevel}",
+                                              "b": "promo"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "iconOnly": true,
+                                  "label": "",
+                                  "className": "absolute inset-0 w-full !h-full rounded-2xl opacity-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "when": "values.productLevel=promo",
+                              "className": "flex flex-col gap-2",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "จุดขาย 1 บรรทัด",
+                                  "className": "font-bold opacity-60",
+                                  "style": {
+                                    "fontSize": "11.5px"
+                                  }
+                                },
+                                {
+                                  "el": "input",
+                                  "field": "productSelling",
+                                  "values": true,
+                                  "maxLength": 120,
+                                  "placeholder": "เช่น หอมกลมกล่อม ไม่ต้องใส่น้ำตาลก็อร่อย"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "box",
+                              "when": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.productEndCard}",
+                                    "b": "on"
+                                  },
+                                  {
+                                    "op": "and",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.productEndCard}",
+                                        "b": ""
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.productLevel}",
+                                        "b": "promo"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              "className": "flex flex-col gap-2",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "ประโยคปิดการขาย",
+                                  "className": "font-bold opacity-60",
+                                  "style": {
+                                    "fontSize": "11.5px"
+                                  }
+                                },
+                                {
+                                  "el": "input",
+                                  "field": "productCta",
+                                  "values": true,
+                                  "maxLength": 90,
+                                  "placeholder": "เช่น กาแฟหมีคาเฟ่ — เริ่มเช้าที่ดีของคุณ"
+                                }
+                              ]
                             }
                           ]
                         },
