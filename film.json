@@ -392,6 +392,15 @@
     "povDialogue": {
       "god": "มุมมองพระเจ้า",
       "third": "มุมมองตัวเอก"
+    },
+    "accentKeyLabels": {
+      "standard": "มาตรฐาน (สุภาพ)",
+      "isan": "อีสาน",
+      "northern": "เหนือ (คำเมือง)",
+      "southern": "ใต้",
+      "bkk": "กรุงเทพ/วัยรุ่น",
+      "rude": "ดุดัน/ปากแสบ (สะใจ)",
+      "vulgar": "หยาบคาย"
     }
   },
   "components": {
@@ -1267,7 +1276,13 @@
       "fields": [
         "name",
         "appearance",
-        "personality"
+        "personality",
+        "role",
+        "motivation",
+        "voiceTimbre",
+        "lookTag",
+        "accent",
+        "voice"
       ],
       "slots": [
         "sheet",
@@ -4761,7 +4776,7 @@
                                           "el": "dropdown",
                                           "field": "accent",
                                           "options": {
-                                            "table": "accentLabels"
+                                            "table": "accentKeyLabels"
                                           },
                                           "className": "flex-1"
                                         }
@@ -6023,6 +6038,82 @@
                           "field": "personality",
                           "label": "นิสัย",
                           "maxLength": 150
+                        },
+                        {
+                          "el": "row",
+                          "className": "items-start",
+                          "card": [
+                            {
+                              "el": "text",
+                              "icon": "label",
+                              "value": "ป้ายลักษณะ",
+                              "className": "text-[11px] w-24 shrink-0 pt-2"
+                            },
+                            {
+                              "el": "input",
+                              "field": "lookTag",
+                              "maxLength": 40,
+                              "placeholder": "สั้น ไม่มีชุด/สี เช่น ชายแก่หนวดขาว",
+                              "className": "flex-1"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "row",
+                          "className": "items-start",
+                          "card": [
+                            {
+                              "el": "text",
+                              "icon": "graphic_eq",
+                              "value": "สำเนียง",
+                              "className": "text-[11px] w-24 shrink-0 pt-2"
+                            },
+                            {
+                              "el": "dropdown",
+                              "field": "accent",
+                              "options": {
+                                "table": "accentKeyLabels"
+                              },
+                              "className": "flex-1"
+                            }
+                          ],
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.narration}",
+                                "b": "dialogue"
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{values.dialogueLanguage}",
+                                  "b": "en"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "el": "row",
+                          "className": "items-start",
+                          "card": [
+                            {
+                              "el": "text",
+                              "icon": "forum",
+                              "value": "วิธีพูด",
+                              "className": "text-[11px] w-24 shrink-0 pt-2"
+                            },
+                            {
+                              "el": "input",
+                              "field": "voice",
+                              "placeholder": "คำติดปาก/นิสัยพูด เช่น สุภาพคมสั้น",
+                              "className": "flex-1"
+                            }
+                          ],
+                          "when": "narration=dialogue"
                         }
                       ]
                     },
