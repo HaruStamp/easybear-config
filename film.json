@@ -2061,11 +2061,11 @@
                 {
                   "el": "group",
                   "label": "ใส่สินค้าในเรื่อง",
-                  "className": "relative transition-colors",
+                  "className": "relative transition-colors bg-white/[0.02]",
                   "classWhen": [
                     {
                       "when": "values.productOn=true",
-                      "class": "!border-emerald-400/30 bg-emerald-400/[0.045]"
+                      "class": "!border-emerald-400/30 !bg-emerald-400/[0.045]"
                     }
                   ],
                   "head": [
@@ -2216,6 +2216,10 @@
                       "when": "values.productOn=true",
                       "className": "flex flex-col gap-4",
                       "card": [
+                        {
+                          "el": "box",
+                          "className": "border-t border-emerald-400/20 -mx-3 -mt-1"
+                        },
                         {
                           "el": "row",
                           "when": "values.productName=",
@@ -3293,14 +3297,14 @@
                 {
                   "el": "group",
                   "label": "ตัวละครที่กำหนดเอง",
-                  "className": "transition-colors",
+                  "className": "transition-colors bg-white/[0.02]",
                   "classWhen": [
                     {
                       "when": {
                         "op": "count",
                         "from": "customCast"
                       },
-                      "class": "!border-sky-400/30 bg-sky-400/[0.045]"
+                      "class": "!border-sky-400/30 !bg-sky-400/[0.045]"
                     }
                   ],
                   "head": [
@@ -3448,155 +3452,179 @@
                   ],
                   "card": [
                     {
-                      "el": "repeat",
-                      "coll": "customCast",
-                      "empty": "ยังไม่มี — ปล่อยว่างไว้ AI จะออกแบบตัวละครเองทั้งหมด (พฤติกรรมเดิม)",
+                      "el": "box",
+                      "when": {
+                        "op": "count",
+                        "from": "customCast"
+                      },
+                      "className": "flex flex-col gap-2.5",
                       "card": [
                         {
                           "el": "box",
-                          "className": "group relative flex gap-3 items-start rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/10 hover:border-white/20 p-3 mb-2 transition-colors",
+                          "className": "border-t border-sky-400/20 -mx-3 -mt-1"
+                        },
+                        {
+                          "el": "repeat",
+                          "coll": "customCast",
                           "card": [
                             {
                               "el": "box",
-                              "className": "w-32 shrink-0 flex flex-col gap-1.5",
+                              "className": "group relative flex gap-3 items-start rounded-2xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/10 hover:border-white/20 p-3 mb-2 transition-colors",
                               "card": [
                                 {
                                   "el": "box",
-                                  "className": "relative",
+                                  "className": "w-32 shrink-0 flex flex-col gap-1.5",
                                   "card": [
                                     {
-                                      "el": "media-slot",
-                                      "src": "{item.slots.srcRef}",
-                                      "aspect": "9:16",
-                                      "style": {
-                                        "borderRadius": "12px"
-                                      },
-                                      "className": "ring-1 ring-white/10",
-                                      "classWhen": [
+                                      "el": "box",
+                                      "className": "relative",
+                                      "card": [
                                         {
-                                          "when": "item.slots.srcRef!=",
-                                          "class": "!ring-orange-500/40"
+                                          "el": "media-slot",
+                                          "src": "{item.slots.srcRef}",
+                                          "aspect": "9:16",
+                                          "style": {
+                                            "borderRadius": "12px"
+                                          },
+                                          "className": "ring-1 ring-white/10",
+                                          "classWhen": [
+                                            {
+                                              "when": "item.slots.srcRef!=",
+                                              "class": "!ring-orange-500/40"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "icon",
+                                          "icon": "person",
+                                          "textSize": "text-[44px]",
+                                          "when": "item.slots.srcRef=",
+                                          "className": "absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none"
                                         }
                                       ]
                                     },
                                     {
-                                      "el": "icon",
-                                      "icon": "person",
-                                      "textSize": "text-[44px]",
+                                      "el": "upload",
+                                      "into": "srcRef",
+                                      "label": "",
+                                      "placeholder": "รูป",
+                                      "icon": "add_photo_alternate",
+                                      "resize": {
+                                        "maxPx": 768,
+                                        "quality": 0.82
+                                      },
                                       "when": "item.slots.srcRef=",
-                                      "className": "absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none"
+                                      "className": "w-full justify-center h-[26px] rounded-lg text-[10px]"
+                                    },
+                                    {
+                                      "el": "button",
+                                      "action": "hook",
+                                      "fn": "clearSlot",
+                                      "to": "srcRef",
+                                      "label": "เอารูปออก",
+                                      "variant": "ghost",
+                                      "size": "sm",
+                                      "textSize": "text-[10px]",
+                                      "when": "item.slots.srcRef!=",
+                                      "className": "opacity-60 hover:opacity-100"
                                     }
                                   ]
                                 },
                                 {
-                                  "el": "upload",
-                                  "into": "srcRef",
-                                  "label": "",
-                                  "placeholder": "รูป",
-                                  "icon": "add_photo_alternate",
-                                  "resize": {
-                                    "maxPx": 768,
-                                    "quality": 0.82
-                                  },
-                                  "when": "item.slots.srcRef=",
-                                  "className": "w-full justify-center h-[26px] rounded-lg text-[10px]"
-                                },
-                                {
-                                  "el": "button",
-                                  "action": "hook",
-                                  "fn": "clearSlot",
-                                  "to": "srcRef",
-                                  "label": "เอารูปออก",
-                                  "variant": "ghost",
-                                  "size": "sm",
-                                  "textSize": "text-[10px]",
-                                  "when": "item.slots.srcRef!=",
-                                  "className": "opacity-60 hover:opacity-100"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex flex-col gap-2 flex-1 min-w-0",
-                              "card": [
-                                {
-                                  "el": "row",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "className": "gap-2 items-center",
+                                  "el": "box",
+                                  "className": "flex flex-col gap-2 flex-1 min-w-0",
                                   "card": [
+                                    {
+                                      "el": "row",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "className": "gap-2 items-center",
+                                      "card": [
+                                        {
+                                          "el": "input",
+                                          "field": "name",
+                                          "variant": "bare",
+                                          "placeholder": "ชื่อตัวละคร...",
+                                          "className": "flex-1 min-w-0",
+                                          "style": {
+                                            "fontWeight": "700"
+                                          },
+                                          "classWhen": [
+                                            {
+                                              "when": "item.name=",
+                                              "class": "!border-b !border-amber-400/50"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "dropdown",
+                                          "field": "role",
+                                          "options": [
+                                            {
+                                              "value": "lead",
+                                              "label": "ตัวเอก",
+                                              "desc": "พระเอก/นางเอก — คนขับเรื่อง"
+                                            },
+                                            {
+                                              "value": "support",
+                                              "label": "ตัวรอง",
+                                              "desc": "พระรอง/นางรอง/เพื่อนสนิท"
+                                            },
+                                            {
+                                              "value": "villain",
+                                              "label": "ตัวร้าย",
+                                              "desc": "ฝ่ายตรงข้ามของตัวเอก"
+                                            },
+                                            {
+                                              "value": "elder",
+                                              "label": "ผู้ใหญ่",
+                                              "desc": "พ่อแม่/ผู้สูงวัย"
+                                            },
+                                            {
+                                              "value": "extra",
+                                              "label": "ตัวประกอบ",
+                                              "desc": "คนทั่วไปในเรื่อง"
+                                            }
+                                          ],
+                                          "placeholder": "บทบาท",
+                                          "className": "shrink-0 w-28"
+                                        },
+                                        {
+                                          "el": "delete-button",
+                                          "iconOnly": true,
+                                          "variant": "ghost",
+                                          "className": "shrink-0 opacity-40 hover:opacity-100"
+                                        }
+                                      ]
+                                    },
                                     {
                                       "el": "input",
-                                      "field": "name",
-                                      "variant": "bare",
-                                      "placeholder": "ชื่อตัวละคร...",
-                                      "className": "flex-1 min-w-0",
-                                      "style": {
-                                        "fontWeight": "700"
-                                      },
+                                      "field": "description",
+                                      "maxLength": 150,
+                                      "placeholder": "บุคลิก เช่น สุขุม เก็บความรู้สึก แต่ใจอ่อนกับครอบครัว"
+                                    },
+                                    {
+                                      "el": "textarea",
+                                      "field": "appearance",
+                                      "label": "",
+                                      "maxLength": 200,
+                                      "placeholder": "รูปลักษณ์ (ใช้สร้างรูป) เช่น หญิงไทยวัย 28 ผมยาวสีน้ำตาล ตาคม ลักยิ้มข้างขวา สวมเสื้อเชิ้ตขาว",
                                       "classWhen": [
                                         {
-                                          "when": "item.name=",
-                                          "class": "!border-b !border-amber-400/50"
+                                          "when": {
+                                            "op": "eq",
+                                            "a": {
+                                              "op": "castLookState"
+                                            },
+                                            "b": "thin"
+                                          },
+                                          "class": "!border-amber-400/50"
                                         }
                                       ]
                                     },
                                     {
-                                      "el": "dropdown",
-                                      "field": "role",
-                                      "options": [
-                                        {
-                                          "value": "lead",
-                                          "label": "ตัวเอก",
-                                          "desc": "พระเอก/นางเอก — คนขับเรื่อง"
-                                        },
-                                        {
-                                          "value": "support",
-                                          "label": "ตัวรอง",
-                                          "desc": "พระรอง/นางรอง/เพื่อนสนิท"
-                                        },
-                                        {
-                                          "value": "villain",
-                                          "label": "ตัวร้าย",
-                                          "desc": "ฝ่ายตรงข้ามของตัวเอก"
-                                        },
-                                        {
-                                          "value": "elder",
-                                          "label": "ผู้ใหญ่",
-                                          "desc": "พ่อแม่/ผู้สูงวัย"
-                                        },
-                                        {
-                                          "value": "extra",
-                                          "label": "ตัวประกอบ",
-                                          "desc": "คนทั่วไปในเรื่อง"
-                                        }
-                                      ],
-                                      "placeholder": "บทบาท",
-                                      "className": "shrink-0 w-28"
-                                    },
-                                    {
-                                      "el": "delete-button",
-                                      "iconOnly": true,
-                                      "variant": "ghost",
-                                      "className": "shrink-0 opacity-40 hover:opacity-100"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "input",
-                                  "field": "description",
-                                  "maxLength": 150,
-                                  "placeholder": "บุคลิก เช่น สุขุม เก็บความรู้สึก แต่ใจอ่อนกับครอบครัว"
-                                },
-                                {
-                                  "el": "textarea",
-                                  "field": "appearance",
-                                  "label": "",
-                                  "maxLength": 200,
-                                  "placeholder": "รูปลักษณ์ (ใช้สร้างรูป) เช่น หญิงไทยวัย 28 ผมยาวสีน้ำตาล ตาคม ลักยิ้มข้างขวา สวมเสื้อเชิ้ตขาว",
-                                  "classWhen": [
-                                    {
+                                      "el": "row",
                                       "when": {
                                         "op": "eq",
                                         "a": {
@@ -3604,95 +3632,84 @@
                                         },
                                         "b": "thin"
                                       },
-                                      "class": "!border-amber-400/50"
+                                      "className": "items-start gap-1.5 flex-nowrap",
+                                      "card": [
+                                        {
+                                          "el": "icon",
+                                          "icon": "info",
+                                          "textSize": "text-[13px]",
+                                          "className": "text-amber-300 shrink-0 mt-px"
+                                        },
+                                        {
+                                          "el": "md",
+                                          "value": "รูปลักษณ์สั้นไป — **AI จะคิดหน้าตาและเสื้อผ้าเองทุกช็อต ชุดจะไม่เหมือนกัน** · เขียนเพิ่มอีกนิด (วัย ผม ตา จุดเด่น **และชุดที่ใส่**)",
+                                          "className": "leading-relaxed",
+                                          "style": {
+                                            "fontSize": "10.5px",
+                                            "color": "rgba(254,243,199,0.7)"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "row",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": {
+                                          "op": "castLookState"
+                                        },
+                                        "b": "noOutfit"
+                                      },
+                                      "className": "items-start gap-1.5 flex-nowrap",
+                                      "card": [
+                                        {
+                                          "el": "icon",
+                                          "icon": "info",
+                                          "textSize": "text-[13px]",
+                                          "className": "text-amber-300 shrink-0 mt-px"
+                                        },
+                                        {
+                                          "el": "md",
+                                          "value": "ยังไม่ได้บอก**ชุดที่ใส่** — เติมท้ายว่า \"สวม...\" เพื่อให้ตัวละครใส่ชุดเดิมทุกช็อต",
+                                          "className": "leading-relaxed",
+                                          "style": {
+                                            "fontSize": "10.5px",
+                                            "color": "rgba(254,243,199,0.7)"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "input",
+                                      "field": "voice",
+                                      "placeholder": "วิธีพูด (ไม่ใส่ = AI เติมให้)",
+                                      "maxLength": 60
                                     }
                                   ]
-                                },
-                                {
-                                  "el": "row",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": {
-                                      "op": "castLookState"
-                                    },
-                                    "b": "thin"
-                                  },
-                                  "className": "items-start gap-1.5 flex-nowrap",
-                                  "card": [
-                                    {
-                                      "el": "icon",
-                                      "icon": "info",
-                                      "textSize": "text-[13px]",
-                                      "className": "text-amber-300 shrink-0 mt-px"
-                                    },
-                                    {
-                                      "el": "md",
-                                      "value": "รูปลักษณ์สั้นไป — **AI จะคิดหน้าตาและเสื้อผ้าเองทุกช็อต ชุดจะไม่เหมือนกัน** · เขียนเพิ่มอีกนิด (วัย ผม ตา จุดเด่น **และชุดที่ใส่**)",
-                                      "className": "leading-relaxed",
-                                      "style": {
-                                        "fontSize": "10.5px",
-                                        "color": "rgba(254,243,199,0.7)"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "row",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": {
-                                      "op": "castLookState"
-                                    },
-                                    "b": "noOutfit"
-                                  },
-                                  "className": "items-start gap-1.5 flex-nowrap",
-                                  "card": [
-                                    {
-                                      "el": "icon",
-                                      "icon": "info",
-                                      "textSize": "text-[13px]",
-                                      "className": "text-amber-300 shrink-0 mt-px"
-                                    },
-                                    {
-                                      "el": "md",
-                                      "value": "ยังไม่ได้บอก**ชุดที่ใส่** — เติมท้ายว่า \"สวม...\" เพื่อให้ตัวละครใส่ชุดเดิมทุกช็อต",
-                                      "className": "leading-relaxed",
-                                      "style": {
-                                        "fontSize": "10.5px",
-                                        "color": "rgba(254,243,199,0.7)"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "input",
-                                  "field": "voice",
-                                  "placeholder": "วิธีพูด (ไม่ใส่ = AI เติมให้)",
-                                  "maxLength": 60
                                 }
                               ]
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "row",
-                      "className": "items-start gap-2 flex-nowrap",
-                      "card": [
-                        {
-                          "el": "icon",
-                          "icon": "info",
-                          "textSize": "text-[15px]",
-                          "className": "text-sky-300 shrink-0"
                         },
                         {
-                          "el": "md",
-                          "value": "AI จะ**ใช้ตัวละครเหล่านี้เป็นตัวตั้งและปรับเรื่องให้เข้ากับพวกเขา** (ไม่ใช่เปลี่ยนตัวละครให้เข้ากับเรื่อง) · ตัวละครอื่นที่เรื่องต้องใช้เพิ่ม AI ออกแบบเองตามปกติ · ไม่ใส่รูปก็ได้ AI จะสร้างให้จากคำบรรยาย",
-                          "className": "opacity-50 leading-relaxed",
-                          "style": {
-                            "fontSize": "11px"
-                          }
+                          "el": "row",
+                          "className": "items-start gap-2 flex-nowrap",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "info",
+                              "textSize": "text-[15px]",
+                              "className": "text-sky-300 shrink-0"
+                            },
+                            {
+                              "el": "md",
+                              "value": "AI จะ**ใช้ตัวละครเหล่านี้เป็นตัวตั้งและปรับเรื่องให้เข้ากับพวกเขา** (ไม่ใช่เปลี่ยนตัวละครให้เข้ากับเรื่อง) · ตัวละครอื่นที่เรื่องต้องใช้เพิ่ม AI ออกแบบเองตามปกติ · ไม่ใส่รูปก็ได้ AI จะสร้างให้จากคำบรรยาย",
+                              "className": "opacity-50 leading-relaxed",
+                              "style": {
+                                "fontSize": "11px"
+                              }
+                            }
+                          ]
                         }
                       ]
                     }
