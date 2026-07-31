@@ -60,8 +60,15 @@
       "variant": "simple",
       "unit": "คลิป",
       "coll": "tasks",
-      "restartFn": "hsResetRun",
-      "restartLabel": "ล้างคิว เริ่มใหม่"
+      "restartLabel": "ล้างคิว เริ่มใหม่",
+      "restart": {
+        "action": "reset-run",
+        "coll": "tasks",
+        "resetColl": "control",
+        "clearData": [
+          "queued"
+        ]
+      }
     }
   },
   "content": {
@@ -3256,8 +3263,7 @@
                       }
                     },
                     {
-                      "el": "custom",
-                      "fn": "hsLog",
+                      "el": "log-panel",
                       "when": {
                         "op": "gt",
                         "a": {
@@ -3265,6 +3271,33 @@
                           "from": "tasks"
                         },
                         "b": 0
+                      },
+                      "label": "บันทึกการทำงาน",
+                      "icon": "terminal",
+                      "copy": true,
+                      "order": "oldest",
+                      "limit": 80,
+                      "emptyText": "ยังไม่มีบันทึก",
+                      "className": "!bg-black/45 !text-[10.5px] min-h-[126px] max-h-[210px]",
+                      "live": {
+                        "op": "or",
+                        "list": [
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "running"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "cooldown"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "retrying"
+                          }
+                        ]
                       }
                     }
                   ]
@@ -3625,8 +3658,7 @@
                     },
                     {
                       "el": "confirm-button",
-                      "action": "hook",
-                      "fn": "hsResetRun",
+                      "action": "reset-run",
                       "when": {
                         "op": "and",
                         "list": [
@@ -3667,7 +3699,12 @@
                       "icon": "refresh",
                       "placeholder": "ยืนยันรีเซ็ต?",
                       "variant": "outline",
-                      "className": "w-full justify-center !h-11 mt-2 !rounded-2xl !text-[13.5px] font-bold"
+                      "className": "w-full justify-center !h-11 mt-2 !rounded-2xl !text-[13.5px] font-bold",
+                      "coll": "tasks",
+                      "resetColl": "control",
+                      "clearData": [
+                        "queued"
+                      ]
                     },
                     {
                       "el": "text",
@@ -8873,28 +8910,27 @@
                       "card": [
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsToggleAll",
+                          "action": "set-all",
                           "coll": "products",
                           "value": "true",
                           "label": "ใช้ทั้งหมด",
                           "icon": "done_all",
-                          "size": "sm"
+                          "size": "sm",
+                          "field": "enabled"
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsToggleAll",
+                          "action": "set-all",
                           "coll": "products",
                           "value": "",
                           "label": "ปิดทั้งหมด",
                           "icon": "close",
-                          "size": "sm"
+                          "size": "sm",
+                          "field": "enabled"
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsAddItem",
+                          "action": "add-edit",
                           "coll": "products",
                           "to": "productEdit",
                           "addDefaults": {
@@ -8948,8 +8984,7 @@
                       "card": [
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsToggleEnabled",
+                          "action": "toggle",
                           "iconOnly": true,
                           "icon": "check",
                           "label": "ใช้",
@@ -8963,7 +8998,8 @@
                               "when": "item.enabled!=true",
                               "class": "!bg-transparent !text-transparent !border-2 !border-[var(--ev-border)]"
                             }
-                          ]
+                          ],
+                          "field": "enabled"
                         },
                         {
                           "el": "media-slot",
@@ -9036,8 +9072,7 @@
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsOpenEdit",
+                          "action": "edit-open",
                           "to": "productEdit",
                           "iconOnly": true,
                           "icon": "edit",
@@ -9095,8 +9130,7 @@
                 },
                 {
                   "el": "button",
-                  "action": "hook",
-                  "fn": "hsAddItem",
+                  "action": "add-edit",
                   "coll": "products",
                   "to": "productEdit",
                   "addDefaults": {
@@ -9339,28 +9373,27 @@
                       "card": [
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsToggleAll",
+                          "action": "set-all",
                           "coll": "characters",
                           "value": "true",
                           "label": "ใช้ทั้งหมด",
                           "icon": "done_all",
-                          "size": "sm"
+                          "size": "sm",
+                          "field": "enabled"
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsToggleAll",
+                          "action": "set-all",
                           "coll": "characters",
                           "value": "",
                           "label": "ปิดทั้งหมด",
                           "icon": "close",
-                          "size": "sm"
+                          "size": "sm",
+                          "field": "enabled"
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsAddItem",
+                          "action": "add-edit",
                           "coll": "characters",
                           "to": "characterEdit",
                           "addDefaults": {
@@ -9392,8 +9425,7 @@
                           "card": [
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsToggleEnabled",
+                              "action": "toggle",
                               "iconOnly": true,
                               "icon": "check",
                               "label": "ใช้",
@@ -9407,7 +9439,8 @@
                                   "when": "item.enabled!=true",
                                   "class": "!bg-transparent !text-transparent !border-2 !border-[var(--ev-border)]"
                                 }
-                              ]
+                              ],
+                              "field": "enabled"
                             },
                             {
                               "el": "media-slot",
@@ -9444,8 +9477,7 @@
                             },
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsOpenEdit",
+                              "action": "edit-open",
                               "to": "characterEdit",
                               "iconOnly": true,
                               "icon": "edit",
@@ -9505,8 +9537,7 @@
                 },
                 {
                   "el": "button",
-                  "action": "hook",
-                  "fn": "hsAddItem",
+                  "action": "add-edit",
                   "coll": "characters",
                   "to": "characterEdit",
                   "addDefaults": {
@@ -9557,8 +9588,7 @@
                           "card": [
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsCancelEdit",
+                              "action": "edit-cancel",
                               "to": "products",
                               "coll": "products",
                               "iconOnly": true,
@@ -9587,8 +9617,7 @@
                           "card": [
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsToggleEnabled",
+                              "action": "toggle",
                               "iconOnly": true,
                               "icon": "check",
                               "label": "ใช้",
@@ -9602,7 +9631,8 @@
                                   "when": "item.enabled!=true",
                                   "class": "!bg-transparent !text-transparent !border-2 !border-[var(--ev-border)]"
                                 }
-                              ]
+                              ],
+                              "field": "enabled"
                             },
                             {
                               "el": "text",
@@ -9931,8 +9961,7 @@
                       "card": [
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsCancelEdit",
+                          "action": "edit-cancel",
                           "to": "products",
                           "coll": "products",
                           "label": "ยกเลิก",
@@ -9940,8 +9969,7 @@
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsCloseEdit",
+                          "action": "edit-close",
                           "to": "products",
                           "label": "บันทึกสินค้า",
                           "variant": "solid",
@@ -9995,8 +10023,7 @@
                           "card": [
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsCancelEdit",
+                              "action": "edit-cancel",
                               "to": "characters",
                               "coll": "characters",
                               "iconOnly": true,
@@ -10025,8 +10052,7 @@
                           "card": [
                             {
                               "el": "button",
-                              "action": "hook",
-                              "fn": "hsToggleEnabled",
+                              "action": "toggle",
                               "iconOnly": true,
                               "icon": "check",
                               "label": "ใช้",
@@ -10040,7 +10066,8 @@
                                   "when": "item.enabled!=true",
                                   "class": "!bg-transparent !text-transparent !border-2 !border-[var(--ev-border)]"
                                 }
-                              ]
+                              ],
+                              "field": "enabled"
                             },
                             {
                               "el": "text",
@@ -10328,8 +10355,7 @@
                       "card": [
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsCancelEdit",
+                          "action": "edit-cancel",
                           "to": "characters",
                           "coll": "characters",
                           "label": "ยกเลิก",
@@ -10337,8 +10363,7 @@
                         },
                         {
                           "el": "button",
-                          "action": "hook",
-                          "fn": "hsCloseEdit",
+                          "action": "edit-close",
                           "to": "characters",
                           "label": "บันทึกตัวละคร",
                           "variant": "solid",
@@ -10360,5 +10385,504 @@
       ]
     }
   ],
-  "brain": {}
+  "brain": {
+    "hs": {
+      "sceneTemplates": [
+        {
+          "id": "ugc-review",
+          "category": "ugc",
+          "name": "UGC รีวิว",
+          "desc": "คนถือสินค้า รีวิวจริง",
+          "icon": "reviews",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic photo, natural lighting. The reviewer presents the product with explosive energy like a top TikTok live-commerce host — proud, wide-eyed, big excited smile or amazed open mouth. The setting matches the product's real usage context.",
+          "videoScene": "The reviewer speaks directly to camera with high energy while holding and presenting the product, leaning slightly forward with genuine excitement, making direct eye contact, natural handheld home-video feel."
+        },
+        {
+          "id": "ugc-live",
+          "category": "ugc",
+          "name": "ไลฟ์สด",
+          "desc": "ขายไลฟ์ ringlight",
+          "icon": "sensors",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic photo inside a home live-selling studio: glowing ring light, stacks of products on the table beside, warm indoor lighting, phone-facing POV. The reviewer sits or stands behind the table presenting the product straight to camera like mid-livestream.",
+          "videoScene": "The reviewer talks to camera like in the middle of a livestream — picks the product up from the table, brings it close to the lens then back, ring-light catchlight in the eyes, energetic selling rhythm."
+        },
+        {
+          "id": "ugc-hand",
+          "category": "ugc",
+          "name": "มือ POV",
+          "desc": "รีวิว ไม่เห็นหน้า",
+          "icon": "back_hand",
+          "kind": "hands",
+          "allowCharacterRef": false,
+          "imageScene": "First-person POV shot, only hands visible — no face, no body. The hands hold and present the product close to camera showing its real texture and details, natural daylight, casual authentic phone-shot review feel.",
+          "videoScene": "POV hands demonstrate the product — turning it, opening it, pointing at key details — while an unseen narrator speaks. The speaker is never visible; voice-over only."
+        },
+        {
+          "id": "ugc-using",
+          "category": "ugc",
+          "name": "สาธิตใช้จริง",
+          "desc": "โชว์การใช้งาน",
+          "icon": "touch_app",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic photo of a mid-action demonstration: the reviewer is actually using the product the way it is meant to be used, medium shot, a frozen action moment in an authentic environment.",
+          "videoScene": "The reviewer demonstrates using the product step by step while talking to camera — glancing at the product then back to the lens, finishing with a satisfied confident nod."
+        },
+        {
+          "id": "ugc-compare",
+          "category": "ugc",
+          "name": "ก่อน-หลัง",
+          "desc": "เทียบผลลัพธ์",
+          "icon": "compare",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic photo showing the visible result after using the product: the reviewer points proudly at the result area, expression implying a clear before/after difference, product held in the other hand.",
+          "videoScene": "The reviewer points at the visible result, gestures comparing before and after with both hands, reacts amazed, then holds the product up to camera as the reason."
+        },
+        {
+          "id": "ugc-feeling",
+          "category": "ugc",
+          "name": "ความรู้สึก",
+          "desc": "รีแอคหลังใช้ ประทับใจ",
+          "icon": "sentiment_satisfied",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic close-up on the reviewer's face right after using the product — genuine delighted reaction, touched satisfied expression, the product held up near the face.",
+          "videoScene": "Close-up reaction shot: the reviewer expresses honest delight about the result, subtle disbelieving head shakes, warm genuine smile while speaking to camera."
+        },
+        {
+          "id": "ugc-closeup",
+          "category": "ugc",
+          "name": "ซูมสินค้า",
+          "desc": "โชว์รายละเอียดใกล้ๆ",
+          "icon": "zoom_in",
+          "kind": "hands",
+          "allowCharacterRef": false,
+          "imageScene": "Extreme close-up macro shot of the product held in hands — texture, label and fine details razor sharp, shallow depth of field, background fully blurred, natural light.",
+          "videoScene": "Camera stays tight on the product while hands slowly rotate it, revealing every angle and detail; an unseen narrator describes what we see. Voice-over only, speaker not visible."
+        },
+        {
+          "id": "ugc-recommend",
+          "category": "ugc",
+          "name": "แนะนำ",
+          "desc": "พูดแนะนำให้เพื่อน",
+          "icon": "thumb_up",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "UGC-style realistic photo: the reviewer gives a confident thumbs-up while holding the product, big assured smile, recommending it like telling a best friend, friendly medium shot.",
+          "videoScene": "The reviewer recommends the product straight to camera like talking to a close friend — nodding confidently, thumbs-up gesture, pointing at the product on the final beat."
+        },
+        {
+          "id": "ugc-warehouse",
+          "category": "ugc",
+          "name": "โกดัง",
+          "desc": "ส่งตรงจากคลัง",
+          "icon": "warehouse",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Inside a real distribution warehouse: tall metal shelving stacked with many identical units of the product, the reviewer stands beside the shelves holding one unit up. No price tags, no closed parcel boxes hiding the product.",
+          "videoScene": "The reviewer presents the product among the warehouse shelves, gesturing back at the huge stock behind them, energetic \"shipped straight from the warehouse\" vibe."
+        },
+        {
+          "id": "ugc-factory",
+          "category": "ugc",
+          "name": "โรงงาน",
+          "desc": "ข้างสายพานผลิต",
+          "icon": "factory",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Inside a clean modern factory: a conveyor line with the product moving along it, two or three blurred uniformed workers in the background, the reviewer in the foreground holding the product. No recognizable brand logos on any machinery.",
+          "videoScene": "The reviewer presents the product beside the running conveyor line, pointing back at the production behind, confident \"direct from the factory\" energy."
+        },
+        {
+          "id": "ugc-mall",
+          "category": "ugc",
+          "name": "ห้างฯ",
+          "desc": "ช้อปปิ้งในห้างหรู",
+          "icon": "storefront",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Inside a bright premium shopping mall retail store: clean stocked shelves, bright LED retail lighting, the reviewer holds the product in the aisle with a delighted expression. No store logos visible.",
+          "videoScene": "The reviewer presents the product in the retail aisle — picks it from the shelf, shows it to camera with delight, premium shopping atmosphere around."
+        },
+        {
+          "id": "ugc-market",
+          "category": "ugc",
+          "name": "ตลาดสด",
+          "desc": "แผงตลาดไทย",
+          "icon": "local_grocery_store",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Thai fresh-market stall scene: wooden stalls, wicker baskets, natural daylight filtering through canvas roofs, lively local vibe. The reviewer holds the product up by the stall.",
+          "videoScene": "The reviewer presents the product at the market stall with friendly street energy, gesturing at the lively market around them."
+        },
+        {
+          "id": "pro-studio",
+          "category": "style",
+          "name": "โฆษณาสตูดิโอ",
+          "desc": "มืออาชีพ สวยงาม",
+          "icon": "photo_camera",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Polished commercial studio advertisement: seamless backdrop, dramatic professional studio lighting, 8K commercial quality. The product is hero-lit at center of attention; the presenter is styled professionally.",
+          "videoScene": "Premium commercial pacing: the presenter delivers polished ad lines to camera while the product gets slow cinematic hero moves and elegant light sweeps."
+        },
+        {
+          "id": "product-only",
+          "category": "style",
+          "name": "สินค้าอย่างเดียว",
+          "desc": "ไม่มีคน",
+          "icon": "inventory_2",
+          "kind": "product",
+          "allowCharacterRef": false,
+          "imageScene": "Product-only hero shot — no people anywhere. The product displayed on a styled surface matching its category, dramatic commercial lighting, tasteful prop accents, crisp clean composition.",
+          "videoScene": "No people on screen: slow orbit and push-in moves on the product with elegant light sweeps; an unseen narrator sells the product. Voice-over only."
+        },
+        {
+          "id": "lifestyle",
+          "category": "style",
+          "name": "Lifestyle",
+          "desc": "ใช้งานจริง สถานการณ์จริง",
+          "icon": "cottage",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Candid lifestyle scene: the product being used naturally in a real daily-life situation, warm natural light, documentary feel, the reviewer blending into the authentic environment.",
+          "videoScene": "A natural day-in-the-life moment featuring the product in real use; the reviewer talks casually while living the scene, nothing staged."
+        },
+        {
+          "id": "social-viral",
+          "category": "style",
+          "name": "Social Viral",
+          "desc": "สะดุดตา เหมาะ TikTok/IG",
+          "icon": "trending_up",
+          "kind": "person",
+          "allowCharacterRef": true,
+          "imageScene": "Bold eye-catching composition built to stop the scroll: punchy saturated colors, dynamic angle, exaggerated fun energy, TikTok/IG-native look with the product impossible to miss.",
+          "videoScene": "Fast attention-grabbing opening, dynamic in-your-face presentation of the product, punchy movements timed to the speech beats."
+        },
+        {
+          "id": "d3-person",
+          "category": "d3",
+          "name": "3D คน",
+          "desc": "การ์ตูนคนน่ารัก",
+          "icon": "face",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon Thai person with an exaggerated troubled expression facing the everyday problem this product solves. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The cute 3D cartoon person acts out the problem, then lights up with joy as the product saves the day — bouncy cartoon motion, expressive face. The real product stays photorealistic exactly as the reference."
+        },
+        {
+          "id": "d3-animal",
+          "category": "d3",
+          "name": "3D สัตว์",
+          "desc": "สัตว์น่ารัก",
+          "icon": "pets",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: an adorable 3D cartoon animal looking sad or troubled by the problem this product solves. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The adorable 3D cartoon animal struggles with the problem, then bounces with happiness as the product fixes everything — playful cartoon motion. The real product stays photorealistic exactly as the reference."
+        },
+        {
+          "id": "d3-fruit",
+          "category": "d3",
+          "name": "3D ผลไม้",
+          "desc": "ผัก/ผลไม้",
+          "icon": "nutrition",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon fruit or vegetable character looking wilted and dull from the problem this product solves. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The cartoon fruit/vegetable character droops with the problem, then plumps up fresh and glowing thanks to the product — squashy bouncy cartoon motion. The real product stays photorealistic exactly as the reference."
+        },
+        {
+          "id": "d3-object",
+          "category": "d3",
+          "name": "3D สิ่งของ",
+          "desc": "สิ่งของน่ารัก",
+          "icon": "category",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon everyday object character looking old, dirty or broken from the problem this product solves. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The cartoon object character suffers the problem, then gets revived sparkling-new thanks to the product — charming cartoon motion. The real product stays photorealistic exactly as the reference."
+        },
+        {
+          "id": "d3-car",
+          "category": "d3",
+          "name": "3D รถ",
+          "desc": "รถแบบ Cars",
+          "icon": "directions_car",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar Cars-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon car with expressive eyes looking dusty, tired or troubled by the problem this product solves. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The cartoon car struggles (dusty, sluggish), then revs up shiny and happy thanks to the product — fun automotive cartoon motion. The real product stays photorealistic exactly as the reference."
+        },
+        {
+          "id": "d3-organ",
+          "category": "d3",
+          "name": "3D อวัยวะ",
+          "desc": "เกี่ยวกับสินค้า",
+          "icon": "favorite",
+          "kind": "cartoon",
+          "allowCharacterRef": false,
+          "imageScene": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon body-organ character (matching the product's benefit) looking weak or uncomfortable. The real product appears prominently and must stay photorealistic exactly as the reference.",
+          "videoScene": "The cute organ character feels weak, then glows healthy and energetic thanks to the product — gentle uplifting cartoon motion. The real product stays photorealistic exactly as the reference."
+        }
+      ],
+      "tones": [
+        {
+          "id": "hardsell",
+          "name": "ขายดุ (ดุดัน)",
+          "desc": "ฮุคแรง โน้มน้าว ปิดการขาย",
+          "icon": "local_fire_department",
+          "speechStyle": "ขายดุดัน: เปิดด้วยฮุคแรงตั้งแต่ประโยคแรก พูดกระชับ เร่งเร้า โน้มน้าวหนัก ย้ำความคุ้มค่า แล้วปิดท้ายกดดันให้ตัดสินใจทันที (เช่น ของมีจำกัด รีบก่อนหมด) — ห้ามหยาบคาย ใช้ภาษาสุภาพแต่พุ่งแรง",
+          "imageVisual": "exaggerated excited expression, amazed open mouth, bold dramatic lighting, vibrant saturated high-contrast colors",
+          "videoMotion": "dynamic zoom-ins, punchy energetic movement, fast confident pacing",
+          "voiceTone": "intense confident persuasive delivery, emphatic and urgent, energy rising toward the closing call-to-action"
+        },
+        {
+          "id": "excite",
+          "name": "ตื่นเต้น ว้าว",
+          "desc": "พลังงานสูง น่าตื่นเต้น",
+          "icon": "celebration",
+          "speechStyle": "ตื่นเต้นสุดๆ: ว้าวกับสินค้าแบบจริงใจ น้ำเสียงพุ่ง ตื่นตาตื่นใจ ชวนคนดูลุ้นและทึ่งไปด้วยกัน",
+          "imageVisual": "wide-eyed thrilled expression, dynamic energetic pose, high-energy vivid lighting",
+          "videoMotion": "fast dramatic reveals, thrilling camera sweeps, high-tension dynamic motion",
+          "voiceTone": "excited breathless enthusiasm, genuine wow reactions, sparkling energy"
+        },
+        {
+          "id": "friendly",
+          "name": "เป็นกันเอง",
+          "desc": "ชวนคุย เหมือนเพื่อนแนะนำ",
+          "icon": "sentiment_satisfied",
+          "speechStyle": "ชวนคุยเหมือนเพื่อนสนิทแนะนำของดีให้กัน อบอุ่น จริงใจ ภาษาบ้านๆ ฟังสบาย ไม่ยัดเยียด",
+          "imageVisual": "warm genuine smile, open relaxed pose, soft cozy lighting",
+          "videoMotion": "natural handheld feel, gentle relaxed panning, easygoing rhythm",
+          "voiceTone": "warm inviting conversational voice, like chatting with a close friend"
+        },
+        {
+          "id": "trust",
+          "name": "น่าเชื่อถือ",
+          "desc": "จริงจัง รีวิวจริง ไม่โอเวอร์",
+          "icon": "verified",
+          "speechStyle": "รีวิวจริงจัง น่าเชื่อถือ: ให้ข้อมูลตรงไปตรงมา พูดถึงข้อดีจากการใช้จริง ไม่โอเวอร์ ไม่เว่อร์ น้ำเสียงมั่นคง",
+          "imageVisual": "composed confident expression, professional balanced stance, clean neutral lighting",
+          "videoMotion": "steady controlled camera, clean professional pans, measured movement",
+          "voiceTone": "measured informative voice, calm credible and trustworthy"
+        },
+        {
+          "id": "fun",
+          "name": "สนุก ตลก",
+          "desc": "อารมณ์ขัน สดใส",
+          "icon": "mood",
+          "speechStyle": "สนุกสนาน มีมุกขำแทรกเป็นจังหวะ เล่นใหญ่ สดใส แต่ยังขายของชัดเจน ปิดท้ายชวนซื้อแบบติดตลก",
+          "imageVisual": "comedic exaggerated expression, playful silly pose, bright cheerful colors",
+          "videoMotion": "bouncy playful camera, comedic zoom timing, fun quick moves",
+          "voiceTone": "cheerful humorous voice with laugh energy, playful delivery"
+        },
+        {
+          "id": "soft",
+          "name": "นุ่มนวล ละมุน",
+          "desc": "โทนอ่อน เหมาะบิวตี้/สุขภาพ",
+          "icon": "spa",
+          "speechStyle": "นุ่มนวล ละมุน: พูดช้าลงเล็กน้อย เน้นความรู้สึกดีและการดูแลตัวเอง เหมาะสินค้าบิวตี้/สุขภาพ ชวนซื้ออย่างอ่อนโยน",
+          "imageVisual": "gentle serene expression, soft elegant pose, dreamy soft pastel lighting",
+          "videoMotion": "slow gentle floating movement, smooth dreamy pans, minimal calm motion",
+          "voiceTone": "soft soothing warm voice, calm caring and comforting"
+        }
+      ],
+      "textStyles": [
+        {
+          "id": "golden-triangle",
+          "name": "ขายดุ",
+          "desc": "ตัวหนา ฉูดฉาด · เหลือง+ขาว+แดง",
+          "colors": [
+            "#FFD700",
+            "#FFFFFF",
+            "#FF1744"
+          ],
+          "typography": "extra-bold heavy Thai display font with thick outline, high-impact yellow, white and red palette, TikTok sale-banner style"
+        },
+        {
+          "id": "promo-hot",
+          "name": "โปรแรง",
+          "desc": "ตัวหนา เร่งด่วน · เหลือง+แดง",
+          "colors": [
+            "#FFD700",
+            "#FF0000"
+          ],
+          "typography": "bold urgent promo typography, yellow on red, flash-sale energy"
+        },
+        {
+          "id": "minimal",
+          "name": "มินิมอล",
+          "desc": "เรียบสะอาด ตัวบาง · ขาว+เทา",
+          "colors": [
+            "#FFFFFF",
+            "#9AA0A6"
+          ],
+          "typography": "thin clean minimal sans-serif, white with soft gray, generous spacing"
+        },
+        {
+          "id": "cute-sweet",
+          "name": "น่ารักหวานๆ",
+          "desc": "ฟอนต์มน ชมพูหวาน",
+          "colors": [
+            "#FF8FC7",
+            "#FFFFFF"
+          ],
+          "typography": "rounded bubbly font, sweet pink and white, soft drop shadow"
+        },
+        {
+          "id": "premium-lux",
+          "name": "พรีเมียมหรู",
+          "desc": "ตัวเซริฟ ดำ+ทอง",
+          "colors": [
+            "#111111",
+            "#D4AF37"
+          ],
+          "typography": "elegant serif typography, black and gold, luxury brand feel"
+        },
+        {
+          "id": "neon-teen",
+          "name": "วัยรุ่นนีออน",
+          "desc": "ตัวหนาเอียง · ฟ้า+ม่วงนีออน",
+          "colors": [
+            "#00E5FF",
+            "#B14BFF"
+          ],
+          "typography": "bold italic glowing neon typography, cyan and purple neon glow"
+        },
+        {
+          "id": "pop-bright",
+          "name": "สดใสป๊อป",
+          "desc": "ฟอนต์กลม · ส้ม+เหลือง",
+          "colors": [
+            "#FF6D00",
+            "#FFD700"
+          ],
+          "typography": "round friendly pop font, orange and yellow, sticker-like look"
+        },
+        {
+          "id": "health-clean",
+          "name": "สายสุขภาพ",
+          "desc": "สะอาด โทนเขียว · มินต์+ขาว",
+          "colors": [
+            "#2EE6C5",
+            "#FFFFFF"
+          ],
+          "typography": "clean modern font, mint green and white, fresh wellness look"
+        },
+        {
+          "id": "cartoon-pop",
+          "name": "การ์ตูนป๊อป",
+          "desc": "ฟอนต์เด้ง หลากสี",
+          "colors": [
+            "#FF1744",
+            "#FFD700",
+            "#00B0FF"
+          ],
+          "typography": "bouncy comic cartoon font, multicolor with playful outlines"
+        },
+        {
+          "id": "jp-clean",
+          "name": "คลีนญี่ปุ่น",
+          "desc": "มินิมอล โทนครีม-น้ำตาล",
+          "colors": [
+            "#F0E6D2",
+            "#A6795A"
+          ],
+          "typography": "minimal Japanese-magazine style typography, cream and brown, airy layout"
+        },
+        {
+          "id": "bw-cool",
+          "name": "เท่ดำขาว",
+          "desc": "คอนทราสต์ เท่ · ดำ+ขาว",
+          "colors": [
+            "#111111",
+            "#FFFFFF"
+          ],
+          "typography": "high-contrast bold condensed font, black and white, street-cool attitude"
+        },
+        {
+          "id": "random",
+          "name": "สุ่มสไตล์",
+          "desc": "สลับสไตล์ใหม่ทุกคลิป",
+          "colors": [],
+          "typography": ""
+        }
+      ],
+      "angleRules": {
+        "benefit": "มุมขาย: ชูจุดเด่น/ประโยชน์หลักของสินค้า — ใช้แล้วได้อะไร ชีวิตดีขึ้นยังไง",
+        "howto": "มุมขาย: เปิดด้วยวิธีใช้/สาธิต — โชว์ว่าใช้ง่ายแค่ไหน แล้วผูกกลับไปที่ความคุ้มค่า",
+        "choose": "มุมขาย: ทำไมต้องตัวนี้ — เทียบกับของทั่วไปในตลาดแบบไม่เอ่ยชื่อแบรนด์อื่น ย้ำความต่าง",
+        "mistake": "มุมขาย: เปิดด้วยปัญหา/ความผิดพลาดที่คนมักเจอเมื่อไม่ใช้ของแบบนี้ แล้วพลิกมาเสนอสินค้าเป็นทางออก"
+      },
+      "poseHints": [
+        "holding the product up high triumphantly",
+        "holding the product with an amazed excited face",
+        "captured mid-action actually using the product",
+        "extending the product toward the camera lens",
+        "pointing at the product with full conviction",
+        "hugging the product happily like a treasure"
+      ],
+      "timeHints": [
+        "fresh bright morning light",
+        "clear midday daylight",
+        "relaxed afternoon light",
+        "warm golden hour glow",
+        "cozy evening ambience",
+        "soft diffused natural light",
+        "crisp airy daylight",
+        "sunlit window light",
+        "gentle overcast light",
+        "sparkling sunny atmosphere"
+      ],
+      "moodHints": [
+        "lively energetic vibe",
+        "relaxed easygoing mood",
+        "enthusiastic bustling atmosphere",
+        "warm friendly feeling",
+        "vibrant full-of-life scene",
+        "calm composed mood",
+        "confident upbeat air",
+        "fun playful spirit",
+        "welcoming homely feel",
+        "exciting buzzing energy"
+      ],
+      "cameraHints": [
+        "intimate close framing",
+        "wide establishing framing",
+        "slightly high three-quarter angle",
+        "low hero angle",
+        "natural eye-level view",
+        "sharp focus pulled to the product",
+        "beautifully blurred background bokeh",
+        "balanced rule-of-thirds composition"
+      ],
+      "blockedDefault": [
+        "ส่งฟรี",
+        "ฟรีค่าส่ง",
+        "ส่งฟรีทั่วไทย",
+        "รับประกันคืนเงิน",
+        "ของแท้100%",
+        "ของแท้ 100%",
+        "รักษาโรค",
+        "หายขาด",
+        "การันตี",
+        "100%"
+      ],
+      "locks": {
+        "product": "IMPORTANT: Do NOT modify, change, or alter the product in any way. The product must retain all its original details, design, colors, labels, and packaging exactly as shown in the reference image.",
+        "price": "STRICT TEXT RULE: Render ONLY the exact headline text provided above — nothing else. Do NOT add, invent, or overlay any price numbers, currency symbols, discount percentages, or promotional price badges. Never render the literal labels \"H1\" or \"H2\" — render only the actual Thai headline content.",
+        "noTextStrict": "DO NOT ADD ANY TEXT, LETTERS, WORDS, OR TYPOGRAPHY TO THE IMAGE. The image must be completely clean with no text at all — no captions, no titles, no labels, no watermarks. Absolutely zero text.",
+        "faceLock": "The person in the reviewer reference image is the reviewer of this clip: keep their face, hairstyle and overall look consistent with that reference. Do not depict any real or famous individual.",
+        "noKids": "Adults only — no children, no babies anywhere in the frame.",
+        "thaiOnly": "All dialogues must be in Thai language only.",
+        "videoNegative": "No English speech, no subtitles, no captions, no on-screen text overlays, no watermarks, no logos, no morphing or distorted text, no background music, no sound effects — clear Thai speech only."
+      }
+    }
+  }
 }
