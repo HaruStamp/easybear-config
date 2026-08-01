@@ -140,7 +140,7 @@
       "where": "enabled=true",
       "thinkingLevel": "high",
       "systemInstruction": "{brain.mn.sys}",
-      "prompt": "ออกแบบแผนคลิปโฆษณามินิมอล จำนวน {values.clipsPerProduct} คลิป สำหรับสินค้านี้\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.info}\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\nโทนสีพาสเทลของสินค้านี้: {item.tone}\nโทนสีพาสเทลหลักของโปรเจกต์: {values.svTone}\n(ลำดับความสำคัญโทนสี: ของสินค้า > ของโปรเจกต์ > ค่าว่างทั้งคู่ = เลือกเองตามหมวดสินค้า)\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\nฉาก 1 เปิดตัว — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\nฉาก 2 จุดเด่น — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\nฉาก 3 ใช้จริง — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\nฉาก 4 หลากหลาย — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\nฉาก 5 ชวนซื้อ — มุมกล้อง: {values.svCam5} · การนำเสนอ: {values.svPres5}\n\nตอบเป็น JSON array ตามรูปแบบใน system instruction เท่านั้น",
+      "prompt": "ออกแบบแผนคลิปโฆษณามินิมอล จำนวน {values.clipsPerProduct} คลิป สำหรับสินค้านี้\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.info}\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\nโทนสีพาสเทลของสินค้านี้: {item.tone}\nโทนสีพาสเทลหลักของโปรเจกต์: {values.svTone}\n(ลำดับความสำคัญโทนสี: ของสินค้า > ของโปรเจกต์ > ค่าว่างทั้งคู่ = เลือกเองตามหมวดสินค้า)\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\nฉาก 1 เปิดตัว — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\nฉาก 2 จุดเด่น — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\nฉาก 3 ใช้จริง — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\nฉาก 4 หลากหลาย — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\nฉาก 5 ชวนซื้อ — มุมกล้อง: {values.svCam5} · การนำเสนอ: {values.svPres5}\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON",
       "images": "{item.slots.image}",
       "imagesNote": "{brain.mn.imgNote}",
       "logRun": "[{item.name}] หมีกำลังคิดบท {values.clipsPerProduct} คลิป (5 ฉาก/คลิป)",
@@ -479,7 +479,7 @@
                                           "label": "คิดบทใหม่",
                                           "variant": "ghost",
                                           "className": "!w-11 !h-11 !p-0 !rounded-xl shrink-0 justify-center !gap-0",
-                                          "when": "item.data.plan!="
+                                          "when": "item.name!="
                                         }
                                       ]
                                     }
@@ -1506,15 +1506,7 @@
                           "order": "oldest",
                           "copy": true,
                           "emptyText": "ยังไม่มีบันทึก",
-                          "className": "!bg-black/45 !text-[14px] min-[640px]:!text-[13px] min-h-[140px] max-h-[220px]",
-                          "when": {
-                            "op": "gt",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks"
-                            },
-                            "b": 0
-                          }
+                          "className": "!bg-black/45 !text-[14px] min-[640px]:!text-[13px] min-h-[140px] max-h-[220px]"
                         }
                       ]
                     },
@@ -1522,6 +1514,48 @@
                       "el": "box",
                       "className": "px-4 min-[640px]:px-5 py-5 border-t border-[var(--ev-border)] shrink-0 flex flex-col gap-3",
                       "card": [
+                        {
+                          "el": "row",
+                          "className": "items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3.5",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "w-[40px] h-[40px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "sync_problem",
+                                  "textSize": "text-[20px]",
+                                  "className": "!text-amber-500 leading-none flex items-center justify-center"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่สินค้าเพื่อคิดบทใหม่ แล้วกด \"เริ่มรอบใหม่\" ด้านล่าง",
+                              "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
+                            }
+                          ],
+                          "when": {
+                            "op": "and",
+                            "a": {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
+                            },
+                            "b": {
+                              "op": "some",
+                              "from": "products",
+                              "where": "data.plan!="
+                            }
+                          }
+                        },
                         {
                           "el": "row",
                           "className": "items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3.5",
@@ -1780,12 +1814,20 @@
                               "variant": "ghost",
                               "className": "w-full justify-center !h-12 !rounded-xl !text-[18px] min-[640px]:!text-[17px] opacity-70",
                               "when": {
-                                "op": "gt",
+                                "op": "or",
                                 "a": {
-                                  "op": "count",
-                                  "from": "tasks"
+                                  "op": "gt",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks"
+                                  },
+                                  "b": 0
                                 },
-                                "b": 0
+                                "b": {
+                                  "op": "some",
+                                  "from": "products",
+                                  "where": "data.plan!="
+                                }
                               }
                             }
                           ]
