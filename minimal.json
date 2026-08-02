@@ -76,7 +76,8 @@
     "charName": "",
     "charGender": "",
     "charAge": "",
-    "charLook": ""
+    "charLook": "",
+    "svCharSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
   },
   "collections": {
     "control": {
@@ -167,7 +168,7 @@
           {
             "op": "lookup",
             "table": "charPlan",
-            "key": "{values.svChar}",
+            "key": "{values.svChar}|{values.svCharSrc}",
             "fallback": ""
           },
           "\n",
@@ -257,7 +258,7 @@
           {
             "op": "lookup",
             "table": "charBoard",
-            "key": "{values.svChar}",
+            "key": "{values.svChar}|{values.svCharSrc}",
             "fallback": ""
           }
         ]
@@ -293,9 +294,17 @@
             "by": "{values.charId}",
             "slot": "face",
             "when": {
-              "op": "eq",
-              "a": "{values.svChar}",
-              "b": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน"
+              "op": "and",
+              "a": {
+                "op": "eq",
+                "a": "{values.svChar}",
+                "b": "มีพรีเซนเตอร์ไทย 1 คนในคลิป"
+              },
+              "b": {
+                "op": "eq",
+                "a": "{values.svCharSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+              }
             }
           }
         ]
@@ -320,7 +329,7 @@
           {
             "op": "lookup",
             "table": "charVideoEN",
-            "key": "{values.svChar}",
+            "key": "{values.svChar}|{values.svCharSrc}",
             "fallback": ""
           }
         ]
@@ -361,9 +370,17 @@
             "by": "{values.charId}",
             "slot": "face",
             "when": {
-              "op": "eq",
-              "a": "{values.svChar}",
-              "b": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน"
+              "op": "and",
+              "a": {
+                "op": "eq",
+                "a": "{values.svChar}",
+                "b": "มีพรีเซนเตอร์ไทย 1 คนในคลิป"
+              },
+              "b": {
+                "op": "eq",
+                "a": "{values.svCharSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+              }
             }
           }
         ]
@@ -681,26 +698,20 @@
                         {
                           "el": "grid-select",
                           "field": "svChar",
-                          "cols": 3,
+                          "cols": 2,
                           "contained": true,
                           "options": [
                             {
                               "value": "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน",
-                              "label": "เห็นเฉพาะสินค้า",
-                              "desc": "เน้นภาพสินค้าโดยตรง ไม่มีตัวละครในคลิป",
+                              "label": "ไม่มีตัวละคร",
+                              "desc": "เน้นภาพสินค้าโดยตรง ไม่มีคนในคลิป",
                               "icon": "inventory_2"
                             },
                             {
-                              "value": "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)",
-                              "label": "ตัวละครถือสินค้า",
-                              "desc": "AI สร้างนาย/นางแบบที่เหมาะกับสินค้าให้อัตโนมัติ",
+                              "value": "มีพรีเซนเตอร์ไทย 1 คนในคลิป",
+                              "label": "มีตัวละคร",
+                              "desc": "มีพรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้า",
                               "icon": "emoji_people"
-                            },
-                            {
-                              "value": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน",
-                              "label": "ตัวละครจากใบหน้า",
-                              "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต ทุกคลิป",
-                              "icon": "face"
                             }
                           ]
                         },
@@ -709,275 +720,200 @@
                           "className": "flex flex-col gap-3 p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
                           "card": [
                             {
-                              "el": "repeat",
-                              "coll": "characters",
-                              "card": [
+                              "el": "grid-select",
+                              "field": "svCharSrc",
+                              "cols": 2,
+                              "contained": true,
+                              "options": [
                                 {
-                                  "el": "row",
-                                  "className": "gap-4 items-stretch",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-full min-[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col min-[560px]:justify-center gap-2.5 p-2.5",
-                                      "card": [
-                                        {
-                                          "el": "upload",
-                                          "label": "",
-                                          "placeholder": "อัพโหลด",
-                                          "icon": "upload",
-                                          "into": "face",
-                                          "resize": {
-                                            "maxPx": 512,
-                                            "quality": 0.8
-                                          },
-                                          "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                                        },
-                                        {
-                                          "el": "pick-button",
-                                          "label": "เลือกภาพ",
-                                          "icon": "photo_library",
-                                          "filter": "image",
-                                          "into": "face",
-                                          "resize": {
-                                            "maxPx": 512,
-                                            "quality": 0.8
-                                          },
-                                          "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "row",
-                                      "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4",
-                                      "style": {
-                                        "flexWrap": "nowrap"
-                                      },
-                                      "card": [
-                                        {
-                                          "el": "box",
-                                          "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
-                                          "card": [
-                                            {
-                                              "el": "icon",
-                                              "icon": "warning",
-                                              "textSize": "text-[20px]",
-                                              "className": "!text-amber-500 leading-none flex items-center justify-center"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "box",
-                                          "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ยังไม่มีรูปใบหน้า",
-                                              "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-amber-600"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
-                                              "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
-                                            }
-                                          ]
-                                        }
-                                      ]
-                                    }
-                                  ],
-                                  "when": "item.slots.face="
+                                  "value": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+                                  "label": "สุ่มตัวละคร",
+                                  "desc": "AI สร้างนาย/นางแบบที่เหมาะกับสินค้าให้",
+                                  "icon": "shuffle"
                                 },
                                 {
-                                  "el": "row",
-                                  "className": "gap-4 items-stretch",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "relative w-[140px] shrink-0",
-                                      "card": [
-                                        {
-                                          "el": "media-slot",
-                                          "src": "{item.slots.face}",
-                                          "aspect": "1:1",
-                                          "style": {
-                                            "borderRadius": "16px"
-                                          },
-                                          "className": "ring-1 ring-[var(--ev-border)]"
-                                        },
-                                        {
-                                          "el": "button",
-                                          "action": "hook",
-                                          "fn": "clearSlot",
-                                          "to": "face",
-                                          "label": "",
-                                          "icon": "close",
-                                          "variant": "ghost",
-                                          "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "row",
-                                      "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-4",
-                                      "style": {
-                                        "flexWrap": "nowrap"
-                                      },
-                                      "card": [
-                                        {
-                                          "el": "box",
-                                          "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
-                                          "card": [
-                                            {
-                                              "el": "icon",
-                                              "icon": "check_circle",
-                                              "textSize": "text-[20px]",
-                                              "className": "!text-green-600 leading-none flex items-center justify-center"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "box",
-                                          "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
-                                              "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-green-600"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "ระบบแนบรูปนี้ให้ตอนวาดภาพและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
-                                              "className": "!text-[14px] min-[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
-                                            }
-                                          ]
-                                        }
-                                      ]
-                                    }
-                                  ],
-                                  "when": "item.slots.face!="
+                                  "value": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
+                                  "label": "ใช้รูปตัวละคร",
+                                  "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต",
+                                  "icon": "face"
                                 }
                               ]
                             },
                             {
                               "el": "box",
-                              "className": "grid grid-cols-1 min-[720px]:grid-cols-2 gap-3",
+                              "className": "flex flex-col gap-3",
                               "card": [
                                 {
-                                  "el": "box",
-                                  "className": "flex flex-col gap-1.5",
+                                  "el": "repeat",
+                                  "coll": "characters",
                                   "card": [
                                     {
-                                      "el": "text",
-                                      "value": "ชื่อเล่นพรีเซนเตอร์",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                      "icon": "badge"
-                                    },
-                                    {
-                                      "el": "input",
-                                      "field": "charName",
-                                      "placeholder": "ว่าง = ไม่ระบุ",
-                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "box",
-                                  "className": "flex flex-col gap-1.5",
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "ลุค / สไตล์การแต่งตัว",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                      "icon": "styler"
-                                    },
-                                    {
-                                      "el": "input",
-                                      "field": "charLook",
-                                      "placeholder": "เช่น สายมินิมอล เสื้อโทนครีม",
-                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "box",
-                                  "className": "flex flex-col gap-1.5",
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "เพศ",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                      "icon": "wc"
-                                    },
-                                    {
-                                      "el": "dropdown",
-                                      "field": "charGender",
-                                      "placeholder": "ให้ AI เลือก",
-                                      "options": [
+                                      "el": "row",
+                                      "className": "gap-4 items-stretch",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
                                         {
-                                          "value": "หญิง",
-                                          "label": "หญิง"
+                                          "el": "box",
+                                          "className": "w-full min-[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col min-[560px]:justify-center gap-2.5 p-2.5",
+                                          "card": [
+                                            {
+                                              "el": "upload",
+                                              "label": "",
+                                              "placeholder": "อัพโหลด",
+                                              "icon": "upload",
+                                              "into": "face",
+                                              "resize": {
+                                                "maxPx": 512,
+                                                "quality": 0.8
+                                              },
+                                              "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                                            },
+                                            {
+                                              "el": "pick-button",
+                                              "label": "เลือกภาพ",
+                                              "icon": "photo_library",
+                                              "filter": "image",
+                                              "into": "face",
+                                              "resize": {
+                                                "maxPx": 512,
+                                                "quality": 0.8
+                                              },
+                                              "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
+                                            }
+                                          ]
                                         },
                                         {
-                                          "value": "ชาย",
-                                          "label": "ชาย"
+                                          "el": "row",
+                                          "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "card": [
+                                            {
+                                              "el": "box",
+                                              "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
+                                              "card": [
+                                                {
+                                                  "el": "icon",
+                                                  "icon": "warning",
+                                                  "textSize": "text-[20px]",
+                                                  "className": "!text-amber-500 leading-none flex items-center justify-center"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                                              "card": [
+                                                {
+                                                  "el": "text",
+                                                  "value": "ยังไม่มีรูปใบหน้า",
+                                                  "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-amber-600"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
+                                                  "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
+                                                }
+                                              ]
+                                            }
+                                          ]
                                         }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "box",
-                                  "className": "flex flex-col gap-1.5",
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "ช่วงวัย",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                      "icon": "cake"
+                                      ],
+                                      "when": "item.slots.face="
                                     },
                                     {
-                                      "el": "dropdown",
-                                      "field": "charAge",
-                                      "placeholder": "ให้ AI เลือก",
-                                      "options": [
+                                      "el": "row",
+                                      "className": "gap-4 items-stretch",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
                                         {
-                                          "value": "วัยรุ่น",
-                                          "label": "วัยรุ่น"
+                                          "el": "box",
+                                          "className": "relative w-[140px] shrink-0",
+                                          "card": [
+                                            {
+                                              "el": "media-slot",
+                                              "src": "{item.slots.face}",
+                                              "aspect": "1:1",
+                                              "style": {
+                                                "borderRadius": "16px"
+                                              },
+                                              "className": "ring-1 ring-[var(--ev-border)]"
+                                            },
+                                            {
+                                              "el": "button",
+                                              "action": "hook",
+                                              "fn": "clearSlot",
+                                              "to": "face",
+                                              "label": "",
+                                              "icon": "close",
+                                              "variant": "ghost",
+                                              "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
+                                            }
+                                          ]
                                         },
                                         {
-                                          "value": "วัยทำงานตอนต้น",
-                                          "label": "วัยทำงานตอนต้น"
-                                        },
-                                        {
-                                          "value": "วัยผู้ใหญ่",
-                                          "label": "วัยผู้ใหญ่"
+                                          "el": "row",
+                                          "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-4",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "card": [
+                                            {
+                                              "el": "box",
+                                              "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
+                                              "card": [
+                                                {
+                                                  "el": "icon",
+                                                  "icon": "check_circle",
+                                                  "textSize": "text-[20px]",
+                                                  "className": "!text-green-600 leading-none flex items-center justify-center"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                                              "card": [
+                                                {
+                                                  "el": "text",
+                                                  "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
+                                                  "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-green-600"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "ระบบแนบรูปนี้ให้ตอนวาดภาพและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
+                                                  "className": "!text-[14px] min-[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
+                                                }
+                                              ]
+                                            }
+                                          ]
                                         }
-                                      ]
+                                      ],
+                                      "when": "item.slots.face!="
                                     }
                                   ]
                                 }
-                              ]
-                            }
-                          ],
-                          "when": {
-                            "op": "eq",
-                            "a": "{values.svChar}",
-                            "b": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน"
-                          }
-                        },
-                        {
-                          "el": "box",
-                          "className": "flex flex-col gap-3 p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
-                          "card": [
+                              ],
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.svCharSrc}",
+                                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                              }
+                            },
                             {
                               "el": "text",
-                              "value": "บอกใบ้ให้ AI เลือกพรีเซนเตอร์ (ไม่บังคับ — ว่าง = AI จัดให้)",
-                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
+                              "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = AI จัดให้)",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.svCharSrc}",
+                                "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+                              }
                             },
                             {
                               "el": "box",
@@ -1083,7 +1019,7 @@
                           "when": {
                             "op": "eq",
                             "a": "{values.svChar}",
-                            "b": "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)"
+                            "b": "มีพรีเซนเตอร์ไทย 1 คนในคลิป"
                           }
                         }
                       ]
@@ -3725,26 +3661,20 @@
                                 {
                                   "el": "grid-select",
                                   "field": "svChar",
-                                  "cols": 3,
+                                  "cols": 2,
                                   "contained": true,
                                   "options": [
                                     {
                                       "value": "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน",
-                                      "label": "เห็นเฉพาะสินค้า",
-                                      "desc": "เน้นภาพสินค้าโดยตรง ไม่มีตัวละครในคลิป",
+                                      "label": "ไม่มีตัวละคร",
+                                      "desc": "เน้นภาพสินค้าโดยตรง ไม่มีคนในคลิป",
                                       "icon": "inventory_2"
                                     },
                                     {
-                                      "value": "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)",
-                                      "label": "ตัวละครถือสินค้า",
-                                      "desc": "AI สร้างนาย/นางแบบที่เหมาะกับสินค้าให้อัตโนมัติ",
+                                      "value": "มีพรีเซนเตอร์ไทย 1 คนในคลิป",
+                                      "label": "มีตัวละคร",
+                                      "desc": "มีพรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้า",
                                       "icon": "emoji_people"
-                                    },
-                                    {
-                                      "value": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน",
-                                      "label": "ตัวละครจากใบหน้า",
-                                      "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต ทุกคลิป",
-                                      "icon": "face"
                                     }
                                   ]
                                 },
@@ -3753,275 +3683,200 @@
                                   "className": "flex flex-col gap-3 p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
                                   "card": [
                                     {
-                                      "el": "repeat",
-                                      "coll": "characters",
-                                      "card": [
+                                      "el": "grid-select",
+                                      "field": "svCharSrc",
+                                      "cols": 2,
+                                      "contained": true,
+                                      "options": [
                                         {
-                                          "el": "row",
-                                          "className": "gap-4 items-stretch",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "box",
-                                              "className": "w-full min-[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col min-[560px]:justify-center gap-2.5 p-2.5",
-                                              "card": [
-                                                {
-                                                  "el": "upload",
-                                                  "label": "",
-                                                  "placeholder": "อัพโหลด",
-                                                  "icon": "upload",
-                                                  "into": "face",
-                                                  "resize": {
-                                                    "maxPx": 512,
-                                                    "quality": 0.8
-                                                  },
-                                                  "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                                                },
-                                                {
-                                                  "el": "pick-button",
-                                                  "label": "เลือกภาพ",
-                                                  "icon": "photo_library",
-                                                  "filter": "image",
-                                                  "into": "face",
-                                                  "resize": {
-                                                    "maxPx": 512,
-                                                    "quality": 0.8
-                                                  },
-                                                  "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "el": "row",
-                                              "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4",
-                                              "style": {
-                                                "flexWrap": "nowrap"
-                                              },
-                                              "card": [
-                                                {
-                                                  "el": "box",
-                                                  "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
-                                                  "card": [
-                                                    {
-                                                      "el": "icon",
-                                                      "icon": "warning",
-                                                      "textSize": "text-[20px]",
-                                                      "className": "!text-amber-500 leading-none flex items-center justify-center"
-                                                    }
-                                                  ]
-                                                },
-                                                {
-                                                  "el": "box",
-                                                  "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                                                  "card": [
-                                                    {
-                                                      "el": "text",
-                                                      "value": "ยังไม่มีรูปใบหน้า",
-                                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-amber-600"
-                                                    },
-                                                    {
-                                                      "el": "text",
-                                                      "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
-                                                      "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
-                                                    }
-                                                  ]
-                                                }
-                                              ]
-                                            }
-                                          ],
-                                          "when": "item.slots.face="
+                                          "value": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+                                          "label": "สุ่มตัวละคร",
+                                          "desc": "AI สร้างนาย/นางแบบที่เหมาะกับสินค้าให้",
+                                          "icon": "shuffle"
                                         },
                                         {
-                                          "el": "row",
-                                          "className": "gap-4 items-stretch",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "box",
-                                              "className": "relative w-[140px] shrink-0",
-                                              "card": [
-                                                {
-                                                  "el": "media-slot",
-                                                  "src": "{item.slots.face}",
-                                                  "aspect": "1:1",
-                                                  "style": {
-                                                    "borderRadius": "16px"
-                                                  },
-                                                  "className": "ring-1 ring-[var(--ev-border)]"
-                                                },
-                                                {
-                                                  "el": "button",
-                                                  "action": "hook",
-                                                  "fn": "clearSlot",
-                                                  "to": "face",
-                                                  "label": "",
-                                                  "icon": "close",
-                                                  "variant": "ghost",
-                                                  "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "el": "row",
-                                              "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-4",
-                                              "style": {
-                                                "flexWrap": "nowrap"
-                                              },
-                                              "card": [
-                                                {
-                                                  "el": "box",
-                                                  "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
-                                                  "card": [
-                                                    {
-                                                      "el": "icon",
-                                                      "icon": "check_circle",
-                                                      "textSize": "text-[20px]",
-                                                      "className": "!text-green-600 leading-none flex items-center justify-center"
-                                                    }
-                                                  ]
-                                                },
-                                                {
-                                                  "el": "box",
-                                                  "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                                                  "card": [
-                                                    {
-                                                      "el": "text",
-                                                      "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
-                                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-green-600"
-                                                    },
-                                                    {
-                                                      "el": "text",
-                                                      "value": "ระบบแนบรูปนี้ให้ตอนวาดภาพและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
-                                                      "className": "!text-[14px] min-[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
-                                                    }
-                                                  ]
-                                                }
-                                              ]
-                                            }
-                                          ],
-                                          "when": "item.slots.face!="
+                                          "value": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
+                                          "label": "ใช้รูปตัวละคร",
+                                          "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต",
+                                          "icon": "face"
                                         }
                                       ]
                                     },
                                     {
                                       "el": "box",
-                                      "className": "grid grid-cols-1 min-[720px]:grid-cols-2 gap-3",
+                                      "className": "flex flex-col gap-3",
                                       "card": [
                                         {
-                                          "el": "box",
-                                          "className": "flex flex-col gap-1.5",
+                                          "el": "repeat",
+                                          "coll": "characters",
                                           "card": [
                                             {
-                                              "el": "text",
-                                              "value": "ชื่อเล่นพรีเซนเตอร์",
-                                              "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                              "icon": "badge"
-                                            },
-                                            {
-                                              "el": "input",
-                                              "field": "charName",
-                                              "placeholder": "ว่าง = ไม่ระบุ",
-                                              "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "box",
-                                          "className": "flex flex-col gap-1.5",
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ลุค / สไตล์การแต่งตัว",
-                                              "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                              "icon": "styler"
-                                            },
-                                            {
-                                              "el": "input",
-                                              "field": "charLook",
-                                              "placeholder": "เช่น สายมินิมอล เสื้อโทนครีม",
-                                              "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "box",
-                                          "className": "flex flex-col gap-1.5",
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "เพศ",
-                                              "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                              "icon": "wc"
-                                            },
-                                            {
-                                              "el": "dropdown",
-                                              "field": "charGender",
-                                              "placeholder": "ให้ AI เลือก",
-                                              "options": [
+                                              "el": "row",
+                                              "className": "gap-4 items-stretch",
+                                              "style": {
+                                                "flexWrap": "nowrap"
+                                              },
+                                              "card": [
                                                 {
-                                                  "value": "หญิง",
-                                                  "label": "หญิง"
+                                                  "el": "box",
+                                                  "className": "w-full min-[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col min-[560px]:justify-center gap-2.5 p-2.5",
+                                                  "card": [
+                                                    {
+                                                      "el": "upload",
+                                                      "label": "",
+                                                      "placeholder": "อัพโหลด",
+                                                      "icon": "upload",
+                                                      "into": "face",
+                                                      "resize": {
+                                                        "maxPx": 512,
+                                                        "quality": 0.8
+                                                      },
+                                                      "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                                                    },
+                                                    {
+                                                      "el": "pick-button",
+                                                      "label": "เลือกภาพ",
+                                                      "icon": "photo_library",
+                                                      "filter": "image",
+                                                      "into": "face",
+                                                      "resize": {
+                                                        "maxPx": 512,
+                                                        "quality": 0.8
+                                                      },
+                                                      "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] min-[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
+                                                    }
+                                                  ]
                                                 },
                                                 {
-                                                  "value": "ชาย",
-                                                  "label": "ชาย"
+                                                  "el": "row",
+                                                  "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4",
+                                                  "style": {
+                                                    "flexWrap": "nowrap"
+                                                  },
+                                                  "card": [
+                                                    {
+                                                      "el": "box",
+                                                      "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
+                                                      "card": [
+                                                        {
+                                                          "el": "icon",
+                                                          "icon": "warning",
+                                                          "textSize": "text-[20px]",
+                                                          "className": "!text-amber-500 leading-none flex items-center justify-center"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "el": "box",
+                                                      "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                                                      "card": [
+                                                        {
+                                                          "el": "text",
+                                                          "value": "ยังไม่มีรูปใบหน้า",
+                                                          "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-amber-600"
+                                                        },
+                                                        {
+                                                          "el": "text",
+                                                          "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
+                                                          "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
                                                 }
-                                              ]
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "box",
-                                          "className": "flex flex-col gap-1.5",
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ช่วงวัย",
-                                              "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                              "icon": "cake"
+                                              ],
+                                              "when": "item.slots.face="
                                             },
                                             {
-                                              "el": "dropdown",
-                                              "field": "charAge",
-                                              "placeholder": "ให้ AI เลือก",
-                                              "options": [
+                                              "el": "row",
+                                              "className": "gap-4 items-stretch",
+                                              "style": {
+                                                "flexWrap": "nowrap"
+                                              },
+                                              "card": [
                                                 {
-                                                  "value": "วัยรุ่น",
-                                                  "label": "วัยรุ่น"
+                                                  "el": "box",
+                                                  "className": "relative w-[140px] shrink-0",
+                                                  "card": [
+                                                    {
+                                                      "el": "media-slot",
+                                                      "src": "{item.slots.face}",
+                                                      "aspect": "1:1",
+                                                      "style": {
+                                                        "borderRadius": "16px"
+                                                      },
+                                                      "className": "ring-1 ring-[var(--ev-border)]"
+                                                    },
+                                                    {
+                                                      "el": "button",
+                                                      "action": "hook",
+                                                      "fn": "clearSlot",
+                                                      "to": "face",
+                                                      "label": "",
+                                                      "icon": "close",
+                                                      "variant": "ghost",
+                                                      "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
+                                                    }
+                                                  ]
                                                 },
                                                 {
-                                                  "value": "วัยทำงานตอนต้น",
-                                                  "label": "วัยทำงานตอนต้น"
-                                                },
-                                                {
-                                                  "value": "วัยผู้ใหญ่",
-                                                  "label": "วัยผู้ใหญ่"
+                                                  "el": "row",
+                                                  "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-4",
+                                                  "style": {
+                                                    "flexWrap": "nowrap"
+                                                  },
+                                                  "card": [
+                                                    {
+                                                      "el": "box",
+                                                      "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
+                                                      "card": [
+                                                        {
+                                                          "el": "icon",
+                                                          "icon": "check_circle",
+                                                          "textSize": "text-[20px]",
+                                                          "className": "!text-green-600 leading-none flex items-center justify-center"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "el": "box",
+                                                      "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                                                      "card": [
+                                                        {
+                                                          "el": "text",
+                                                          "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
+                                                          "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-green-600"
+                                                        },
+                                                        {
+                                                          "el": "text",
+                                                          "value": "ระบบแนบรูปนี้ให้ตอนวาดภาพและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
+                                                          "className": "!text-[14px] min-[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
                                                 }
-                                              ]
+                                              ],
+                                              "when": "item.slots.face!="
                                             }
                                           ]
                                         }
-                                      ]
-                                    }
-                                  ],
-                                  "when": {
-                                    "op": "eq",
-                                    "a": "{values.svChar}",
-                                    "b": "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน"
-                                  }
-                                },
-                                {
-                                  "el": "box",
-                                  "className": "flex flex-col gap-3 p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
-                                  "card": [
+                                      ],
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.svCharSrc}",
+                                        "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                                      }
+                                    },
                                     {
                                       "el": "text",
-                                      "value": "บอกใบ้ให้ AI เลือกพรีเซนเตอร์ (ไม่บังคับ — ว่าง = AI จัดให้)",
-                                      "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
+                                      "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = AI จัดให้)",
+                                      "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{values.svCharSrc}",
+                                        "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+                                      }
                                     },
                                     {
                                       "el": "box",
@@ -4127,7 +3982,7 @@
                                   "when": {
                                     "op": "eq",
                                     "a": "{values.svChar}",
-                                    "b": "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)"
+                                    "b": "มีพรีเซนเตอร์ไทย 1 คนในคลิป"
                                   }
                                 }
                               ]
@@ -10926,19 +10781,22 @@
       "mnVideo": "กำลังสร้างวิดีโอ"
     },
     "charPlan": {
-      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน": "กฎพรีเซนเตอร์: ห้ามมีคนในทุกฉาก สินค้าเป็นพระเอกล้วน (มือสะอาดตามธรรมชาติโผล่สั้นๆ ได้เฉพาะฉากสาธิตที่จำเป็น) — เขียนบท s*th/s*en ให้ไม่มีบุคคล",
-      "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)": "กฎพรีเซนเตอร์: มีนาย/นางแบบไทยหน้าตาดี 1 คน บุคลิกเป็นมิตร ดูจริงใจ เข้ากับหมวดสินค้าและกลุ่มเป้าหมาย — เขียนบทให้พรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้าอย่างเป็นธรรมชาติ (แนะนำ → ชี้จุดเด่น → ใช้จริง → โคลสอัพดีเทล → ยิ้มปิดพร้อมสินค้า) สินค้ายังเป็นจุดโฟกัสหลักทุกฉาก · สะท้อนพรีเซนเตอร์ใน s*th และ s*en ทุกฉากที่มีคน",
-      "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน": "กฎพรีเซนเตอร์: ใช้บุคคลจากรูปใบหน้าที่แนบเป็นพรีเซนเตอร์คนเดิมทุกฉากทุกคลิป ห้ามเปลี่ยนคน — เขียนบทให้พรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้าอย่างเป็นธรรมชาติ สินค้ายังเป็นจุดโฟกัสหลักทุกฉาก · สะท้อนพรีเซนเตอร์ใน s*th และ s*en ทุกฉากที่มีคน"
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ห้ามมีคนในทุกฉาก สินค้าเป็นพระเอกล้วน (มือสะอาดตามธรรมชาติโผล่สั้นๆ ได้เฉพาะฉากสาธิตที่จำเป็น) — เขียนบท s*th/s*en ให้ไม่มีบุคคล",
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ห้ามมีคนในทุกฉาก สินค้าเป็นพระเอกล้วน (มือสะอาดตามธรรมชาติโผล่สั้นๆ ได้เฉพาะฉากสาธิตที่จำเป็น) — เขียนบท s*th/s*en ให้ไม่มีบุคคล",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: มีนาย/นางแบบไทยหน้าตาดี 1 คน บุคลิกเป็นมิตร ดูจริงใจ เข้ากับหมวดสินค้าและกลุ่มเป้าหมาย — เขียนบทให้พรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้าอย่างเป็นธรรมชาติ (แนะนำ → ชี้จุดเด่น → ใช้จริง → โคลสอัพดีเทล → ยิ้มปิดพร้อมสินค้า) สินค้ายังเป็นจุดโฟกัสหลักทุกฉาก · สะท้อนพรีเซนเตอร์ใน s*th และ s*en ทุกฉากที่มีคน",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ใช้บุคคลจากรูปใบหน้าที่แนบเป็นพรีเซนเตอร์คนเดิมทุกฉากทุกคลิป ห้ามเปลี่ยนคน — เขียนบทให้พรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้าอย่างเป็นธรรมชาติ สินค้ายังเป็นจุดโฟกัสหลักทุกฉาก · สะท้อนพรีเซนเตอร์ใน s*th และ s*en ทุกฉากที่มีคน"
     },
     "charBoard": {
-      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน": "ห้ามมีคนในภาพทุกช่อง (มือสะอาดโผล่ได้เฉพาะช่องสาธิตที่บทระบุ)",
-      "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)": "มีนาย/นางแบบไทย 1 คนตามบท — คนเดียวกันทุกช่องของแผงนี้ หน้าตาเป็นมิตรดูจริงใจ ท่าทางธรรมชาติ สินค้าเด่นกว่าคนเสมอ",
-      "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน": "ใช้บุคคลจากภาพใบหน้าที่แนบมา (character reference) เป็นคนเดียวกันทุกช่อง — ล็อกหน้าตา ทรงผม สีผิว รูปหน้า 100% ห้ามเปลี่ยนเป็นคนอื่น ปรับได้เฉพาะเสื้อผ้า/ท่าทาง/มุมกล้อง สินค้าเด่นกว่าคนเสมอ"
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ห้ามมีคนในภาพทุกช่อง (มือสะอาดโผล่ได้เฉพาะช่องสาธิตที่บทระบุ)",
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ห้ามมีคนในภาพทุกช่อง (มือสะอาดโผล่ได้เฉพาะช่องสาธิตที่บทระบุ)",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "มีนาย/นางแบบไทย 1 คนตามบท — คนเดียวกันทุกช่องของแผงนี้ หน้าตาเป็นมิตรดูจริงใจ ท่าทางธรรมชาติ สินค้าเด่นกว่าคนเสมอ",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ใช้บุคคลจากภาพใบหน้าที่แนบมา (character reference) เป็นคนเดียวกันทุกช่อง — ล็อกหน้าตา ทรงผม สีผิว รูปหน้า 100% ห้ามเปลี่ยนเป็นคนอื่น ปรับได้เฉพาะเสื้อผ้า/ท่าทาง/มุมกล้อง สินค้าเด่นกว่าคนเสมอ"
     },
     "charVideoEN": {
-      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน": "No people in the video. The product is the only hero; clean natural hands may appear briefly only when a usage shot requires it.",
-      "มีพรีเซนเตอร์ไทย 1 คน (AI เลือกให้เหมาะกับสินค้า)": "MAIN CHARACTER: One attractive Thai-looking presenter (auto-select gender/age to fit the product and target audience). Friendly, stylish, authentic and relatable, with natural expressions, eye contact, smiles and realistic hand interaction with the product. The presenter must be the same person in every scene. The product remains the main focus in every shot.",
-      "ใช้พรีเซนเตอร์คนเดิมจากรูปใบหน้าที่แนบ ทุกฉากต้องเป็นคนเดียวกัน": "CHARACTER CONSISTENCY (HIGHEST PRIORITY): The attached face image is the only character reference. Recreate exactly the same person — preserve facial features, facial proportions, hairstyle, hair color, skin tone, body type, age appearance and overall identity. Do NOT generate a different person, do NOT randomize gender/age/ethnicity/hairstyle, do NOT replace the character. Treat the attached character as the same individual in every shot; only adapt clothing, pose, camera angle and expressions to suit the product. The product remains the main focus in every shot."
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "No people in the video. The product is the only hero; clean natural hands may appear briefly only when a usage shot requires it.",
+      "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No people in the video. The product is the only hero; clean natural hands may appear briefly only when a usage shot requires it.",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "MAIN CHARACTER: One attractive Thai-looking presenter (auto-select gender/age to fit the product and target audience). Friendly, stylish, authentic and relatable, with natural expressions, eye contact, smiles and realistic hand interaction with the product. The presenter must be the same person in every scene. The product remains the main focus in every shot.",
+      "มีพรีเซนเตอร์ไทย 1 คนในคลิป|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "CHARACTER CONSISTENCY (HIGHEST PRIORITY): The attached face image is the only character reference. Recreate exactly the same person — preserve facial features, facial proportions, hairstyle, hair color, skin tone, body type, age appearance and overall identity. Do NOT generate a different person, do NOT randomize gender/age/ethnicity/hairstyle, do NOT replace the character. Treat the attached character as the same individual in every shot; only adapt clothing, pose, camera angle and expressions to suit the product. The product remains the main focus in every shot."
     }
   },
   "seed": {
