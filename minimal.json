@@ -2228,13 +2228,13 @@
                   "card": [
                     {
                       "el": "load-button",
-                      "label": "โหลด",
+                      "label": "โหลดสินค้า",
                       "icon": "upload_file",
                       "className": "!h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[18px] min-[640px]:!text-[17px]"
                     },
                     {
                       "el": "save-button",
-                      "label": "เซฟ",
+                      "label": "เซฟสินค้า",
                       "icon": "save",
                       "className": "!h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[18px] min-[640px]:!text-[17px]"
                     }
@@ -2441,10 +2441,24 @@
                   "className": "flex flex-col gap-3",
                   "card": [
                     {
+                      "el": "text",
+                      "value": "ยังไม่มีสินค้า — กดเพิ่มสินค้าใหม่ข้างล่าง",
+                      "className": "!text-[16px] min-[640px]:!text-[15px] opacity-60 text-center w-full py-10",
+                      "when": {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "name,info~{values.__q}"
+                        },
+                        "b": 0
+                      }
+                    },
+                    {
                       "el": "repeat",
                       "coll": "products",
                       "where": "name,info~{values.__q}",
-                      "empty": "ยังไม่มีสินค้า — กดเพิ่มสินค้าใหม่ข้างล่าง",
+                      "empty": "",
                       "card": [
                         {
                           "el": "box",
