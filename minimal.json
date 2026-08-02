@@ -70,7 +70,8 @@
     "__page": "",
     "__q": "",
     "__editId": "",
-    "__editNew": ""
+    "__editNew": "",
+    "mode": "auto"
   },
   "collections": {
     "control": {
@@ -1617,7 +1618,7 @@
                             {
                               "el": "text",
                               "value": "ยังไม่ได้เลือกใช้สินค้า — เข้า \"จัดการสินค้า\" (ข้อ 1) ก่อน",
-                              "className": "!text-[16px] min-[640px]:!text-[15px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
+                              "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
                             }
                           ],
                           "when": {
@@ -1652,7 +1653,7 @@
                             {
                               "el": "text",
                               "value": "มีสินค้าที่เลือกใช้แต่ยังไม่มีรูป — ใส่รูปให้ครบก่อน (สูตรล็อกหน้าตาสินค้าตามรูปจริง)",
-                              "className": "!text-[16px] min-[640px]:!text-[15px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
+                              "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
                             }
                           ],
                           "when": {
@@ -1674,18 +1675,50 @@
                           }
                         },
                         {
+                          "el": "box",
+                          "className": "flex flex-col gap-2",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "โหมดการผลิต",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-75 uppercase tracking-widest font-black px-0.5"
+                            },
+                            {
+                              "el": "grid-select",
+                              "field": "mode",
+                              "cols": 2,
+                              "contained": true,
+                              "options": [
+                                {
+                                  "value": "auto",
+                                  "label": "ออโต้",
+                                  "desc": "กดครั้งเดียว — บอร์ดเสร็จแล้วทำวิดีโอต่อเลย",
+                                  "icon": "bolt"
+                                },
+                                {
+                                  "value": "manual",
+                                  "label": "ทีละขั้น",
+                                  "desc": "ทำบอร์ดก่อน ตรวจ แล้วค่อยสั่งวิดีโอ",
+                                  "icon": "fact_check"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
                           "el": "gen-phase",
                           "ops": [
                             "mnPlan",
                             "mnQueue",
-                            "mnBoard"
+                            "mnBoard",
+                            "mnVideo"
                           ],
-                          "icon": "edit_note",
+                          "icon": "bolt",
                           "variant": "solid",
                           "label": {
                             "op": "concat",
                             "parts": [
-                              "1) คิดบท + วาดสตอรีบอร์ด · ",
+                              "เริ่มผลิตคลิป · ",
                               {
                                 "op": "mul",
                                 "a": {
@@ -1698,7 +1731,7 @@
                               " คลิป"
                             ]
                           },
-                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[20px] min-[640px]:!text-[19px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
+                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] min-[640px]:!text-[16px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
                           "disabledWhen": {
                             "op": "or",
                             "list": [
@@ -1732,12 +1765,170 @@
                           },
                           "reason": "เพิ่ม/ติ๊กใช้สินค้า + ใส่รูปให้ครบก่อน",
                           "when": {
-                            "op": "eq",
+                            "op": "and",
                             "a": {
-                              "op": "count",
-                              "from": "tasks"
+                              "op": "eq",
+                              "a": "{values.mode}",
+                              "b": "auto"
                             },
-                            "b": 0
+                            "b": {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
+                            }
+                          }
+                        },
+                        {
+                          "el": "gen-phase",
+                          "ops": [
+                            "mnPlan",
+                            "mnQueue",
+                            "mnBoard",
+                            "mnVideo"
+                          ],
+                          "icon": "bolt",
+                          "variant": "solid",
+                          "label": {
+                            "op": "concat",
+                            "parts": [
+                              "ผลิตต่อ · เหลือ ",
+                              {
+                                "op": "sub",
+                                "a": {
+                                  "op": "count",
+                                  "from": "tasks"
+                                },
+                                "b": {
+                                  "op": "count",
+                                  "from": "tasks",
+                                  "slot": "video"
+                                }
+                              },
+                              " คลิป"
+                            ]
+                          },
+                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] min-[640px]:!text-[16px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
+                          "when": {
+                            "op": "and",
+                            "a": {
+                              "op": "eq",
+                              "a": "{values.mode}",
+                              "b": "auto"
+                            },
+                            "b": {
+                              "op": "and",
+                              "a": {
+                                "op": "gt",
+                                "a": {
+                                  "op": "count",
+                                  "from": "tasks"
+                                },
+                                "b": 0
+                              },
+                              "b": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "slot": "video"
+                                  },
+                                  "b": {
+                                    "op": "count",
+                                    "from": "tasks"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "el": "text",
+                          "value": "โหมดออโต้: คิดบท → วาดบอร์ด → สร้างวิดีโอ ต่อเนื่องจนจบ (ใช้โควตาวิดีโอทันทีที่บอร์ดเสร็จ)",
+                          "className": "!text-[13px] min-[640px]:!text-[12px] opacity-60 text-center",
+                          "when": {
+                            "op": "eq",
+                            "a": "{values.mode}",
+                            "b": "auto"
+                          }
+                        },
+                        {
+                          "el": "gen-phase",
+                          "ops": [
+                            "mnPlan",
+                            "mnQueue",
+                            "mnBoard"
+                          ],
+                          "icon": "edit_note",
+                          "variant": "solid",
+                          "label": {
+                            "op": "concat",
+                            "parts": [
+                              "1) คิดบท + วาดสตอรีบอร์ด · ",
+                              {
+                                "op": "mul",
+                                "a": {
+                                  "op": "count",
+                                  "from": "products",
+                                  "where": "enabled=true"
+                                },
+                                "b": "{values.clipsPerProduct}"
+                              },
+                              " คลิป"
+                            ]
+                          },
+                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] min-[640px]:!text-[16px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
+                          "disabledWhen": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": {
+                                  "op": "count",
+                                  "from": "products",
+                                  "where": "enabled=true"
+                                },
+                                "b": 0
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "products",
+                                    "where": "enabled=true"
+                                  },
+                                  "b": {
+                                    "op": "count",
+                                    "from": "products",
+                                    "where": "enabled=true",
+                                    "slot": "image"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "reason": "เพิ่ม/ติ๊กใช้สินค้า + ใส่รูปให้ครบก่อน",
+                          "when": {
+                            "op": "and",
+                            "a": {
+                              "op": "eq",
+                              "a": "{values.mode}",
+                              "b": "manual"
+                            },
+                            "b": {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
+                            }
                           }
                         },
                         {
@@ -1768,29 +1959,37 @@
                               " คลิป"
                             ]
                           },
-                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[20px] min-[640px]:!text-[19px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
+                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] min-[640px]:!text-[16px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
                           "when": {
                             "op": "and",
                             "a": {
-                              "op": "gt",
-                              "a": {
-                                "op": "count",
-                                "from": "tasks"
-                              },
-                              "b": 0
+                              "op": "eq",
+                              "a": "{values.mode}",
+                              "b": "manual"
                             },
                             "b": {
-                              "op": "not",
+                              "op": "and",
                               "a": {
-                                "op": "eq",
+                                "op": "gt",
                                 "a": {
                                   "op": "count",
-                                  "from": "tasks",
-                                  "slot": "board"
-                                },
-                                "b": {
-                                  "op": "count",
                                   "from": "tasks"
+                                },
+                                "b": 0
+                              },
+                              "b": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "slot": "board"
+                                  },
+                                  "b": {
+                                    "op": "count",
+                                    "from": "tasks"
+                                  }
                                 }
                               }
                             }
@@ -1806,7 +2005,7 @@
                           "label": {
                             "op": "concat",
                             "parts": [
-                              "2) สร้างวิดีโอ · ",
+                              "2) สร้างวิดีโอทั้งหมด · ",
                               {
                                 "op": "sub",
                                 "a": {
@@ -1820,10 +2019,10 @@
                                   "slot": "video"
                                 }
                               },
-                              " คลิป (Omni Flash 10 วิ)"
+                              " คลิป"
                             ]
                           },
-                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[20px] min-[640px]:!text-[19px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
+                          "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] min-[640px]:!text-[16px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] shadow-[0_8px_20px_-6px_rgba(47,127,232,0.5)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-6px_rgba(47,127,232,0.55)] active:translate-y-0",
                           "disabledWhen": {
                             "op": "eq",
                             "a": {
@@ -1833,12 +2032,22 @@
                             },
                             "b": 0
                           },
-                          "reason": "ยังไม่มีสตอรีบอร์ด — ทำข้อ 1 ก่อน"
+                          "reason": "ยังไม่มีสตอรีบอร์ด — ทำข้อ 1 ก่อน",
+                          "when": {
+                            "op": "eq",
+                            "a": "{values.mode}",
+                            "b": "manual"
+                          }
                         },
                         {
                           "el": "text",
-                          "value": "ตรวจสตอรีบอร์ดในการ์ดคลิปให้พอใจก่อนกดข้อ 2 — ขั้นนี้ใช้โควตาวิดีโอจริง",
-                          "className": "!text-[18px] min-[640px]:!text-[17px] opacity-65 text-center"
+                          "value": "โหมดทีละขั้น: ตรวจสตอรีบอร์ดในการ์ดคลิปให้พอใจก่อนกดข้อ 2 — ขั้นวิดีโอใช้โควตาจริง",
+                          "className": "!text-[13px] min-[640px]:!text-[12px] opacity-60 text-center",
+                          "when": {
+                            "op": "eq",
+                            "a": "{values.mode}",
+                            "b": "manual"
+                          }
                         },
                         {
                           "el": "repeat",
@@ -1851,7 +2060,7 @@
                               "placeholder": "ยืนยัน? บอร์ด+วิดีโอเดิมจะถูกล้าง",
                               "icon": "restart_alt",
                               "variant": "ghost",
-                              "className": "w-full justify-center !h-12 !rounded-xl !text-[18px] min-[640px]:!text-[17px] opacity-70",
+                              "className": "w-full justify-center !h-12 !rounded-xl !text-[14px] min-[640px]:!text-[13px] opacity-70",
                               "when": {
                                 "op": "or",
                                 "a": {
