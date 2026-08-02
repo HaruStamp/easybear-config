@@ -77,7 +77,8 @@
     "charGender": "",
     "charAge": "",
     "charLook": "",
-    "svCharSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+    "svCharSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+    "__delId": ""
   },
   "collections": {
     "control": {
@@ -2481,29 +2482,14 @@
                               "className": "!w-12 !h-12 !p-0 !rounded-xl shrink-0 justify-center !gap-0"
                             },
                             {
-                              "el": "delete-button",
-                              "iconOnly": false,
+                              "el": "button",
+                              "action": "set",
+                              "to": "__delId",
+                              "value": "{item.id}",
                               "label": "",
-                              "className": "!h-12 min-[640px]:!h-11 !px-2 !rounded-xl justify-center shrink-0",
-                              "disabledWhen": {
-                                "op": "or",
-                                "list": [
-                                  {
-                                    "op": "eq",
-                                    "a": "{values.__runState}",
-                                    "b": "running"
-                                  },
-                                  {
-                                    "op": "eq",
-                                    "a": "{values.__runState}",
-                                    "b": "retrying"
-                                  }
-                                ]
-                              },
-                              "reason": "กำลังผลิตอยู่ — ลบไม่ได้",
                               "icon": "delete",
-                              "placeholder": "ลบสินค้านี้?",
-                              "variant": "ghost"
+                              "variant": "ghost",
+                              "className": "!h-12 min-[640px]:!h-11 !px-2 !rounded-xl justify-center !gap-0 shrink-0"
                             }
                           ],
                           "classWhen": [
@@ -2532,6 +2518,91 @@
                   "variant": "ghost"
                 }
               ]
+            },
+            {
+              "el": "box",
+              "className": "fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4",
+              "card": [
+                {
+                  "el": "box",
+                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 w-full max-w-[440px] flex flex-col gap-4",
+                  "card": [
+                    {
+                      "el": "row",
+                      "className": "items-center gap-3.5",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center shrink-0",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "delete",
+                              "textSize": "text-[22px]",
+                              "className": "!text-red-500 leading-none flex items-center justify-center"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "ลบสินค้านี้?",
+                          "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)]"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "repeat",
+                      "coll": "products",
+                      "where": "id={values.__delId}",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "ต้องการลบ \"{item.name}\" ออกจากลิสต์สินค้าใช่ไหม? การลบนี้กู้คืนไม่ได้",
+                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-65 leading-relaxed"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center justify-end gap-2.5 mt-1",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__delId",
+                          "value": "",
+                          "label": "ยกเลิก",
+                          "variant": "ghost",
+                          "className": "!h-12 min-[640px]:!h-11 !px-5 !rounded-xl !text-[16px] min-[640px]:!text-[15px] font-bold border border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "repeat",
+                          "coll": "products",
+                          "where": "id={values.__delId}",
+                          "card": [
+                            {
+                              "el": "button",
+                              "action": "hook",
+                              "fn": "delItem",
+                              "to": "__delId",
+                              "label": "ลบ",
+                              "icon": "delete",
+                              "className": "!h-12 min-[640px]:!h-11 !px-6 !rounded-xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-red-500 !text-white !border-0"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "when": "values.__delId!="
             }
           ],
           "when": {
