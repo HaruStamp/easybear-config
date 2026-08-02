@@ -2371,13 +2371,62 @@
                   }
                 },
                 {
-                  "el": "button",
-                  "action": "set",
-                  "to": "__page",
-                  "value": "script",
-                  "label": "เริ่มแบบทีละขั้น — ไปเขียนบทก่อน",
-                  "icon": "fact_check",
+                  "el": "gen-phase",
+                  "ops": [
+                    "mnPlan",
+                    "mnQueue"
+                  ],
+                  "icon": "edit_note",
+                  "variant": "solid",
+                  "label": {
+                    "op": "concat",
+                    "parts": [
+                      "เริ่มแบบทีละขั้น — เขียนบทเลย · ",
+                      {
+                        "op": "mul",
+                        "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "enabled=true"
+                        },
+                        "b": "{values.clipsPerProduct}"
+                      },
+                      " คลิป"
+                    ]
+                  },
                   "className": "w-full justify-center !h-16 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                  "disabledWhen": {
+                    "op": "or",
+                    "list": [
+                      {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "enabled=true"
+                        },
+                        "b": 0
+                      },
+                      {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": {
+                            "op": "count",
+                            "from": "products",
+                            "where": "enabled=true"
+                          },
+                          "b": {
+                            "op": "count",
+                            "from": "products",
+                            "where": "enabled=true",
+                            "slot": "image"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "reason": "เพิ่ม/ติ๊กใช้สินค้า + ใส่รูปให้ครบก่อน",
                   "when": {
                     "op": "eq",
                     "a": "{values.mode}",
@@ -2388,14 +2437,72 @@
                   "el": "text",
                   "value": "เปลี่ยนใจภายหลังได้ — กลับมาหน้านี้ด้วยปุ่ม ← มุมซ้ายบนของทุกหน้า",
                   "className": "!text-[13px] min-[640px]:!text-[12px] opacity-50 text-center"
+                },
+                {
+                  "el": "button",
+                  "action": "set",
+                  "to": "__page",
+                  "value": "script",
+                  "label": "กลับไปหน้าบท",
+                  "icon": "arrow_forward",
+                  "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                  "variant": "ghost",
+                  "when": {
+                    "op": "and",
+                    "a": {
+                      "op": "eq",
+                      "a": "{values.mode}",
+                      "b": "manual"
+                    },
+                    "b": {
+                      "op": "gt",
+                      "a": {
+                        "op": "count",
+                        "from": "tasks"
+                      },
+                      "b": 0
+                    }
+                  }
                 }
               ]
             }
           ],
           "when": {
-            "op": "eq",
-            "a": "{values.__page}",
-            "b": ""
+            "op": "or",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.__page}",
+                "b": "setup"
+              },
+              {
+                "op": "and",
+                "a": {
+                  "op": "eq",
+                  "a": "{values.__page}",
+                  "b": ""
+                },
+                "b": {
+                  "op": "not",
+                  "a": {
+                    "op": "and",
+                    "a": {
+                      "op": "eq",
+                      "a": "{values.mode}",
+                      "b": "manual"
+                    },
+                    "b": {
+                      "op": "gt",
+                      "a": {
+                        "op": "count",
+                        "from": "tasks"
+                      },
+                      "b": 0
+                    }
+                  }
+                }
+              }
+            ]
           }
         },
         {
@@ -8080,7 +8187,7 @@
             },
             {
               "el": "box",
-              "className": "w-full max-w-[1060px] mx-auto px-4 min-[640px]:px-6 py-5 min-[640px]:py-7 flex flex-col gap-5",
+              "className": "w-full max-w-[1060px] mx-auto px-2 min-[640px]:px-6 py-4 min-[640px]:py-7 flex flex-col gap-5",
               "card": [
                 {
                   "el": "row",
@@ -8093,7 +8200,7 @@
                       "el": "button",
                       "action": "set",
                       "to": "__page",
-                      "value": "",
+                      "value": "setup",
                       "label": "",
                       "icon": "arrow_back",
                       "variant": "ghost",
@@ -8105,12 +8212,12 @@
                       "card": [
                         {
                           "el": "text",
-                          "value": "บท — เขียนแล้วแก้ได้ทุกช่อง",
+                          "value": "บท — รีวิวและแก้ได้ทุกคลิป",
                           "className": "!text-[22px] min-[640px]:!text-[21px] font-black !text-[var(--ev-text)]"
                         },
                         {
                           "el": "text",
-                          "value": "รีวิวบททีละคลิป · โอเคแล้วกดสร้างภาพของคลิปนั้น หรือสร้างภาพทั้งหมดทีเดียว",
+                          "value": "กดการ์ดเพื่อกางบท · แก้เสร็จกดสร้างภาพรายคลิป หรือสร้างทั้งหมดที่หน้าภาพ",
                           "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
                         }
                       ]
@@ -8160,7 +8267,7 @@
                           "el": "button",
                           "action": "set",
                           "to": "__page",
-                          "value": "studio",
+                          "value": "boards",
                           "label": "2 ภาพ",
                           "icon": "image",
                           "variant": "ghost",
@@ -8192,7 +8299,7 @@
                           "el": "button",
                           "action": "set",
                           "to": "__page",
-                          "value": "studio",
+                          "value": "videos",
                           "label": "3 วิดีโอ",
                           "icon": "movie",
                           "variant": "ghost",
@@ -8205,75 +8312,40 @@
                             },
                             "b": 0
                           }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "el": "row",
-                  "className": "items-center gap-3 flex-wrap",
-                  "style": {
-                    "flexWrap": "nowrap"
-                  },
-                  "card": [
-                    {
-                      "el": "gen-phase",
-                      "ops": [
-                        "mnPlan",
-                        "mnQueue"
-                      ],
-                      "icon": "edit_note",
-                      "variant": "solid",
-                      "label": {
-                        "op": "concat",
-                        "parts": [
-                          "เขียนบททั้งหมด · ",
-                          {
-                            "op": "mul",
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
                             "a": {
                               "op": "count",
-                              "from": "products",
-                              "where": "enabled=true"
-                            },
-                            "b": "{values.clipsPerProduct}"
-                          },
-                          " คลิป"
-                        ]
-                      },
-                      "className": "flex-1 min-[640px]:flex-none justify-center !h-13 !h-[52px] !px-6 !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                      "disabledWhen": {
-                        "op": "or",
-                        "list": [
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "products",
-                              "where": "enabled=true"
+                              "from": "tasks"
                             },
                             "b": 0
-                          },
-                          {
-                            "op": "not",
-                            "a": {
-                              "op": "eq",
-                              "a": {
-                                "op": "count",
-                                "from": "products",
-                                "where": "enabled=true"
-                              },
-                              "b": {
-                                "op": "count",
-                                "from": "products",
-                                "where": "enabled=true",
-                                "slot": "image"
-                              }
-                            }
                           }
-                        ]
-                      },
-                      "reason": "เพิ่ม/ติ๊กใช้สินค้า + ใส่รูปให้ครบก่อน (ที่หน้าตั้งค่า)"
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "gallery",
+                          "label": "4 คลังคลิป",
+                          "icon": "photo_library",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
@@ -8882,15 +8954,17 @@
                 {
                   "el": "repeat",
                   "coll": "tasks",
-                  "className": "flex flex-col gap-5",
+                  "className": "flex flex-col gap-4",
                   "card": [
                     {
-                      "el": "box",
-                      "className": "rounded-[26px] border border-[var(--ev-border)] bg-gradient-to-br from-[var(--ev-surface)] to-[var(--ev-bg)] hover:border-[var(--ev-accent)]/40 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col",
-                      "card": [
+                      "el": "group",
+                      "collapsible": true,
+                      "startOpen": false,
+                      "className": "!rounded-[26px] bg-[var(--ev-surface)] !border !border-[var(--ev-border)] overflow-hidden",
+                      "head": [
                         {
                           "el": "row",
-                          "className": "items-center gap-2.5 px-5 min-[640px]:px-6 pt-5",
+                          "className": "items-center gap-2.5 flex-1 min-w-0",
                           "style": {
                             "flexWrap": "nowrap"
                           },
@@ -8914,7 +8988,7 @@
                                 "field": "prod",
                                 "fallback": "{item.productName}"
                               },
-                              "className": "font-bold !text-[18px] min-[640px]:!text-[17px] truncate !text-[var(--ev-text)]"
+                              "className": "font-bold !text-[17px] min-[640px]:!text-[16px] truncate !text-[var(--ev-text)]"
                             },
                             {
                               "el": "box",
@@ -8941,7 +9015,7 @@
                                 },
                                 {
                                   "el": "text",
-                                  "value": "แก้บทได้",
+                                  "value": "รอรีวิวบท",
                                   "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-[var(--ev-accent)]"
                                 }
                               ],
@@ -8979,17 +9053,19 @@
                               }
                             }
                           ]
-                        },
-                        {
-                          "el": "text",
-                          "value": "{item.synopsis}",
-                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed px-5 min-[640px]:px-6 pt-1.5",
-                          "when": "item.synopsis!="
-                        },
+                        }
+                      ],
+                      "card": [
                         {
                           "el": "box",
-                          "className": "flex flex-col gap-3.5 p-5 min-[640px]:p-6 pt-4",
+                          "className": "flex flex-col gap-3.5 p-4 min-[640px]:p-5",
                           "card": [
+                            {
+                              "el": "text",
+                              "value": "{item.synopsis}",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
+                              "when": "item.synopsis!="
+                            },
                             {
                               "el": "row",
                               "className": "items-end gap-3 flex-wrap",
@@ -9033,14 +9109,8 @@
                               ]
                             },
                             {
-                              "el": "text",
-                              "value": "Script · แก้ได้ทุกช่อง — ระบบประกอบเป็นคำสั่งวาดภาพ/วิดีโอให้เอง",
-                              "className": "flex items-center gap-1.5 !text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]",
-                              "icon": "description"
-                            },
-                            {
                               "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
+                              "className": "bg-[var(--ev-bg)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
                               "card": [
                                 {
                                   "el": "row",
@@ -9063,7 +9133,7 @@
                                     {
                                       "el": "text",
                                       "value": "เปิดตัว",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
+                                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
                                     },
                                     {
                                       "el": "box",
@@ -9084,7 +9154,87 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": "ภาพ (คำสั่งวาด)",
+                                      "value": "มุมกล้อง",
+                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                                      "icon": "videocam"
+                                    },
+                                    {
+                                      "el": "dropdown",
+                                      "field": "cam1",
+                                      "icon": "auto_awesome",
+                                      "placeholder": "ตามที่ AI เลือกในบท — เลือกเพื่อเปลี่ยน",
+                                      "options": [
+                                        {
+                                          "value": "โคลสอัพใกล้ (close-up)",
+                                          "label": "โคลสอัพใกล้ (close-up)",
+                                          "icon": "center_focus_strong"
+                                        },
+                                        {
+                                          "value": "มาโครใกล้มาก (extreme macro)",
+                                          "label": "มาโครใกล้มาก (extreme macro)",
+                                          "icon": "zoom_in"
+                                        },
+                                        {
+                                          "value": "มุมสูง 45 องศา",
+                                          "label": "มุมสูง 45 องศา",
+                                          "icon": "south_east"
+                                        },
+                                        {
+                                          "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "icon": "arrow_downward"
+                                        },
+                                        {
+                                          "value": "ระดับสายตา (eye-level)",
+                                          "label": "ระดับสายตา (eye-level)",
+                                          "icon": "visibility"
+                                        },
+                                        {
+                                          "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "icon": "arrow_upward"
+                                        },
+                                        {
+                                          "value": "แพนกล้องช้าๆ (slow pan)",
+                                          "label": "แพนกล้องช้าๆ (slow pan)",
+                                          "icon": "swap_horiz"
+                                        },
+                                        {
+                                          "value": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "label": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "icon": "zoom_in_map"
+                                        },
+                                        {
+                                          "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "icon": "zoom_out_map"
+                                        },
+                                        {
+                                          "value": "หมุนรอบสินค้า (orbit)",
+                                          "label": "หมุนรอบสินค้า (orbit)",
+                                          "icon": "360"
+                                        },
+                                        {
+                                          "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "icon": "double_arrow"
+                                        },
+                                        {
+                                          "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "icon": "pan_tool_alt"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "บทภาพ (คำสั่งวาด)",
                                       "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
                                       "icon": "image"
                                     },
@@ -9098,26 +9248,8 @@
                                 },
                                 {
                                   "el": "box",
-                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-3 gap-3",
+                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-2 gap-3",
                                   "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "flex flex-col gap-1.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "มุมกล้อง",
-                                          "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                          "icon": "videocam"
-                                        },
-                                        {
-                                          "el": "input",
-                                          "field": "cam1",
-                                          "placeholder": "ว่าง = AI เลือก",
-                                          "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    },
                                     {
                                       "el": "box",
                                       "className": "flex flex-col gap-1.5",
@@ -9131,7 +9263,7 @@
                                         {
                                           "el": "input",
                                           "field": "ov1",
-                                          "placeholder": "ข้อความ overlay สั้นๆ",
+                                          "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
                                           "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
                                         }
                                       ]
@@ -9160,7 +9292,7 @@
                             },
                             {
                               "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
+                              "className": "bg-[var(--ev-bg)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
                               "card": [
                                 {
                                   "el": "row",
@@ -9183,7 +9315,7 @@
                                     {
                                       "el": "text",
                                       "value": "จุดเด่น",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
+                                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
                                     },
                                     {
                                       "el": "box",
@@ -9204,7 +9336,87 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": "ภาพ (คำสั่งวาด)",
+                                      "value": "มุมกล้อง",
+                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                                      "icon": "videocam"
+                                    },
+                                    {
+                                      "el": "dropdown",
+                                      "field": "cam2",
+                                      "icon": "auto_awesome",
+                                      "placeholder": "ตามที่ AI เลือกในบท — เลือกเพื่อเปลี่ยน",
+                                      "options": [
+                                        {
+                                          "value": "โคลสอัพใกล้ (close-up)",
+                                          "label": "โคลสอัพใกล้ (close-up)",
+                                          "icon": "center_focus_strong"
+                                        },
+                                        {
+                                          "value": "มาโครใกล้มาก (extreme macro)",
+                                          "label": "มาโครใกล้มาก (extreme macro)",
+                                          "icon": "zoom_in"
+                                        },
+                                        {
+                                          "value": "มุมสูง 45 องศา",
+                                          "label": "มุมสูง 45 องศา",
+                                          "icon": "south_east"
+                                        },
+                                        {
+                                          "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "icon": "arrow_downward"
+                                        },
+                                        {
+                                          "value": "ระดับสายตา (eye-level)",
+                                          "label": "ระดับสายตา (eye-level)",
+                                          "icon": "visibility"
+                                        },
+                                        {
+                                          "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "icon": "arrow_upward"
+                                        },
+                                        {
+                                          "value": "แพนกล้องช้าๆ (slow pan)",
+                                          "label": "แพนกล้องช้าๆ (slow pan)",
+                                          "icon": "swap_horiz"
+                                        },
+                                        {
+                                          "value": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "label": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "icon": "zoom_in_map"
+                                        },
+                                        {
+                                          "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "icon": "zoom_out_map"
+                                        },
+                                        {
+                                          "value": "หมุนรอบสินค้า (orbit)",
+                                          "label": "หมุนรอบสินค้า (orbit)",
+                                          "icon": "360"
+                                        },
+                                        {
+                                          "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "icon": "double_arrow"
+                                        },
+                                        {
+                                          "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "icon": "pan_tool_alt"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "บทภาพ (คำสั่งวาด)",
                                       "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
                                       "icon": "image"
                                     },
@@ -9218,26 +9430,8 @@
                                 },
                                 {
                                   "el": "box",
-                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-3 gap-3",
+                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-2 gap-3",
                                   "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "flex flex-col gap-1.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "มุมกล้อง",
-                                          "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                          "icon": "videocam"
-                                        },
-                                        {
-                                          "el": "input",
-                                          "field": "cam2",
-                                          "placeholder": "ว่าง = AI เลือก",
-                                          "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    },
                                     {
                                       "el": "box",
                                       "className": "flex flex-col gap-1.5",
@@ -9251,7 +9445,7 @@
                                         {
                                           "el": "input",
                                           "field": "ov2",
-                                          "placeholder": "ข้อความ overlay สั้นๆ",
+                                          "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
                                           "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
                                         }
                                       ]
@@ -9280,7 +9474,7 @@
                             },
                             {
                               "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
+                              "className": "bg-[var(--ev-bg)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
                               "card": [
                                 {
                                   "el": "row",
@@ -9303,7 +9497,7 @@
                                     {
                                       "el": "text",
                                       "value": "ใช้จริง",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
+                                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
                                     },
                                     {
                                       "el": "box",
@@ -9324,7 +9518,87 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": "ภาพ (คำสั่งวาด)",
+                                      "value": "มุมกล้อง",
+                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                                      "icon": "videocam"
+                                    },
+                                    {
+                                      "el": "dropdown",
+                                      "field": "cam3",
+                                      "icon": "auto_awesome",
+                                      "placeholder": "ตามที่ AI เลือกในบท — เลือกเพื่อเปลี่ยน",
+                                      "options": [
+                                        {
+                                          "value": "โคลสอัพใกล้ (close-up)",
+                                          "label": "โคลสอัพใกล้ (close-up)",
+                                          "icon": "center_focus_strong"
+                                        },
+                                        {
+                                          "value": "มาโครใกล้มาก (extreme macro)",
+                                          "label": "มาโครใกล้มาก (extreme macro)",
+                                          "icon": "zoom_in"
+                                        },
+                                        {
+                                          "value": "มุมสูง 45 องศา",
+                                          "label": "มุมสูง 45 องศา",
+                                          "icon": "south_east"
+                                        },
+                                        {
+                                          "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "icon": "arrow_downward"
+                                        },
+                                        {
+                                          "value": "ระดับสายตา (eye-level)",
+                                          "label": "ระดับสายตา (eye-level)",
+                                          "icon": "visibility"
+                                        },
+                                        {
+                                          "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "icon": "arrow_upward"
+                                        },
+                                        {
+                                          "value": "แพนกล้องช้าๆ (slow pan)",
+                                          "label": "แพนกล้องช้าๆ (slow pan)",
+                                          "icon": "swap_horiz"
+                                        },
+                                        {
+                                          "value": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "label": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "icon": "zoom_in_map"
+                                        },
+                                        {
+                                          "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "icon": "zoom_out_map"
+                                        },
+                                        {
+                                          "value": "หมุนรอบสินค้า (orbit)",
+                                          "label": "หมุนรอบสินค้า (orbit)",
+                                          "icon": "360"
+                                        },
+                                        {
+                                          "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "icon": "double_arrow"
+                                        },
+                                        {
+                                          "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "icon": "pan_tool_alt"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "บทภาพ (คำสั่งวาด)",
                                       "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
                                       "icon": "image"
                                     },
@@ -9338,26 +9612,8 @@
                                 },
                                 {
                                   "el": "box",
-                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-3 gap-3",
+                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-2 gap-3",
                                   "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "flex flex-col gap-1.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "มุมกล้อง",
-                                          "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                          "icon": "videocam"
-                                        },
-                                        {
-                                          "el": "input",
-                                          "field": "cam3",
-                                          "placeholder": "ว่าง = AI เลือก",
-                                          "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    },
                                     {
                                       "el": "box",
                                       "className": "flex flex-col gap-1.5",
@@ -9371,7 +9627,7 @@
                                         {
                                           "el": "input",
                                           "field": "ov3",
-                                          "placeholder": "ข้อความ overlay สั้นๆ",
+                                          "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
                                           "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
                                         }
                                       ]
@@ -9400,7 +9656,7 @@
                             },
                             {
                               "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
+                              "className": "bg-[var(--ev-bg)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
                               "card": [
                                 {
                                   "el": "row",
@@ -9423,7 +9679,7 @@
                                     {
                                       "el": "text",
                                       "value": "หลากหลาย",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
+                                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
                                     },
                                     {
                                       "el": "box",
@@ -9444,7 +9700,87 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": "ภาพ (คำสั่งวาด)",
+                                      "value": "มุมกล้อง",
+                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                                      "icon": "videocam"
+                                    },
+                                    {
+                                      "el": "dropdown",
+                                      "field": "cam4",
+                                      "icon": "auto_awesome",
+                                      "placeholder": "ตามที่ AI เลือกในบท — เลือกเพื่อเปลี่ยน",
+                                      "options": [
+                                        {
+                                          "value": "โคลสอัพใกล้ (close-up)",
+                                          "label": "โคลสอัพใกล้ (close-up)",
+                                          "icon": "center_focus_strong"
+                                        },
+                                        {
+                                          "value": "มาโครใกล้มาก (extreme macro)",
+                                          "label": "มาโครใกล้มาก (extreme macro)",
+                                          "icon": "zoom_in"
+                                        },
+                                        {
+                                          "value": "มุมสูง 45 องศา",
+                                          "label": "มุมสูง 45 องศา",
+                                          "icon": "south_east"
+                                        },
+                                        {
+                                          "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "icon": "arrow_downward"
+                                        },
+                                        {
+                                          "value": "ระดับสายตา (eye-level)",
+                                          "label": "ระดับสายตา (eye-level)",
+                                          "icon": "visibility"
+                                        },
+                                        {
+                                          "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "icon": "arrow_upward"
+                                        },
+                                        {
+                                          "value": "แพนกล้องช้าๆ (slow pan)",
+                                          "label": "แพนกล้องช้าๆ (slow pan)",
+                                          "icon": "swap_horiz"
+                                        },
+                                        {
+                                          "value": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "label": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "icon": "zoom_in_map"
+                                        },
+                                        {
+                                          "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "icon": "zoom_out_map"
+                                        },
+                                        {
+                                          "value": "หมุนรอบสินค้า (orbit)",
+                                          "label": "หมุนรอบสินค้า (orbit)",
+                                          "icon": "360"
+                                        },
+                                        {
+                                          "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "icon": "double_arrow"
+                                        },
+                                        {
+                                          "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "icon": "pan_tool_alt"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "บทภาพ (คำสั่งวาด)",
                                       "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
                                       "icon": "image"
                                     },
@@ -9458,26 +9794,8 @@
                                 },
                                 {
                                   "el": "box",
-                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-3 gap-3",
+                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-2 gap-3",
                                   "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "flex flex-col gap-1.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "มุมกล้อง",
-                                          "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                          "icon": "videocam"
-                                        },
-                                        {
-                                          "el": "input",
-                                          "field": "cam4",
-                                          "placeholder": "ว่าง = AI เลือก",
-                                          "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    },
                                     {
                                       "el": "box",
                                       "className": "flex flex-col gap-1.5",
@@ -9491,7 +9809,7 @@
                                         {
                                           "el": "input",
                                           "field": "ov4",
-                                          "placeholder": "ข้อความ overlay สั้นๆ",
+                                          "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
                                           "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
                                         }
                                       ]
@@ -9520,7 +9838,7 @@
                             },
                             {
                               "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
+                              "className": "bg-[var(--ev-bg)] border border-[var(--ev-border)] rounded-[20px] p-4 min-[640px]:p-5 flex flex-col gap-3",
                               "card": [
                                 {
                                   "el": "row",
@@ -9543,7 +9861,7 @@
                                     {
                                       "el": "text",
                                       "value": "ชวนซื้อ",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
+                                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
                                     },
                                     {
                                       "el": "box",
@@ -9564,7 +9882,87 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": "ภาพ (คำสั่งวาด)",
+                                      "value": "มุมกล้อง",
+                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                                      "icon": "videocam"
+                                    },
+                                    {
+                                      "el": "dropdown",
+                                      "field": "cam5",
+                                      "icon": "auto_awesome",
+                                      "placeholder": "ตามที่ AI เลือกในบท — เลือกเพื่อเปลี่ยน",
+                                      "options": [
+                                        {
+                                          "value": "โคลสอัพใกล้ (close-up)",
+                                          "label": "โคลสอัพใกล้ (close-up)",
+                                          "icon": "center_focus_strong"
+                                        },
+                                        {
+                                          "value": "มาโครใกล้มาก (extreme macro)",
+                                          "label": "มาโครใกล้มาก (extreme macro)",
+                                          "icon": "zoom_in"
+                                        },
+                                        {
+                                          "value": "มุมสูง 45 องศา",
+                                          "label": "มุมสูง 45 องศา",
+                                          "icon": "south_east"
+                                        },
+                                        {
+                                          "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
+                                          "icon": "arrow_downward"
+                                        },
+                                        {
+                                          "value": "ระดับสายตา (eye-level)",
+                                          "label": "ระดับสายตา (eye-level)",
+                                          "icon": "visibility"
+                                        },
+                                        {
+                                          "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
+                                          "icon": "arrow_upward"
+                                        },
+                                        {
+                                          "value": "แพนกล้องช้าๆ (slow pan)",
+                                          "label": "แพนกล้องช้าๆ (slow pan)",
+                                          "icon": "swap_horiz"
+                                        },
+                                        {
+                                          "value": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "label": "ซูมเข้าช้าๆ (slow zoom-in)",
+                                          "icon": "zoom_in_map"
+                                        },
+                                        {
+                                          "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
+                                          "icon": "zoom_out_map"
+                                        },
+                                        {
+                                          "value": "หมุนรอบสินค้า (orbit)",
+                                          "label": "หมุนรอบสินค้า (orbit)",
+                                          "icon": "360"
+                                        },
+                                        {
+                                          "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
+                                          "icon": "double_arrow"
+                                        },
+                                        {
+                                          "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
+                                          "icon": "pan_tool_alt"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "บทภาพ (คำสั่งวาด)",
                                       "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
                                       "icon": "image"
                                     },
@@ -9578,26 +9976,8 @@
                                 },
                                 {
                                   "el": "box",
-                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-3 gap-3",
+                                  "className": "grid grid-cols-1 min-[900px]:grid-cols-2 gap-3",
                                   "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "flex flex-col gap-1.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "มุมกล้อง",
-                                          "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                                          "icon": "videocam"
-                                        },
-                                        {
-                                          "el": "input",
-                                          "field": "cam5",
-                                          "placeholder": "ว่าง = AI เลือก",
-                                          "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    },
                                     {
                                       "el": "box",
                                       "className": "flex flex-col gap-1.5",
@@ -9611,7 +9991,7 @@
                                         {
                                           "el": "input",
                                           "field": "ov5",
-                                          "placeholder": "ข้อความ overlay สั้นๆ",
+                                          "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
                                           "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)]"
                                         }
                                       ]
@@ -9672,7 +10052,7 @@
                                     },
                                     {
                                       "el": "text",
-                                      "value": "ภาพเสร็จแล้ว — ดูที่หน้าภาพ",
+                                      "value": "ภาพเสร็จแล้ว",
                                       "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-green-600"
                                     }
                                   ]
@@ -9683,16 +10063,16 @@
                                   "label": "วาดใหม่ด้วยบทล่าสุด",
                                   "icon": "brush",
                                   "variant": "ghost",
-                                  "className": "!h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px]"
+                                  "className": "!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px]"
                                 },
                                 {
                                   "el": "button",
                                   "action": "set",
                                   "to": "__page",
-                                  "value": "studio",
+                                  "value": "boards",
                                   "label": "ไปหน้าภาพ",
                                   "icon": "arrow_forward",
-                                  "className": "!h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold ml-auto border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                                  "className": "!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold ml-auto border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
                                   "variant": "ghost"
                                 }
                               ],
@@ -9720,27 +10100,17 @@
                   "card": [
                     {
                       "el": "text",
-                      "value": "ภาพครบทุกคลิปแล้ว ไปหน้าภาพเพื่อตรวจ แล้วค่อยสั่งวิดีโอ",
-                      "className": "!text-[13px] min-[640px]:!text-[12px] opacity-55 flex-1 min-w-[220px]"
-                    },
-                    {
-                      "el": "gen-phase",
-                      "ops": [
-                        "mnBoard"
-                      ],
-                      "icon": "brush",
-                      "variant": "outline",
-                      "label": "สร้างภาพทั้งหมด",
-                      "className": "justify-center !h-12 !px-5 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold"
+                      "value": "รีวิวครบแล้ว ไปสร้างภาพต่อได้เลย",
+                      "className": "!text-[13px] min-[640px]:!text-[12px] opacity-55 flex-1 min-w-[200px]"
                     },
                     {
                       "el": "button",
                       "action": "set",
                       "to": "__page",
-                      "value": "studio",
+                      "value": "boards",
                       "label": "ไปหน้าภาพ",
                       "icon": "arrow_forward",
-                      "className": "justify-center !h-12 !px-5 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                      "className": "justify-center !h-12 !px-6 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                     }
                   ],
                   "when": {
@@ -9787,9 +10157,37 @@
             }
           ],
           "when": {
-            "op": "eq",
-            "a": "{values.__page}",
-            "b": "script"
+            "op": "or",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.__page}",
+                "b": "script"
+              },
+              {
+                "op": "and",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__page}",
+                    "b": ""
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.mode}",
+                    "b": "manual"
+                  },
+                  {
+                    "op": "gt",
+                    "a": {
+                      "op": "count",
+                      "from": "tasks"
+                    },
+                    "b": 0
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -9858,7 +10256,7 @@
             },
             {
               "el": "box",
-              "className": "w-full max-w-[1060px] mx-auto px-4 min-[640px]:px-6 py-5 min-[640px]:py-7 flex flex-col gap-5",
+              "className": "w-full max-w-[1060px] mx-auto px-2 min-[640px]:px-6 py-4 min-[640px]:py-7 flex flex-col gap-5",
               "card": [
                 {
                   "el": "row",
@@ -9883,12 +10281,12 @@
                       "card": [
                         {
                           "el": "text",
-                          "value": "ภาพ & วิดีโอ — ตรวจทีละคลิป",
+                          "value": "ภาพสตอรีบอร์ด — ตรวจทีละคลิป",
                           "className": "!text-[22px] min-[640px]:!text-[21px] font-black !text-[var(--ev-text)]"
                         },
                         {
                           "el": "text",
-                          "value": "ภาพโอเคค่อยสั่งวิดีโอรายคลิป หรือรอครบแล้วสั่งทั้งหมดทีเดียว",
+                          "value": "สร้างทั้งหมดทีเดียว หรือกดจากการ์ดรายคลิป · ภาพโอเคค่อยไปหน้าวิดีโอ",
                           "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
                         }
                       ]
@@ -9970,9 +10368,41 @@
                           "el": "button",
                           "action": "set",
                           "to": "__page",
-                          "value": "studio",
+                          "value": "videos",
                           "label": "3 วิดีโอ",
                           "icon": "movie",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "gallery",
+                          "label": "4 คลังคลิป",
+                          "icon": "photo_library",
                           "variant": "ghost",
                           "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
                           "when": {
@@ -10001,21 +10431,11 @@
                         "mnBoard"
                       ],
                       "icon": "brush",
-                      "variant": "outline",
-                      "label": "สร้างภาพทั้งหมด",
-                      "className": "justify-center !h-12 !px-5 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold"
-                    },
-                    {
-                      "el": "gen-phase",
-                      "ops": [
-                        "mnVideo"
-                      ],
-                      "icon": "movie",
                       "variant": "solid",
                       "label": {
                         "op": "concat",
                         "parts": [
-                          "สร้างวิดีโอทั้งหมด · ",
+                          "สร้างภาพทั้งหมด · เหลือ ",
                           {
                             "op": "sub",
                             "a": {
@@ -10025,29 +10445,34 @@
                             "b": {
                               "op": "count",
                               "from": "tasks",
-                              "slot": "video"
+                              "slot": "board"
                             }
                           },
                           " คลิป"
                         ]
                       },
-                      "className": "justify-center !h-12 !px-6 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                      "disabledWhen": {
-                        "op": "not",
-                        "a": {
-                          "op": "eq",
-                          "a": {
+                      "className": "justify-center !h-13 !h-[52px] !px-6 !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                    },
+                    {
+                      "el": "text",
+                      "value": {
+                        "op": "concat",
+                        "parts": [
+                          "เสร็จแล้ว ",
+                          {
                             "op": "count",
                             "from": "tasks",
                             "slot": "board"
                           },
-                          "b": {
+                          " / ",
+                          {
                             "op": "count",
                             "from": "tasks"
-                          }
-                        }
+                          },
+                          " คลิป"
+                        ]
                       },
-                      "reason": "ต้องมีภาพครบทุกคลิปก่อน — สร้างภาพที่เหลือให้เสร็จ"
+                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold opacity-70 tabular-nums ml-auto"
                     }
                   ]
                 },
@@ -10327,232 +10752,1360 @@
                   }
                 },
                 {
-                  "el": "box",
-                  "className": "grid grid-cols-1 min-[560px]:grid-cols-3 gap-3",
+                  "el": "repeat",
+                  "coll": "tasks",
+                  "className": "flex flex-col gap-4",
                   "card": [
                     {
                       "el": "box",
-                      "className": "flex-1 min-w-0 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
+                      "className": "flex flex-col",
                       "card": [
                         {
-                          "el": "row",
-                          "className": "items-center gap-3",
-                          "style": {
-                            "flexWrap": "nowrap"
-                          },
+                          "el": "box",
+                          "className": "rounded-[26px] border border-[var(--ev-border)] bg-gradient-to-br from-[var(--ev-surface)] to-[var(--ev-bg)] overflow-hidden flex flex-col",
                           "card": [
                             {
                               "el": "box",
-                              "className": "w-[44px] h-[44px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
+                              "className": "flex flex-col min-[720px]:flex-row",
                               "card": [
                                 {
-                                  "el": "icon",
-                                  "icon": "sell",
-                                  "textSize": "text-[22px]",
-                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex flex-col min-w-0 gap-1",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "สินค้าที่ใช้",
-                                  "className": "!text-[13px] min-[640px]:!text-[12.5px] font-bold uppercase tracking-[0.14em] opacity-60 !text-[var(--ev-text)]"
+                                  "el": "box",
+                                  "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-[var(--ev-accent)]/[0.03]",
+                                  "card": [
+                                    {
+                                      "el": "box",
+                                      "className": "relative",
+                                      "card": [
+                                        {
+                                          "el": "md",
+                                          "value": "{item.clipIndex}",
+                                          "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
+                                        },
+                                        {
+                                          "el": "box",
+                                          "className": "w-[240px] min-[720px]:w-[220px]",
+                                          "card": [
+                                            {
+                                              "el": "media-slot",
+                                              "src": "{item.slots.board}",
+                                              "aspect": "3:4",
+                                              "style": {
+                                                "borderRadius": "20px"
+                                              },
+                                              "className": "ring-1 ring-[var(--ev-border)]"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
                                 },
                                 {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      {
-                                        "op": "count",
-                                        "from": "products",
-                                        "where": "enabled=true"
+                                  "el": "box",
+                                  "className": "flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3 border-t border-[var(--ev-border)] min-[720px]:border-t-0 justify-center",
+                                  "card": [
+                                    {
+                                      "el": "row",
+                                      "className": "items-center gap-2.5",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "refName",
+                                            "from": "products",
+                                            "field": "prod",
+                                            "fallback": "{item.productName}"
+                                          },
+                                          "className": "font-bold !text-[17px] min-[640px]:!text-[16px] truncate !text-[var(--ev-text)]"
+                                        },
+                                        {
+                                          "el": "box",
+                                          "className": "!text-[12px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] shrink-0",
+                                          "card": [
+                                            {
+                                              "el": "text",
+                                              "value": "คลิปที่ {item.clipIndex}",
+                                              "className": "!text-[12px] min-[640px]:!text-[11px] font-bold opacity-70"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "row",
+                                          "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 ml-auto shrink-0",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "card": [
+                                            {
+                                              "el": "box",
+                                              "className": "w-2 h-2 rounded-full bg-amber-500",
+                                              "card": []
+                                            },
+                                            {
+                                              "el": "text",
+                                              "value": "รอวาดภาพ",
+                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-amber-600"
+                                            }
+                                          ],
+                                          "when": {
+                                            "op": "eq",
+                                            "a": "{item.slots.board}",
+                                            "b": ""
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.synopsis}",
+                                      "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
+                                      "when": "item.synopsis!="
+                                    },
+                                    {
+                                      "el": "gen-button",
+                                      "op": "mnBoard",
+                                      "label": "สร้างภาพคลิปนี้",
+                                      "icon": "brush",
+                                      "className": "w-full justify-center !h-[52px] !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
                                       }
-                                    ]
-                                  },
-                                  "className": "!text-[31px] min-[640px]:!text-[30px] font-black !text-[var(--ev-text)] tabular-nums leading-none"
+                                    },
+                                    {
+                                      "el": "row",
+                                      "className": "items-center gap-2.5 flex-wrap",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "retry-button",
+                                          "op": "mnBoard",
+                                          "label": "วาดใหม่",
+                                          "icon": "brush",
+                                          "variant": "ghost",
+                                          "className": "!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px] border border-[var(--ev-border)]"
+                                        },
+                                        {
+                                          "el": "button",
+                                          "action": "set",
+                                          "to": "__page",
+                                          "value": "script",
+                                          "label": "แก้บทคลิปนี้",
+                                          "icon": "edit_note",
+                                          "className": "!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px] border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                                          "variant": "ghost"
+                                        },
+                                        {
+                                          "el": "row",
+                                          "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 ml-auto",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "card": [
+                                            {
+                                              "el": "icon",
+                                              "icon": "check_circle",
+                                              "textSize": "text-[15px]",
+                                              "className": "!text-green-600 leading-none flex items-center justify-center"
+                                            },
+                                            {
+                                              "el": "text",
+                                              "value": "พร้อมทำวิดีโอ",
+                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-green-600"
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.board}",
+                                          "b": ""
+                                        }
+                                      }
+                                    }
+                                  ]
                                 }
                               ]
                             }
                           ]
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap justify-end",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "__page",
+                      "value": "videos",
+                      "label": "ไปหน้าวิดีโอ",
+                      "icon": "arrow_forward",
+                      "className": "justify-center !h-12 !px-6 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                    }
+                  ],
+                  "when": {
+                    "op": "gt",
+                    "a": {
+                      "op": "count",
+                      "from": "tasks",
+                      "slot": "board"
+                    },
+                    "b": 0
+                  }
+                },
+                {
+                  "el": "repeat",
+                  "coll": "control",
+                  "card": [
+                    {
+                      "el": "confirm-button",
+                      "op": "mnQueue",
+                      "label": "เริ่มรอบใหม่ — จัดคิวจากสินค้า/บท/สไตล์ล่าสุด",
+                      "placeholder": "ยืนยัน? บอร์ด+วิดีโอเดิมจะถูกล้าง",
+                      "icon": "restart_alt",
+                      "variant": "ghost",
+                      "className": "w-full justify-center !h-12 !rounded-xl !text-[14px] min-[640px]:!text-[13px] opacity-70",
+                      "when": {
+                        "op": "or",
+                        "a": {
+                          "op": "gt",
+                          "a": {
+                            "op": "count",
+                            "from": "tasks"
+                          },
+                          "b": 0
+                        },
+                        "b": {
+                          "op": "some",
+                          "from": "products",
+                          "where": "data.plan!="
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "when": {
+            "op": "eq",
+            "a": "{values.__page}",
+            "b": "boards"
+          }
+        },
+        {
+          "el": "box",
+          "className": "min-h-full flex flex-col",
+          "card": [
+            {
+              "el": "box",
+              "className": "mx-4 min-[640px]:mx-5 mt-4 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl px-5 py-3.5 flex flex-row items-center gap-3.5",
+              "card": [
+                {
+                  "el": "spinner",
+                  "className": "shrink-0"
+                },
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำงาน"
+                  },
+                  "className": "!text-[19px] min-[640px]:!text-[18px] font-bold !text-[var(--ev-text)]"
+                },
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "concat",
+                    "parts": [
+                      "{values.__runDone}",
+                      "/",
+                      "{values.__runTotal}"
+                    ]
+                  },
+                  "className": "!text-[18px] min-[640px]:!text-[17px] opacity-70 tabular-nums"
+                },
+                {
+                  "el": "box",
+                  "className": "flex-1",
+                  "card": []
+                },
+                {
+                  "el": "button",
+                  "action": "stop",
+                  "label": "หยุดชั่วคราว",
+                  "icon": "pause",
+                  "variant": "ghost",
+                  "className": "shrink-0 !h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[18px] min-[640px]:!text-[17px]"
+                }
+              ],
+              "when": {
+                "op": "or",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "running"
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "retrying"
+                  }
+                ]
+              }
+            },
+            {
+              "el": "box",
+              "className": "w-full max-w-[1060px] mx-auto px-2 min-[640px]:px-6 py-4 min-[640px]:py-7 flex flex-col gap-5",
+              "card": [
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap min-[900px]:flex-nowrap",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "__page",
+                      "value": "boards",
+                      "label": "",
+                      "icon": "arrow_back",
+                      "variant": "ghost",
+                      "className": "!w-12 !h-12 min-[640px]:!w-11 min-[640px]:!h-11 !rounded-xl justify-center !gap-0 shrink-0 !px-0"
                     },
                     {
                       "el": "box",
-                      "className": "flex-1 min-w-0 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
+                      "className": "flex flex-col gap-0.5 flex-1 min-w-[220px]",
                       "card": [
                         {
+                          "el": "text",
+                          "value": "วิดีโอ — Omni Flash 10 วิ",
+                          "className": "!text-[22px] min-[640px]:!text-[21px] font-black !text-[var(--ev-text)]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "สร้างทั้งหมดทีเดียว หรือกดรายคลิป · เสร็จแล้วรวมอยู่ที่คลังคลิป",
+                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center gap-1.5 overflow-x-auto",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "script",
+                          "label": "1 บท",
+                          "icon": "edit_note",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "boards",
+                          "label": "2 ภาพ",
+                          "icon": "image",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
                           "el": "row",
-                          "className": "items-center gap-3",
+                          "className": "items-center gap-2 px-3.5 py-2 rounded-full border shrink-0 bg-[var(--ev-accent)] border-transparent",
                           "style": {
                             "flexWrap": "nowrap"
                           },
                           "card": [
                             {
-                              "el": "box",
-                              "className": "w-[44px] h-[44px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "dashboard",
-                                  "textSize": "text-[22px]",
-                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                                }
-                              ]
+                              "el": "icon",
+                              "icon": "movie",
+                              "textSize": "text-[17px]",
+                              "className": "!text-white leading-none flex items-center justify-center"
                             },
                             {
-                              "el": "box",
-                              "className": "flex flex-col min-w-0 gap-1",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "สตอรีบอร์ด",
-                                  "className": "!text-[13px] min-[640px]:!text-[12.5px] font-bold uppercase tracking-[0.14em] opacity-60 !text-[var(--ev-text)]"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      " / ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "className": "!text-[31px] min-[640px]:!text-[30px] font-black !text-[var(--ev-text)] tabular-nums leading-none"
-                                }
-                              ]
+                              "el": "text",
+                              "value": "3 วิดีโอ",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] font-bold !text-white whitespace-nowrap"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "gallery",
+                          "label": "4 คลังคลิป",
+                          "icon": "photo_library",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "gen-phase",
+                      "ops": [
+                        "mnVideo"
+                      ],
+                      "icon": "movie",
+                      "variant": "solid",
+                      "label": {
+                        "op": "concat",
+                        "parts": [
+                          "สร้างวิดีโอทั้งหมด · เหลือ ",
+                          {
+                            "op": "sub",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": {
+                              "op": "count",
+                              "from": "tasks",
+                              "slot": "video"
+                            }
+                          },
+                          " คลิป"
+                        ]
+                      },
+                      "className": "justify-center !h-[52px] !px-6 !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                      "disabledWhen": {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": {
+                            "op": "count",
+                            "from": "tasks",
+                            "slot": "board"
+                          },
+                          "b": {
+                            "op": "count",
+                            "from": "tasks"
+                          }
+                        }
+                      },
+                      "reason": "ต้องมีภาพครบทุกคลิปก่อน"
+                    },
+                    {
+                      "el": "text",
+                      "value": {
+                        "op": "concat",
+                        "parts": [
+                          "เสร็จแล้ว ",
+                          {
+                            "op": "count",
+                            "from": "tasks",
+                            "slot": "video"
+                          },
+                          " / ",
+                          {
+                            "op": "count",
+                            "from": "tasks"
+                          },
+                          " คลิป"
+                        ]
+                      },
+                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold opacity-70 tabular-nums ml-auto"
+                    }
+                  ]
+                },
+                {
+                  "el": "box",
+                  "className": "flex flex-col gap-2.5 px-4 py-4 rounded-2xl bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/30",
+                  "card": [
+                    {
+                      "el": "row",
+                      "className": "items-center gap-3.5",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "w-[46px] h-[46px] rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "edit_note",
+                              "textSize": "text-[24px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center animate-pulse",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnPlan"
+                              }
+                            },
+                            {
+                              "el": "icon",
+                              "icon": "playlist_add",
+                              "textSize": "text-[24px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center animate-pulse",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnQueue"
+                              }
+                            },
+                            {
+                              "el": "icon",
+                              "icon": "brush",
+                              "textSize": "text-[24px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center animate-pulse",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnBoard"
+                              }
+                            },
+                            {
+                              "el": "icon",
+                              "icon": "movie",
+                              "textSize": "text-[24px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center animate-pulse",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnVideo"
+                              }
                             }
                           ]
                         },
                         {
                           "el": "box",
-                          "className": "mt-3",
+                          "className": "flex-1 min-w-0 flex flex-col gap-1",
                           "card": [
                             {
-                              "el": "progress-bar",
-                              "value": {
-                                "op": "mul",
-                                "a": {
-                                  "op": "div",
-                                  "a": {
-                                    "op": "count",
-                                    "from": "tasks",
-                                    "slot": "board"
-                                  },
-                                  "b": {
-                                    "op": "max",
-                                    "a": {
-                                      "op": "count",
-                                      "from": "tasks"
-                                    },
-                                    "b": 1
-                                  }
-                                },
-                                "b": 100
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "style": {
+                                "flexWrap": "nowrap"
                               },
-                              "className": "!h-2 !bg-white border border-[var(--ev-border)]"
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "lookup",
+                                    "table": "opNames",
+                                    "key": "{values.__runStage}",
+                                    "fallback": "กำลังทำงาน"
+                                  },
+                                  "className": "!text-[18px] min-[640px]:!text-[17px] font-bold !text-[var(--ev-text)]"
+                                },
+                                {
+                                  "el": "row",
+                                  "className": "items-center gap-1 mt-1",
+                                  "style": {
+                                    "flexWrap": "nowrap"
+                                  },
+                                  "card": [
+                                    {
+                                      "el": "box",
+                                      "className": "w-1.5 h-1.5 rounded-full bg-[var(--ev-accent)] animate-bounce",
+                                      "card": []
+                                    },
+                                    {
+                                      "el": "box",
+                                      "className": "w-1.5 h-1.5 rounded-full bg-[var(--ev-accent)] animate-bounce [animation-delay:0.15s]",
+                                      "card": []
+                                    },
+                                    {
+                                      "el": "box",
+                                      "className": "w-1.5 h-1.5 rounded-full bg-[var(--ev-accent)] animate-bounce [animation-delay:0.3s]",
+                                      "card": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": "หมีอ่านรูป+จุดเด่นสินค้า แล้วเขียนบท 5 ฉากให้แต่ละคลิป",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-65 leading-relaxed",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnPlan"
+                              }
+                            },
+                            {
+                              "el": "text",
+                              "value": "กำลังแตกบทเป็นการ์ดคลิป — เดี๋ยวโผล่ทางขวา",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-65 leading-relaxed",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnQueue"
+                              }
+                            },
+                            {
+                              "el": "text",
+                              "value": "กำลังวาดภาพสตอรีบอร์ดทีละคลิป",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-65 leading-relaxed",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnBoard"
+                              }
+                            },
+                            {
+                              "el": "text",
+                              "value": "กำลังถ่ายวิดีโอ 10 วิ ทีละคลิป",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] opacity-65 leading-relaxed",
+                              "when": {
+                                "op": "eq",
+                                "a": "{values.__runStage}",
+                                "b": "mnVideo"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "shrink-0 flex flex-col items-end gap-1",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "{values.__runDone}",
+                                  "/",
+                                  "{values.__runTotal}"
+                                ]
+                              },
+                              "className": "!text-[22px] min-[640px]:!text-[21px] font-black !text-[var(--ev-accent)] tabular-nums leading-none",
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{values.__runTotal}",
+                                  "b": ""
+                                }
+                              }
+                            },
+                            {
+                              "el": "text",
+                              "value": "เสร็จแล้ว",
+                              "className": "!text-[12px] min-[640px]:!text-[11px] opacity-60 font-bold",
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{values.__runTotal}",
+                                  "b": ""
+                                }
+                              }
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "el": "box",
-                      "className": "flex-1 min-w-0 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
+                      "el": "row",
+                      "className": "items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/[0.1] border border-amber-500/25",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
                       "card": [
                         {
+                          "el": "icon",
+                          "icon": "hourglass_top",
+                          "textSize": "text-[16px]",
+                          "className": "!text-amber-600 leading-none flex items-center justify-center animate-pulse"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "พักตามคิวโมเดล อีก ",
+                              "{values.__runCoolLeft}",
+                              " วิ แล้วไปต่อเอง"
+                            ]
+                          },
+                          "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 font-medium"
+                        }
+                      ],
+                      "when": {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": "{values.__runCoolTotal}",
+                          "b": ""
+                        }
+                      }
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/[0.1] border border-amber-500/25",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "icon",
+                          "icon": "autorenew",
+                          "textSize": "text-[16px]",
+                          "className": "!text-amber-600 leading-none flex items-center justify-center animate-spin"
+                        },
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "คิวแน่น กำลังลองใหม่ (ครั้งที่ ",
+                              "{values.__runAttempt}",
+                              ")"
+                            ]
+                          },
+                          "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 font-medium"
+                        }
+                      ],
+                      "when": {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "retrying"
+                      }
+                    }
+                  ],
+                  "when": {
+                    "op": "or",
+                    "list": [
+                      {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "running"
+                      },
+                      {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "retrying"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "el": "repeat",
+                  "coll": "tasks",
+                  "className": "flex flex-col gap-4",
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "flex flex-col",
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "rounded-[26px] border border-[var(--ev-border)] bg-gradient-to-br from-[var(--ev-surface)] to-[var(--ev-bg)] overflow-hidden flex flex-col",
+                          "card": [
+                            {
+                              "el": "box",
+                              "className": "flex flex-col min-[720px]:flex-row",
+                              "card": [
+                                {
+                                  "el": "box",
+                                  "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-green-500/[0.03]",
+                                  "card": [
+                                    {
+                                      "el": "box",
+                                      "className": "relative",
+                                      "card": [
+                                        {
+                                          "el": "md",
+                                          "value": "{item.clipIndex}",
+                                          "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
+                                        },
+                                        {
+                                          "el": "box",
+                                          "className": "w-[210px] min-[720px]:w-[200px]",
+                                          "card": [
+                                            {
+                                              "el": "media-slot",
+                                              "src": "{item.slots.video}",
+                                              "aspect": "9:16",
+                                              "showPlay": true,
+                                              "style": {
+                                                "borderRadius": "20px"
+                                              },
+                                              "className": "ring-1 ring-[var(--ev-border)]"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3 border-t border-[var(--ev-border)] min-[720px]:border-t-0 justify-center",
+                                  "card": [
+                                    {
+                                      "el": "row",
+                                      "className": "items-center gap-2.5",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "text",
+                                          "value": {
+                                            "op": "refName",
+                                            "from": "products",
+                                            "field": "prod",
+                                            "fallback": "{item.productName}"
+                                          },
+                                          "className": "font-bold !text-[17px] min-[640px]:!text-[16px] truncate !text-[var(--ev-text)]"
+                                        },
+                                        {
+                                          "el": "box",
+                                          "className": "!text-[12px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] shrink-0",
+                                          "card": [
+                                            {
+                                              "el": "text",
+                                              "value": "คลิปที่ {item.clipIndex}",
+                                              "className": "!text-[12px] min-[640px]:!text-[11px] font-bold opacity-70"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "el": "row",
+                                          "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 ml-auto shrink-0",
+                                          "style": {
+                                            "flexWrap": "nowrap"
+                                          },
+                                          "card": [
+                                            {
+                                              "el": "box",
+                                              "className": "w-2 h-2 rounded-full bg-green-500",
+                                              "card": []
+                                            },
+                                            {
+                                              "el": "text",
+                                              "value": "เสร็จแล้ว",
+                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-green-600"
+                                            }
+                                          ],
+                                          "when": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.video}",
+                                              "b": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "ต้องมีภาพก่อนถึงสร้างวิดีโอได้ — กลับไปหน้าภาพ",
+                                      "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      }
+                                    },
+                                    {
+                                      "el": "gen-button",
+                                      "op": "mnVideo",
+                                      "label": "สร้างวิดีโอคลิปนี้",
+                                      "icon": "movie",
+                                      "className": "w-full justify-center !h-[52px] !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "eq",
+                                            "a": "{item.slots.board}",
+                                            "b": ""
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "el": "row",
+                                      "className": "items-center gap-2.5 flex-wrap",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "download-button",
+                                          "to": "{item.slots.video}",
+                                          "label": "ดาวน์โหลด",
+                                          "icon": "download",
+                                          "variant": "solid",
+                                          "className": "!h-12 !px-5 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                        },
+                                        {
+                                          "el": "retry-button",
+                                          "op": "mnVideo",
+                                          "label": "สร้างใหม่",
+                                          "icon": "refresh",
+                                          "variant": "ghost",
+                                          "className": "!h-11 !px-4 !rounded-xl !text-[14px] min-[640px]:!text-[13px] border border-[var(--ev-border)]"
+                                        }
+                                      ],
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap justify-end",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "__page",
+                      "value": "gallery",
+                      "label": "ไปคลังคลิป",
+                      "icon": "arrow_forward",
+                      "className": "justify-center !h-12 !px-6 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                    }
+                  ],
+                  "when": {
+                    "op": "gt",
+                    "a": {
+                      "op": "count",
+                      "from": "tasks",
+                      "slot": "video"
+                    },
+                    "b": 0
+                  }
+                },
+                {
+                  "el": "repeat",
+                  "coll": "control",
+                  "card": [
+                    {
+                      "el": "confirm-button",
+                      "op": "mnQueue",
+                      "label": "เริ่มรอบใหม่ — จัดคิวจากสินค้า/บท/สไตล์ล่าสุด",
+                      "placeholder": "ยืนยัน? บอร์ด+วิดีโอเดิมจะถูกล้าง",
+                      "icon": "restart_alt",
+                      "variant": "ghost",
+                      "className": "w-full justify-center !h-12 !rounded-xl !text-[14px] min-[640px]:!text-[13px] opacity-70",
+                      "when": {
+                        "op": "or",
+                        "a": {
+                          "op": "gt",
+                          "a": {
+                            "op": "count",
+                            "from": "tasks"
+                          },
+                          "b": 0
+                        },
+                        "b": {
+                          "op": "some",
+                          "from": "products",
+                          "where": "data.plan!="
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "when": {
+            "op": "eq",
+            "a": "{values.__page}",
+            "b": "videos"
+          }
+        },
+        {
+          "el": "box",
+          "className": "min-h-full flex flex-col",
+          "card": [
+            {
+              "el": "box",
+              "className": "mx-4 min-[640px]:mx-5 mt-4 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl px-5 py-3.5 flex flex-row items-center gap-3.5",
+              "card": [
+                {
+                  "el": "spinner",
+                  "className": "shrink-0"
+                },
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำงาน"
+                  },
+                  "className": "!text-[19px] min-[640px]:!text-[18px] font-bold !text-[var(--ev-text)]"
+                },
+                {
+                  "el": "text",
+                  "value": {
+                    "op": "concat",
+                    "parts": [
+                      "{values.__runDone}",
+                      "/",
+                      "{values.__runTotal}"
+                    ]
+                  },
+                  "className": "!text-[18px] min-[640px]:!text-[17px] opacity-70 tabular-nums"
+                },
+                {
+                  "el": "box",
+                  "className": "flex-1",
+                  "card": []
+                },
+                {
+                  "el": "button",
+                  "action": "stop",
+                  "label": "หยุดชั่วคราว",
+                  "icon": "pause",
+                  "variant": "ghost",
+                  "className": "shrink-0 !h-12 min-[640px]:!h-11 !px-4 !rounded-xl !text-[18px] min-[640px]:!text-[17px]"
+                }
+              ],
+              "when": {
+                "op": "or",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "running"
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "retrying"
+                  }
+                ]
+              }
+            },
+            {
+              "el": "box",
+              "className": "w-full max-w-[1060px] mx-auto px-2 min-[640px]:px-6 py-4 min-[640px]:py-7 flex flex-col gap-5",
+              "card": [
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap min-[900px]:flex-nowrap",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "button",
+                      "action": "set",
+                      "to": "__page",
+                      "value": "videos",
+                      "label": "",
+                      "icon": "arrow_back",
+                      "variant": "ghost",
+                      "className": "!w-12 !h-12 min-[640px]:!w-11 min-[640px]:!h-11 !rounded-xl justify-center !gap-0 shrink-0 !px-0"
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-0.5 flex-1 min-w-[220px]",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "คลังคลิป — งานที่เสร็จแล้ว",
+                          "className": "!text-[22px] min-[640px]:!text-[21px] font-black !text-[var(--ev-text)]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "กดคลิปเพื่อดูเต็มจอ · ดาวน์โหลดรายคลิปได้เลย",
+                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center gap-1.5 overflow-x-auto",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "script",
+                          "label": "1 บท",
+                          "icon": "edit_note",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "boards",
+                          "label": "2 ภาพ",
+                          "icon": "image",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "videos",
+                          "label": "3 วิดีโอ",
+                          "icon": "movie",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] shrink-0",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center",
+                          "when": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          }
+                        },
+                        {
                           "el": "row",
-                          "className": "items-center gap-3",
+                          "className": "items-center gap-2 px-3.5 py-2 rounded-full border shrink-0 bg-[var(--ev-accent)] border-transparent",
                           "style": {
                             "flexWrap": "nowrap"
                           },
                           "card": [
                             {
-                              "el": "box",
-                              "className": "w-[44px] h-[44px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "movie",
-                                  "textSize": "text-[22px]",
-                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                                }
-                              ]
+                              "el": "icon",
+                              "icon": "photo_library",
+                              "textSize": "text-[17px]",
+                              "className": "!text-white leading-none flex items-center justify-center"
                             },
                             {
-                              "el": "box",
-                              "className": "flex flex-col min-w-0 gap-1",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "วิดีโอ",
-                                  "className": "!text-[13px] min-[640px]:!text-[12.5px] font-bold uppercase tracking-[0.14em] opacity-60 !text-[var(--ev-text)]"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "video"
-                                      },
-                                      " / ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "className": "!text-[31px] min-[640px]:!text-[30px] font-black !text-[var(--ev-text)] tabular-nums leading-none"
-                                }
-                              ]
+                              "el": "text",
+                              "value": "4 คลังคลิป",
+                              "className": "!text-[14px] min-[640px]:!text-[13px] font-bold !text-white whitespace-nowrap"
                             }
                           ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "className": "items-center gap-3 flex-wrap",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "row",
+                      "className": "items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-green-500/[0.08] border border-green-500/25",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "icon",
+                          "icon": "check_circle",
+                          "textSize": "text-[18px]",
+                          "className": "!text-green-600 leading-none flex items-center justify-center"
                         },
                         {
-                          "el": "box",
-                          "className": "mt-3",
-                          "card": [
-                            {
-                              "el": "progress-bar",
-                              "value": {
-                                "op": "mul",
-                                "a": {
-                                  "op": "div",
-                                  "a": {
-                                    "op": "count",
-                                    "from": "tasks",
-                                    "slot": "video"
-                                  },
-                                  "b": {
-                                    "op": "max",
-                                    "a": {
-                                      "op": "count",
-                                      "from": "tasks"
-                                    },
-                                    "b": 1
-                                  }
-                                },
-                                "b": 100
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "เสร็จแล้ว ",
+                              {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "video"
                               },
-                              "className": "!h-2 !bg-white border border-[var(--ev-border)]"
-                            }
-                          ]
+                              " คลิป จากทั้งหมด ",
+                              {
+                                "op": "count",
+                                "from": "tasks"
+                              }
+                            ]
+                          },
+                          "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-green-700 tabular-nums"
                         }
                       ]
                     }
@@ -10568,7 +12121,7 @@
                       "card": [
                         {
                           "el": "icon",
-                          "icon": "image",
+                          "icon": "photo_library",
                           "textSize": "text-[28px]",
                           "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
                         }
@@ -10576,69 +12129,56 @@
                     },
                     {
                       "el": "text",
-                      "value": "ยังไม่มีบท",
+                      "value": "ยังไม่มีคลิปเสร็จ",
                       "className": "!text-[19px] min-[640px]:!text-[18px] font-bold !text-[var(--ev-text)]"
                     },
                     {
                       "el": "text",
-                      "value": "กลับไปหน้าบทเพื่อเขียนบทก่อน",
+                      "value": "กลับไปหน้าวิดีโอเพื่อสร้างให้เสร็จก่อน",
                       "className": "!text-[15px] min-[640px]:!text-[14px] opacity-60 text-center"
-                    },
-                    {
-                      "el": "button",
-                      "action": "set",
-                      "to": "__page",
-                      "value": "script",
-                      "label": "ไปหน้าบท",
-                      "icon": "arrow_back",
-                      "className": "!h-12 !px-5 !rounded-xl !text-[15px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
-                      "variant": "ghost"
                     }
                   ],
                   "when": {
-                    "op": "and",
+                    "op": "eq",
                     "a": {
-                      "op": "eq",
-                      "a": {
-                        "op": "count",
-                        "from": "tasks"
-                      },
-                      "b": 0
+                      "op": "count",
+                      "from": "tasks",
+                      "slot": "video"
                     },
-                    "b": {
-                      "op": "not",
-                      "a": {
-                        "op": "or",
-                        "list": [
-                          {
-                            "op": "eq",
-                            "a": "{values.__runState}",
-                            "b": "running"
-                          },
-                          {
-                            "op": "eq",
-                            "a": "{values.__runState}",
-                            "b": "retrying"
-                          }
-                        ]
-                      }
-                    }
+                    "b": 0
                   }
                 },
                 {
                   "el": "repeat",
                   "coll": "tasks",
+                  "where": "slots.video!=",
+                  "className": "grid grid-cols-2 min-[900px]:grid-cols-3 gap-4",
                   "card": [
                     {
                       "el": "box",
-                      "className": "rounded-[26px] border border-[var(--ev-border)] bg-gradient-to-br from-[var(--ev-surface)] to-[var(--ev-bg)] hover:border-[var(--ev-accent)]/40 transition-all duration-300 overflow-hidden flex flex-col",
+                      "className": "rounded-[24px] border border-[var(--ev-border)] bg-[var(--ev-surface)] overflow-hidden flex flex-col",
                       "card": [
                         {
-                          "el": "row",
-                          "className": "items-center gap-2.5 px-5 min-[640px]:px-6 pt-5",
-                          "style": {
-                            "flexWrap": "nowrap"
-                          },
+                          "el": "box",
+                          "className": "relative",
+                          "card": [
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.video}",
+                              "aspect": "9:16",
+                              "showPlay": true,
+                              "className": ""
+                            },
+                            {
+                              "el": "md",
+                              "value": "{item.clipIndex}",
+                              "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "p-3.5 flex flex-col gap-2.5",
                           "card": [
                             {
                               "el": "text",
@@ -10648,721 +12188,22 @@
                                 "field": "prod",
                                 "fallback": "{item.productName}"
                               },
-                              "className": "font-bold !text-[18px] min-[640px]:!text-[17px] truncate !text-[var(--ev-text)]"
+                              "className": "font-bold !text-[15px] min-[640px]:!text-[14px] truncate !text-[var(--ev-text)]"
                             },
-                            {
-                              "el": "box",
-                              "className": "!text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] shrink-0",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "คลิปที่ {item.clipIndex}",
-                                  "className": "!text-[12px] min-[640px]:!text-[11px] font-bold opacity-70"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "row",
-                              "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--ev-accent)]/10 ml-auto shrink-0",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "box",
-                                  "className": "w-2 h-2 rounded-full bg-[var(--ev-accent)]",
-                                  "card": []
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "รีวิวบท",
-                                  "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-[var(--ev-accent)]"
-                                }
-                              ],
-                              "when": {
-                                "op": "eq",
-                                "a": "{item.slots.board}",
-                                "b": ""
-                              }
-                            },
-                            {
-                              "el": "row",
-                              "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 ml-auto shrink-0",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "box",
-                                  "className": "w-2 h-2 rounded-full bg-amber-500",
-                                  "card": []
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "รีวิวภาพ",
-                                  "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-amber-600"
-                                }
-                              ],
-                              "when": {
-                                "op": "and",
-                                "a": {
-                                  "op": "not",
-                                  "a": {
-                                    "op": "eq",
-                                    "a": "{item.slots.board}",
-                                    "b": ""
-                                  }
-                                },
-                                "b": {
-                                  "op": "eq",
-                                  "a": "{item.slots.video}",
-                                  "b": ""
-                                }
-                              }
-                            },
-                            {
-                              "el": "row",
-                              "className": "items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 ml-auto shrink-0",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "box",
-                                  "className": "w-2 h-2 rounded-full bg-green-500",
-                                  "card": []
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "เสร็จแล้ว",
-                                  "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-green-600"
-                                }
-                              ],
-                              "when": "item.slots.video!="
-                            }
-                          ]
-                        },
-                        {
-                          "el": "text",
-                          "value": "{item.synopsis}",
-                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed px-5 min-[640px]:px-6 pt-1",
-                          "when": "item.synopsis!="
-                        },
-                        {
-                          "el": "box",
-                          "className": "flex flex-col gap-3.5 p-5 min-[640px]:p-6 pt-3",
-                          "card": [
                             {
                               "el": "text",
-                              "value": "Script · ตรวจบท 5 ฉาก",
-                              "className": "flex items-center gap-1.5 !text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]",
-                              "icon": "description"
+                              "value": "คลิปที่ {item.clipIndex} · 10 วิ · 9:16",
+                              "className": "!text-[13px] min-[640px]:!text-[12px] opacity-55"
                             },
                             {
-                              "el": "box",
-                              "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[20px] overflow-hidden",
-                              "card": [
-                                {
-                                  "el": "row",
-                                  "className": "items-start gap-3.5 px-4 min-[640px]:px-5 py-3.5",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-9 h-9 rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0 mt-0.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "1",
-                                          "className": "!text-[16px] font-black !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "flex-1 min-w-0 flex flex-col gap-1",
-                                      "card": [
-                                        {
-                                          "el": "row",
-                                          "className": "items-baseline gap-2",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "เปิดตัว",
-                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "0-2 วิ",
-                                              "className": "inline-flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] opacity-55 tabular-nums ml-auto shrink-0",
-                                              "icon": "schedule"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": "{item.ov1}",
-                                          "className": "!text-[17px] min-[640px]:!text-[16px] font-bold !text-[var(--ev-text)] leading-snug"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "พูด: ",
-                                              "{item.vo1}"
-                                            ]
-                                          },
-                                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-70 leading-relaxed",
-                                          "icon": "record_voice_over"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "ภาพ: ",
-                                              "{item.s1th}"
-                                            ]
-                                          },
-                                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
-                                          "icon": "image"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-start gap-3.5 px-4 min-[640px]:px-5 py-3.5 border-t border-[var(--ev-border)]",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-9 h-9 rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0 mt-0.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "2",
-                                          "className": "!text-[16px] font-black !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "flex-1 min-w-0 flex flex-col gap-1",
-                                      "card": [
-                                        {
-                                          "el": "row",
-                                          "className": "items-baseline gap-2",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "จุดเด่น",
-                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "2-4 วิ",
-                                              "className": "inline-flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] opacity-55 tabular-nums ml-auto shrink-0",
-                                              "icon": "schedule"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": "{item.ov2}",
-                                          "className": "!text-[17px] min-[640px]:!text-[16px] font-bold !text-[var(--ev-text)] leading-snug"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "พูด: ",
-                                              "{item.vo2}"
-                                            ]
-                                          },
-                                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-70 leading-relaxed",
-                                          "icon": "record_voice_over"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "ภาพ: ",
-                                              "{item.s2th}"
-                                            ]
-                                          },
-                                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
-                                          "icon": "image"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-start gap-3.5 px-4 min-[640px]:px-5 py-3.5 border-t border-[var(--ev-border)]",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-9 h-9 rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0 mt-0.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "3",
-                                          "className": "!text-[16px] font-black !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "flex-1 min-w-0 flex flex-col gap-1",
-                                      "card": [
-                                        {
-                                          "el": "row",
-                                          "className": "items-baseline gap-2",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ใช้จริง",
-                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "4-6 วิ",
-                                              "className": "inline-flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] opacity-55 tabular-nums ml-auto shrink-0",
-                                              "icon": "schedule"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": "{item.ov3}",
-                                          "className": "!text-[17px] min-[640px]:!text-[16px] font-bold !text-[var(--ev-text)] leading-snug"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "พูด: ",
-                                              "{item.vo3}"
-                                            ]
-                                          },
-                                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-70 leading-relaxed",
-                                          "icon": "record_voice_over"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "ภาพ: ",
-                                              "{item.s3th}"
-                                            ]
-                                          },
-                                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
-                                          "icon": "image"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-start gap-3.5 px-4 min-[640px]:px-5 py-3.5 border-t border-[var(--ev-border)]",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-9 h-9 rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0 mt-0.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "4",
-                                          "className": "!text-[16px] font-black !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "flex-1 min-w-0 flex flex-col gap-1",
-                                      "card": [
-                                        {
-                                          "el": "row",
-                                          "className": "items-baseline gap-2",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "หลากหลาย",
-                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "6-8 วิ",
-                                              "className": "inline-flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] opacity-55 tabular-nums ml-auto shrink-0",
-                                              "icon": "schedule"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": "{item.ov4}",
-                                          "className": "!text-[17px] min-[640px]:!text-[16px] font-bold !text-[var(--ev-text)] leading-snug"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "พูด: ",
-                                              "{item.vo4}"
-                                            ]
-                                          },
-                                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-70 leading-relaxed",
-                                          "icon": "record_voice_over"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "ภาพ: ",
-                                              "{item.s4th}"
-                                            ]
-                                          },
-                                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
-                                          "icon": "image"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-start gap-3.5 px-4 min-[640px]:px-5 py-3.5 border-t border-[var(--ev-border)]",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "box",
-                                      "className": "w-9 h-9 rounded-xl bg-white border border-[var(--ev-border)] flex items-center justify-center shrink-0 mt-0.5",
-                                      "card": [
-                                        {
-                                          "el": "text",
-                                          "value": "5",
-                                          "className": "!text-[16px] font-black !text-[#17253a]"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "flex-1 min-w-0 flex flex-col gap-1",
-                                      "card": [
-                                        {
-                                          "el": "row",
-                                          "className": "items-baseline gap-2",
-                                          "style": {
-                                            "flexWrap": "nowrap"
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "ชวนซื้อ",
-                                              "className": "!text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-65"
-                                            },
-                                            {
-                                              "el": "text",
-                                              "value": "8-10 วิ",
-                                              "className": "inline-flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] opacity-55 tabular-nums ml-auto shrink-0",
-                                              "icon": "schedule"
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": "{item.ov5}",
-                                          "className": "!text-[17px] min-[640px]:!text-[16px] font-bold !text-[var(--ev-text)] leading-snug"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "พูด: ",
-                                              "{item.vo5}"
-                                            ]
-                                          },
-                                          "className": "!text-[15px] min-[640px]:!text-[14px] opacity-70 leading-relaxed",
-                                          "icon": "record_voice_over"
-                                        },
-                                        {
-                                          "el": "text",
-                                          "value": {
-                                            "op": "concat",
-                                            "parts": [
-                                              "ภาพ: ",
-                                              "{item.s5th}"
-                                            ]
-                                          },
-                                          "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed",
-                                          "icon": "image"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "el": "row",
-                              "className": "items-center gap-3 flex-wrap min-[640px]:flex-nowrap",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "บทยังไม่โดน? กดปุ่มสมองที่การ์ดสินค้า แล้วกด เริ่มรอบใหม่",
-                                  "className": "!text-[13px] min-[640px]:!text-[12px] opacity-60 flex-1 min-w-[200px]",
-                                  "icon": "psychology"
-                                },
-                                {
-                                  "el": "gen-button",
-                                  "op": "mnBoard",
-                                  "label": "บทโอเค — สร้างภาพ",
-                                  "icon": "check_circle",
-                                  "className": "shrink-0 w-full min-[640px]:w-auto justify-center !h-13 !h-[52px] !px-7 !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
-                                }
-                              ]
+                              "el": "download-button",
+                              "to": "{item.slots.video}",
+                              "label": "ดาวน์โหลด",
+                              "icon": "download",
+                              "variant": "solid",
+                              "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                             }
-                          ],
-                          "when": {
-                            "op": "eq",
-                            "a": "{item.slots.board}",
-                            "b": ""
-                          }
-                        },
-                        {
-                          "el": "box",
-                          "className": "flex flex-col min-[720px]:flex-row",
-                          "card": [
-                            {
-                              "el": "box",
-                              "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-[var(--ev-accent)]/[0.03]",
-                              "card": [
-                                {
-                                  "el": "box",
-                                  "className": "relative",
-                                  "card": [
-                                    {
-                                      "el": "md",
-                                      "value": "{item.clipIndex}",
-                                      "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "w-[240px] min-[720px]:w-[230px]",
-                                      "card": [
-                                        {
-                                          "el": "media-slot",
-                                          "src": "{item.slots.board}",
-                                          "aspect": "3:4",
-                                          "style": {
-                                            "borderRadius": "20px"
-                                          },
-                                          "className": "ring-1 ring-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3 border-t border-[var(--ev-border)] min-[720px]:border-t-0 justify-center",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "Image Review · ตรวจสตอรีบอร์ด",
-                                  "className": "flex items-center gap-1.5 !text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-widest !text-[var(--ev-accent)]",
-                                  "icon": "image"
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-center gap-2 flex-wrap",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "{item.category}",
-                                      "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                      "icon": "category"
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": "โทน {item.palette}",
-                                      "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                      "icon": "palette"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "สินค้าตรงรูปจริงไหม · ข้อความไทยคมชัดไหม · โทนสีถูกใจไหม",
-                                  "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
-                                },
-                                {
-                                  "el": "gen-button",
-                                  "op": "mnVideo",
-                                  "label": "ภาพโอเค — สร้างวิดีโอ",
-                                  "icon": "check_circle",
-                                  "className": "w-full justify-center !h-[52px] !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
-                                },
-                                {
-                                  "el": "retry-button",
-                                  "op": "mnBoard",
-                                  "label": "ยังไม่โดน — วาดภาพใหม่",
-                                  "icon": "brush",
-                                  "variant": "ghost",
-                                  "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px]"
-                                }
-                              ]
-                            }
-                          ],
-                          "when": {
-                            "op": "and",
-                            "a": {
-                              "op": "not",
-                              "a": {
-                                "op": "eq",
-                                "a": "{item.slots.board}",
-                                "b": ""
-                              }
-                            },
-                            "b": {
-                              "op": "eq",
-                              "a": "{item.slots.video}",
-                              "b": ""
-                            }
-                          }
-                        },
-                        {
-                          "el": "box",
-                          "className": "flex flex-col min-[720px]:flex-row",
-                          "card": [
-                            {
-                              "el": "box",
-                              "className": "relative shrink-0 flex justify-center min-[720px]:justify-start p-5 min-[720px]:p-6 min-[720px]:bg-green-500/[0.03]",
-                              "card": [
-                                {
-                                  "el": "box",
-                                  "className": "relative",
-                                  "card": [
-                                    {
-                                      "el": "md",
-                                      "value": "{item.clipIndex}",
-                                      "className": "absolute -top-2.5 -left-2.5 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
-                                    },
-                                    {
-                                      "el": "box",
-                                      "className": "w-[210px] min-[720px]:w-[200px]",
-                                      "card": [
-                                        {
-                                          "el": "media-slot",
-                                          "src": "{item.slots.video}",
-                                          "aspect": "9:16",
-                                          "showPlay": true,
-                                          "style": {
-                                            "borderRadius": "20px"
-                                          },
-                                          "className": "ring-1 ring-[var(--ev-border)]"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex-1 min-w-0 p-5 min-[720px]:px-7 min-[720px]:py-6 flex flex-col gap-3 border-t border-[var(--ev-border)] min-[720px]:border-t-0 justify-center",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "Done · พร้อมโพสต์ลง Social",
-                                  "className": "flex items-center gap-1.5 !text-[13px] min-[640px]:!text-[12px] font-bold uppercase tracking-widest !text-green-600",
-                                  "icon": "check_circle"
-                                },
-                                {
-                                  "el": "row",
-                                  "className": "items-center gap-2 flex-wrap",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "Omni Flash · 10 วิ · 9:16",
-                                      "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                      "icon": "movie"
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": "โทน {item.palette}",
-                                      "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                      "icon": "palette"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "download-button",
-                                  "to": "{item.slots.video}",
-                                  "label": "ดาวน์โหลดวิดีโอ",
-                                  "icon": "download",
-                                  "variant": "solid",
-                                  "className": "w-full justify-center !h-[52px] !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
-                                },
-                                {
-                                  "el": "retry-button",
-                                  "op": "mnVideo",
-                                  "label": "สร้างวิดีโอใหม่",
-                                  "icon": "refresh",
-                                  "variant": "ghost",
-                                  "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px]"
-                                }
-                              ]
-                            }
-                          ],
-                          "when": "item.slots.video!="
+                          ]
                         }
                       ]
                     }
@@ -11405,7 +12246,104 @@
           "when": {
             "op": "eq",
             "a": "{values.__page}",
-            "b": "studio"
+            "b": "gallery"
+          }
+        },
+        {
+          "el": "box",
+          "className": "fixed inset-0 z-[90] bg-[var(--ev-bg)] flex flex-col items-center justify-center gap-5 px-6",
+          "card": [
+            {
+              "el": "icon",
+              "icon": "progress_activity",
+              "textSize": "text-[56px]",
+              "className": "!text-[var(--ev-accent)] animate-spin leading-none flex items-center justify-center"
+            },
+            {
+              "el": "text",
+              "value": "AI กำลังเขียนบท…",
+              "className": "!text-[26px] min-[640px]:!text-[24px] font-black !text-[var(--ev-text)] text-center"
+            },
+            {
+              "el": "text",
+              "value": "หมีอ่านรูปสินค้า + จุดเด่น แล้วเขียนบท 5 ฉากให้ทุกคลิป",
+              "className": "!text-[16px] min-[640px]:!text-[15px] opacity-60 text-center leading-relaxed"
+            },
+            {
+              "el": "row",
+              "className": "items-center gap-1.5",
+              "style": {
+                "flexWrap": "nowrap"
+              },
+              "card": [
+                {
+                  "el": "box",
+                  "className": "w-2 h-2 rounded-full bg-[var(--ev-accent)] animate-bounce",
+                  "card": []
+                },
+                {
+                  "el": "box",
+                  "className": "w-2 h-2 rounded-full bg-[var(--ev-accent)] animate-bounce [animation-delay:0.15s]",
+                  "card": []
+                },
+                {
+                  "el": "box",
+                  "className": "w-2 h-2 rounded-full bg-[var(--ev-accent)] animate-bounce [animation-delay:0.3s]",
+                  "card": []
+                }
+              ]
+            },
+            {
+              "el": "text",
+              "value": {
+                "op": "concat",
+                "parts": [
+                  "เขียนแล้ว {values.__runDone} / {values.__runTotal} สินค้า"
+                ]
+              },
+              "className": "!text-[15px] font-bold !text-[var(--ev-accent)] tabular-nums",
+              "when": {
+                "op": "not",
+                "a": {
+                  "op": "eq",
+                  "a": "{values.__runTotal}",
+                  "b": ""
+                }
+              }
+            }
+          ],
+          "when": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.mode}",
+                "b": "manual"
+              },
+              {
+                "op": "or",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "running"
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runState}",
+                    "b": "retrying"
+                  }
+                ]
+              },
+              {
+                "op": "eq",
+                "a": {
+                  "op": "count",
+                  "from": "tasks"
+                },
+                "b": 0
+              }
+            ]
           }
         }
       ]
