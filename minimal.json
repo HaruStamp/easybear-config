@@ -4692,32 +4692,136 @@
                             },
                             {
                               "el": "box",
-                              "className": "aspect-[9/16] rounded-[18px] border-2 border-dashed border-red-400/50 bg-red-500/[0.05] flex flex-col items-center justify-center gap-2",
+                              "className": "aspect-[9/16] rounded-[18px] border-2 border-dashed border-red-400/50 bg-red-500/[0.05] flex flex-col items-center justify-center gap-2.5 px-4 text-center",
                               "card": [
                                 {
                                   "el": "icon",
                                   "icon": "error",
-                                  "textSize": "text-[24px]",
+                                  "textSize": "text-[30px]",
                                   "className": "!text-red-500 leading-none flex items-center justify-center"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "วาดภาพไม่สำเร็จ",
+                                  "className": "!text-[14px] font-bold !text-red-500"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "{item.meta.error}",
+                                  "className": "!text-[11.5px] opacity-60 leading-snug line-clamp-3",
+                                  "when": "item.meta.error!="
+                                },
+                                {
+                                  "el": "gen-button",
+                                  "op": "mnBoard",
+                                  "label": "ลองใหม่",
+                                  "icon": "replay",
+                                  "className": "!h-10 !px-5 !rounded-full !text-[13px] font-bold mt-1 !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                                 }
                               ],
                               "when": {
                                 "op": "and",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{item.slots.board}",
-                                  "b": ""
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.slots.board}",
+                                    "b": ""
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.status}",
+                                    "b": "error"
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.status}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.meta.retrying}",
+                                          "b": "1"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "el": "box",
+                              "className": "absolute inset-0 rounded-[18px] bg-black/55 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-2.5 px-4 text-center",
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "error",
+                                  "textSize": "text-[30px]",
+                                  "className": "!text-red-400 leading-none flex items-center justify-center"
                                 },
-                                "b": {
-                                  "op": "eq",
-                                  "a": "{item.status}",
-                                  "b": "error"
+                                {
+                                  "el": "text",
+                                  "value": "สร้างวิดีโอไม่สำเร็จ",
+                                  "className": "!text-[14px] font-bold !text-white"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "{item.meta.error}",
+                                  "className": "!text-[11.5px] !text-white/75 leading-snug line-clamp-3",
+                                  "when": "item.meta.error!="
+                                },
+                                {
+                                  "el": "retry-button",
+                                  "op": "mnVideo",
+                                  "label": "ลองใหม่",
+                                  "icon": "replay",
+                                  "className": "!h-10 !px-5 !rounded-full !text-[13px] font-bold mt-1 !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                                 }
+                              ],
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.board}",
+                                      "b": ""
+                                    }
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.status}",
+                                    "b": "error"
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.status}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.meta.retrying}",
+                                          "b": "1"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
                               }
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 bg-green-600/85",
+                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-green-600/85",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -4766,7 +4870,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 bg-[var(--ev-accent)]/90",
+                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[var(--ev-accent)]/90",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -4799,7 +4903,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 bg-[#17253a]/75",
+                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[#17253a]/75",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -4857,7 +4961,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 bg-amber-500/85",
+                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-amber-500/85",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -4907,26 +5011,47 @@
                             },
                             {
                               "el": "box",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10",
+                              "className": "absolute inset-0 rounded-[18px] bg-gradient-to-t from-black/75 via-black/25 to-transparent z-10 flex flex-col items-center justify-end gap-2 pb-4 px-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none",
                               "card": [
                                 {
-                                  "el": "gen-button",
-                                  "op": "mnBoard",
-                                  "label": "ลองใหม่",
-                                  "icon": "replay",
-                                  "className": "!h-9 !px-3.5 !rounded-full !text-[12px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                  "el": "download-button",
+                                  "to": "{item.slots.video}",
+                                  "label": "ดาวน์โหลด",
+                                  "icon": "download",
+                                  "variant": "solid",
+                                  "className": "!h-10 !px-4 !rounded-full !text-[13px] font-bold !bg-white !text-[#17253a] pointer-events-auto",
                                   "when": {
-                                    "op": "eq",
-                                    "a": "{item.slots.board}",
-                                    "b": ""
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.video}",
+                                      "b": ""
+                                    }
                                   }
                                 },
                                 {
                                   "el": "retry-button",
                                   "op": "mnVideo",
-                                  "label": "ลองใหม่",
-                                  "icon": "replay",
-                                  "className": "!h-9 !px-3.5 !rounded-full !text-[12px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                  "label": "เจนวิดีโอใหม่",
+                                  "icon": "auto_awesome",
+                                  "variant": "ghost",
+                                  "className": "!h-10 !px-4 !rounded-full !text-[13px] font-bold !bg-white/15 !text-white border border-white/40 backdrop-blur-sm pointer-events-auto",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.video}",
+                                      "b": ""
+                                    }
+                                  }
+                                },
+                                {
+                                  "el": "retry-button",
+                                  "op": "mnBoard",
+                                  "label": "วาดภาพใหม่",
+                                  "icon": "auto_awesome",
+                                  "variant": "ghost",
+                                  "className": "!h-10 !px-4 !rounded-full !text-[13px] font-bold !bg-white/15 !text-white border border-white/40 backdrop-blur-sm pointer-events-auto",
                                   "when": {
                                     "op": "not",
                                     "a": {
@@ -4939,43 +5064,34 @@
                               ],
                               "when": {
                                 "op": "and",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{item.status}",
-                                  "b": "error"
-                                },
-                                "b": {
-                                  "op": "not",
-                                  "a": {
-                                    "op": "or",
-                                    "list": [
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.status}",
-                                        "b": "running"
-                                      },
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.meta.retrying}",
-                                        "b": "1"
-                                      }
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "el": "box",
-                              "className": "absolute top-2 right-2 z-20 flex flex-col items-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity",
-                              "card": [
-                                {
-                                  "el": "retry-button",
-                                  "op": "mnBoard",
-                                  "label": "วาดภาพใหม่",
-                                  "icon": "auto_awesome",
-                                  "variant": "ghost",
-                                  "className": "!h-9 !px-3 !rounded-full !text-[12px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] shadow-none",
-                                  "when": {
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.status}",
+                                      "b": "error"
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.status}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.meta.retrying}",
+                                          "b": "1"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
                                     "op": "not",
                                     "a": {
                                       "op": "eq",
@@ -4983,24 +5099,8 @@
                                       "b": ""
                                     }
                                   }
-                                },
-                                {
-                                  "el": "retry-button",
-                                  "op": "mnVideo",
-                                  "label": "เจนวิดีโอใหม่",
-                                  "icon": "auto_awesome",
-                                  "variant": "ghost",
-                                  "className": "!h-9 !px-3 !rounded-full !text-[12px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] shadow-none",
-                                  "when": {
-                                    "op": "not",
-                                    "a": {
-                                      "op": "eq",
-                                      "a": "{item.slots.video}",
-                                      "b": ""
-                                    }
-                                  }
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         }
