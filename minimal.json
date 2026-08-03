@@ -4931,40 +4931,66 @@
                       ],
                       "when": {
                         "op": "and",
-                        "list": [
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks",
-                              "slot": "board"
+                        "a": {
+                          "op": "and",
+                          "list": [
+                            {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "board"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks"
+                              }
                             },
-                            "b": {
-                              "op": "count",
-                              "from": "tasks"
+                            {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "video"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks"
+                              }
+                            },
+                            {
+                              "op": "gt",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
                             }
-                          },
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks",
-                              "slot": "video"
-                            },
-                            "b": {
-                              "op": "count",
-                              "from": "tasks"
-                            }
-                          },
-                          {
-                            "op": "gt",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks"
-                            },
-                            "b": 0
+                          ]
+                        },
+                        "b": {
+                          "op": "not",
+                          "a": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              }
+                            ]
                           }
-                        ]
+                        }
                       }
                     }
                   ],
@@ -5033,49 +5059,75 @@
                       ],
                       "when": {
                         "op": "and",
-                        "list": [
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks",
-                              "slot": "board"
+                        "a": {
+                          "op": "and",
+                          "list": [
+                            {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "board"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks"
+                              }
                             },
-                            "b": {
-                              "op": "count",
-                              "from": "tasks"
+                            {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "video"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks"
+                              }
+                            },
+                            {
+                              "op": "eq",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "where": "status=error"
+                              },
+                              "b": 0
+                            },
+                            {
+                              "op": "gt",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
                             }
-                          },
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks",
-                              "slot": "video"
-                            },
-                            "b": {
-                              "op": "count",
-                              "from": "tasks"
-                            }
-                          },
-                          {
-                            "op": "eq",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks",
-                              "where": "status=error"
-                            },
-                            "b": 0
-                          },
-                          {
-                            "op": "gt",
-                            "a": {
-                              "op": "count",
-                              "from": "tasks"
-                            },
-                            "b": 0
+                          ]
+                        },
+                        "b": {
+                          "op": "not",
+                          "a": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              }
+                            ]
                           }
-                        ]
+                        }
                       }
                     },
                     {
@@ -8137,7 +8189,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-green-600/85",
+                              "className": "absolute top-1.5 right-1.5 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-green-600/85",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -8186,7 +8238,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[var(--ev-accent)]/90",
+                              "className": "absolute top-1.5 right-1.5 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[var(--ev-accent)]/90",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -8219,7 +8271,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[#17253a]/75",
+                              "className": "absolute top-1.5 right-1.5 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-[#17253a]/75",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -8277,7 +8329,7 @@
                             },
                             {
                               "el": "row",
-                              "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-amber-500/85",
+                              "className": "absolute top-1.5 right-1.5 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none shrink-0 group-hover:opacity-0 transition-opacity bg-amber-500/85",
                               "style": {
                                 "flexWrap": "nowrap"
                               },
@@ -8652,6 +8704,41 @@
                         }
                       ]
                     }
+                  }
+                ]
+              },
+              {
+                "op": "and",
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__page}",
+                    "b": ""
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.mode}",
+                    "b": "auto"
+                  },
+                  {
+                    "op": "or",
+                    "list": [
+                      {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "running"
+                      },
+                      {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "retrying"
+                      },
+                      {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "cooldown"
+                      }
+                    ]
                   }
                 ]
               }
@@ -9167,45 +9254,70 @@
               },
               {
                 "op": "and",
-                "a": {
-                  "op": "eq",
-                  "a": "{values.__page}",
-                  "b": ""
-                },
-                "b": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "gt",
-                      "a": {
-                        "op": "count",
-                        "from": "tasks"
+                "list": [
+                  {
+                    "op": "eq",
+                    "a": "{values.__page}",
+                    "b": ""
+                  },
+                  {
+                    "op": "and",
+                    "list": [
+                      {
+                        "op": "gt",
+                        "a": {
+                          "op": "count",
+                          "from": "tasks"
+                        },
+                        "b": 0
                       },
-                      "b": 0
-                    },
-                    {
-                      "op": "eq",
-                      "a": {
-                        "op": "count",
-                        "from": "tasks",
-                        "slot": "video"
+                      {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "tasks",
+                          "slot": "video"
+                        },
+                        "b": {
+                          "op": "count",
+                          "from": "tasks"
+                        }
                       },
-                      "b": {
-                        "op": "count",
-                        "from": "tasks"
+                      {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "tasks",
+                          "where": "status=error"
+                        },
+                        "b": 0
                       }
-                    },
-                    {
-                      "op": "eq",
-                      "a": {
-                        "op": "count",
-                        "from": "tasks",
-                        "where": "status=error"
-                      },
-                      "b": 0
+                    ]
+                  },
+                  {
+                    "op": "not",
+                    "a": {
+                      "op": "or",
+                      "list": [
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "running"
+                        },
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "retrying"
+                        },
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "cooldown"
+                        }
+                      ]
                     }
-                  ]
-                }
+                  }
+                ]
               }
             ]
           }
@@ -9275,31 +9387,39 @@
           ],
           "when": {
             "op": "and",
-            "list": [
-              {
-                "op": "or",
-                "list": [
-                  {
-                    "op": "eq",
-                    "a": "{values.__runState}",
-                    "b": "running"
-                  },
-                  {
-                    "op": "eq",
-                    "a": "{values.__runState}",
-                    "b": "retrying"
-                  }
-                ]
-              },
-              {
-                "op": "eq",
-                "a": {
-                  "op": "count",
-                  "from": "tasks"
+            "a": {
+              "op": "eq",
+              "a": "{values.mode}",
+              "b": "manual"
+            },
+            "b": {
+              "op": "and",
+              "list": [
+                {
+                  "op": "or",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "running"
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "retrying"
+                    }
+                  ]
                 },
-                "b": 0
-              }
-            ]
+                {
+                  "op": "eq",
+                  "a": {
+                    "op": "count",
+                    "from": "tasks"
+                  },
+                  "b": 0
+                }
+              ]
+            }
           }
         }
       ]
