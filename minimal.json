@@ -5183,158 +5183,8 @@
                   }
                 },
                 {
-                  "el": "row",
-                  "style": {
-                    "flexWrap": "nowrap"
-                  },
-                  "className": "items-center gap-2.5 px-4 py-3 rounded-2xl bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/25",
-                  "when": {
-                    "op": "not",
-                    "a": {
-                      "op": "eq",
-                      "a": "{values.__runLoopProd}",
-                      "b": ""
-                    }
-                  },
-                  "card": [
-                    {
-                      "el": "spinner",
-                      "className": "!text-[17px] shrink-0"
-                    },
-                    {
-                      "el": "text",
-                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-accent)] truncate",
-                      "value": {
-                        "op": "concat",
-                        "parts": [
-                          "สินค้าที่ ",
-                          {
-                            "op": "add",
-                            "a": "{values.__runLoopDone}",
-                            "b": 1
-                          },
-                          "/",
-                          "{values.__runLoopTotal}",
-                          " — ",
-                          "{values.__runLoopProd}"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "el": "row",
-                  "className": "items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-2xl bg-[var(--ev-surface)] border border-[var(--ev-accent)]/35",
-                  "style": {
-                    "flexWrap": "nowrap"
-                  },
-                  "card": [
-                    {
-                      "el": "box",
-                      "className": "w-11 h-11 rounded-xl bg-[var(--ev-accent)]/10 flex items-center justify-center shrink-0",
-                      "card": [
-                        {
-                          "el": "spinner",
-                          "className": "!text-[22px]"
-                        }
-                      ]
-                    },
-                    {
-                      "el": "box",
-                      "className": "flex flex-col gap-0.5 flex-1 min-w-0",
-                      "card": [
-                        {
-                          "el": "text",
-                          "value": {
-                            "op": "lookup",
-                            "table": "opNames",
-                            "key": "{values.__runStage}",
-                            "fallback": "กำลังทำงาน…"
-                          },
-                          "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-[var(--ev-text)] truncate"
-                        },
-                        {
-                          "el": "row",
-                          "className": "items-center gap-2",
-                          "style": {
-                            "flexWrap": "nowrap"
-                          },
-                          "card": [
-                            {
-                              "el": "text",
-                              "value": {
-                                "op": "concat",
-                                "parts": [
-                                  "เสร็จ ",
-                                  "{values.__runDone}",
-                                  "/",
-                                  "{values.__runTotal}"
-                                ]
-                              },
-                              "className": "!text-[13px] min-[640px]:!text-[12.5px] opacity-60 tabular-nums whitespace-nowrap"
-                            },
-                            {
-                              "el": "text",
-                              "value": {
-                                "op": "concat",
-                                "parts": [
-                                  "พักหลบเรดาร์ ",
-                                  "{values.__runCoolLeft}",
-                                  " วิ"
-                                ]
-                              },
-                              "className": "flex items-center gap-1 !text-[12px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 !text-amber-600 whitespace-nowrap",
-                              "icon": "hourglass_top",
-                              "when": {
-                                "op": "eq",
-                                "a": "{values.__runState}",
-                                "b": "cooldown"
-                              }
-                            },
-                            {
-                              "el": "text",
-                              "value": {
-                                "op": "concat",
-                                "parts": [
-                                  "ลองใหม่ครั้งที่ ",
-                                  "{values.__runAttempt}"
-                                ]
-                              },
-                              "className": "!text-[12px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 !text-red-500 whitespace-nowrap",
-                              "when": {
-                                "op": "eq",
-                                "a": "{values.__runState}",
-                                "b": "retrying"
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "button",
-                      "action": "stop",
-                      "label": "หยุดพัก",
-                      "icon": "pause_circle",
-                      "variant": "ghost",
-                      "className": "!h-11 !px-4 !rounded-xl !text-[14px] font-bold border border-red-300/60 !bg-[var(--ev-surface)] !text-red-500 shrink-0"
-                    }
-                  ],
-                  "when": {
-                    "op": "or",
-                    "list": [
-                      {
-                        "op": "eq",
-                        "a": "{values.__runState}",
-                        "b": "running"
-                      },
-                      {
-                        "op": "eq",
-                        "a": "{values.__runState}",
-                        "b": "retrying"
-                      }
-                    ]
-                  }
+                  "el": "use",
+                  "component": "mnRunBanner"
                 },
                 {
                   "el": "box",
@@ -9240,6 +9090,10 @@
                       "className": "w-full justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold border border-red-300/60 !bg-[var(--ev-surface)] !text-red-500"
                     }
                   ]
+                },
+                {
+                  "el": "use",
+                  "component": "mnRunBanner"
                 }
               ]
             }
@@ -9519,5 +9373,549 @@
       "capDefault": 5
     },
     "scopeColl": "products"
+  },
+  "components": {
+    "mnRunBanner": [
+      {
+        "el": "box",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "or",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "running"
+                },
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "cooldown"
+                },
+                {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "retrying"
+                }
+              ]
+            },
+            {
+              "op": "not",
+              "a": {
+                "op": "and",
+                "list": [
+                  {
+                    "op": "not",
+                    "a": {
+                      "op": "eq",
+                      "a": "{values.mode}",
+                      "b": "auto"
+                    }
+                  },
+                  {
+                    "op": "eq",
+                    "a": "{values.__runStage}",
+                    "b": "mnPlan"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[620px] flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in border-[var(--ev-accent)]/45",
+        "style": {
+          "backgroundColor": "var(--ev-modal)",
+          "boxShadow": "0 18px 44px rgba(23,37,58,0.18)"
+        },
+        "card": [
+          {
+            "el": "box",
+            "className": "shrink-0",
+            "card": [
+              {
+                "el": "box",
+                "when": {
+                  "op": "eq",
+                  "a": "{values.__runState}",
+                  "b": "running"
+                },
+                "className": "w-12 h-12 rounded-full flex items-center justify-center bg-[var(--ev-accent)]/12",
+                "card": [
+                  {
+                    "el": "spinner",
+                    "className": "!text-[24px]"
+                  }
+                ]
+              },
+              {
+                "el": "progress-ring",
+                "when": {
+                  "op": "or",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "cooldown"
+                    },
+                    {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "retrying"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "mul",
+                  "a": {
+                    "op": "div",
+                    "a": "{values.__runCoolLeft}",
+                    "b": "{values.__runCoolTotal}"
+                  },
+                  "b": 100
+                },
+                "className": "w-12 h-12",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "hourglass_top",
+                    "textSize": "text-[22px]",
+                    "className": "!text-amber-500 animate-hgflip",
+                    "style": {
+                      "display": "inline-flex",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "lineHeight": "1",
+                      "transformOrigin": "center"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "el": "box",
+            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "card": [
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
+                "card": [
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2 min-w-0",
+                    "card": [
+                      {
+                        "el": "text",
+                        "value": "ผลิตคลิป",
+                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
+                      },
+                      {
+                        "el": "text",
+                        "value": "กำลังสร้าง",
+                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-[var(--ev-accent)] !text-[var(--ev-accent-fg)]",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "running"
+                        }
+                      },
+                      {
+                        "el": "text",
+                        "value": "พักหลบเรดาร์",
+                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-amber-500/15 !text-amber-600",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "cooldown"
+                        },
+                        "icon": "hourglass_top"
+                      },
+                      {
+                        "el": "text",
+                        "value": {
+                          "op": "concat",
+                          "parts": [
+                            "ลองใหม่ครั้งที่ ",
+                            "{values.__runAttempt}"
+                          ]
+                        },
+                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-red-500/12 !text-red-500",
+                        "when": {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "retrying"
+                        },
+                        "icon": "replay"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "{values.__runDone}",
+                        "/",
+                        "{values.__runTotal}",
+                        " คลิป"
+                      ]
+                    },
+                    "when": {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.__runState}",
+                        "b": "cooldown"
+                      }
+                    },
+                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]"
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "เหลือ ",
+                        "{values.__runCoolLeft}",
+                        " วิ"
+                      ]
+                    },
+                    "when": {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "cooldown"
+                    },
+                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-amber-600"
+                  }
+                ]
+              },
+              {
+                "el": "progress-bar",
+                "value": {
+                  "op": "mul",
+                  "a": {
+                    "op": "div",
+                    "a": "{values.__runDone}",
+                    "b": "{values.__runTotal}"
+                  },
+                  "b": 100
+                }
+              },
+              {
+                "el": "text",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "สินค้าที่ ",
+                    {
+                      "op": "add",
+                      "a": "{values.__runLoopDone}",
+                      "b": 1
+                    },
+                    "/",
+                    "{values.__runLoopTotal}",
+                    " · ",
+                    "{values.__runLoopProd}",
+                    " — ",
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "กำลังทำงาน…"
+                    }
+                  ]
+                },
+                "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]",
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "eq",
+                    "a": "{values.__runLoopProd}",
+                    "b": ""
+                  }
+                }
+              },
+              {
+                "el": "text",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    {
+                      "op": "lookup",
+                      "table": "opNames",
+                      "key": "{values.__runStage}",
+                      "fallback": "กำลังทำงาน…"
+                    },
+                    " · คลิปที่ ",
+                    {
+                      "op": "min",
+                      "a": {
+                        "op": "add",
+                        "a": "{values.__runDone}",
+                        "b": 1
+                      },
+                      "b": "{values.__runTotal}"
+                    },
+                    "/",
+                    "{values.__runTotal}"
+                  ]
+                },
+                "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]",
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "not",
+                    "a": {
+                      "op": "eq",
+                      "a": "{values.__runLoopProd}",
+                      "b": ""
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "el": "button",
+            "action": "stop",
+            "label": "หยุดพัก",
+            "icon": "pause_circle",
+            "variant": "ghost",
+            "style": {
+              "borderRadius": "9999px",
+              "height": "42px"
+            },
+            "className": "px-4 shrink-0 !text-[14px] font-bold border border-red-300/60 !bg-[var(--ev-surface)] !text-red-500"
+          }
+        ]
+      },
+      {
+        "el": "box",
+        "when": {
+          "op": "eq",
+          "a": "{values.__runState}",
+          "b": "done"
+        },
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[620px] flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in border-green-500/50",
+        "style": {
+          "backgroundColor": "var(--ev-modal)",
+          "boxShadow": "0 18px 44px rgba(23,37,58,0.18)"
+        },
+        "card": [
+          {
+            "el": "box",
+            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-green-500/15",
+            "card": [
+              {
+                "el": "icon",
+                "icon": "check_circle",
+                "textSize": "text-[26px]",
+                "className": "!text-green-500"
+              }
+            ]
+          },
+          {
+            "el": "box",
+            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "card": [
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
+                "card": [
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2 min-w-0",
+                    "card": [
+                      {
+                        "el": "text",
+                        "value": "ผลิตคลิป",
+                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
+                      },
+                      {
+                        "el": "text",
+                        "value": "เสร็จครบ",
+                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-green-500/15 !text-green-600",
+                        "icon": "check"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        {
+                          "op": "count",
+                          "from": "tasks",
+                          "slot": "video"
+                        },
+                        "/",
+                        {
+                          "op": "count",
+                          "from": "tasks"
+                        },
+                        " คลิป"
+                      ]
+                    },
+                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-green-600"
+                  }
+                ]
+              },
+              {
+                "el": "box",
+                "className": "h-1.5 rounded-full bg-green-500 w-full"
+              },
+              {
+                "el": "text",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "เหลืออีก ",
+                    "{values.__runLoopLeft}",
+                    " สินค้า — กด “ผลิตต่อรอบถัดไป” ที่หน้าผลิต"
+                  ]
+                },
+                "className": "!text-[13px] font-bold truncate !text-amber-600",
+                "when": {
+                  "op": "gt",
+                  "a": "{values.__runLoopLeft}",
+                  "b": 0
+                }
+              },
+              {
+                "el": "text",
+                "value": "ครบทุกคลิปแล้ว — ไปดูผลงานที่คลังคลิปได้เลย",
+                "className": "!text-[13px] font-bold truncate !text-green-600",
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "gt",
+                    "a": "{values.__runLoopLeft}",
+                    "b": 0
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "el": "button",
+            "action": "set",
+            "to": "__runState",
+            "value": "",
+            "label": "ปิด",
+            "variant": "ghost",
+            "style": {
+              "borderRadius": "9999px",
+              "height": "42px"
+            },
+            "className": "px-5 shrink-0 !text-[14px] font-bold border border-green-300/70 !bg-[var(--ev-surface)] !text-green-600"
+          }
+        ]
+      },
+      {
+        "el": "box",
+        "when": {
+          "op": "eq",
+          "a": "{values.__runState}",
+          "b": "fail"
+        },
+        "className": "fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[92%] max-w-[620px] flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in border-red-500/50",
+        "style": {
+          "backgroundColor": "var(--ev-modal)",
+          "boxShadow": "0 18px 44px rgba(23,37,58,0.18)"
+        },
+        "card": [
+          {
+            "el": "box",
+            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-red-500/12",
+            "card": [
+              {
+                "el": "icon",
+                "icon": "error",
+                "textSize": "text-[26px]",
+                "className": "!text-red-500"
+              }
+            ]
+          },
+          {
+            "el": "box",
+            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "card": [
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "justify-between items-center gap-2",
+                "card": [
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-2 min-w-0",
+                    "card": [
+                      {
+                        "el": "text",
+                        "value": "ผลิตคลิป",
+                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
+                      },
+                      {
+                        "el": "text",
+                        "value": "มีคลิปพลาด",
+                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-red-500/12 !text-red-500"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "พลาด ",
+                        "{values.__runFail}"
+                      ]
+                    },
+                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-red-500"
+                  }
+                ]
+              },
+              {
+                "el": "text",
+                "value": "กดปุ่ม “ลองใหม่ที่พลาด” เพื่อสั่งทำเฉพาะตัวที่พลาดอีกครั้ง",
+                "className": "!text-[13px] font-bold truncate !text-red-500"
+              }
+            ]
+          },
+          {
+            "el": "button",
+            "action": "set",
+            "to": "__runState",
+            "value": "",
+            "label": "ปิด",
+            "variant": "ghost",
+            "style": {
+              "borderRadius": "9999px",
+              "height": "42px"
+            },
+            "className": "px-5 shrink-0 !text-[14px] font-bold border border-red-300/70 !bg-[var(--ev-surface)] !text-red-500"
+          }
+        ]
+      }
+    ]
   }
 }
