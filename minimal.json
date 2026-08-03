@@ -5406,8 +5406,8 @@
                     {
                       "el": "button",
                       "action": "set",
-                      "to": "__page",
-                      "value": "setup",
+                      "to": "__runExitAsk",
+                      "value": "1",
                       "label": "",
                       "icon": "arrow_back",
                       "variant": "ghost",
@@ -9167,6 +9167,91 @@
                   }
                 }
               ]
+            },
+            {
+              "el": "box",
+              "className": "fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4",
+              "card": [
+                {
+                  "el": "box",
+                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-6 w-full max-w-[460px] flex flex-col gap-4",
+                  "card": [
+                    {
+                      "el": "row",
+                      "className": "items-center gap-3.5",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center shrink-0",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "stop_circle",
+                              "textSize": "text-[22px]",
+                              "className": "!text-red-500 leading-none flex items-center justify-center"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "หยุดและรีเซ็ตงาน?",
+                          "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)]"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "text",
+                      "value": "กลับหน้าตั้งค่าจะหยุดการผลิต และล้างการ์ด/บอร์ด/วิดีโอชุดนี้ทั้งหมด — ไฟล์ที่ดาวน์โหลดหรือเซฟโปรเจกต์ไว้แล้วไม่หาย",
+                      "className": "!text-[15px] min-[640px]:!text-[14px] opacity-65 leading-relaxed"
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center justify-end gap-2.5 mt-1",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "card": [
+                        {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__runExitAsk",
+                          "value": "",
+                          "label": "ยกเลิก — ทำต่อ",
+                          "variant": "ghost",
+                          "className": "!h-12 min-[640px]:!h-11 !px-5 !rounded-xl !text-[16px] min-[640px]:!text-[15px] font-bold border border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "button",
+                          "action": "reset-run",
+                          "coll": "tasks",
+                          "label": "หยุดและรีเซ็ต",
+                          "icon": "stop_circle",
+                          "className": "!h-12 min-[640px]:!h-11 !px-6 !rounded-xl !text-[16px] min-[640px]:!text-[15px] font-bold !border-0 !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] !text-white"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "when": {
+                "op": "and",
+                "a": {
+                  "op": "eq",
+                  "a": "{values.__runExitAsk}",
+                  "b": "1"
+                },
+                "b": {
+                  "op": "gt",
+                  "a": {
+                    "op": "count",
+                    "from": "tasks"
+                  },
+                  "b": 0
+                }
+              }
             }
           ],
           "when": {
