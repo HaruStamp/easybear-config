@@ -82,7 +82,8 @@
     "__delId": "",
     "__runExitAsk": "",
     "batchDelay": "10",
-    "retryDelay": "20"
+    "retryDelay": "20",
+    "productCap": "5"
   },
   "collections": {
     "control": {
@@ -2288,6 +2289,16 @@
                           "max": 120,
                           "step": 5,
                           "unit": "วิ"
+                        },
+                        {
+                          "el": "stepper",
+                          "field": "productCap",
+                          "label": "สินค้าต่อรอบ (ออโต้)",
+                          "placeholder": "ครบแล้วพักรอบ — กดผลิตต่อเพื่อทำชุดถัดไป",
+                          "min": 1,
+                          "max": 20,
+                          "step": 1,
+                          "unit": "สินค้า"
                         }
                       ]
                     }
@@ -4472,6 +4483,91 @@
                             },
                             "b": 0
                           }
+                        ]
+                      }
+                    },
+                    {
+                      "el": "run-button",
+                      "icon": "conveyor_belt",
+                      "variant": "ghost",
+                      "label": {
+                        "op": "concat",
+                        "parts": [
+                          "ผลิตต่อรอบถัดไป · เหลืออีก ",
+                          "{values.__runLoopLeft}",
+                          " สินค้า"
+                        ]
+                      },
+                      "className": "w-full justify-center !h-14 min-[640px]:!h-12 !rounded-2xl !text-[16px] min-[640px]:!text-[15px] font-bold border border-[var(--ev-accent)]/40 !bg-[var(--ev-surface)] !text-[var(--ev-accent)]",
+                      "when": {
+                        "op": "and",
+                        "a": {
+                          "op": "gt",
+                          "a": "{values.__runLoopLeft}",
+                          "b": 0
+                        },
+                        "b": {
+                          "op": "not",
+                          "a": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "el": "row",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "className": "items-center gap-2.5 px-4 py-3 rounded-2xl bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/25",
+                  "when": {
+                    "op": "not",
+                    "a": {
+                      "op": "eq",
+                      "a": "{values.__runLoopProd}",
+                      "b": ""
+                    }
+                  },
+                  "card": [
+                    {
+                      "el": "spinner",
+                      "className": "!w-4 !h-4 shrink-0"
+                    },
+                    {
+                      "el": "text",
+                      "className": "!text-[15px] min-[640px]:!text-[14px] font-bold !text-[var(--ev-accent)] truncate",
+                      "value": {
+                        "op": "concat",
+                        "parts": [
+                          "สินค้าที่ ",
+                          {
+                            "op": "add",
+                            "a": "{values.__runLoopDone}",
+                            "b": 1
+                          },
+                          "/",
+                          "{values.__runLoopTotal}",
+                          " — ",
+                          "{values.__runLoopProd}"
                         ]
                       }
                     }
@@ -10189,5 +10285,21 @@
         }
       ]
     }
+  },
+  "auto": {
+    "productLoop": {
+      "source": "products",
+      "where": "enabled=true",
+      "plan": "mnPlan",
+      "queue": "mnQueue",
+      "gens": [
+        "mnBoard",
+        "mnVideo"
+      ],
+      "childRef": "prod",
+      "capValue": "productCap",
+      "capDefault": 5
+    },
+    "scopeColl": "products"
   }
 }
