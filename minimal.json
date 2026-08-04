@@ -8955,7 +8955,7 @@
                             },
                             {
                               "el": "box",
-                              "className": "",
+                              "className": "relative",
                               "card": [
                                 {
                                   "el": "media-slot",
@@ -8965,6 +8965,65 @@
                                     "borderRadius": "18px"
                                   },
                                   "className": "ring-1 ring-[var(--ev-border)]"
+                                },
+                                {
+                                  "el": "box",
+                                  "when": {
+                                    "op": "and",
+                                    "list": [
+                                      {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{values.mode}",
+                                          "b": "auto"
+                                        }
+                                      },
+                                      {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{item.slots.video}",
+                                        "b": ""
+                                      }
+                                    ]
+                                  },
+                                  "className": "absolute inset-0 z-10 rounded-[18px] bg-black/35 flex flex-col items-center justify-center gap-2 pointer-events-none",
+                                  "card": [
+                                    {
+                                      "el": "gen-button",
+                                      "op": "mnVideo",
+                                      "label": "Gen วิดีโอ",
+                                      "icon": "auto_fix_high",
+                                      "variant": "solid",
+                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white w-[132px] !pointer-events-auto"
+                                    },
+                                    {
+                                      "el": "pick-button",
+                                      "into": "{item.slots.video}",
+                                      "filter": "video",
+                                      "label": "เลือกวิดีโอ",
+                                      "icon": "video_library",
+                                      "variant": "ghost",
+                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto"
+                                    }
+                                  ]
                                 }
                               ],
                               "when": {
@@ -8994,7 +9053,64 @@
                                   "textSize": "text-[24px]",
                                   "className": "opacity-25 leading-none flex items-center justify-center",
                                   "when": {
-                                    "op": "not",
+                                    "op": "and",
+                                    "a": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "eq",
+                                            "a": "{values.mode}",
+                                            "b": "auto"
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.meta.retrying}",
+                                                "b": "1"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "el": "spinner",
+                                  "className": "!text-[26px]",
+                                  "when": {
+                                    "op": "and",
                                     "a": {
                                       "op": "or",
                                       "list": [
@@ -9009,26 +9125,39 @@
                                           "b": "1"
                                         }
                                       ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "spinner",
-                                  "className": "!text-[26px]",
-                                  "when": {
-                                    "op": "or",
-                                    "list": [
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.status}",
-                                        "b": "running"
-                                      },
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.meta.retrying}",
-                                        "b": "1"
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "eq",
+                                            "a": "{values.mode}",
+                                            "b": "auto"
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.meta.retrying}",
+                                                "b": "1"
+                                              }
+                                            ]
+                                          }
+                                        }
                                       }
-                                    ]
+                                    }
                                   }
                                 },
                                 {
@@ -9040,21 +9169,130 @@
                                     "fallback": "กำลังทำ…"
                                   },
                                   "when": {
-                                    "op": "or",
-                                    "list": [
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.status}",
-                                        "b": "running"
-                                      },
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.meta.retrying}",
-                                        "b": "1"
+                                    "op": "and",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.status}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.meta.retrying}",
+                                          "b": "1"
+                                        }
+                                      ]
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "eq",
+                                            "a": "{values.mode}",
+                                            "b": "auto"
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.meta.retrying}",
+                                                "b": "1"
+                                              }
+                                            ]
+                                          }
+                                        }
                                       }
-                                    ]
+                                    }
                                   },
                                   "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] text-center px-2"
+                                },
+                                {
+                                  "el": "gen-button",
+                                  "op": "mnBoard",
+                                  "label": "Gen ภาพ",
+                                  "icon": "auto_fix_high",
+                                  "variant": "solid",
+                                  "when": {
+                                    "op": "and",
+                                    "a": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{values.mode}",
+                                        "b": "auto"
+                                      }
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white w-[132px] !pointer-events-auto"
+                                },
+                                {
+                                  "el": "pick-button",
+                                  "into": "{item.slots.board}",
+                                  "label": "เลือกภาพ",
+                                  "icon": "photo_library",
+                                  "variant": "ghost",
+                                  "when": {
+                                    "op": "and",
+                                    "a": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{values.mode}",
+                                        "b": "auto"
+                                      }
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto"
                                 }
                               ],
                               "when": {
