@@ -139,7 +139,8 @@
         "cam2",
         "cam3",
         "cam4",
-        "cam5"
+        "cam5",
+        "picked"
       ],
       "slots": [
         "board",
@@ -5367,144 +5368,6 @@
                                   "value": {
                                     "op": "concat",
                                     "parts": [
-                                      "บอร์ด ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      "/",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "icon": "image",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-[var(--ev-surface2)] opacity-80",
-                                  "when": {
-                                    "op": "not",
-                                    "a": {
-                                      "op": "eq",
-                                      "a": {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      "b": {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "บอร์ด ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      "/",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "icon": "image",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-green-500/[0.12] !text-green-700",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": {
-                                      "op": "count",
-                                      "from": "tasks",
-                                      "slot": "board"
-                                    },
-                                    "b": {
-                                      "op": "count",
-                                      "from": "tasks"
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "วิดีโอ ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "video"
-                                      },
-                                      "/",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "icon": "movie",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-[var(--ev-surface2)] opacity-80",
-                                  "when": {
-                                    "op": "not",
-                                    "a": {
-                                      "op": "eq",
-                                      "a": {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "video"
-                                      },
-                                      "b": {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
-                                      "วิดีโอ ",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "video"
-                                      },
-                                      "/",
-                                      {
-                                        "op": "count",
-                                        "from": "tasks"
-                                      }
-                                    ]
-                                  },
-                                  "icon": "movie",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-green-500/[0.12] !text-green-700",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": {
-                                      "op": "count",
-                                      "from": "tasks",
-                                      "slot": "video"
-                                    },
-                                    "b": {
-                                      "op": "count",
-                                      "from": "tasks"
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "text",
-                                  "value": {
-                                    "op": "concat",
-                                    "parts": [
                                       "พลาด ",
                                       {
                                         "op": "count",
@@ -5525,7 +5388,16 @@
                                     "b": 0
                                   }
                                 }
-                              ]
+                              ],
+                              "when": {
+                                "op": "gt",
+                                "a": {
+                                  "op": "count",
+                                  "from": "tasks",
+                                  "where": "status=error"
+                                },
+                                "b": 0
+                              }
                             }
                           ]
                         },
@@ -9706,7 +9578,233 @@
                               "style": {
                                 "flexWrap": "nowrap"
                               },
-                              "className": "items-center gap-1.5 pt-2 px-0.5",
+                              "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7 rounded-b-[18px] bg-gradient-to-t from-black/70 to-transparent",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "{item.productName}",
+                                  "className": "!text-[12.5px] font-bold truncate flex-1 min-w-0 !text-white"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-2 h-2 rounded-full shrink-0",
+                                  "card": [],
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.board}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "class": "bg-green-500"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "not",
+                                              "a": {
+                                                "op": "eq",
+                                                "a": "{item.slots.board}",
+                                                "b": ""
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runStage}",
+                                            "b": "mnBoard"
+                                          }
+                                        ]
+                                      },
+                                      "class": "bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(47,127,232,0.25)]"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.board}",
+                                              "b": ""
+                                            }
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "not",
+                                                  "a": {
+                                                    "op": "eq",
+                                                    "a": "{item.slots.board}",
+                                                    "b": ""
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runStage}",
+                                                "b": "mnBoard"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      "class": "bg-[var(--ev-border)]"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-2 h-2 rounded-full shrink-0",
+                                  "card": [],
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "class": "bg-green-500"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "not",
+                                              "a": {
+                                                "op": "eq",
+                                                "a": "{item.slots.video}",
+                                                "b": ""
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runStage}",
+                                            "b": "mnVideo"
+                                          }
+                                        ]
+                                      },
+                                      "class": "bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(47,127,232,0.25)]"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.video}",
+                                              "b": ""
+                                            }
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "not",
+                                                  "a": {
+                                                    "op": "eq",
+                                                    "a": "{item.slots.video}",
+                                                    "b": ""
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runStage}",
+                                                "b": "mnVideo"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      "class": "bg-[var(--ev-border)]"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "[{item.clipIndex}/{values.clipsPerProduct}]",
+                                  "className": "!text-[12px] font-black tabular-nums shrink-0 !text-white"
+                                }
+                              ],
+                              "when": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.board}",
+                                      "b": ""
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.video}",
+                                      "b": ""
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "el": "row",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7 rounded-b-[18px] ",
                               "card": [
                                 {
                                   "el": "text",
@@ -9904,7 +10002,31 @@
                                   "value": "[{item.clipIndex}/{values.clipsPerProduct}]",
                                   "className": "!text-[12px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]"
                                 }
-                              ]
+                              ],
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "or",
+                                  "list": [
+                                    {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      }
+                                    },
+                                    {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{item.slots.video}",
+                                        "b": ""
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
                             }
                           ]
                         }
@@ -10699,73 +10821,95 @@
                       "card": [
                         {
                           "el": "box",
-                          "className": "relative",
+                          "className": "relative group flex flex-col",
                           "card": [
                             {
                               "el": "md",
                               "value": "{item.clipIndex}",
-                              "className": "absolute -top-2 -left-2 z-20 w-9 h-9 bg-white !text-[#17253a] rounded-xl flex items-center justify-center !text-[16px] font-black border-[3px] border-[var(--ev-surface)]"
+                              "className": "absolute -top-2 -left-2 z-30 w-8 h-8 bg-white !text-[#17253a] rounded-lg flex items-center justify-center !text-[15px] font-black border border-[var(--ev-border)]"
+                            },
+                            {
+                              "el": "media-slot",
+                              "src": "{item.slots.video}",
+                              "aspect": "9:16",
+                              "showPlay": true,
+                              "style": {
+                                "borderRadius": "18px"
+                              },
+                              "className": "ring-1 ring-[var(--ev-border)]"
+                            },
+                            {
+                              "el": "row",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7 rounded-b-[18px] bg-gradient-to-t from-black/70 to-transparent pointer-events-none",
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "{item.productName}",
+                                  "className": "!text-[12.5px] font-bold truncate flex-1 min-w-0 !text-white"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "[{item.clipIndex}/{values.clipsPerProduct}]",
+                                  "className": "!text-[12px] font-black tabular-nums shrink-0 !text-white"
+                                }
+                              ]
                             },
                             {
                               "el": "box",
-                              "className": "rounded-[24px] border border-[var(--ev-border)] bg-[var(--ev-surface)] overflow-hidden flex flex-col",
+                              "className": "absolute inset-0 z-20 rounded-[18px] bg-black/45 opacity-0 group-hover:opacity-100 transition flex flex-col justify-end gap-2 p-2.5 pointer-events-none",
                               "card": [
                                 {
-                                  "el": "box",
-                                  "className": "relative",
-                                  "card": [
-                                    {
-                                      "el": "media-slot",
-                                      "src": "{item.slots.video}",
-                                      "aspect": "9:16",
-                                      "showPlay": true,
-                                      "className": ""
-                                    }
-                                  ]
+                                  "el": "download-button",
+                                  "to": "{item.slots.video}",
+                                  "label": "ดาวน์โหลด",
+                                  "icon": "download",
+                                  "variant": "solid",
+                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold w-full !pointer-events-auto !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white"
                                 },
                                 {
-                                  "el": "box",
-                                  "className": "p-3.5 flex flex-col gap-2.5",
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": "{item.productName}",
-                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold truncate !text-[var(--ev-text)]"
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": "คลิปที่ {item.clipIndex} · 10 วิ · 9:16",
-                                      "className": "!text-[12.5px] min-[640px]:!text-[12px] opacity-55 font-medium"
-                                    },
-                                    {
-                                      "el": "row",
-                                      "className": "gap-2",
-                                      "style": {
-                                        "flexWrap": "nowrap"
-                                      },
-                                      "card": [
-                                        {
-                                          "el": "download-button",
-                                          "to": "{item.slots.video}",
-                                          "label": "ดาวน์โหลด",
-                                          "icon": "download",
-                                          "variant": "solid",
-                                          "className": "flex-1 justify-center !h-12 min-[640px]:!h-11 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
-                                        },
-                                        {
-                                          "el": "open-editor",
-                                          "coll": "tasks",
-                                          "only": true,
-                                          "label": "ตัดต่อ",
-                                          "icon": "movie_edit",
-                                          "variant": "ghost",
-                                          "className": "flex-1 justify-center !h-12 min-[640px]:!h-11 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]"
-                                        }
-                                      ]
-                                    }
-                                  ]
+                                  "el": "open-editor",
+                                  "coll": "tasks",
+                                  "only": true,
+                                  "label": "ตัดต่อ",
+                                  "icon": "movie_edit",
+                                  "variant": "ghost",
+                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold w-full !pointer-events-auto !bg-white/90 !text-[#17253a]"
                                 }
                               ]
+                            },
+                            {
+                              "el": "button",
+                              "action": "toggle",
+                              "field": "picked",
+                              "label": "",
+                              "icon": "radio_button_unchecked",
+                              "variant": "ghost",
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{item.picked}",
+                                  "b": "true"
+                                }
+                              },
+                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-full !bg-black/50 !text-white justify-center !gap-0 opacity-0 group-hover:opacity-100 transition !border-0"
+                            },
+                            {
+                              "el": "button",
+                              "action": "toggle",
+                              "field": "picked",
+                              "label": "",
+                              "icon": "check_circle",
+                              "variant": "ghost",
+                              "when": {
+                                "op": "eq",
+                                "a": "{item.picked}",
+                                "b": "true"
+                              },
+                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-full !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0"
                             }
                           ]
                         }
@@ -10807,6 +10951,34 @@
                         },
                         "b": 0
                       }
+                    },
+                    {
+                      "el": "zip-export",
+                      "coll": "tasks",
+                      "where": "picked=true",
+                      "mediaSlots": [
+                        "video"
+                      ],
+                      "prefix": "minimal-clip",
+                      "icon": "download",
+                      "label": {
+                        "op": "concat",
+                        "parts": [
+                          "ดาวน์โหลดที่เลือก · ",
+                          {
+                            "op": "count",
+                            "from": "tasks",
+                            "where": "picked=true"
+                          },
+                          " คลิป"
+                        ]
+                      },
+                      "when": {
+                        "op": "some",
+                        "from": "tasks",
+                        "where": "picked=true"
+                      },
+                      "className": "w-full justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                     },
                     {
                       "el": "button",
