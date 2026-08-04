@@ -4632,29 +4632,14 @@
                     {
                       "el": "text",
                       "value": "มุมมอง",
-                      "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-50",
+                      "className": "!text-[12.5px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
                       "icon": "visibility"
                     },
                     {
                       "el": "segmented",
                       "field": "viewMode",
-                      "variant": "accent",
-                      "icon": "visibility",
+                      "variant": "tab",
                       "label": "",
-                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-full",
-                      "className": "shrink-0",
-                      "options": [
-                        {
-                          "value": "",
-                          "label": "การ์ด",
-                          "icon": "view_agenda"
-                        },
-                        {
-                          "value": "grid",
-                          "label": "กริด",
-                          "icon": "grid_view"
-                        }
-                      ],
                       "when": {
                         "op": "and",
                         "a": {
@@ -4670,28 +4655,27 @@
                             "b": "auto"
                           }
                         }
-                      }
-                    },
-                    {
-                      "el": "segmented",
-                      "field": "viewMode",
-                      "variant": "accent",
-                      "icon": "visibility",
-                      "label": "",
-                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-full",
-                      "className": "shrink-0",
+                      },
+                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                      "className": "w-[190px] shrink-0",
                       "options": [
                         {
-                          "value": "cards",
+                          "value": "",
                           "label": "การ์ด",
                           "icon": "view_agenda"
                         },
                         {
-                          "value": "",
+                          "value": "grid",
                           "label": "กริด",
                           "icon": "grid_view"
                         }
-                      ],
+                      ]
+                    },
+                    {
+                      "el": "segmented",
+                      "field": "viewMode",
+                      "variant": "tab",
+                      "label": "",
                       "when": {
                         "op": "and",
                         "a": {
@@ -4704,16 +4688,37 @@
                           "a": "{values.mode}",
                           "b": "auto"
                         }
-                      }
+                      },
+                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                      "className": "w-[190px] shrink-0",
+                      "options": [
+                        {
+                          "value": "cards",
+                          "label": "การ์ด",
+                          "icon": "view_agenda"
+                        },
+                        {
+                          "value": "",
+                          "label": "กริด",
+                          "icon": "grid_view"
+                        }
+                      ]
                     },
                     {
                       "el": "segmented",
                       "field": "viewMode",
-                      "variant": "accent",
-                      "icon": "visibility",
+                      "variant": "tab",
                       "label": "",
-                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-full",
-                      "className": "shrink-0",
+                      "when": {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": "{values.viewMode}",
+                          "b": ""
+                        }
+                      },
+                      "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                      "className": "w-[190px] shrink-0",
                       "options": [
                         {
                           "value": "cards",
@@ -4725,17 +4730,32 @@
                           "label": "กริด",
                           "icon": "grid_view"
                         }
-                      ],
-                      "when": {
-                        "op": "not",
-                        "a": {
-                          "op": "eq",
-                          "a": "{values.viewMode}",
-                          "b": ""
-                        }
-                      }
+                      ]
                     }
-                  ]
+                  ],
+                  "when": {
+                    "op": "not",
+                    "a": {
+                      "op": "or",
+                      "list": [
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "running"
+                        },
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "cooldown"
+                        },
+                        {
+                          "op": "eq",
+                          "a": "{values.__runState}",
+                          "b": "retrying"
+                        }
+                      ]
+                    }
+                  }
                 },
                 {
                   "el": "box",
@@ -5265,6 +5285,39 @@
                                               "el": "md",
                                               "value": "{item.clipIndex}",
                                               "className": "absolute -top-2 -left-2 z-20 w-8 h-8 bg-white !text-[#17253a] rounded-lg flex items-center justify-center !text-[15px] font-black border border-[var(--ev-border)]"
+                                            },
+                                            {
+                                              "el": "row",
+                                              "when": {
+                                                "op": "or",
+                                                "list": [
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{item.status}",
+                                                    "b": "running"
+                                                  },
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{item.meta.retrying}",
+                                                    "b": "1"
+                                                  }
+                                                ]
+                                              },
+                                              "style": {
+                                                "flexWrap": "nowrap"
+                                              },
+                                              "className": "absolute top-1.5 right-1.5 z-20 items-center gap-1.5 px-2 py-1 rounded-full bg-black/65",
+                                              "card": [
+                                                {
+                                                  "el": "spinner",
+                                                  "className": "!text-[13px] !text-white"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "กำลังทำ",
+                                                  "className": "!text-[11px] font-bold !text-white leading-none"
+                                                }
+                                              ]
                                             },
                                             {
                                               "el": "box",
@@ -7098,7 +7151,22 @@
                                       "op": "mnBoard",
                                       "label": "ลองใหม่",
                                       "icon": "replay",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
                                     },
                                     {
                                       "el": "pick-button",
@@ -7162,7 +7230,22 @@
                                       "op": "mnVideo",
                                       "label": "ลองใหม่",
                                       "icon": "replay",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
                                     }
                                   ],
                                   "when": {
@@ -7224,7 +7307,22 @@
                                       "op": "mnBoard",
                                       "label": "วาดภาพ",
                                       "icon": "auto_awesome",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
                                     },
                                     {
                                       "el": "pick-button",
@@ -7488,9 +7586,19 @@
                                       "label": "สร้างวิดีโอ",
                                       "icon": "auto_awesome",
                                       "disabledWhen": {
-                                        "op": "eq",
-                                        "a": "{item.slots.board}",
-                                        "b": ""
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
                                       },
                                       "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                                     },
@@ -7505,7 +7613,22 @@
                                       "label": "วาดภาพ",
                                       "icon": "auto_awesome",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                                      "disabledWhen": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
                                     },
                                     {
                                       "el": "pick-button",
@@ -7583,7 +7706,22 @@
                                       "op": "mnVideo",
                                       "label": "สร้างวิดีโอ",
                                       "icon": "auto_awesome",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
                                     },
                                     {
                                       "el": "pick-button",
@@ -7923,7 +8061,22 @@
                                   "op": "mnBoard",
                                   "label": "ลองใหม่",
                                   "icon": "replay",
-                                  "className": "!h-10 !px-5 !rounded-full !text-[13px] font-bold mt-1 !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                  "className": "!h-10 !px-5 !rounded-full !text-[13px] font-bold mt-1 !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                  "disabledWhen": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{item.status}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{item.meta.retrying}",
+                                        "b": "1"
+                                      }
+                                    ]
+                                  }
                                 }
                               ],
                               "when": {
@@ -9630,166 +9783,60 @@
             }
           ]
         },
-        "className": "w-full flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in",
+        "className": "w-full flex flex-col gap-3 px-4 min-[640px]:px-5 py-4 rounded-[26px] border-2 animate-in",
         "style": {
           "backgroundColor": "var(--ev-surface)",
           "borderColor": "color-mix(in srgb, var(--ev-accent) 45%, transparent)"
         },
         "card": [
           {
-            "el": "box",
-            "className": "shrink-0",
-            "card": [
-              {
-                "el": "box",
-                "when": {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "running"
-                },
-                "className": "w-12 h-12 rounded-full flex items-center justify-center bg-[var(--ev-accent)]/12",
-                "card": [
-                  {
-                    "el": "spinner",
-                    "className": "!text-[24px]"
-                  }
-                ]
-              },
-              {
-                "el": "progress-ring",
-                "when": {
-                  "op": "or",
-                  "list": [
-                    {
-                      "op": "eq",
-                      "a": "{values.__runState}",
-                      "b": "cooldown"
-                    },
-                    {
-                      "op": "eq",
-                      "a": "{values.__runState}",
-                      "b": "retrying"
-                    }
-                  ]
-                },
-                "value": {
-                  "op": "mul",
-                  "a": {
-                    "op": "div",
-                    "a": "{values.__runCoolLeft}",
-                    "b": "{values.__runCoolTotal}"
-                  },
-                  "b": 100
-                },
-                "className": "w-12 h-12",
-                "card": [
-                  {
-                    "el": "icon",
-                    "icon": "hourglass_top",
-                    "textSize": "text-[22px]",
-                    "className": "!text-amber-500 animate-hgflip",
-                    "style": {
-                      "display": "inline-flex",
-                      "alignItems": "center",
-                      "justifyContent": "center",
-                      "lineHeight": "1",
-                      "transformOrigin": "center"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
+            "el": "row",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "className": "items-center justify-between gap-2",
             "card": [
               {
                 "el": "row",
                 "style": {
                   "flexWrap": "nowrap"
                 },
-                "className": "justify-between items-center gap-2",
+                "className": "items-center gap-2.5 min-w-0",
                 "card": [
                   {
-                    "el": "row",
-                    "style": {
-                      "flexWrap": "nowrap"
-                    },
-                    "className": "items-center gap-2 min-w-0",
-                    "card": [
-                      {
-                        "el": "text",
-                        "value": "ผลิตคลิป",
-                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
-                      },
-                      {
-                        "el": "text",
-                        "value": "กำลังสร้าง",
-                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-[var(--ev-accent)] !text-[var(--ev-accent-fg)]",
-                        "when": {
-                          "op": "eq",
-                          "a": "{values.__runState}",
-                          "b": "running"
-                        }
-                      },
-                      {
-                        "el": "text",
-                        "value": "พักหลบเรดาร์",
-                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-amber-500/15 !text-amber-600",
-                        "when": {
-                          "op": "eq",
-                          "a": "{values.__runState}",
-                          "b": "cooldown"
-                        },
-                        "icon": "hourglass_top"
-                      },
-                      {
-                        "el": "text",
-                        "value": {
-                          "op": "concat",
-                          "parts": [
-                            "ลองใหม่ครั้งที่ ",
-                            "{values.__runAttempt}"
-                          ]
-                        },
-                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-red-500/12 !text-red-500",
-                        "when": {
-                          "op": "eq",
-                          "a": "{values.__runState}",
-                          "b": "retrying"
-                        },
-                        "icon": "replay"
-                      }
-                    ]
+                    "el": "box",
+                    "className": "w-2 h-2 rounded-full bg-[var(--ev-accent)] animate-pulse shrink-0"
                   },
                   {
                     "el": "text",
-                    "value": {
-                      "op": "concat",
-                      "parts": [
-                        "{values.__runDone}",
-                        "/",
-                        "{values.__runTotal}",
-                        " คลิป"
-                      ]
-                    },
+                    "value": "กำลังผลิตคลิป",
+                    "className": "!text-[16px] min-[640px]:!text-[15px] font-extrabold !text-[var(--ev-text)] truncate"
+                  }
+                ]
+              },
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-center gap-2 shrink-0",
+                "card": [
+                  {
+                    "el": "text",
+                    "value": "กำลังสร้าง",
                     "when": {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.__runState}",
-                        "b": "cooldown"
-                      }
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "running"
                     },
-                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]"
+                    "className": "px-2.5 py-1 rounded-full !text-[12px] font-bold bg-[var(--ev-accent)] !text-[var(--ev-accent-fg)] leading-none"
                   },
                   {
                     "el": "text",
                     "value": {
                       "op": "concat",
                       "parts": [
-                        "เหลือ ",
+                        "พักหลบเรดาร์ · เหลือ ",
                         "{values.__runCoolLeft}",
                         " วิ"
                       ]
@@ -9799,107 +9846,519 @@
                       "a": "{values.__runState}",
                       "b": "cooldown"
                     },
-                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-amber-600"
+                    "icon": "hourglass_top",
+                    "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-amber-500/15 !text-amber-600 leading-none"
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "ลองใหม่ครั้งที่ ",
+                        "{values.__runAttempt}"
+                      ]
+                    },
+                    "when": {
+                      "op": "eq",
+                      "a": "{values.__runState}",
+                      "b": "retrying"
+                    },
+                    "icon": "replay",
+                    "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-red-500/12 !text-red-500 leading-none"
                   }
                 ]
-              },
-              {
-                "el": "progress-bar",
-                "value": {
-                  "op": "mul",
-                  "a": {
-                    "op": "div",
-                    "a": "{values.__runDone}",
-                    "b": "{values.__runTotal}"
-                  },
-                  "b": 100
-                }
-              },
-              {
-                "el": "text",
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "สินค้าที่ ",
-                    {
-                      "op": "add",
-                      "a": "{values.__runLoopDone}",
-                      "b": 1
-                    },
-                    "/",
-                    "{values.__runLoopTotal}",
-                    " · ",
-                    "{values.__runLoopProd}",
-                    " — ",
-                    {
-                      "op": "lookup",
-                      "table": "opNames",
-                      "key": "{values.__runStage}",
-                      "fallback": "กำลังทำงาน…"
-                    }
-                  ]
-                },
-                "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]",
-                "when": {
-                  "op": "not",
-                  "a": {
-                    "op": "eq",
-                    "a": "{values.__runLoopProd}",
-                    "b": ""
-                  }
-                }
-              },
-              {
-                "el": "text",
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    {
-                      "op": "lookup",
-                      "table": "opNames",
-                      "key": "{values.__runStage}",
-                      "fallback": "กำลังทำงาน…"
-                    },
-                    " · คลิปที่ ",
-                    {
-                      "op": "min",
-                      "a": {
-                        "op": "add",
-                        "a": "{values.__runDone}",
-                        "b": 1
-                      },
-                      "b": "{values.__runTotal}"
-                    },
-                    "/",
-                    "{values.__runTotal}"
-                  ]
-                },
-                "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]",
-                "when": {
-                  "op": "not",
-                  "a": {
-                    "op": "not",
-                    "a": {
-                      "op": "eq",
-                      "a": "{values.__runLoopProd}",
-                      "b": ""
-                    }
-                  }
-                }
               }
             ]
           },
           {
-            "el": "button",
-            "action": "stop",
-            "label": "หยุดพัก",
-            "icon": "pause_circle",
-            "variant": "ghost",
+            "el": "row",
             "style": {
-              "borderRadius": "9999px",
-              "height": "42px"
+              "flexWrap": "nowrap"
             },
-            "className": "px-4 shrink-0 !text-[14px] font-bold border border-red-300/60 !bg-[var(--ev-surface)] !text-red-500"
+            "className": "items-center gap-4 overflow-hidden",
+            "card": [
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-center gap-1 shrink-0",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "shopping_cart",
+                    "textSize": "text-[15px]",
+                    "className": "opacity-55 leading-none flex items-center justify-center"
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        {
+                          "op": "count",
+                          "from": "products",
+                          "where": "enabled=true"
+                        },
+                        " สินค้า"
+                      ]
+                    },
+                    "className": "!text-[12.5px] font-bold opacity-70 leading-none whitespace-nowrap"
+                  }
+                ]
+              },
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-center gap-1 shrink-0",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "content_copy",
+                    "textSize": "text-[15px]",
+                    "className": "opacity-55 leading-none flex items-center justify-center"
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "{values.clipsPerProduct}",
+                        " คลิป/สินค้า"
+                      ]
+                    },
+                    "className": "!text-[12.5px] font-bold opacity-70 leading-none whitespace-nowrap"
+                  }
+                ]
+              },
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-center gap-1 shrink-0",
+                "card": [
+                  {
+                    "el": "icon",
+                    "icon": "timer",
+                    "textSize": "text-[15px]",
+                    "className": "opacity-55 leading-none flex items-center justify-center"
+                  },
+                  {
+                    "el": "text",
+                    "value": "ความยาว 10 วิ",
+                    "className": "!text-[12.5px] font-bold opacity-70 leading-none whitespace-nowrap"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "el": "row",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "className": "items-center gap-3.5",
+            "card": [
+              {
+                "el": "box",
+                "className": "flex-1 min-w-0",
+                "card": [
+                  {
+                    "el": "progress-bar",
+                    "value": {
+                      "op": "mul",
+                      "a": {
+                        "op": "div",
+                        "a": "{values.__runDone}",
+                        "b": "{values.__runTotal}"
+                      },
+                      "b": 100
+                    }
+                  }
+                ]
+              },
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-baseline gap-1 shrink-0",
+                "card": [
+                  {
+                    "el": "text",
+                    "value": "{values.__runDone}",
+                    "className": "!text-[24px] font-black tabular-nums !text-[var(--ev-accent)] leading-none"
+                  },
+                  {
+                    "el": "text",
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "/ ",
+                        "{values.__runTotal}",
+                        " คลิป"
+                      ]
+                    },
+                    "className": "!text-[13px] font-bold opacity-60 leading-none whitespace-nowrap"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "el": "text",
+            "when": {
+              "op": "not",
+              "a": {
+                "op": "eq",
+                "a": "{values.__runLoopProd}",
+                "b": ""
+              }
+            },
+            "value": {
+              "op": "concat",
+              "parts": [
+                "สินค้าที่ ",
+                {
+                  "op": "add",
+                  "a": "{values.__runLoopDone}",
+                  "b": 1
+                },
+                "/",
+                "{values.__runLoopTotal}",
+                " · ",
+                "{values.__runLoopProd}",
+                " — ",
+                {
+                  "op": "lookup",
+                  "table": "opNames",
+                  "key": "{values.__runStage}",
+                  "fallback": "กำลังทำงาน…"
+                }
+              ]
+            },
+            "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]"
+          },
+          {
+            "el": "text",
+            "when": {
+              "op": "not",
+              "a": {
+                "op": "not",
+                "a": {
+                  "op": "eq",
+                  "a": "{values.__runLoopProd}",
+                  "b": ""
+                }
+              }
+            },
+            "value": {
+              "op": "concat",
+              "parts": [
+                {
+                  "op": "lookup",
+                  "table": "opNames",
+                  "key": "{values.__runStage}",
+                  "fallback": "กำลังทำงาน…"
+                },
+                " · คลิปที่ ",
+                {
+                  "op": "min",
+                  "a": {
+                    "op": "add",
+                    "a": "{values.__runDone}",
+                    "b": 1
+                  },
+                  "b": "{values.__runTotal}"
+                },
+                "/",
+                "{values.__runTotal}"
+              ]
+            },
+            "className": "!text-[13px] font-bold truncate !text-[var(--ev-accent)]"
+          },
+          {
+            "el": "row",
+            "style": {
+              "flexWrap": "nowrap"
+            },
+            "className": "items-center justify-between gap-2",
+            "card": [
+              {
+                "el": "row",
+                "className": "items-center gap-1.5 flex-1 min-w-0 overflow-hidden",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "card": [
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-1.5 px-2.5 py-1 rounded-full shrink-0 bg-green-500/10 !text-green-600",
+                    "card": [
+                      {
+                        "el": "box",
+                        "className": "w-1.5 h-1.5 rounded-full bg-green-500"
+                      },
+                      {
+                        "el": "text",
+                        "value": {
+                          "op": "concat",
+                          "parts": [
+                            "เสร็จ ",
+                            {
+                              "op": "count",
+                              "from": "tasks",
+                              "slot": "video"
+                            }
+                          ]
+                        },
+                        "className": "!text-[12.5px] font-bold leading-none"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-1.5 px-2.5 py-1 rounded-full shrink-0 bg-amber-500/10 !text-amber-600",
+                    "card": [
+                      {
+                        "el": "box",
+                        "className": "w-1.5 h-1.5 rounded-full bg-amber-500"
+                      },
+                      {
+                        "el": "text",
+                        "value": {
+                          "op": "concat",
+                          "parts": [
+                            "กำลังทำ ",
+                            {
+                              "op": "count",
+                              "from": "tasks",
+                              "where": "status=running"
+                            }
+                          ]
+                        },
+                        "className": "!text-[12.5px] font-bold leading-none"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-1.5 px-2.5 py-1 rounded-full shrink-0 bg-[var(--ev-surface2)] opacity-80",
+                    "card": [
+                      {
+                        "el": "box",
+                        "className": "w-1.5 h-1.5 rounded-full bg-[var(--ev-dim)]"
+                      },
+                      {
+                        "el": "text",
+                        "value": {
+                          "op": "concat",
+                          "parts": [
+                            "รอคิว ",
+                            {
+                              "op": "sub",
+                              "a": {
+                                "op": "sub",
+                                "a": {
+                                  "op": "sub",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks"
+                                  },
+                                  "b": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "slot": "video"
+                                  }
+                                },
+                                "b": {
+                                  "op": "count",
+                                  "from": "tasks",
+                                  "where": "status=running"
+                                }
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks",
+                                "where": "status=error"
+                              }
+                            }
+                          ]
+                        },
+                        "className": "!text-[12.5px] font-bold leading-none"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "row",
+                    "style": {
+                      "flexWrap": "nowrap"
+                    },
+                    "className": "items-center gap-1.5 px-2.5 py-1 rounded-full shrink-0 bg-red-500/10 !text-red-500",
+                    "card": [
+                      {
+                        "el": "box",
+                        "className": "w-1.5 h-1.5 rounded-full bg-red-500"
+                      },
+                      {
+                        "el": "text",
+                        "value": {
+                          "op": "concat",
+                          "parts": [
+                            "พลาด ",
+                            {
+                              "op": "count",
+                              "from": "tasks",
+                              "where": "status=error"
+                            }
+                          ]
+                        },
+                        "className": "!text-[12.5px] font-bold leading-none"
+                      }
+                    ],
+                    "when": {
+                      "op": "gt",
+                      "a": {
+                        "op": "count",
+                        "from": "tasks",
+                        "where": "status=error"
+                      },
+                      "b": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "el": "row",
+                "style": {
+                  "flexWrap": "nowrap"
+                },
+                "className": "items-center gap-2 shrink-0",
+                "card": [
+                  {
+                    "el": "button",
+                    "action": "stop",
+                    "label": "หยุดพัก",
+                    "icon": "pause_circle",
+                    "variant": "ghost",
+                    "style": {
+                      "borderRadius": "12px",
+                      "height": "40px"
+                    },
+                    "className": "px-3.5 shrink-0 !text-[13.5px] font-bold border border-red-300/60 !bg-[var(--ev-surface)] !text-red-500"
+                  },
+                  {
+                    "el": "segmented",
+                    "field": "viewMode",
+                    "variant": "tab",
+                    "label": "",
+                    "when": {
+                      "op": "and",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.viewMode}",
+                        "b": ""
+                      },
+                      "b": {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": "{values.mode}",
+                          "b": "auto"
+                        }
+                      }
+                    },
+                    "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                    "className": "w-[96px] shrink-0",
+                    "options": [
+                      {
+                        "value": "",
+                        "label": "",
+                        "icon": "view_agenda"
+                      },
+                      {
+                        "value": "grid",
+                        "label": "",
+                        "icon": "grid_view"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "segmented",
+                    "field": "viewMode",
+                    "variant": "tab",
+                    "label": "",
+                    "when": {
+                      "op": "and",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.viewMode}",
+                        "b": ""
+                      },
+                      "b": {
+                        "op": "eq",
+                        "a": "{values.mode}",
+                        "b": "auto"
+                      }
+                    },
+                    "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                    "className": "w-[96px] shrink-0",
+                    "options": [
+                      {
+                        "value": "cards",
+                        "label": "",
+                        "icon": "view_agenda"
+                      },
+                      {
+                        "value": "",
+                        "label": "",
+                        "icon": "grid_view"
+                      }
+                    ]
+                  },
+                  {
+                    "el": "segmented",
+                    "field": "viewMode",
+                    "variant": "tab",
+                    "label": "",
+                    "when": {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.viewMode}",
+                        "b": ""
+                      }
+                    },
+                    "selClass": "!bg-[var(--ev-accent)] !text-white rounded-lg",
+                    "className": "w-[96px] shrink-0",
+                    "options": [
+                      {
+                        "value": "cards",
+                        "label": "",
+                        "icon": "view_agenda"
+                      },
+                      {
+                        "value": "grid",
+                        "label": "",
+                        "icon": "grid_view"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
