@@ -4533,9 +4533,13 @@
                               }
                             },
                             "b": {
-                              "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "fail"
+                              "op": "gt",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "where": "status=error"
+                              },
+                              "b": 0
                             }
                           },
                           "className": "w-[46px] h-[46px] rounded-xl flex items-center justify-center shrink-0 bg-red-500/[0.10]",
@@ -4579,9 +4583,13 @@
                               {
                                 "op": "not",
                                 "a": {
-                                  "op": "eq",
-                                  "a": "{values.__runState}",
-                                  "b": "fail"
+                                  "op": "gt",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error"
+                                  },
+                                  "b": 0
                                 }
                               },
                               {
@@ -4650,9 +4658,13 @@
                               {
                                 "op": "not",
                                 "a": {
-                                  "op": "eq",
-                                  "a": "{values.__runState}",
-                                  "b": "fail"
+                                  "op": "gt",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error"
+                                  },
+                                  "b": 0
                                 }
                               },
                               {
@@ -4969,7 +4981,7 @@
                               "value": {
                                 "op": "concat",
                                 "parts": [
-                                  "สินค้าที่ ",
+                                  "กำลังทำสินค้าที่ ",
                                   {
                                     "op": "add",
                                     "a": "{values.__runLoopDone}",
@@ -4977,8 +4989,6 @@
                                   },
                                   "/",
                                   "{values.__runLoopTotal}",
-                                  " · ",
-                                  "{values.__runLoopProd}",
                                   " — ",
                                   {
                                     "op": "lookup",
@@ -5084,7 +5094,18 @@
                             },
                             {
                               "el": "text",
-                              "value": "มีคลิปพลาด — กดปุ่ม “ลองใหม่ที่พลาด” สีแดงด้านล่าง",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "มีคลิปพลาด ",
+                                  {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error"
+                                  },
+                                  " ตัว — กดปุ่ม “ลองใหม่ที่พลาด” สีแดงด้านล่าง"
+                                ]
+                              },
                               "when": {
                                 "op": "and",
                                 "a": {
@@ -5111,9 +5132,13 @@
                                   }
                                 },
                                 "b": {
-                                  "op": "eq",
-                                  "a": "{values.__runState}",
-                                  "b": "fail"
+                                  "op": "gt",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error"
+                                  },
+                                  "b": 0
                                 }
                               },
                               "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-red-500"
@@ -5157,9 +5182,13 @@
                                   {
                                     "op": "not",
                                     "a": {
-                                      "op": "eq",
-                                      "a": "{values.__runState}",
-                                      "b": "fail"
+                                      "op": "gt",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "where": "status=error"
+                                      },
+                                      "b": 0
                                     }
                                   },
                                   {
@@ -5203,9 +5232,13 @@
                                   {
                                     "op": "not",
                                     "a": {
-                                      "op": "eq",
-                                      "a": "{values.__runState}",
-                                      "b": "fail"
+                                      "op": "gt",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "where": "status=error"
+                                      },
+                                      "b": 0
                                     }
                                   },
                                   {
@@ -5275,9 +5308,13 @@
                                   {
                                     "op": "not",
                                     "a": {
-                                      "op": "eq",
-                                      "a": "{values.__runState}",
-                                      "b": "fail"
+                                      "op": "gt",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "where": "status=error"
+                                      },
+                                      "b": 0
                                     }
                                   },
                                   {
@@ -5500,6 +5537,31 @@
                                       "from": "tasks"
                                     }
                                   }
+                                },
+                                {
+                                  "el": "text",
+                                  "icon": "error",
+                                  "when": {
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "where": "status=error"
+                                    },
+                                    "b": 0
+                                  },
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "พลาด ",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "where": "status=error"
+                                      }
+                                    ]
+                                  },
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-red-500/[0.10] !text-red-500"
                                 }
                               ]
                             }
@@ -6294,6 +6356,31 @@
                                             {
                                               "el": "row",
                                               "when": {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "error"
+                                              },
+                                              "style": {
+                                                "flexWrap": "nowrap"
+                                              },
+                                              "className": "absolute top-1.5 right-1.5 z-20 items-center gap-1.5 px-2 py-1 rounded-full bg-red-500/90 max-w-[150px]",
+                                              "card": [
+                                                {
+                                                  "el": "icon",
+                                                  "icon": "error",
+                                                  "textSize": "text-[13px]",
+                                                  "className": "!text-white leading-none flex items-center justify-center animate-pulse"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "พลาด — ลองใหม่ได้",
+                                                  "className": "!text-[11px] font-bold !text-white leading-none truncate"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "el": "row",
+                                              "when": {
                                                 "op": "or",
                                                 "list": [
                                                   {
@@ -6319,7 +6406,12 @@
                                                 },
                                                 {
                                                   "el": "text",
-                                                  "value": "กำลังทำ",
+                                                  "value": {
+                                                    "op": "lookup",
+                                                    "table": "opNames",
+                                                    "key": "{values.__runStage}",
+                                                    "fallback": "กำลังทำ…"
+                                                  },
                                                   "className": "!text-[11px] font-bold !text-white leading-none"
                                                 }
                                               ]
@@ -8871,6 +8963,19 @@
                                 }
                               ]
                             }
+                          ],
+                          "classWhen": [
+                            {
+                              "when": {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{item.slots.video}",
+                                  "b": ""
+                                }
+                              },
+                              "class": "!bg-green-500/[0.05] !border-green-500/25"
+                            }
                           ]
                         }
                       ]
@@ -9044,7 +9149,7 @@
                                   "style": {
                                     "borderRadius": "18px"
                                   },
-                                  "className": "ring-1 ring-[var(--ev-border)]"
+                                  "className": "ring-2 ring-green-500/30"
                                 }
                               ],
                               "when": {
@@ -9133,6 +9238,31 @@
                                       }
                                     ]
                                   }
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "lookup",
+                                    "table": "opNames",
+                                    "key": "{values.__runStage}",
+                                    "fallback": "กำลังทำ…"
+                                  },
+                                  "when": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{item.status}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{item.meta.retrying}",
+                                        "b": "1"
+                                      }
+                                    ]
+                                  },
+                                  "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] text-center px-2"
                                 }
                               ],
                               "when": {
@@ -9587,6 +9717,192 @@
                                   "el": "text",
                                   "value": "{item.productName}",
                                   "className": "!text-[12.5px] font-bold truncate flex-1 min-w-0 opacity-70"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-2 h-2 rounded-full shrink-0",
+                                  "card": [],
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.board}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "class": "bg-green-500"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "not",
+                                              "a": {
+                                                "op": "eq",
+                                                "a": "{item.slots.board}",
+                                                "b": ""
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runStage}",
+                                            "b": "mnBoard"
+                                          }
+                                        ]
+                                      },
+                                      "class": "bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(47,127,232,0.25)]"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.board}",
+                                              "b": ""
+                                            }
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "not",
+                                                  "a": {
+                                                    "op": "eq",
+                                                    "a": "{item.slots.board}",
+                                                    "b": ""
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runStage}",
+                                                "b": "mnBoard"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      "class": "bg-[var(--ev-border)]"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "w-2 h-2 rounded-full shrink-0",
+                                  "card": [],
+                                  "classWhen": [
+                                    {
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.video}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "class": "bg-green-500"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "not",
+                                              "a": {
+                                                "op": "eq",
+                                                "a": "{item.slots.video}",
+                                                "b": ""
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runStage}",
+                                            "b": "mnVideo"
+                                          }
+                                        ]
+                                      },
+                                      "class": "bg-[var(--ev-accent)] animate-pulse shadow-[0_0_0_3px_rgba(47,127,232,0.25)]"
+                                    },
+                                    {
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.video}",
+                                              "b": ""
+                                            }
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "not",
+                                                  "a": {
+                                                    "op": "eq",
+                                                    "a": "{item.slots.video}",
+                                                    "b": ""
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.status}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runStage}",
+                                                "b": "mnVideo"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      "class": "bg-[var(--ev-border)]"
+                                    }
+                                  ]
                                 },
                                 {
                                   "el": "text",
@@ -10242,70 +10558,70 @@
                           ]
                         },
                         {
-                          "el": "box",
-                          "className": "flex flex-col items-end gap-2 shrink-0 ml-auto",
+                          "el": "row",
+                          "className": "items-center gap-2 flex-wrap ml-auto",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
                           "card": [
                             {
-                              "el": "row",
-                              "className": "items-center gap-2",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "open-editor",
-                                  "coll": "control",
-                                  "label": "ไปตัดต่อคลิป",
-                                  "icon": "movie_edit",
-                                  "className": "justify-center !h-11 !rounded-xl !text-[14px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] px-4 shrink-0 whitespace-nowrap",
-                                  "variant": "ghost"
-                                },
-                                {
-                                  "el": "zip-export",
-                                  "coll": "tasks",
-                                  "where": "slots.video!=",
-                                  "mediaSlots": [
-                                    "video",
-                                    "board"
-                                  ],
-                                  "prefix": "clip",
-                                  "label": "ดาวน์โหลดทั้งหมด (ZIP)",
-                                  "icon": "download",
-                                  "variant": "solid",
-                                  "className": "justify-center !h-11 !rounded-xl !text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap"
-                                }
-                              ]
+                              "el": "text",
+                              "value": "Omni Flash",
+                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                              "icon": "movie"
                             },
                             {
-                              "el": "row",
-                              "className": "items-center gap-2",
-                              "style": {
-                                "flexWrap": "nowrap"
-                              },
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "Omni Flash",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                  "icon": "movie"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "10 วิ / คลิป",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                  "icon": "timer"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "9:16 แนวตั้ง",
-                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                                  "icon": "crop_portrait"
-                                }
-                              ]
+                              "el": "text",
+                              "value": "10 วิ / คลิป",
+                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                              "icon": "timer"
+                            },
+                            {
+                              "el": "text",
+                              "value": "9:16 แนวตั้ง",
+                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                              "icon": "crop_portrait"
                             }
                           ]
                         }
                       ]
+                    }
+                  ],
+                  "when": {
+                    "op": "gt",
+                    "a": {
+                      "op": "count",
+                      "from": "tasks",
+                      "slot": "video"
+                    },
+                    "b": 0
+                  }
+                },
+                {
+                  "el": "box",
+                  "className": "flex flex-col min-[720px]:flex-row gap-2.5",
+                  "card": [
+                    {
+                      "el": "open-editor",
+                      "coll": "control",
+                      "label": "ไปตัดต่อคลิป",
+                      "icon": "movie_edit",
+                      "className": "flex-1 justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                      "variant": "ghost"
+                    },
+                    {
+                      "el": "zip-export",
+                      "coll": "tasks",
+                      "where": "slots.video!=",
+                      "mediaSlots": [
+                        "video",
+                        "board"
+                      ],
+                      "prefix": "clip",
+                      "label": "ดาวน์โหลดทั้งหมด (ZIP)",
+                      "icon": "download",
+                      "variant": "solid",
+                      "className": "flex-1 justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                     }
                   ],
                   "when": {
