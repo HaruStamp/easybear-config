@@ -71,7 +71,7 @@
     "__q": "",
     "__editId": "",
     "__editNew": "",
-    "mode": "auto",
+    "mode": "manual",
     "svChar": "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน",
     "charId": "ch1",
     "charName": "",
@@ -2565,6 +2565,38 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-2.5 mt-1",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "ออโต้โหมด",
+                              "icon": "bolt",
+                              "className": "!text-[12.5px] min-[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none"
+                            },
+                            {
+                              "el": "grid-select",
+                              "field": "mode",
+                              "cols": 2,
+                              "contained": true,
+                              "options": [
+                                {
+                                  "value": "auto",
+                                  "label": "ออโต้",
+                                  "desc": "กดครั้งเดียวจบ — บอร์ด + วิดีโอต่อเนื่อง",
+                                  "icon": "bolt"
+                                },
+                                {
+                                  "value": "manual",
+                                  "label": "ทีละขั้น",
+                                  "desc": "เขียนบท → ตรวจ → สร้างภาพ → วิดีโอ",
+                                  "icon": "fact_check"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
@@ -2689,52 +2721,6 @@
                       }
                     }
                   }
-                },
-                {
-                  "el": "box",
-                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-[24px] p-4 min-[640px]:p-5 flex flex-col gap-2.5",
-                  "card": [
-                    {
-                      "el": "row",
-                      "className": "items-center gap-2.5",
-                      "style": {
-                        "flexWrap": "nowrap"
-                      },
-                      "card": [
-                        {
-                          "el": "icon",
-                          "icon": "tune",
-                          "textSize": "text-[19px]",
-                          "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                        },
-                        {
-                          "el": "text",
-                          "value": "ออโต้โหมด — เลือกก่อนกดเริ่ม",
-                          "className": "font-bold !text-[17px] min-[640px]:!text-[16px] !text-[var(--ev-text)]"
-                        }
-                      ]
-                    },
-                    {
-                      "el": "grid-select",
-                      "field": "mode",
-                      "cols": 2,
-                      "contained": true,
-                      "options": [
-                        {
-                          "value": "auto",
-                          "label": "ออโต้",
-                          "desc": "กดครั้งเดียวจบ — บอร์ด + วิดีโอต่อเนื่อง",
-                          "icon": "bolt"
-                        },
-                        {
-                          "value": "manual",
-                          "label": "ทีละขั้น",
-                          "desc": "เขียนบท → ตรวจ → สร้างภาพ → วิดีโอ",
-                          "icon": "fact_check"
-                        }
-                      ]
-                    }
-                  ]
                 },
                 {
                   "el": "run-button",
@@ -6246,30 +6232,74 @@
                                               ]
                                             },
                                             {
-                                              "el": "row",
-                                              "when": {
-                                                "op": "or",
-                                                "list": [
-                                                  {
-                                                    "op": "eq",
-                                                    "a": "{item.status}",
-                                                    "b": "running"
-                                                  },
-                                                  {
-                                                    "op": "eq",
-                                                    "a": "{item.meta.retrying}",
-                                                    "b": "1"
-                                                  }
-                                                ]
-                                              },
-                                              "style": {
-                                                "flexWrap": "nowrap"
-                                              },
-                                              "className": "absolute top-1.5 right-1.5 z-20 items-center gap-1.5 px-2 py-1 rounded-full bg-black/65",
+                                              "el": "box",
+                                              "className": "aspect-[9/16] rounded-2xl border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] flex flex-col items-center justify-center gap-2",
                                               "card": [
                                                 {
+                                                  "el": "icon",
+                                                  "icon": "brush",
+                                                  "textSize": "text-[28px]",
+                                                  "className": "!text-[var(--ev-accent)] opacity-60 leading-none flex items-center justify-center",
+                                                  "when": {
+                                                    "op": "not",
+                                                    "a": {
+                                                      "op": "or",
+                                                      "list": [
+                                                        {
+                                                          "op": "eq",
+                                                          "a": "{item.status}",
+                                                          "b": "running"
+                                                        },
+                                                        {
+                                                          "op": "eq",
+                                                          "a": "{item.meta.retrying}",
+                                                          "b": "1"
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "รอวาดภาพ",
+                                                  "className": "!text-[13px] font-bold !text-[var(--ev-accent)] opacity-70",
+                                                  "when": {
+                                                    "op": "not",
+                                                    "a": {
+                                                      "op": "or",
+                                                      "list": [
+                                                        {
+                                                          "op": "eq",
+                                                          "a": "{item.status}",
+                                                          "b": "running"
+                                                        },
+                                                        {
+                                                          "op": "eq",
+                                                          "a": "{item.meta.retrying}",
+                                                          "b": "1"
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                },
+                                                {
                                                   "el": "spinner",
-                                                  "className": "!text-[13px] !text-white"
+                                                  "className": "!text-[24px]",
+                                                  "when": {
+                                                    "op": "or",
+                                                    "list": [
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{item.status}",
+                                                        "b": "running"
+                                                      },
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{item.meta.retrying}",
+                                                        "b": "1"
+                                                      }
+                                                    ]
+                                                  }
                                                 },
                                                 {
                                                   "el": "text",
@@ -6279,24 +6309,22 @@
                                                     "key": "{values.__runStage}",
                                                     "fallback": "กำลังทำ…"
                                                   },
-                                                  "className": "!text-[11px] font-bold !text-white leading-none"
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "el": "box",
-                                              "className": "aspect-[9/16] rounded-2xl border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] flex flex-col items-center justify-center gap-2",
-                                              "card": [
-                                                {
-                                                  "el": "icon",
-                                                  "icon": "brush",
-                                                  "textSize": "text-[28px]",
-                                                  "className": "!text-[var(--ev-accent)] opacity-60 leading-none flex items-center justify-center"
-                                                },
-                                                {
-                                                  "el": "text",
-                                                  "value": "รอวาดภาพ",
-                                                  "className": "!text-[13px] font-bold !text-[var(--ev-accent)] opacity-70"
+                                                  "when": {
+                                                    "op": "or",
+                                                    "list": [
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{item.status}",
+                                                        "b": "running"
+                                                      },
+                                                      {
+                                                        "op": "eq",
+                                                        "a": "{item.meta.retrying}",
+                                                        "b": "1"
+                                                      }
+                                                    ]
+                                                  },
+                                                  "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2"
                                                 }
                                               ],
                                               "when": {
@@ -8116,20 +8144,23 @@
                                       "label": "ลองใหม่",
                                       "icon": "replay",
                                       "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
                                       }
                                     },
                                     {
@@ -8195,20 +8226,23 @@
                                       "label": "ลองใหม่",
                                       "icon": "replay",
                                       "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
                                       }
                                     }
                                   ],
@@ -8272,20 +8306,23 @@
                                       "label": "วาดภาพ",
                                       "icon": "auto_awesome",
                                       "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
                                       }
                                     },
                                     {
@@ -8549,22 +8586,25 @@
                                       "op": "mnVideo",
                                       "label": "สร้างวิดีโอ",
                                       "icon": "auto_awesome",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
-                                      },
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
+                                      }
                                     },
                                     {
                                       "el": "box",
@@ -8578,20 +8618,23 @@
                                       "icon": "auto_awesome",
                                       "variant": "ghost",
                                       "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
                                       }
                                     },
                                     {
@@ -8671,20 +8714,23 @@
                                       "label": "สร้างวิดีโอ",
                                       "icon": "auto_awesome",
                                       "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.status}",
-                                            "b": "running"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.meta.retrying}",
-                                            "b": "1"
-                                          }
-                                        ]
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{item.meta.retrying}",
+                                              "b": "1"
+                                            }
+                                          ]
+                                        }
                                       }
                                     },
                                     {
@@ -10440,7 +10486,6 @@
                               "el": "media-slot",
                               "src": "{item.slots.video}",
                               "aspect": "9:16",
-                              "showPlay": true,
                               "style": {
                                 "borderRadius": "18px"
                               },
@@ -10493,7 +10538,7 @@
                               "action": "toggle",
                               "field": "picked",
                               "label": "",
-                              "icon": "radio_button_unchecked",
+                              "icon": "check_box_outline_blank",
                               "variant": "ghost",
                               "when": {
                                 "op": "not",
@@ -10503,21 +10548,21 @@
                                   "b": "true"
                                 }
                               },
-                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-full !bg-black/50 !text-white justify-center !gap-0 opacity-0 group-hover:opacity-100 transition !border-0"
+                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-black/50 !text-white justify-center !gap-0 opacity-0 group-hover:opacity-100 transition !border-0"
                             },
                             {
                               "el": "button",
                               "action": "toggle",
                               "field": "picked",
                               "label": "",
-                              "icon": "check_circle",
+                              "icon": "check_box",
                               "variant": "ghost",
                               "when": {
                                 "op": "eq",
                                 "a": "{item.picked}",
                                 "b": "true"
                               },
-                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-full !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0"
+                              "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0"
                             }
                           ]
                         }
