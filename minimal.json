@@ -4465,183 +4465,136 @@
                   }
                 },
                 {
-                  "el": "use",
-                  "component": "mnRunBanner"
-                },
-                {
                   "el": "box",
-                  "className": "grid grid-cols-1 min-[560px]:grid-cols-2 gap-3",
+                  "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5 flex flex-col gap-3.5",
                   "card": [
                     {
-                      "el": "box",
-                      "className": "flex-1 min-w-0 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
+                      "el": "row",
+                      "className": "items-center gap-3.5",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
                       "card": [
                         {
-                          "el": "row",
-                          "className": "items-center gap-3.5",
-                          "style": {
-                            "flexWrap": "nowrap"
+                          "el": "box",
+                          "when": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              }
+                            ]
                           },
+                          "className": "w-[46px] h-[46px] rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/10",
                           "card": [
                             {
-                              "el": "box",
-                              "className": "w-[46px] h-[46px] rounded-xl bg-[var(--ev-surface2)] border border-[var(--ev-border)] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "image",
-                                  "textSize": "text-[22px]",
-                                  "className": "opacity-70 leading-none flex items-center justify-center"
+                              "el": "spinner",
+                              "className": "!text-[22px]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "when": {
+                            "op": "and",
+                            "a": {
+                              "op": "not",
+                              "a": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "running"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "cooldown"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "retrying"
+                                  }
+                                ]
+                              }
+                            },
+                            "b": {
+                              "op": "eq",
+                              "a": "{values.__runState}",
+                              "b": "fail"
+                            }
+                          },
+                          "className": "w-[46px] h-[46px] rounded-xl flex items-center justify-center shrink-0 bg-red-500/[0.10]",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "error",
+                              "textSize": "text-[22px]",
+                              "className": "!text-red-500 leading-none flex items-center justify-center"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "or",
+                                  "list": [
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "running"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "cooldown"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "retrying"
+                                    }
+                                  ]
                                 }
-                              ],
-                              "when": {
+                              },
+                              {
                                 "op": "not",
                                 "a": {
                                   "op": "eq",
+                                  "a": "{values.__runState}",
+                                  "b": "fail"
+                                }
+                              },
+                              {
+                                "op": "and",
+                                "a": {
+                                  "op": "gt",
                                   "a": {
                                     "op": "count",
-                                    "from": "tasks",
-                                    "slot": "board"
-                                  },
-                                  "b": {
-                                    "op": "count",
                                     "from": "tasks"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "el": "box",
-                              "className": "w-[46px] h-[46px] rounded-xl bg-green-500/[0.12] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "check_circle",
-                                  "textSize": "text-[22px]",
-                                  "className": "!text-green-600 leading-none flex items-center justify-center"
-                                }
-                              ],
-                              "when": {
-                                "op": "eq",
-                                "a": {
-                                  "op": "count",
-                                  "from": "tasks",
-                                  "slot": "board"
+                                  },
+                                  "b": 0
                                 },
                                 "b": {
-                                  "op": "count",
-                                  "from": "tasks"
-                                }
-                              }
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex flex-col min-w-0 gap-1",
-                              "card": [
-                                {
-                                  "el": "row",
-                                  "className": "items-baseline gap-1",
-                                  "style": {
-                                    "flexWrap": "nowrap"
-                                  },
-                                  "card": [
-                                    {
-                                      "el": "text",
-                                      "value": {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-[var(--ev-accent)]",
-                                      "when": {
-                                        "op": "not",
-                                        "a": {
-                                          "op": "eq",
-                                          "a": {
-                                            "op": "count",
-                                            "from": "tasks",
-                                            "slot": "board"
-                                          },
-                                          "b": {
-                                            "op": "count",
-                                            "from": "tasks"
-                                          }
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "board"
-                                      },
-                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-green-600",
-                                      "when": {
-                                        "op": "eq",
-                                        "a": {
-                                          "op": "count",
-                                          "from": "tasks",
-                                          "slot": "board"
-                                        },
-                                        "b": {
-                                          "op": "count",
-                                          "from": "tasks"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": {
-                                        "op": "concat",
-                                        "parts": [
-                                          "/",
-                                          {
-                                            "op": "count",
-                                            "from": "tasks"
-                                          }
-                                        ]
-                                      },
-                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold opacity-45 tabular-nums"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "ภาพสตอรีบอร์ด",
-                                  "className": "!text-[15px] min-[640px]:!text-[14px] opacity-65 font-medium whitespace-nowrap"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "box",
-                      "className": "flex-1 min-w-0 bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
-                      "card": [
-                        {
-                          "el": "row",
-                          "className": "items-center gap-3.5",
-                          "style": {
-                            "flexWrap": "nowrap"
-                          },
-                          "card": [
-                            {
-                              "el": "box",
-                              "className": "w-[46px] h-[46px] rounded-xl bg-[var(--ev-surface2)] border border-[var(--ev-border)] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "movie",
-                                  "textSize": "text-[22px]",
-                                  "className": "opacity-70 leading-none flex items-center justify-center"
-                                }
-                              ],
-                              "when": {
-                                "op": "not",
-                                "a": {
                                   "op": "eq",
                                   "a": {
                                     "op": "count",
@@ -4654,34 +4607,102 @@
                                   }
                                 }
                               }
-                            },
+                            ]
+                          },
+                          "className": "w-[46px] h-[46px] rounded-xl flex items-center justify-center shrink-0 bg-green-500/[0.12]",
+                          "card": [
                             {
-                              "el": "box",
-                              "className": "w-[46px] h-[46px] rounded-xl bg-green-500/[0.12] flex items-center justify-center shrink-0",
-                              "card": [
-                                {
-                                  "el": "icon",
-                                  "icon": "check_circle",
-                                  "textSize": "text-[22px]",
-                                  "className": "!text-green-600 leading-none flex items-center justify-center"
-                                }
-                              ],
-                              "when": {
-                                "op": "eq",
+                              "el": "icon",
+                              "icon": "check_circle",
+                              "textSize": "text-[22px]",
+                              "className": "!text-green-600 leading-none flex items-center justify-center"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "not",
                                 "a": {
-                                  "op": "count",
-                                  "from": "tasks",
-                                  "slot": "video"
-                                },
-                                "b": {
-                                  "op": "count",
-                                  "from": "tasks"
+                                  "op": "or",
+                                  "list": [
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "running"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "cooldown"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "retrying"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "eq",
+                                  "a": "{values.__runState}",
+                                  "b": "fail"
+                                }
+                              },
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "and",
+                                  "a": {
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks"
+                                    },
+                                    "b": 0
+                                  },
+                                  "b": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "slot": "video"
+                                    },
+                                    "b": {
+                                      "op": "count",
+                                      "from": "tasks"
+                                    }
+                                  }
                                 }
                               }
-                            },
+                            ]
+                          },
+                          "className": "w-[46px] h-[46px] rounded-xl flex items-center justify-center shrink-0 bg-[var(--ev-accent)]/10",
+                          "card": [
                             {
-                              "el": "box",
-                              "className": "flex flex-col min-w-0 gap-1",
+                              "el": "icon",
+                              "icon": "movie_filter",
+                              "textSize": "text-[22px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col min-w-0 gap-1 flex-1",
+                          "card": [
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
                               "card": [
                                 {
                                   "el": "row",
@@ -4692,27 +4713,60 @@
                                   "card": [
                                     {
                                       "el": "text",
-                                      "value": {
-                                        "op": "count",
-                                        "from": "tasks",
-                                        "slot": "video"
-                                      },
-                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-[var(--ev-accent)]",
+                                      "value": "{values.__runDone}",
                                       "when": {
-                                        "op": "not",
-                                        "a": {
-                                          "op": "eq",
-                                          "a": {
-                                            "op": "count",
-                                            "from": "tasks",
-                                            "slot": "video"
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "running"
                                           },
-                                          "b": {
-                                            "op": "count",
-                                            "from": "tasks"
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "cooldown"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "retrying"
                                           }
-                                        }
-                                      }
+                                        ]
+                                      },
+                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-[var(--ev-accent)]"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": {
+                                        "op": "concat",
+                                        "parts": [
+                                          "/",
+                                          "{values.__runTotal}",
+                                          " คลิป"
+                                        ]
+                                      },
+                                      "when": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "cooldown"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.__runState}",
+                                            "b": "retrying"
+                                          }
+                                        ]
+                                      },
+                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold opacity-45 tabular-nums whitespace-nowrap"
                                     },
                                     {
                                       "el": "text",
@@ -4721,8 +4775,532 @@
                                         "from": "tasks",
                                         "slot": "video"
                                       },
-                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-green-600",
                                       "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "cooldown"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "retrying"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "and",
+                                          "a": {
+                                            "op": "gt",
+                                            "a": {
+                                              "op": "count",
+                                              "from": "tasks"
+                                            },
+                                            "b": 0
+                                          },
+                                          "b": {
+                                            "op": "eq",
+                                            "a": {
+                                              "op": "count",
+                                              "from": "tasks",
+                                              "slot": "video"
+                                            },
+                                            "b": {
+                                              "op": "count",
+                                              "from": "tasks"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-green-600"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      },
+                                      "when": {
+                                        "op": "and",
+                                        "a": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "or",
+                                            "list": [
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "running"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "cooldown"
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{values.__runState}",
+                                                "b": "retrying"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "b": {
+                                          "op": "not",
+                                          "a": {
+                                            "op": "and",
+                                            "a": {
+                                              "op": "gt",
+                                              "a": {
+                                                "op": "count",
+                                                "from": "tasks"
+                                              },
+                                              "b": 0
+                                            },
+                                            "b": {
+                                              "op": "eq",
+                                              "a": {
+                                                "op": "count",
+                                                "from": "tasks",
+                                                "slot": "video"
+                                              },
+                                              "b": {
+                                                "op": "count",
+                                                "from": "tasks"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "className": "!text-[31px] min-[640px]:!text-[30px] font-black tabular-nums leading-none !text-[var(--ev-accent)]"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": {
+                                        "op": "concat",
+                                        "parts": [
+                                          "/",
+                                          {
+                                            "op": "count",
+                                            "from": "tasks"
+                                          },
+                                          " คลิป"
+                                        ]
+                                      },
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "or",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.__runState}",
+                                              "b": "running"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.__runState}",
+                                              "b": "cooldown"
+                                            },
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.__runState}",
+                                              "b": "retrying"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold opacity-45 tabular-nums whitespace-nowrap"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "พักหลบเรดาร์ · เหลือ ",
+                                      "{values.__runCoolLeft}",
+                                      " วิ"
+                                    ]
+                                  },
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "cooldown"
+                                  },
+                                  "icon": "hourglass_top",
+                                  "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-amber-500/15 !text-amber-600 leading-none shrink-0"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "ลองใหม่ครั้งที่ ",
+                                      "{values.__runAttempt}"
+                                    ]
+                                  },
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "retrying"
+                                  },
+                                  "icon": "replay",
+                                  "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-red-500/12 !text-red-500 leading-none shrink-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "สินค้าที่ ",
+                                  {
+                                    "op": "add",
+                                    "a": "{values.__runLoopDone}",
+                                    "b": 1
+                                  },
+                                  "/",
+                                  "{values.__runLoopTotal}",
+                                  " · ",
+                                  "{values.__runLoopProd}",
+                                  " — ",
+                                  {
+                                    "op": "lookup",
+                                    "table": "opNames",
+                                    "key": "{values.__runStage}",
+                                    "fallback": "กำลังทำงาน…"
+                                  }
+                                ]
+                              },
+                              "when": {
+                                "op": "and",
+                                "a": {
+                                  "op": "or",
+                                  "list": [
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "running"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "cooldown"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "retrying"
+                                    }
+                                  ]
+                                },
+                                "b": {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{values.__runLoopProd}",
+                                    "b": ""
+                                  }
+                                }
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-[var(--ev-accent)]"
+                            },
+                            {
+                              "el": "text",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  {
+                                    "op": "lookup",
+                                    "table": "opNames",
+                                    "key": "{values.__runStage}",
+                                    "fallback": "กำลังทำงาน…"
+                                  },
+                                  " · คลิปที่ ",
+                                  {
+                                    "op": "min",
+                                    "a": {
+                                      "op": "add",
+                                      "a": "{values.__runDone}",
+                                      "b": 1
+                                    },
+                                    "b": "{values.__runTotal}"
+                                  },
+                                  "/",
+                                  "{values.__runTotal}"
+                                ]
+                              },
+                              "when": {
+                                "op": "and",
+                                "a": {
+                                  "op": "or",
+                                  "list": [
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "running"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "cooldown"
+                                    },
+                                    {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "retrying"
+                                    }
+                                  ]
+                                },
+                                "b": {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.__runLoopProd}",
+                                      "b": ""
+                                    }
+                                  }
+                                }
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-[var(--ev-accent)]"
+                            },
+                            {
+                              "el": "text",
+                              "value": "มีคลิปพลาด — กดปุ่ม “ลองใหม่ที่พลาด” สีแดงด้านล่าง",
+                              "when": {
+                                "op": "and",
+                                "a": {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "cooldown"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "retrying"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "b": {
+                                  "op": "eq",
+                                  "a": "{values.__runState}",
+                                  "b": "fail"
+                                }
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-red-500"
+                            },
+                            {
+                              "el": "text",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "เหลืออีก ",
+                                  "{values.__runLoopLeft}",
+                                  " สินค้า — กด “ผลิตต่อรอบถัดไป” ด้านล่าง"
+                                ]
+                              },
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "cooldown"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "retrying"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "fail"
+                                    }
+                                  },
+                                  {
+                                    "op": "gt",
+                                    "a": "{values.__runLoopLeft}",
+                                    "b": 0
+                                  }
+                                ]
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-amber-600"
+                            },
+                            {
+                              "el": "text",
+                              "value": "ครบทุกคลิปแล้ว — ไปดูผลงานที่คลังคลิปได้เลย",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "cooldown"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "retrying"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "fail"
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "gt",
+                                      "a": "{values.__runLoopLeft}",
+                                      "b": 0
+                                    }
+                                  },
+                                  {
+                                    "op": "and",
+                                    "a": {
+                                      "op": "gt",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      },
+                                      "b": 0
+                                    },
+                                    "b": {
+                                      "op": "eq",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-green-600"
+                            },
+                            {
+                              "el": "text",
+                              "value": "พร้อมผลิต — กดสร้างทั้งหมด หรือจัดการรายคลิปข้างล่าง",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "cooldown"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.__runState}",
+                                          "b": "retrying"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{values.__runState}",
+                                      "b": "fail"
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "gt",
+                                      "a": "{values.__runLoopLeft}",
+                                      "b": 0
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "and",
+                                      "a": {
+                                        "op": "gt",
+                                        "a": {
+                                          "op": "count",
+                                          "from": "tasks"
+                                        },
+                                        "b": 0
+                                      },
+                                      "b": {
                                         "op": "eq",
                                         "a": {
                                           "op": "count",
@@ -4734,43 +5312,276 @@
                                           "from": "tasks"
                                         }
                                       }
-                                    },
-                                    {
-                                      "el": "text",
-                                      "value": {
-                                        "op": "concat",
-                                        "parts": [
-                                          "/",
-                                          {
-                                            "op": "count",
-                                            "from": "tasks"
-                                          }
-                                        ]
-                                      },
-                                      "className": "!text-[16px] min-[640px]:!text-[15px] font-bold opacity-45 tabular-nums"
                                     }
-                                  ]
+                                  }
+                                ]
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate opacity-60"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col items-end gap-2 shrink-0",
+                          "card": [
+                            {
+                              "el": "button",
+                              "action": "stop",
+                              "label": "หยุดพัก",
+                              "icon": "pause_circle",
+                              "variant": "ghost",
+                              "when": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "running"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "cooldown"
+                                  },
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.__runState}",
+                                    "b": "retrying"
+                                  }
+                                ]
+                              },
+                              "style": {
+                                "borderRadius": "12px",
+                                "height": "40px"
+                              },
+                              "className": "px-4 shrink-0 !text-[14px] font-bold !bg-red-500 !text-white border-0"
+                            },
+                            {
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "บอร์ด ",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "board"
+                                      },
+                                      "/",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    ]
+                                  },
+                                  "icon": "image",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-[var(--ev-surface2)] opacity-80",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "board"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    }
+                                  }
                                 },
                                 {
                                   "el": "text",
-                                  "value": "วิดีโอ",
-                                  "className": "!text-[15px] min-[640px]:!text-[14px] opacity-65 font-medium whitespace-nowrap"
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "บอร์ด ",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "board"
+                                      },
+                                      "/",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    ]
+                                  },
+                                  "icon": "image",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-green-500/[0.12] !text-green-700",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "slot": "board"
+                                    },
+                                    "b": {
+                                      "op": "count",
+                                      "from": "tasks"
+                                    }
+                                  }
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "วิดีโอ ",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      },
+                                      "/",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    ]
+                                  },
+                                  "icon": "movie",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-[var(--ev-surface2)] opacity-80",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "วิดีโอ ",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      },
+                                      "/",
+                                      {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      }
+                                    ]
+                                  },
+                                  "icon": "movie",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap bg-green-500/[0.12] !text-green-700",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "slot": "video"
+                                    },
+                                    "b": {
+                                      "op": "count",
+                                      "from": "tasks"
+                                    }
+                                  }
                                 }
                               ]
                             }
                           ]
                         }
                       ]
-                    }
-                  ],
-                  "when": {
-                    "op": "gt",
-                    "a": {
-                      "op": "count",
-                      "from": "tasks"
                     },
-                    "b": 0
-                  }
+                    {
+                      "el": "progress-bar",
+                      "when": {
+                        "op": "or",
+                        "list": [
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "running"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "cooldown"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "retrying"
+                          }
+                        ]
+                      },
+                      "value": {
+                        "op": "mul",
+                        "a": {
+                          "op": "div",
+                          "a": "{values.__runDone}",
+                          "b": "{values.__runTotal}"
+                        },
+                        "b": 100
+                      }
+                    },
+                    {
+                      "el": "progress-bar",
+                      "when": {
+                        "op": "not",
+                        "a": {
+                          "op": "or",
+                          "list": [
+                            {
+                              "op": "eq",
+                              "a": "{values.__runState}",
+                              "b": "running"
+                            },
+                            {
+                              "op": "eq",
+                              "a": "{values.__runState}",
+                              "b": "cooldown"
+                            },
+                            {
+                              "op": "eq",
+                              "a": "{values.__runState}",
+                              "b": "retrying"
+                            }
+                          ]
+                        }
+                      },
+                      "value": {
+                        "op": "mul",
+                        "a": {
+                          "op": "div",
+                          "a": {
+                            "op": "count",
+                            "from": "tasks",
+                            "slot": "video"
+                          },
+                          "b": {
+                            "op": "count",
+                            "from": "tasks"
+                          }
+                        },
+                        "b": 100
+                      }
+                    }
+                  ]
                 },
                 {
                   "el": "row",
@@ -9364,10 +10175,6 @@
                   ]
                 },
                 {
-                  "el": "use",
-                  "component": "mnRunBanner"
-                },
-                {
                   "el": "box",
                   "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5",
                   "card": [
@@ -9435,70 +10242,70 @@
                           ]
                         },
                         {
-                          "el": "row",
-                          "className": "items-center gap-2 flex-wrap ml-auto",
-                          "style": {
-                            "flexWrap": "nowrap"
-                          },
+                          "el": "box",
+                          "className": "flex flex-col items-end gap-2 shrink-0 ml-auto",
                           "card": [
                             {
-                              "el": "text",
-                              "value": "Omni Flash",
-                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                              "icon": "movie"
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "open-editor",
+                                  "coll": "control",
+                                  "label": "ไปตัดต่อคลิป",
+                                  "icon": "movie_edit",
+                                  "className": "justify-center !h-11 !rounded-xl !text-[14px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] px-4 shrink-0 whitespace-nowrap",
+                                  "variant": "ghost"
+                                },
+                                {
+                                  "el": "zip-export",
+                                  "coll": "tasks",
+                                  "where": "slots.video!=",
+                                  "mediaSlots": [
+                                    "video",
+                                    "board"
+                                  ],
+                                  "prefix": "clip",
+                                  "label": "ดาวน์โหลดทั้งหมด (ZIP)",
+                                  "icon": "download",
+                                  "variant": "solid",
+                                  "className": "justify-center !h-11 !rounded-xl !text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap"
+                                }
+                              ]
                             },
                             {
-                              "el": "text",
-                              "value": "10 วิ / คลิป",
-                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                              "icon": "timer"
-                            },
-                            {
-                              "el": "text",
-                              "value": "9:16 แนวตั้ง",
-                              "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
-                              "icon": "crop_portrait"
+                              "el": "row",
+                              "className": "items-center gap-2",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "text",
+                                  "value": "Omni Flash",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                                  "icon": "movie"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "10 วิ / คลิป",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                                  "icon": "timer"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "9:16 แนวตั้ง",
+                                  "className": "flex items-center gap-1 !text-[12px] min-[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80",
+                                  "icon": "crop_portrait"
+                                }
+                              ]
                             }
                           ]
                         }
                       ]
-                    }
-                  ],
-                  "when": {
-                    "op": "gt",
-                    "a": {
-                      "op": "count",
-                      "from": "tasks",
-                      "slot": "video"
-                    },
-                    "b": 0
-                  }
-                },
-                {
-                  "el": "box",
-                  "className": "flex flex-col min-[720px]:flex-row gap-2.5",
-                  "card": [
-                    {
-                      "el": "open-editor",
-                      "coll": "control",
-                      "label": "ไปตัดต่อคลิป",
-                      "icon": "movie_edit",
-                      "className": "flex-1 justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
-                      "variant": "ghost"
-                    },
-                    {
-                      "el": "zip-export",
-                      "coll": "tasks",
-                      "where": "slots.video!=",
-                      "mediaSlots": [
-                        "video",
-                        "board"
-                      ],
-                      "prefix": "clip",
-                      "label": "ดาวน์โหลดทั้งหมด (ZIP)",
-                      "icon": "download",
-                      "variant": "solid",
-                      "className": "flex-1 justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
                     }
                   ],
                   "when": {
@@ -10059,501 +10866,5 @@
     },
     "scopeColl": "products"
   },
-  "components": {
-    "mnRunBanner": [
-      {
-        "el": "box",
-        "className": "w-full flex flex-col gap-3 px-4 min-[640px]:px-5 py-4 rounded-[26px] border-2 animate-in",
-        "style": {
-          "backgroundColor": "var(--ev-surface)",
-          "borderColor": "color-mix(in srgb, var(--ev-accent) 45%, transparent)"
-        },
-        "card": [
-          {
-            "el": "row",
-            "style": {
-              "flexWrap": "nowrap"
-            },
-            "className": "items-center gap-3.5 justify-between",
-            "card": [
-              {
-                "el": "row",
-                "style": {
-                  "flexWrap": "nowrap"
-                },
-                "className": "items-center gap-3.5 min-w-0",
-                "card": [
-                  {
-                    "el": "box",
-                    "className": "w-11 h-11 rounded-xl bg-[var(--ev-accent)]/10 flex items-center justify-center shrink-0",
-                    "card": [
-                      {
-                        "el": "spinner",
-                        "className": "!text-[22px]"
-                      }
-                    ]
-                  },
-                  {
-                    "el": "box",
-                    "className": "flex flex-col gap-0.5 min-w-0",
-                    "card": [
-                      {
-                        "el": "row",
-                        "style": {
-                          "flexWrap": "nowrap"
-                        },
-                        "className": "items-center gap-2 min-w-0",
-                        "card": [
-                          {
-                            "el": "text",
-                            "value": "กำลังผลิตคลิป",
-                            "className": "!text-[16px] min-[640px]:!text-[15px] font-extrabold !text-[var(--ev-text)] truncate"
-                          },
-                          {
-                            "el": "text",
-                            "value": {
-                              "op": "concat",
-                              "parts": [
-                                "พักหลบเรดาร์ · เหลือ ",
-                                "{values.__runCoolLeft}",
-                                " วิ"
-                              ]
-                            },
-                            "when": {
-                              "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "cooldown"
-                            },
-                            "icon": "hourglass_top",
-                            "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-amber-500/15 !text-amber-600 leading-none shrink-0"
-                          },
-                          {
-                            "el": "text",
-                            "value": {
-                              "op": "concat",
-                              "parts": [
-                                "ลองใหม่ครั้งที่ ",
-                                "{values.__runAttempt}"
-                              ]
-                            },
-                            "when": {
-                              "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "retrying"
-                            },
-                            "icon": "replay",
-                            "className": "flex items-center gap-1 px-2.5 py-1 rounded-full !text-[12px] font-bold bg-red-500/12 !text-red-500 leading-none shrink-0"
-                          }
-                        ]
-                      },
-                      {
-                        "el": "text",
-                        "when": {
-                          "op": "not",
-                          "a": {
-                            "op": "eq",
-                            "a": "{values.__runLoopProd}",
-                            "b": ""
-                          }
-                        },
-                        "value": {
-                          "op": "concat",
-                          "parts": [
-                            "สินค้าที่ ",
-                            {
-                              "op": "add",
-                              "a": "{values.__runLoopDone}",
-                              "b": 1
-                            },
-                            "/",
-                            "{values.__runLoopTotal}",
-                            " · ",
-                            "{values.__runLoopProd}",
-                            " — ",
-                            {
-                              "op": "lookup",
-                              "table": "opNames",
-                              "key": "{values.__runStage}",
-                              "fallback": "กำลังทำงาน…"
-                            }
-                          ]
-                        },
-                        "className": "!text-[13px] font-bold truncate opacity-70"
-                      },
-                      {
-                        "el": "text",
-                        "when": {
-                          "op": "not",
-                          "a": {
-                            "op": "not",
-                            "a": {
-                              "op": "eq",
-                              "a": "{values.__runLoopProd}",
-                              "b": ""
-                            }
-                          }
-                        },
-                        "value": {
-                          "op": "concat",
-                          "parts": [
-                            {
-                              "op": "lookup",
-                              "table": "opNames",
-                              "key": "{values.__runStage}",
-                              "fallback": "กำลังทำงาน…"
-                            },
-                            " · คลิปที่ ",
-                            {
-                              "op": "min",
-                              "a": {
-                                "op": "add",
-                                "a": "{values.__runDone}",
-                                "b": 1
-                              },
-                              "b": "{values.__runTotal}"
-                            },
-                            "/",
-                            "{values.__runTotal}"
-                          ]
-                        },
-                        "className": "!text-[13px] font-bold truncate opacity-70"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "el": "button",
-                "action": "stop",
-                "label": "หยุดพัก",
-                "icon": "pause_circle",
-                "variant": "ghost",
-                "style": {
-                  "borderRadius": "12px",
-                  "height": "40px"
-                },
-                "className": "px-4 shrink-0 !text-[14px] font-bold !bg-red-500 !text-white border-0"
-              }
-            ]
-          },
-          {
-            "el": "row",
-            "style": {
-              "flexWrap": "nowrap"
-            },
-            "className": "items-center gap-3.5",
-            "card": [
-              {
-                "el": "box",
-                "className": "flex-1 min-w-0",
-                "card": [
-                  {
-                    "el": "progress-bar",
-                    "value": {
-                      "op": "mul",
-                      "a": {
-                        "op": "div",
-                        "a": "{values.__runDone}",
-                        "b": "{values.__runTotal}"
-                      },
-                      "b": 100
-                    }
-                  }
-                ]
-              },
-              {
-                "el": "row",
-                "style": {
-                  "flexWrap": "nowrap"
-                },
-                "className": "items-baseline gap-1 shrink-0",
-                "card": [
-                  {
-                    "el": "text",
-                    "value": "{values.__runDone}",
-                    "className": "!text-[20px] font-black tabular-nums !text-[var(--ev-accent)] leading-none"
-                  },
-                  {
-                    "el": "text",
-                    "value": {
-                      "op": "concat",
-                      "parts": [
-                        "/ ",
-                        "{values.__runTotal}",
-                        " คลิป"
-                      ]
-                    },
-                    "className": "!text-[13px] font-bold opacity-60 leading-none whitespace-nowrap"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "when": {
-          "op": "and",
-          "list": [
-            {
-              "op": "or",
-              "list": [
-                {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "running"
-                },
-                {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "cooldown"
-                },
-                {
-                  "op": "eq",
-                  "a": "{values.__runState}",
-                  "b": "retrying"
-                }
-              ]
-            },
-            {
-              "op": "not",
-              "a": {
-                "op": "and",
-                "list": [
-                  {
-                    "op": "not",
-                    "a": {
-                      "op": "eq",
-                      "a": "{values.mode}",
-                      "b": "auto"
-                    }
-                  },
-                  {
-                    "op": "eq",
-                    "a": "{values.__runStage}",
-                    "b": "mnPlan"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "el": "box",
-        "when": {
-          "op": "eq",
-          "a": "{values.__runState}",
-          "b": "done"
-        },
-        "className": "w-full flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in border-green-500/50",
-        "style": {
-          "backgroundColor": "var(--ev-surface)"
-        },
-        "card": [
-          {
-            "el": "box",
-            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-green-500/15",
-            "card": [
-              {
-                "el": "icon",
-                "icon": "check_circle",
-                "textSize": "text-[26px]",
-                "className": "!text-green-500"
-              }
-            ]
-          },
-          {
-            "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
-            "card": [
-              {
-                "el": "row",
-                "style": {
-                  "flexWrap": "nowrap"
-                },
-                "className": "justify-between items-center gap-2",
-                "card": [
-                  {
-                    "el": "row",
-                    "style": {
-                      "flexWrap": "nowrap"
-                    },
-                    "className": "items-center gap-2 min-w-0",
-                    "card": [
-                      {
-                        "el": "text",
-                        "value": "ผลิตคลิป",
-                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
-                      },
-                      {
-                        "el": "text",
-                        "value": "เสร็จครบ",
-                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-green-500/15 !text-green-600",
-                        "icon": "check"
-                      }
-                    ]
-                  },
-                  {
-                    "el": "text",
-                    "value": {
-                      "op": "concat",
-                      "parts": [
-                        {
-                          "op": "count",
-                          "from": "tasks",
-                          "slot": "video"
-                        },
-                        "/",
-                        {
-                          "op": "count",
-                          "from": "tasks"
-                        },
-                        " คลิป"
-                      ]
-                    },
-                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-green-600"
-                  }
-                ]
-              },
-              {
-                "el": "box",
-                "className": "h-1.5 rounded-full bg-green-500 w-full"
-              },
-              {
-                "el": "text",
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "เหลืออีก ",
-                    "{values.__runLoopLeft}",
-                    " สินค้า — กด “ผลิตต่อรอบถัดไป” ที่หน้าผลิต"
-                  ]
-                },
-                "className": "!text-[13px] font-bold truncate !text-amber-600",
-                "when": {
-                  "op": "gt",
-                  "a": "{values.__runLoopLeft}",
-                  "b": 0
-                }
-              },
-              {
-                "el": "text",
-                "value": "ครบทุกคลิปแล้ว — ไปดูผลงานที่คลังคลิปได้เลย",
-                "className": "!text-[13px] font-bold truncate !text-green-600",
-                "when": {
-                  "op": "not",
-                  "a": {
-                    "op": "gt",
-                    "a": "{values.__runLoopLeft}",
-                    "b": 0
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "el": "button",
-            "action": "set",
-            "to": "__runState",
-            "value": "",
-            "label": "ปิด",
-            "variant": "ghost",
-            "style": {
-              "borderRadius": "9999px",
-              "height": "42px"
-            },
-            "className": "px-5 shrink-0 !text-[14px] font-bold border border-green-300/70 !bg-[var(--ev-surface)] !text-green-600"
-          }
-        ]
-      },
-      {
-        "el": "box",
-        "when": {
-          "op": "eq",
-          "a": "{values.__runState}",
-          "b": "fail"
-        },
-        "className": "w-full flex items-center gap-3.5 px-4 min-[640px]:px-5 py-3.5 rounded-[26px] border-2 animate-in border-red-500/50",
-        "style": {
-          "backgroundColor": "var(--ev-surface)"
-        },
-        "card": [
-          {
-            "el": "box",
-            "className": "w-12 h-12 rounded-full shrink-0 flex items-center justify-center bg-red-500/12",
-            "card": [
-              {
-                "el": "icon",
-                "icon": "error",
-                "textSize": "text-[26px]",
-                "className": "!text-red-500"
-              }
-            ]
-          },
-          {
-            "el": "box",
-            "className": "flex-1 min-w-0 flex flex-col gap-1.5",
-            "card": [
-              {
-                "el": "row",
-                "style": {
-                  "flexWrap": "nowrap"
-                },
-                "className": "justify-between items-center gap-2",
-                "card": [
-                  {
-                    "el": "row",
-                    "style": {
-                      "flexWrap": "nowrap"
-                    },
-                    "className": "items-center gap-2 min-w-0",
-                    "card": [
-                      {
-                        "el": "text",
-                        "value": "ผลิตคลิป",
-                        "className": "!text-[15px] font-extrabold shrink-0 !text-[var(--ev-text)]"
-                      },
-                      {
-                        "el": "text",
-                        "value": "มีคลิปพลาด",
-                        "className": "flex items-center gap-1 px-2.5 py-0.5 rounded-full !text-[12px] font-bold shrink-0 leading-none bg-red-500/12 !text-red-500"
-                      }
-                    ]
-                  },
-                  {
-                    "el": "text",
-                    "value": {
-                      "op": "concat",
-                      "parts": [
-                        "พลาด ",
-                        "{values.__runFail}"
-                      ]
-                    },
-                    "className": "!text-[14px] font-black tabular-nums shrink-0 !text-red-500"
-                  }
-                ]
-              },
-              {
-                "el": "text",
-                "value": "กดปุ่ม “ลองใหม่ที่พลาด” เพื่อสั่งทำเฉพาะตัวที่พลาดอีกครั้ง",
-                "className": "!text-[13px] font-bold truncate !text-red-500"
-              }
-            ]
-          },
-          {
-            "el": "button",
-            "action": "set",
-            "to": "__runState",
-            "value": "",
-            "label": "ปิด",
-            "variant": "ghost",
-            "style": {
-              "borderRadius": "9999px",
-              "height": "42px"
-            },
-            "className": "px-5 shrink-0 !text-[14px] font-bold border border-red-300/70 !bg-[var(--ev-surface)] !text-red-500"
-          }
-        ]
-      }
-    ]
-  }
+  "components": {}
 }
