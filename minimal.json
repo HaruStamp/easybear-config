@@ -5103,7 +5103,7 @@
                                     "from": "tasks",
                                     "where": "status=error"
                                   },
-                                  " ตัว — กดปุ่ม “ลองใหม่ที่พลาด” สีแดงด้านล่าง"
+                                  " ตัว — กด “ลองใหม่ที่พลาด” มุมขวาบนได้เลย"
                                 ]
                               },
                               "when": {
@@ -5394,6 +5394,52 @@
                               "className": "px-4 shrink-0 !text-[14px] font-bold !bg-red-500 !text-white border-0"
                             },
                             {
+                              "el": "gen-phase",
+                              "ops": [
+                                "mnBoard",
+                                "mnVideo"
+                              ],
+                              "icon": "replay",
+                              "variant": "solid",
+                              "label": "ลองใหม่ที่พลาด",
+                              "when": {
+                                "op": "and",
+                                "a": {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "cooldown"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "retrying"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "b": {
+                                  "op": "gt",
+                                  "a": {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error"
+                                  },
+                                  "b": 0
+                                }
+                              },
+                              "className": "justify-center !h-10 !rounded-xl !text-[14px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] !text-white px-4 shrink-0 whitespace-nowrap"
+                            },
+                            {
                               "el": "row",
                               "className": "items-center gap-2",
                               "style": {
@@ -5604,26 +5650,55 @@
                     {
                       "el": "progress-bar",
                       "when": {
-                        "op": "not",
+                        "op": "and",
                         "a": {
-                          "op": "or",
-                          "list": [
-                            {
-                              "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "running"
+                          "op": "not",
+                          "a": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              }
+                            ]
+                          }
+                        },
+                        "b": {
+                          "op": "not",
+                          "a": {
+                            "op": "and",
+                            "a": {
+                              "op": "gt",
+                              "a": {
+                                "op": "count",
+                                "from": "tasks"
+                              },
+                              "b": 0
                             },
-                            {
+                            "b": {
                               "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "cooldown"
-                            },
-                            {
-                              "op": "eq",
-                              "a": "{values.__runState}",
-                              "b": "retrying"
+                              "a": {
+                                "op": "count",
+                                "from": "tasks",
+                                "slot": "video"
+                              },
+                              "b": {
+                                "op": "count",
+                                "from": "tasks"
+                              }
                             }
-                          ]
+                          }
                         }
                       },
                       "value": {
@@ -5642,6 +5717,59 @@
                         },
                         "b": 100
                       }
+                    },
+                    {
+                      "el": "box",
+                      "when": {
+                        "op": "and",
+                        "a": {
+                          "op": "not",
+                          "a": {
+                            "op": "or",
+                            "list": [
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "running"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "cooldown"
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.__runState}",
+                                "b": "retrying"
+                              }
+                            ]
+                          }
+                        },
+                        "b": {
+                          "op": "and",
+                          "a": {
+                            "op": "gt",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": 0
+                          },
+                          "b": {
+                            "op": "eq",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks",
+                              "slot": "video"
+                            },
+                            "b": {
+                              "op": "count",
+                              "from": "tasks"
+                            }
+                          }
+                        }
+                      },
+                      "className": "h-1.5 rounded-full bg-green-500 w-full"
                     }
                   ]
                 },
@@ -5659,48 +5787,6 @@
                       },
                       "className": "items-center gap-2 flex-1 min-w-0",
                       "card": [
-                        {
-                          "el": "gen-phase",
-                          "ops": [
-                            "mnBoard",
-                            "mnVideo"
-                          ],
-                          "icon": "replay",
-                          "variant": "solid",
-                          "label": {
-                            "op": "concat",
-                            "parts": [
-                              "ลองใหม่ที่พลาด · ",
-                              {
-                                "op": "count",
-                                "from": "tasks",
-                                "where": "status=error"
-                              },
-                              " คลิป"
-                            ]
-                          },
-                          "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap",
-                          "when": {
-                            "op": "and",
-                            "a": {
-                              "op": "gt",
-                              "a": {
-                                "op": "count",
-                                "from": "tasks",
-                                "where": "status=error"
-                              },
-                              "b": 0
-                            },
-                            "b": {
-                              "op": "not",
-                              "a": {
-                                "op": "eq",
-                                "a": "{values.mode}",
-                                "b": "auto"
-                              }
-                            }
-                          }
-                        },
                         {
                           "el": "gen-phase",
                           "ops": [
@@ -5851,45 +5937,6 @@
                                 "a": "{values.mode}",
                                 "b": "auto"
                               }
-                            }
-                          }
-                        },
-                        {
-                          "el": "gen-phase",
-                          "ops": [
-                            "mnBoard",
-                            "mnVideo"
-                          ],
-                          "icon": "replay",
-                          "variant": "solid",
-                          "label": {
-                            "op": "concat",
-                            "parts": [
-                              "ลองใหม่ที่พลาด · ",
-                              {
-                                "op": "count",
-                                "from": "tasks",
-                                "where": "status=error"
-                              },
-                              " คลิป"
-                            ]
-                          },
-                          "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap",
-                          "when": {
-                            "op": "and",
-                            "a": {
-                              "op": "gt",
-                              "a": {
-                                "op": "count",
-                                "from": "tasks",
-                                "where": "status=error"
-                              },
-                              "b": 0
-                            },
-                            "b": {
-                              "op": "eq",
-                              "a": "{values.mode}",
-                              "b": "auto"
                             }
                           }
                         },
