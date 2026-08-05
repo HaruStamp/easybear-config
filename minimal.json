@@ -92,6 +92,10 @@
     "products": {
       "fields": [
         "name",
+        "description",
+        "price",
+        "promotion",
+        "cta",
         "info",
         "idea",
         "tone",
@@ -176,7 +180,7 @@
       "prompt": {
         "op": "concat",
         "parts": [
-          "ออกแบบแผนคลิปโฆษณามินิมอล จำนวน {values.clipsPerProduct} คลิป สำหรับสินค้านี้\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.info}\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\nโทนสีพาสเทลของสินค้านี้: {item.tone}\nโทนสีพาสเทลหลักของโปรเจกต์: {values.svTone}\n(ลำดับความสำคัญโทนสี: ของสินค้า > ของโปรเจกต์ > ค่าว่างทั้งคู่ = เลือกเองตามหมวดสินค้า)\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\nฉาก 1 เปิดตัว — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\nฉาก 2 จุดเด่น — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\nฉาก 3 ใช้จริง — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\nฉาก 4 หลากหลาย — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\nฉาก 5 ชวนซื้อ — มุมกล้อง: {values.svCam5} · การนำเสนอ: {values.svPres5}\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON",
+          "ออกแบบแผนคลิปโฆษณามินิมอล จำนวน {values.clipsPerProduct} คลิป สำหรับสินค้านี้\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.description} {item.info}\nราคา: {item.price}\nโปรโมชั่น: {item.promotion}\nคำชวนซื้อ (CTA) ที่ต้องใช้ในฉาก 5: {item.cta}\n(ราคา/โปรโมชั่น/CTA: ค่าว่าง = ออกแบบเองหรือไม่ต้องพูดถึง · มีค่า = ต้องสะท้อนในบท โดยเฉพาะฉากชวนซื้อ)\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\nโทนสีพาสเทลของสินค้านี้: {item.tone}\nโทนสีพาสเทลหลักของโปรเจกต์: {values.svTone}\n(ลำดับความสำคัญโทนสี: ของสินค้า > ของโปรเจกต์ > ค่าว่างทั้งคู่ = เลือกเองตามหมวดสินค้า)\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\nฉาก 1 เปิดตัว — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\nฉาก 2 จุดเด่น — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\nฉาก 3 ใช้จริง — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\nฉาก 4 หลากหลาย — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\nฉาก 5 ชวนซื้อ — มุมกล้อง: {values.svCam5} · การนำเสนอ: {values.svPres5}\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON",
           "\n\nโหมดพรีเซนเตอร์: {values.svChar}\n",
           {
             "op": "lookup",
@@ -3975,9 +3979,66 @@
                         },
                         {
                           "el": "textarea",
-                          "field": "info",
+                          "field": "description",
                           "placeholder": "เช่น SPF50+ เนื้อบางเบา ไม่เหนียว โทนอัพผิว — ยิ่งละเอียด AI ยิ่งเขียนบทได้ตรง",
                           "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "gap-3",
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-2 w-full min-[640px]:w-[160px]",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "ราคา",
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                            },
+                            {
+                              "el": "input",
+                              "field": "price",
+                              "placeholder": "฿390",
+                              "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-2 flex-1 min-w-[200px]",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "โปรโมชั่น",
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                            },
+                            {
+                              "el": "input",
+                              "field": "promotion",
+                              "placeholder": "ลด 50% วันนี้เท่านั้น",
+                              "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-2 flex-1 min-w-[200px]",
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "คำชวนซื้อ (CTA)",
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                            },
+                            {
+                              "el": "input",
+                              "field": "cta",
+                              "placeholder": "กดสั่งซื้อเลย",
+                              "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
+                            }
+                          ]
                         }
                       ]
                     },
@@ -4073,6 +4134,30 @@
                                   ]
                                 }
                               ]
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-2",
+                          "when": {
+                            "op": "not",
+                            "a": {
+                              "op": "eq",
+                              "a": "{item.info}",
+                              "b": ""
+                            }
+                          },
+                          "card": [
+                            {
+                              "el": "text",
+                              "value": "ข้อมูลสินค้า (ช่องรุ่นเก่า — บทยังอ่านค่านี้อยู่ ย้ายข้อความไปช่องใหม่ได้เลย)",
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                            },
+                            {
+                              "el": "textarea",
+                              "field": "info",
+                              "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
                             }
                           ]
                         }
