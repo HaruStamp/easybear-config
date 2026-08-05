@@ -152,9 +152,7 @@
       "idPrefix": "t"
     },
     "characters": {
-      "fields": [
-        "label"
-      ],
+      "fields": [],
       "slots": [
         "face"
       ],
@@ -214,7 +212,7 @@
       "pace": false,
       "spawn": {
         "into": "tasks",
-        "reset": true,
+        "reset": false,
         "source": "products",
         "where": "enabled=true",
         "list": "{item.data.plan}",
@@ -2565,7 +2563,7 @@
                     },
                     {
                       "el": "text",
-                      "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่สินค้าเพื่อคิดบทใหม่ แล้วกด \"เริ่มรอบใหม่\"",
+                      "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่สินค้าเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
                       "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
                     }
                   ],
@@ -2675,17 +2673,37 @@
                     "b": "auto"
                   },
                   "disabledWhen": {
-                    "op": "not",
-                    "a": {
-                      "op": "gt",
-                      "a": {
-                        "op": "count",
-                        "from": "products",
-                        "where": "enabled=true"
+                    "op": "or",
+                    "list": [
+                      {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "enabled=true"
+                        },
+                        "b": 0
                       },
-                      "b": 0
-                    }
-                  }
+                      {
+                        "op": "not",
+                        "a": {
+                          "op": "eq",
+                          "a": {
+                            "op": "count",
+                            "from": "products",
+                            "where": "enabled=true"
+                          },
+                          "b": {
+                            "op": "count",
+                            "from": "products",
+                            "where": "enabled=true",
+                            "slot": "image"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "reason": "ทุกสินค้าที่ใช้ต้องมีรูปก่อน"
                 },
                 {
                   "el": "gen-phase",
@@ -4249,6 +4267,22 @@
                       },
                       "card": [
                         {
+                          "el": "button",
+                          "action": "set",
+                          "to": "__page",
+                          "value": "setup",
+                          "label": "ตั้งค่า",
+                          "icon": "tune",
+                          "variant": "ghost",
+                          "className": "!h-11 min-[640px]:!h-10 !px-3.5 !rounded-full !text-[14px] min-[640px]:!text-[13px] font-bold border border-[var(--ev-border)]"
+                        },
+                        {
+                          "el": "icon",
+                          "icon": "chevron_right",
+                          "textSize": "text-[16px]",
+                          "className": "opacity-25 shrink-0 leading-none flex items-center justify-center"
+                        },
+                        {
                           "el": "row",
                           "className": "items-center gap-2 px-3.5 py-2 rounded-full border shrink-0 bg-[var(--ev-accent)] border-transparent",
                           "style": {
@@ -4290,6 +4324,52 @@
                 },
                 {
                   "el": "row",
+                  "className": "items-center gap-3.5 bg-red-500/[0.07] border border-red-500/25 rounded-2xl p-3.5 mx-3 min-[640px]:mx-6",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "w-[40px] h-[40px] rounded-xl bg-red-500/[0.14] flex items-center justify-center shrink-0",
+                      "card": [
+                        {
+                          "el": "icon",
+                          "icon": "error",
+                          "textSize": "text-[20px]",
+                          "className": "!text-red-500 leading-none flex items-center justify-center"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "text",
+                      "value": {
+                        "op": "concat",
+                        "parts": [
+                          "คิดบทไม่สำเร็จ ",
+                          {
+                            "op": "count",
+                            "from": "products",
+                            "where": "status=error"
+                          },
+                          " สินค้า — กด \"เริ่ม\" อีกครั้ง ระบบจะเขียนใหม่เฉพาะตัวที่พลาด"
+                        ]
+                      },
+                      "className": "!text-[15px] min-[640px]:!text-[14px] !text-red-600 font-medium leading-relaxed flex-1 min-w-0"
+                    }
+                  ],
+                  "when": {
+                    "op": "gt",
+                    "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "status=error"
+                    },
+                    "b": 0
+                  }
+                },
+                {
+                  "el": "row",
                   "className": "items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3.5",
                   "style": {
                     "flexWrap": "nowrap"
@@ -4309,7 +4389,7 @@
                     },
                     {
                       "el": "text",
-                      "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่สินค้าเพื่อคิดบทใหม่ แล้วกด \"เริ่มรอบใหม่\"",
+                      "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่สินค้าเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
                       "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
                     }
                   ],
@@ -5477,9 +5557,16 @@
                                 "parts": [
                                   "ลองใหม่ที่พลาด · ",
                                   {
-                                    "op": "count",
-                                    "from": "tasks",
-                                    "where": "status=error"
+                                    "op": "sub",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks"
+                                    },
+                                    "b": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "slot": "video"
+                                    }
                                   },
                                   " คลิป"
                                 ]
@@ -5578,7 +5665,39 @@
                                   }
                                 ]
                               },
-                              "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold border border-[var(--ev-accent)]/40 !bg-[var(--ev-surface)] !text-[var(--ev-accent)] px-4 shrink-0 whitespace-nowrap"
+                              "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold border border-[var(--ev-accent)]/40 !bg-[var(--ev-surface)] !text-[var(--ev-accent)] px-4 shrink-0 whitespace-nowrap",
+                              "disabledWhen": {
+                                "op": "or",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "products",
+                                      "where": "enabled=true"
+                                    },
+                                    "b": 0
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "products",
+                                        "where": "enabled=true"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "products",
+                                        "where": "enabled=true",
+                                        "slot": "image"
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "reason": "ทุกสินค้าที่ใช้ต้องมีรูปก่อน"
                             },
                             {
                               "el": "gen-phase",
@@ -6265,7 +6384,7 @@
                     },
                     {
                       "el": "text",
-                      "value": "กด \"เขียนบททั้งหมด\" ด้านบน — บทจะโผล่เป็นการ์ดให้แก้ได้ทีละช่อง",
+                      "value": "กลับหน้าตั้งค่าแล้วกด \"เริ่ม\" อีกครั้ง — บทจะโผล่เป็นการ์ดให้แก้ได้ทีละช่อง",
                       "className": "!text-[15px] min-[640px]:!text-[14px] opacity-60 text-center leading-relaxed"
                     }
                   ],
@@ -6710,22 +6829,35 @@
                                                     }
                                                   ],
                                                   "when": {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "or",
-                                                      "list": [
-                                                        {
+                                                    "op": "and",
+                                                    "list": [
+                                                      {
+                                                        "op": "not",
+                                                        "a": {
+                                                          "op": "or",
+                                                          "list": [
+                                                            {
+                                                              "op": "eq",
+                                                              "a": "{item.status}",
+                                                              "b": "running"
+                                                            },
+                                                            {
+                                                              "op": "eq",
+                                                              "a": "{item.meta.retrying}",
+                                                              "b": "1"
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      {
+                                                        "op": "not",
+                                                        "a": {
                                                           "op": "eq",
                                                           "a": "{item.status}",
-                                                          "b": "running"
-                                                        },
-                                                        {
-                                                          "op": "eq",
-                                                          "a": "{item.meta.retrying}",
-                                                          "b": "1"
+                                                          "b": "error"
                                                         }
-                                                      ]
-                                                    }
+                                                      }
+                                                    ]
                                                   }
                                                 },
                                                 {
@@ -6858,6 +6990,46 @@
                                                     "b": ""
                                                   }
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "el": "box",
+                                              "className": "aspect-[9/16] rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-[var(--ev-surface)] flex flex-col items-center justify-center gap-2",
+                                              "card": [
+                                                {
+                                                  "el": "icon",
+                                                  "icon": "image",
+                                                  "textSize": "text-[26px]",
+                                                  "className": "opacity-25 leading-none flex items-center justify-center"
+                                                },
+                                                {
+                                                  "el": "text",
+                                                  "value": "ยังไม่มีภาพ",
+                                                  "className": "!text-[12px] font-bold opacity-35"
+                                                }
+                                              ],
+                                              "when": {
+                                                "op": "and",
+                                                "list": [
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{item.view}",
+                                                    "b": "board"
+                                                  },
+                                                  {
+                                                    "op": "eq",
+                                                    "a": "{item.slots.board}",
+                                                    "b": ""
+                                                  },
+                                                  {
+                                                    "op": "not",
+                                                    "a": {
+                                                      "op": "eq",
+                                                      "a": "{item.slots.video}",
+                                                      "b": ""
+                                                    }
+                                                  }
+                                                ]
                                               }
                                             }
                                           ]
@@ -7169,34 +7341,47 @@
                                         "op": "and",
                                         "list": [
                                           {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "eq",
+                                                  "a": "{item.slots.board}",
+                                                  "b": ""
+                                                }
+                                              },
+                                              {
+                                                "op": "eq",
+                                                "a": "{item.slots.video}",
+                                                "b": ""
+                                              },
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "or",
+                                                  "list": [
+                                                    {
+                                                      "op": "eq",
+                                                      "a": "{item.status}",
+                                                      "b": "running"
+                                                    },
+                                                    {
+                                                      "op": "eq",
+                                                      "a": "{item.meta.retrying}",
+                                                      "b": "1"
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          {
                                             "op": "not",
                                             "a": {
                                               "op": "eq",
-                                              "a": "{item.slots.board}",
-                                              "b": ""
-                                            }
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{item.slots.video}",
-                                            "b": ""
-                                          },
-                                          {
-                                            "op": "not",
-                                            "a": {
-                                              "op": "or",
-                                              "list": [
-                                                {
-                                                  "op": "eq",
-                                                  "a": "{item.status}",
-                                                  "b": "running"
-                                                },
-                                                {
-                                                  "op": "eq",
-                                                  "a": "{item.meta.retrying}",
-                                                  "b": "1"
-                                                }
-                                              ]
+                                              "a": "{item.status}",
+                                              "b": "error"
                                             }
                                           }
                                         ]
@@ -7222,12 +7407,43 @@
                                         }
                                       ],
                                       "when": {
-                                        "op": "not",
-                                        "a": {
-                                          "op": "eq",
-                                          "a": "{item.slots.video}",
-                                          "b": ""
-                                        }
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.slots.video}",
+                                              "b": ""
+                                            }
+                                          },
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "error"
+                                            }
+                                          },
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "or",
+                                              "list": [
+                                                {
+                                                  "op": "eq",
+                                                  "a": "{item.status}",
+                                                  "b": "running"
+                                                },
+                                                {
+                                                  "op": "eq",
+                                                  "a": "{item.meta.retrying}",
+                                                  "b": "1"
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
                                       }
                                     }
                                   ]
@@ -7492,6 +7708,17 @@
                                                       "field": "s1th",
                                                       "placeholder": "บรรยายภาพฉากนี้เป็นภาษาไทย",
                                                       "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "บทอังกฤษ — ใช้ส่งเข้าโมเดลวิดีโอ (แก้คู่กับบทไทย)",
+                                                      "className": "!text-[11.5px] opacity-45 px-0.5 -mb-1"
+                                                    },
+                                                    {
+                                                      "el": "textarea",
+                                                      "field": "s1en",
+                                                      "placeholder": "บทอังกฤษ (ตัวนี้ถูกส่งเข้าโมเดลวิดีโอ)",
+                                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
                                                     }
                                                   ]
                                                 },
@@ -7678,6 +7905,17 @@
                                                       "el": "textarea",
                                                       "field": "s2th",
                                                       "placeholder": "บรรยายภาพฉากนี้เป็นภาษาไทย",
+                                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "บทอังกฤษ — ใช้ส่งเข้าโมเดลวิดีโอ (แก้คู่กับบทไทย)",
+                                                      "className": "!text-[11.5px] opacity-45 px-0.5 -mb-1"
+                                                    },
+                                                    {
+                                                      "el": "textarea",
+                                                      "field": "s2en",
+                                                      "placeholder": "บทอังกฤษ (ตัวนี้ถูกส่งเข้าโมเดลวิดีโอ)",
                                                       "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
                                                     }
                                                   ]
@@ -7866,6 +8104,17 @@
                                                       "field": "s3th",
                                                       "placeholder": "บรรยายภาพฉากนี้เป็นภาษาไทย",
                                                       "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "บทอังกฤษ — ใช้ส่งเข้าโมเดลวิดีโอ (แก้คู่กับบทไทย)",
+                                                      "className": "!text-[11.5px] opacity-45 px-0.5 -mb-1"
+                                                    },
+                                                    {
+                                                      "el": "textarea",
+                                                      "field": "s3en",
+                                                      "placeholder": "บทอังกฤษ (ตัวนี้ถูกส่งเข้าโมเดลวิดีโอ)",
+                                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
                                                     }
                                                   ]
                                                 },
@@ -8052,6 +8301,17 @@
                                                       "el": "textarea",
                                                       "field": "s4th",
                                                       "placeholder": "บรรยายภาพฉากนี้เป็นภาษาไทย",
+                                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "บทอังกฤษ — ใช้ส่งเข้าโมเดลวิดีโอ (แก้คู่กับบทไทย)",
+                                                      "className": "!text-[11.5px] opacity-45 px-0.5 -mb-1"
+                                                    },
+                                                    {
+                                                      "el": "textarea",
+                                                      "field": "s4en",
+                                                      "placeholder": "บทอังกฤษ (ตัวนี้ถูกส่งเข้าโมเดลวิดีโอ)",
                                                       "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
                                                     }
                                                   ]
@@ -8240,6 +8500,17 @@
                                                       "field": "s5th",
                                                       "placeholder": "บรรยายภาพฉากนี้เป็นภาษาไทย",
                                                       "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
+                                                    },
+                                                    {
+                                                      "el": "text",
+                                                      "value": "บทอังกฤษ — ใช้ส่งเข้าโมเดลวิดีโอ (แก้คู่กับบทไทย)",
+                                                      "className": "!text-[11.5px] opacity-45 px-0.5 -mb-1"
+                                                    },
+                                                    {
+                                                      "el": "textarea",
+                                                      "field": "s5en",
+                                                      "placeholder": "บทอังกฤษ (ตัวนี้ถูกส่งเข้าโมเดลวิดีโอ)",
+                                                      "className": "!text-[16px] min-[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 min-[640px]:!py-2.5 border-[var(--ev-border)] min-h-[64px]"
                                                     }
                                                   ]
                                                 },
@@ -8421,7 +8692,13 @@
                                             }
                                           ]
                                         }
-                                      }
+                                      },
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      },
+                                      "reason": "ต้อง Gen ภาพก่อน"
                                     }
                                   ],
                                   "when": {
@@ -8762,7 +9039,13 @@
                                       "op": "mnVideo",
                                       "label": "Gen วิดีโอ",
                                       "icon": "auto_fix_high",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      },
+                                      "reason": "ต้อง Gen ภาพก่อน"
                                     },
                                     {
                                       "el": "box",
@@ -8853,7 +9136,13 @@
                                       "op": "mnVideo",
                                       "label": "Gen วิดีโอ",
                                       "icon": "auto_fix_high",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] min-[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      },
+                                      "reason": "ต้อง Gen ภาพก่อน"
                                     },
                                     {
                                       "el": "pick-button",
@@ -9228,7 +9517,13 @@
                                       "label": "Gen วิดีโอ",
                                       "icon": "auto_fix_high",
                                       "variant": "solid",
-                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white w-[132px] !pointer-events-auto"
+                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white w-[132px] !pointer-events-auto",
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{item.slots.board}",
+                                        "b": ""
+                                      },
+                                      "reason": "ต้อง Gen ภาพก่อน"
                                     },
                                     {
                                       "el": "pick-button",
@@ -9693,32 +9988,63 @@
                               ],
                               "when": {
                                 "op": "and",
-                                "a": {
-                                  "op": "not",
-                                  "a": {
-                                    "op": "eq",
-                                    "a": "{item.slots.video}",
-                                    "b": ""
-                                  }
-                                },
-                                "b": {
-                                  "op": "not",
-                                  "a": {
-                                    "op": "or",
-                                    "list": [
-                                      {
+                                "list": [
+                                  {
+                                    "op": "and",
+                                    "a": {
+                                      "op": "not",
+                                      "a": {
                                         "op": "eq",
-                                        "a": "{item.status}",
-                                        "b": "running"
-                                      },
-                                      {
-                                        "op": "eq",
-                                        "a": "{item.meta.retrying}",
-                                        "b": "1"
+                                        "a": "{item.slots.video}",
+                                        "b": ""
                                       }
-                                    ]
+                                    },
+                                    "b": {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "or",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.status}",
+                                            "b": "running"
+                                          },
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.meta.retrying}",
+                                            "b": "1"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.status}",
+                                      "b": "error"
+                                    }
+                                  },
+                                  {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "or",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.status}",
+                                          "b": "running"
+                                        },
+                                        {
+                                          "op": "eq",
+                                          "a": "{item.meta.retrying}",
+                                          "b": "1"
+                                        }
+                                      ]
+                                    }
                                   }
-                                }
+                                ]
                               }
                             },
                             {
@@ -10420,21 +10746,6 @@
                 "b": "run"
               },
               {
-                "op": "eq",
-                "a": "{values.__page}",
-                "b": "boards"
-              },
-              {
-                "op": "eq",
-                "a": "{values.__page}",
-                "b": "videos"
-              },
-              {
-                "op": "eq",
-                "a": "{values.__page}",
-                "b": "script"
-              },
-              {
                 "op": "and",
                 "list": [
                   {
@@ -10769,7 +11080,7 @@
                   "card": [
                     {
                       "el": "open-editor",
-                      "coll": "control",
+                      "coll": "tasks",
                       "label": "ไปตัดต่อคลิป",
                       "icon": "movie_edit",
                       "className": "flex-1 justify-center !h-16 min-[640px]:!h-14 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
@@ -10986,9 +11297,16 @@
                         "parts": [
                           "ลองใหม่ที่พลาด · ",
                           {
-                            "op": "count",
-                            "from": "tasks",
-                            "where": "status=error"
+                            "op": "sub",
+                            "a": {
+                              "op": "count",
+                              "from": "tasks"
+                            },
+                            "b": {
+                              "op": "count",
+                              "from": "tasks",
+                              "slot": "video"
+                            }
                           },
                           " คลิป"
                         ]
@@ -11306,6 +11624,14 @@
                 "b": 0
               },
               "className": "!text-[12.5px] opacity-55 text-center"
+            },
+            {
+              "el": "button",
+              "action": "stop",
+              "label": "หยุดพัก",
+              "icon": "pause_circle",
+              "variant": "ghost",
+              "className": "!h-12 !px-6 !rounded-xl !text-[15px] font-bold border border-[var(--ev-border)] mt-2"
             }
           ],
           "when": {
@@ -11444,7 +11770,6 @@
         "mnVideo"
       ],
       "childRef": "prod",
-      "capValue": "productCap",
       "capDefault": 999
     },
     "scopeColl": "control"
