@@ -9327,59 +9327,103 @@
                       },
                       "card": [
                         {
-                          "el": "box",
-                          "when": {
-                            "op": "eq",
-                            "a": "{item.data.plan}",
-                            "b": ""
-                          },
-                          "className": "rounded-[26px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] py-10 px-6 flex flex-col items-center justify-center gap-2.5",
+                          "el": "repeat",
+                          "count": 10,
                           "card": [
                             {
-                              "el": "spinner",
-                              "className": "!text-[24px]",
+                              "el": "box",
                               "when": {
-                                "op": "eq",
-                                "a": "{item.fields.name}",
-                                "b": "{values.__runLoopProd}"
-                              }
-                            },
-                            {
-                              "el": "icon",
-                              "icon": "hourglass_empty",
-                              "textSize": "text-[22px]",
-                              "className": "opacity-30 leading-none flex items-center justify-center",
-                              "when": {
-                                "op": "not",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{item.fields.name}",
-                                  "b": "{values.__runLoopProd}"
-                                }
-                              }
-                            },
-                            {
-                              "el": "text",
-                              "value": "กำลังเขียนบท — {item.name}",
-                              "when": {
-                                "op": "eq",
-                                "a": "{item.fields.name}",
-                                "b": "{values.__runLoopProd}"
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{item.data.plan}",
+                                    "b": ""
+                                  },
+                                  {
+                                    "op": "lt",
+                                    "a": {
+                                      "op": "index"
+                                    },
+                                    "b": "{values.clipsPerProduct}"
+                                  }
+                                ]
                               },
-                              "className": "!text-[15px] font-bold !text-[var(--ev-accent)] text-center"
-                            },
-                            {
-                              "el": "text",
-                              "value": "รอคิวเขียนบท — {item.name}",
-                              "when": {
-                                "op": "not",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{item.fields.name}",
-                                  "b": "{values.__runLoopProd}"
+                              "className": "rounded-[26px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] py-10 px-6 flex flex-col items-center justify-center gap-2.5",
+                              "card": [
+                                {
+                                  "el": "spinner",
+                                  "className": "!text-[24px]",
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{item.fields.name}",
+                                    "b": "{values.__runLoopProd}"
+                                  }
+                                },
+                                {
+                                  "el": "icon",
+                                  "icon": "hourglass_empty",
+                                  "textSize": "text-[22px]",
+                                  "className": "opacity-30 leading-none flex items-center justify-center",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.fields.name}",
+                                      "b": "{values.__runLoopProd}"
+                                    }
+                                  }
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "กำลังเขียนบท — {item.name}",
+                                      " · คลิปที่ ",
+                                      {
+                                        "op": "add",
+                                        "a": {
+                                          "op": "index"
+                                        },
+                                        "b": 1
+                                      }
+                                    ]
+                                  },
+                                  "when": {
+                                    "op": "eq",
+                                    "a": "{item.fields.name}",
+                                    "b": "{values.__runLoopProd}"
+                                  },
+                                  "className": "!text-[15px] font-bold !text-[var(--ev-accent)] text-center"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": {
+                                    "op": "concat",
+                                    "parts": [
+                                      "รอคิวเขียนบท — {item.name}",
+                                      " · คลิปที่ ",
+                                      {
+                                        "op": "add",
+                                        "a": {
+                                          "op": "index"
+                                        },
+                                        "b": 1
+                                      }
+                                    ]
+                                  },
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.fields.name}",
+                                      "b": "{values.__runLoopProd}"
+                                    }
+                                  },
+                                  "className": "!text-[15px] font-bold opacity-45 text-center"
                                 }
-                              },
-                              "className": "!text-[15px] font-bold opacity-45 text-center"
+                              ]
                             }
                           ]
                         }
@@ -10422,87 +10466,122 @@
                       },
                       "card": [
                         {
-                          "el": "box",
-                          "when": {
-                            "op": "eq",
-                            "a": "{item.data.plan}",
-                            "b": ""
-                          },
-                          "className": "relative flex flex-col",
+                          "el": "repeat",
+                          "count": 10,
                           "card": [
                             {
                               "el": "box",
-                              "className": "aspect-[9/16] rounded-[18px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] flex flex-col items-center justify-center gap-2.5 px-3",
-                              "card": [
-                                {
-                                  "el": "spinner",
-                                  "className": "!text-[26px]",
-                                  "when": {
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
                                     "op": "eq",
-                                    "a": "{item.fields.name}",
-                                    "b": "{values.__runLoopProd}"
-                                  }
-                                },
-                                {
-                                  "el": "icon",
-                                  "icon": "hourglass_empty",
-                                  "textSize": "text-[24px]",
-                                  "className": "opacity-30 leading-none flex items-center justify-center",
-                                  "when": {
-                                    "op": "not",
-                                    "a": {
-                                      "op": "eq",
-                                      "a": "{item.fields.name}",
-                                      "b": "{values.__runLoopProd}"
-                                    }
-                                  }
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "กำลังเขียนบท…",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": "{item.fields.name}",
-                                    "b": "{values.__runLoopProd}"
+                                    "a": "{item.data.plan}",
+                                    "b": ""
                                   },
-                                  "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "รอคิวเขียนบท",
-                                  "when": {
-                                    "op": "not",
+                                  {
+                                    "op": "lt",
                                     "a": {
-                                      "op": "eq",
-                                      "a": "{item.fields.name}",
-                                      "b": "{values.__runLoopProd}"
-                                    }
-                                  },
-                                  "className": "!text-[13px] font-bold opacity-45 text-center"
-                                }
-                              ]
-                            },
-                            {
-                              "el": "row",
-                              "style": {
-                                "flexWrap": "nowrap"
+                                      "op": "index"
+                                    },
+                                    "b": "{values.clipsPerProduct}"
+                                  }
+                                ]
                               },
-                              "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7",
+                              "className": "relative flex flex-col",
                               "card": [
                                 {
-                                  "el": "text",
-                                  "value": "{item.name}",
-                                  "className": "!text-[12.5px] font-bold truncate opacity-70 shrink min-w-0"
+                                  "el": "box",
+                                  "className": "aspect-[9/16] rounded-[18px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] flex flex-col items-center justify-center gap-2.5 px-3",
+                                  "card": [
+                                    {
+                                      "el": "spinner",
+                                      "className": "!text-[26px]",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.fields.name}",
+                                        "b": "{values.__runLoopProd}"
+                                      }
+                                    },
+                                    {
+                                      "el": "icon",
+                                      "icon": "hourglass_empty",
+                                      "textSize": "text-[24px]",
+                                      "className": "opacity-30 leading-none flex items-center justify-center",
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.fields.name}",
+                                          "b": "{values.__runLoopProd}"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "กำลังเขียนบท…",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.fields.name}",
+                                        "b": "{values.__runLoopProd}"
+                                      },
+                                      "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "รอคิวเขียนบท",
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.fields.name}",
+                                          "b": "{values.__runLoopProd}"
+                                        }
+                                      },
+                                      "className": "!text-[13px] font-bold opacity-45 text-center"
+                                    }
+                                  ]
                                 },
                                 {
-                                  "el": "text",
-                                  "value": "[{values.clipsPerProduct} คลิป]",
-                                  "className": "!text-[12px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]",
-                                  "when": {
-                                    "op": "eq",
-                                    "a": "{item.fields.name}",
-                                    "b": "{values.__runLoopProd}"
-                                  }
+                                  "el": "row",
+                                  "style": {
+                                    "flexWrap": "nowrap"
+                                  },
+                                  "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7",
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "{item.name}",
+                                      "className": "!text-[12.5px] font-bold truncate opacity-70 shrink min-w-0"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "[{values.clipsPerProduct} คลิป]",
+                                      "className": "!text-[12px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.fields.name}",
+                                        "b": "{values.__runLoopProd}"
+                                      }
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": {
+                                        "op": "concat",
+                                        "parts": [
+                                          "คลิปที่ ",
+                                          {
+                                            "op": "add",
+                                            "a": {
+                                              "op": "index"
+                                            },
+                                            "b": 1
+                                          }
+                                        ]
+                                      },
+                                      "className": "!text-[11px] font-bold !text-[var(--ev-text)] opacity-45 whitespace-nowrap ml-auto"
+                                    }
+                                  ]
                                 }
                               ]
                             }
