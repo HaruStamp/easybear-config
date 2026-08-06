@@ -5542,7 +5542,13 @@
                                 "borderRadius": "12px",
                                 "height": "48px"
                               },
-                              "className": "px-5 shrink-0 !text-[15px] font-bold !bg-red-500 !text-white border-0 whitespace-nowrap"
+                              "className": "px-5 shrink-0 !text-[15px] font-bold !bg-red-500 !text-white border-0 whitespace-nowrap",
+                              "disabledWhen": {
+                                "op": "eq",
+                                "a": "{values.__runStopping}",
+                                "b": "1"
+                              },
+                              "reason": "กำลังหยุด — รอขั้นที่ค้างอยู่จบ"
                             },
                             {
                               "el": "gen-phase",
@@ -6356,6 +6362,29 @@
                               ]
                             }
                           ]
+                        }
+                      ]
+                    },
+                    {
+                      "el": "row",
+                      "className": "items-center gap-2",
+                      "style": {
+                        "flexWrap": "nowrap"
+                      },
+                      "when": {
+                        "op": "eq",
+                        "a": "{values.__runStopping}",
+                        "b": "1"
+                      },
+                      "card": [
+                        {
+                          "el": "spinner",
+                          "className": "!text-[14px]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "กำลังหยุด… รอขั้นที่ค้างอยู่จบก่อน (ช่วงเขียนบทอาจใช้เวลาถึง 1 นาที)",
+                          "className": "!text-[13.5px] font-bold !text-amber-600"
                         }
                       ]
                     }
@@ -11705,12 +11734,41 @@
               "className": "!text-[12.5px] opacity-55 text-center"
             },
             {
+              "el": "row",
+              "className": "items-center gap-2",
+              "style": {
+                "flexWrap": "nowrap"
+              },
+              "when": {
+                "op": "eq",
+                "a": "{values.__runStopping}",
+                "b": "1"
+              },
+              "card": [
+                {
+                  "el": "spinner",
+                  "className": "!text-[14px]"
+                },
+                {
+                  "el": "text",
+                  "value": "กำลังหยุด… รอขั้นที่ค้างอยู่จบก่อน (ช่วงเขียนบทอาจใช้เวลาถึง 1 นาที)",
+                  "className": "!text-[13.5px] font-bold !text-amber-600"
+                }
+              ]
+            },
+            {
               "el": "button",
               "action": "stop",
               "label": "หยุดพัก",
               "icon": "pause_circle",
               "variant": "ghost",
-              "className": "!h-12 !px-6 !rounded-xl !text-[15px] font-bold border border-[var(--ev-border)] mt-2"
+              "className": "!h-12 !px-6 !rounded-xl !text-[15px] font-bold border border-[var(--ev-border)] mt-2",
+              "disabledWhen": {
+                "op": "eq",
+                "a": "{values.__runStopping}",
+                "b": "1"
+              },
+              "reason": "กำลังหยุด — รอขั้นที่ค้างอยู่จบ"
             }
           ],
           "when": {
