@@ -14,7 +14,7 @@
 import json, os
 
 ROOT = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config'
-SRC, DST = os.path.join(ROOT, 'minimal.json'), os.path.join(ROOT, 'story.json')
+SRC, DST = os.path.join(ROOT, 'minimal.json'), os.path.join(ROOT, 'showhow.json')
 
 # ── 0) rename op ids + brain namespace บนข้อความดิบ (ครอบ UI ที่อ้างถึงด้วย) ──
 raw = open(SRC, encoding='utf-8').read()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# handson-v4.py — story.json → handson.json
+# showhow-v4 (ประวัติ · one-shot รันไปแล้ว) — ยกเครื่อง brain ตาม MASTER BIBLE
 #   ① rename ทั้งชุด (op ids st*→ho* · brain.st→brain.ho · identity)
 #   ② ยกเครื่อง brain ตาม MASTER CONTENT & PRODUCTION BIBLE + MASTER_SYSTEM_PROMPT
 #   ③ ปิด 8 ช่องว่าง: operator ไม่ใช่ presenter · object permanence · progress% · verb ·
@@ -7,7 +7,7 @@
 import json, os
 
 ROOT = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config'
-SRC = DST = os.path.join(ROOT, 'story.json')   # rename ทีหลังเมื่อเคาะชื่อ
+SRC = DST = os.path.join(ROOT, 'showhow.json')   # rename ทีหลังเมื่อเคาะชื่อ
 
 raw = open(SRC, encoding='utf-8').read()
 # ── rename แบบข้อความดิบ (ครอบ UI ที่อ้างถึงด้วย) ──
@@ -227,4 +227,4 @@ def retext(n):
 walk(cfg['phases'], retext)
 
 json.dump(cfg, open(DST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print('✓ story.json (เนื้อหา v4) →', os.path.getsize(DST), 'bytes')
+print('✓ showhow.json (เนื้อหา v4) →', os.path.getsize(DST), 'bytes')

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# story-v2-arc.py — patch story.json: โครงเรื่อง 2 ชั้น + ความยาว 10-60 วิ/อัตโนมัติ + ท่าเปิด
-# แก้จาก story.json ตัวปัจจุบัน (ไม่ใช่ bootstrap ใหม่) · รันซ้ำได้ (idempotent)
+# showhow-v2-arc.py — patch showhow.json: โครงเรื่อง 2 ชั้น + ความยาว 10-60 วิ/อัตโนมัติ + ท่าเปิด
+# showhow-v2 (ประวัติ · one-shot รันไปแล้ว) — แก้จาก config ตัวปัจจุบัน (ไม่ใช่ bootstrap ใหม่) · รันซ้ำได้ (idempotent)
 import json, os, copy
 
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/story.json'
+P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow.json'
 cfg = json.load(open(P, encoding='utf-8'))
 OPS = {o['id']: o for o in cfg['ops']}
 V = cfg['values']
@@ -172,7 +172,7 @@ OPS['stFrame']['refs'] = {
 }
 
 json.dump(cfg, open(P, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print('✓ story-v2 (arc) →', os.path.getsize(P), 'bytes')
+print('✓ showhow-v2 (arc) →', os.path.getsize(P), 'bytes')
 
 # ═══════════════ 6) UI ═══════════════
 SETUP = cfg['phases'][0]['form'][0]
