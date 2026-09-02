@@ -3315,7 +3315,7 @@
           },
           {
            "el": "text",
-           "value": "มีงานที่เลือกใช้แต่ยังไม่มีรูป — ใส่รูปของหลักก่อน (สูตรล็อกหน้าตาของตามรูปจริง)",
+           "value": "บางงานยังไม่มีรูปพื้นที่ — หมีจะสร้างพื้นที่ให้เอง ผลอาจไม่ตรงบ้านจริง (แนบรูปได้ที่หัวข้อ 2)",
            "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -3349,37 +3349,15 @@
           "b": "auto"
          },
          "disabledWhen": {
-          "op": "or",
-          "list": [
-           {
-            "op": "eq",
-            "a": {
-             "op": "count",
-             "from": "products",
-             "where": "enabled=true"
-            },
-            "b": 0
-           },
-           {
-            "op": "not",
-            "a": {
-             "op": "eq",
-             "a": {
-              "op": "count",
-              "from": "products",
-              "where": "enabled=true"
-             },
-             "b": {
-              "op": "count",
-              "from": "products",
-              "where": "enabled=true",
-              "slot": "image"
-             }
-            }
-           }
-          ]
+          "op": "eq",
+          "a": {
+           "op": "count",
+           "from": "products",
+           "where": "enabled=true"
+          },
+          "b": 0
          },
-         "reason": "ทุกงานที่ใช้ต้องมีรูปของหลักก่อน"
+         "reason": "เพิ่มงานอย่างน้อย 1 งาน แล้วติ๊ก \"ใช้\" ก่อน"
         },
         {
          "el": "gen-phase",
@@ -3408,37 +3386,15 @@
          },
          "className": "w-full justify-center !h-16 !rounded-2xl !text-[18px] min-[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
          "disabledWhen": {
-          "op": "or",
-          "list": [
-           {
-            "op": "eq",
-            "a": {
-             "op": "count",
-             "from": "products",
-             "where": "enabled=true"
-            },
-            "b": 0
-           },
-           {
-            "op": "not",
-            "a": {
-             "op": "eq",
-             "a": {
-              "op": "count",
-              "from": "products",
-              "where": "enabled=true"
-             },
-             "b": {
-              "op": "count",
-              "from": "products",
-              "where": "enabled=true",
-              "slot": "image"
-             }
-            }
-           }
-          ]
+          "op": "eq",
+          "a": {
+           "op": "count",
+           "from": "products",
+           "where": "enabled=true"
+          },
+          "b": 0
          },
-         "reason": "เพิ่ม/ติ๊กใช้งาน + ใส่รูปของหลักให้ครบก่อน",
+         "reason": "เพิ่มงานอย่างน้อย 1 งาน แล้วติ๊ก \"ใช้\" ก่อน",
          "when": {
           "op": "eq",
           "a": "{values.mode}",
@@ -4128,20 +4084,22 @@
            "card": [
             {
              "el": "row",
-             "className": "items-center gap-3.5 mb-2",
+             "className": "items-center gap-3 mb-1",
              "style": {
               "flexWrap": "nowrap"
              },
              "card": [
               {
                "el": "box",
-               "className": "w-[46px] h-[46px] rounded-2xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
+               "className": "w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
+               "style": {
+                "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #1e3a8a))"
+               },
                "card": [
                 {
-                 "el": "icon",
-                 "icon": "photo_camera",
-                 "textSize": "text-[22px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                 "el": "text",
+                 "value": "1",
+                 "className": "!text-[18px] font-black !text-white"
                 }
                ]
               },
@@ -4150,35 +4108,465 @@
                "className": "flex-1 min-w-0 flex flex-col gap-0.5",
                "card": [
                 {
-                 "el": "text",
-                 "value": "รูปของหลักที่จะใช้",
-                 "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "งานนี้ทำอะไร",
+                   "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
+                  },
+                  {
+                   "el": "text",
+                   "value": "บังคับ",
+                   "className": "!text-[12px] font-black px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap !bg-[var(--ev-accent)] !text-white"
+                  }
+                 ]
                 },
                 {
                  "el": "text",
-                 "value": "รูปแรก = รูปหลัก — หมีล็อกรูปทรง สี วัสดุ ตามรูปที่แนบทุกมุม",
+                 "value": "บอกสั้น ๆ ว่าจะทำอะไรกับพื้นที่ไหน — หมีใช้ประโยคนี้ตั้งต้นทั้งเรื่อง",
                  "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "input",
+             "field": "name",
+             "placeholder": "เช่น จัดครัวใหม่ · ล้างแอร์ · ถางหญ้าหน้าบ้าน · ปลูกผักสลัดในระเบียง",
+             "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5 flex flex-col gap-3.5",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-3 mb-1",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
+               "style": {
+                "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #1e3a8a))"
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "2",
+                 "className": "!text-[18px] font-black !text-white"
                 }
                ]
               },
               {
                "el": "box",
-               "className": "shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[var(--ev-accent)]/10 self-center",
+               "className": "flex-1 min-w-0 flex flex-col gap-0.5",
                "card": [
                 {
-                 "el": "icon",
-                 "icon": "filter_5",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "พื้นที่ที่จะถ่าย",
+                   "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
+                  },
+                  {
+                   "el": "text",
+                   "value": "แนะนำอย่างยิ่ง",
+                   "className": "!text-[12px] font-black px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap !bg-[var(--ev-accent)]/[0.14] !text-[var(--ev-accent)]"
+                  }
+                 ]
                 },
                 {
                  "el": "text",
-                 "value": "สูงสุด 5 มุม",
-                 "className": "!text-[13px] min-[640px]:!text-[12px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                 "value": "แนบรูปจริงได้ = หมีล็อกให้เป็นที่เดิมทุกฉาก · ไม่มีรูปก็ได้ หมีสร้างให้จากคำบรรยาย",
+                 "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
                 }
                ]
               }
              ]
+            },
+            {
+             "el": "text",
+             "value": "รูปพื้นที่จริง (สูงสุด 2 รูป)",
+             "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+            },
+            {
+             "el": "box",
+             "className": "flex flex-row flex-wrap gap-3 items-stretch",
+             "card": [
+              {
+               "el": "box",
+               "className": "relative w-[104px] min-[560px]:w-[150px] shrink-0",
+               "card": [
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.room1}",
+                 "aspect": "1:1",
+                 "style": {
+                  "borderRadius": "16px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]"
+                },
+                {
+                 "el": "button",
+                 "action": "hook",
+                 "fn": "clearSlot",
+                 "to": "room1",
+                 "label": "",
+                 "icon": "close",
+                 "variant": "ghost",
+                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
+                }
+               ],
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.slots.room1}",
+                 "b": ""
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "w-full min-[560px]:w-[150px] aspect-auto min-[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col gap-2.5 p-2.5 min-[560px]:justify-center",
+               "card": [
+                {
+                 "el": "upload",
+                 "label": "",
+                 "placeholder": "อัพโหลด",
+                 "icon": "upload",
+                 "into": "room1",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                },
+                {
+                 "el": "pick-button",
+                 "label": "เลือกภาพ",
+                 "icon": "photo_library",
+                 "filter": "image",
+                 "into": "room1",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.slots.room1}",
+                "b": ""
+               }
+              },
+              {
+               "el": "box",
+               "className": "relative w-[104px] min-[560px]:w-[150px] shrink-0",
+               "card": [
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.room2}",
+                 "aspect": "1:1",
+                 "style": {
+                  "borderRadius": "16px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]"
+                },
+                {
+                 "el": "button",
+                 "action": "hook",
+                 "fn": "clearSlot",
+                 "to": "room2",
+                 "label": "",
+                 "icon": "close",
+                 "variant": "ghost",
+                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
+                }
+               ],
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.slots.room2}",
+                 "b": ""
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "w-full min-[560px]:w-[150px] aspect-auto min-[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col gap-2.5 p-2.5 min-[560px]:justify-center",
+               "card": [
+                {
+                 "el": "upload",
+                 "label": "",
+                 "placeholder": "อัพโหลด",
+                 "icon": "upload",
+                 "into": "room2",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                },
+                {
+                 "el": "pick-button",
+                 "label": "เลือกภาพ",
+                 "icon": "photo_library",
+                 "filter": "image",
+                 "into": "room2",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.slots.room2}",
+                "b": ""
+               }
+              },
+              {
+               "el": "row",
+               "className": "flex-1 min-w-[220px] items-center gap-3.5 bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/25 rounded-2xl p-4",
+               "style": {
+                "flexWrap": "nowrap"
+               },
+               "card": [
+                {
+                 "el": "box",
+                 "className": "w-[42px] h-[42px] rounded-xl bg-[var(--ev-accent)]/[0.14] flex items-center justify-center shrink-0",
+                 "card": [
+                  {
+                   "el": "icon",
+                   "icon": "lightbulb",
+                   "textSize": "text-[20px]",
+                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ยังไม่ได้แนบรูปพื้นที่",
+                   "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-[var(--ev-accent)]"
+                  },
+                  {
+                   "el": "text",
+                   "value": "ไม่มีรูปก็ผลิตได้ — หมีจะจินตนาการพื้นที่จากคำบรรยาย แต่แนบรูปจริงแล้วตรงบ้านกว่ามาก",
+                   "className": "!text-[14px] min-[640px]:!text-[13px] !text-[var(--ev-accent)] opacity-80 leading-relaxed"
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.slots.room1}",
+                "b": ""
+               }
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2",
+             "card": [
+              {
+               "el": "text",
+               "value": "พื้นที่นี้หน้าตาเป็นยังไง",
+               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+              },
+              {
+               "el": "input",
+               "field": "room",
+               "placeholder": "เช่น ครัวเล็กผนังขาว ตู้ไม้อ่อน หน้าต่างบานใหญ่ทางซ้าย",
+               "className": "!h-14 !px-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px]"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5 flex flex-col gap-3.5",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-3 mb-1",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
+               "style": {
+                "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #1e3a8a))"
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "3",
+                 "className": "!text-[18px] font-black !text-white"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ก่อน → หลัง",
+                   "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
+                  },
+                  {
+                   "el": "text",
+                   "value": "แนะนำอย่างยิ่ง",
+                   "className": "!text-[12px] font-black px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap !bg-[var(--ev-accent)]/[0.14] !text-[var(--ev-accent)]"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "หัวใจของคลิป — ยิ่งบอก \"ก่อน\" ชัด คนดูยิ่งเห็นการเปลี่ยนแปลงชัด",
+                 "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2",
+             "card": [
+              {
+               "el": "text",
+               "value": "ตอนนี้สภาพเป็นยังไง",
+               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+              },
+              {
+               "el": "textarea",
+               "field": "before",
+               "placeholder": "เช่น เคาน์เตอร์รก จานชามกองรวมกัน พื้นยังไม่ได้ทำความสะอาด",
+               "className": "!min-h-[96px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2",
+             "card": [
+              {
+               "el": "text",
+               "value": "อยากให้จบแบบไหน",
+               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+              },
+              {
+               "el": "input",
+               "field": "goal",
+               "placeholder": "เช่น ครัวโล่ง หยิบของง่าย ดูสบายตา",
+               "className": "!h-14 !px-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px]"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5 flex flex-col gap-3.5",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-3 mb-1",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
+               "style": {
+                "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #1e3a8a))"
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "4",
+                 "className": "!text-[18px] font-black !text-white"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ของที่จะใช้",
+                   "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
+                  },
+                  {
+                   "el": "text",
+                   "value": "ไม่บังคับ",
+                   "className": "!text-[12px] font-black px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap !bg-[var(--ev-text)]/[0.08] opacity-70"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "ชั้นวาง กล่อง ต้นไม้ อุปกรณ์ — แนบรูปแล้วหมีล็อกให้เหมือนของจริง 100%",
+                 "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "งานที่ไม่มีของหลัก (ล้างบ้าน · ถางหญ้า · ขัดพื้น · ทาสี) ข้ามหัวข้อนี้ไปได้เลย",
+             "className": "!text-[13.5px] min-[640px]:!text-[13px] opacity-55 leading-relaxed -mt-1"
+            },
+            {
+             "el": "text",
+             "value": "รูปของ (สูงสุด 5 มุม)",
+             "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
             },
             {
              "el": "box",
@@ -4578,271 +4966,6 @@
                  "b": ""
                 }
                }
-              },
-              {
-               "el": "row",
-               "className": "flex-1 min-w-[220px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-4",
-               "style": {
-                "flexWrap": "nowrap"
-               },
-               "card": [
-                {
-                 "el": "box",
-                 "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
-                 "card": [
-                  {
-                   "el": "icon",
-                   "icon": "warning",
-                   "textSize": "text-[20px]",
-                   "className": "!text-amber-500 leading-none flex items-center justify-center"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ยังไม่มีรูปของหลักที่จะใช้",
-                   "className": "!text-[16px] min-[640px]:!text-[15px] font-bold !text-amber-600"
-                  },
-                  {
-                   "el": "text",
-                   "value": "ต้องเลือกภาพอย่างน้อย 1 ภาพถึงจะผลิตได้",
-                   "className": "!text-[14px] min-[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
-                  }
-                 ]
-                }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.image}",
-                "b": ""
-               }
-              }
-             ]
-            },
-            {
-             "el": "row",
-             "className": "items-center gap-2.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl px-3.5 py-2.5 mt-1",
-             "style": {
-              "flexWrap": "nowrap"
-             },
-             "card": [
-              {
-               "el": "icon",
-               "icon": "check_circle",
-               "textSize": "text-[18px]",
-               "className": "!text-green-600 leading-none flex items-center justify-center"
-              },
-              {
-               "el": "text",
-               "value": "มีรูปหลักแล้ว — พร้อมผลิต",
-               "className": "!text-[14px] min-[640px]:!text-[13px] !text-green-600 font-bold"
-              }
-             ],
-             "when": "item.slots.image!="
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-4 min-[640px]:p-5 flex flex-col gap-3.5",
-           "card": [
-            {
-             "el": "row",
-             "className": "items-center gap-3.5 mb-2",
-             "style": {
-              "flexWrap": "nowrap"
-             },
-             "card": [
-              {
-               "el": "box",
-               "className": "w-[46px] h-[46px] rounded-2xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "home_work",
-                 "textSize": "text-[22px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "พื้นที่ที่จะถ่าย",
-                 "className": "!text-[20px] min-[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
-                },
-                {
-                 "el": "text",
-                 "value": "แนบรูปพื้นที่จริงได้ = หมีล็อกให้เป็นห้องเดิมทุกฉาก · ไม่มีรูปก็ได้ หมีสร้างพื้นที่ให้จากคำบรรยาย",
-                 "className": "!text-[14px] min-[640px]:!text-[13px] opacity-60 leading-relaxed"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-row flex-wrap gap-3 items-stretch",
-             "card": [
-              {
-               "el": "box",
-               "className": "relative w-[104px] min-[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.room1}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "room1",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.room1}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full min-[560px]:w-[150px] aspect-auto min-[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col gap-2.5 p-2.5 min-[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "room1",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "room1",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.room1}",
-                "b": ""
-               }
-              },
-              {
-               "el": "box",
-               "className": "relative w-[104px] min-[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.room2}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "room2",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-9 !h-9 min-[640px]:!w-8 min-[640px]:!h-8 !rounded-full !px-0 !bg-white/95 !text-red-500 !border-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.room2}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full min-[560px]:w-[150px] aspect-auto min-[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row min-[560px]:flex-col gap-2.5 p-2.5 min-[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "room2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "room2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 min-[560px]:flex-none min-[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] min-[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.room2}",
-                "b": ""
-               }
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-2 mt-1",
-             "card": [
-              {
-               "el": "text",
-               "value": "พื้นที่นี้หน้าตาเป็นยังไง",
-               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-              },
-              {
-               "el": "input",
-               "field": "room",
-               "placeholder": "เช่น ครัวเล็กผนังขาว ตู้ไม้อ่อน หน้าต่างบานใหญ่ทางซ้าย",
-               "className": "!h-14 !px-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px]"
               }
              ]
             },
@@ -4852,14 +4975,51 @@
              "card": [
               {
                "el": "text",
-               "value": "สภาพ \"ก่อน\" เริ่มทำ",
+               "value": "ของชิ้นนี้คืออะไร — จุดเด่น / ขนาด / วัสดุ",
                "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "textarea",
-               "field": "before",
-               "placeholder": "เช่น เคาน์เตอร์ครัวรก จานชามกองรวมกัน ของวางเต็มโต๊ะ",
-               "className": "!min-h-[96px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
+               "field": "description",
+               "placeholder": "เช่น ชั้นเหล็กพ่นสีขาว 4 ชั้น รับน้ำหนักชั้นละ 8 กก. ประกอบเองได้",
+               "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "group",
+           "collapsible": true,
+           "startOpen": false,
+           "className": "!rounded-2xl !p-4 min-[640px]:!p-5 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+           "head": [
+            {
+             "el": "icon",
+             "icon": "tune",
+             "textSize": "text-[18px]",
+             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+            },
+            {
+             "el": "text",
+             "value": "ขั้นสูง — ไอเดีย · โทน · ราคา · โปรโมชั่น · CTA",
+             "className": "!text-[17px] min-[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
+            }
+           ],
+           "card": [
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2",
+             "card": [
+              {
+               "el": "text",
+               "value": "ไอเดียเพิ่มเติมที่อยากให้มี",
+               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+              },
+              {
+               "el": "input",
+               "field": "idea",
+               "className": "!h-14 !px-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px]"
               }
              ]
             },
@@ -4869,50 +5029,23 @@
              "card": [
               {
                "el": "text",
-               "value": "ผลลัพธ์ \"หลัง\" ที่อยากได้ (ไม่บังคับ)",
+               "value": "โทน/บรรยากาศของงานนี้",
                "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "input",
-               "field": "goal",
-               "placeholder": "เช่น ครัวโล่ง หยิบของง่าย ดูสบายตา",
+               "field": "tone",
                "className": "!h-14 !px-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px]"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "row",
-           "className": "gap-3",
-           "style": {
-            "flexWrap": "nowrap"
-           },
-           "card": [
-            {
-             "el": "box",
-             "className": "flex flex-col gap-2 flex-1 min-w-0",
-             "card": [
-              {
-               "el": "text",
-               "value": "ชื่องาน / ของหลัก *",
-               "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-              },
-              {
-               "el": "input",
-               "field": "name",
-               "placeholder": "เช่น ชั้นวางของ 4 ชั้น / ชุดปลูกผักสลัด",
-               "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
               }
              ]
             },
             {
              "el": "box",
-             "className": "flex flex-col gap-2 w-full min-[640px]:w-[180px]",
+             "className": "flex flex-col gap-2",
              "card": [
               {
                "el": "text",
-               "value": "ราคา (ไม่บังคับ)",
+               "value": "ราคา",
                "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
@@ -4922,49 +5055,7 @@
                "className": "!h-14 !px-4 !rounded-xl !text-[20px] min-[640px]:!text-[19px]"
               }
              ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-2",
-           "card": [
-            {
-             "el": "text",
-             "value": "ของหลักที่ใช้ — จุดเด่น / คุณสมบัติ",
-             "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
             },
-            {
-             "el": "textarea",
-             "field": "description",
-             "placeholder": "เช่น ชั้นเหล็กพ่นสีขาว 4 ชั้น รับน้ำหนักชั้นละ 8 กก. ประกอบเองได้ — ยิ่งละเอียด บทยิ่งตรง",
-             "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] min-[640px]:!text-[18px] !leading-relaxed"
-            }
-           ]
-          },
-          {
-           "el": "group",
-           "collapsible": true,
-           "className": "!rounded-2xl bg-[var(--ev-surface)]",
-           "head": [
-            {
-             "el": "icon",
-             "icon": "local_offer",
-             "textSize": "text-[18px]",
-             "className": "opacity-40"
-            },
-            {
-             "el": "text",
-             "value": "โปรโมชั่น + CTA",
-             "className": "!text-[13px] font-bold !text-[var(--ev-text)]"
-            },
-            {
-             "el": "text",
-             "value": "(ไม่บังคับ)",
-             "className": "!text-[13px] opacity-30"
-            }
-           ],
-           "card": [
             {
              "el": "box",
              "className": "grid grid-cols-1 min-[640px]:grid-cols-2 gap-3",
@@ -5379,7 +5470,7 @@
           },
           {
            "el": "text",
-           "value": "มีงานที่เลือกใช้แต่ยังไม่มีรูป — ใส่รูปของหลักก่อน (สูตรล็อกหน้าตาของตามรูปจริง)",
+           "value": "บางงานยังไม่มีรูปพื้นที่ — หมีจะสร้างพื้นที่ให้เอง ผลอาจไม่ตรงบ้านจริง (แนบรูปได้ที่หัวข้อ 2)",
            "className": "!text-[15px] min-[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -6586,37 +6677,15 @@
                },
                "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold border border-[var(--ev-accent)]/40 !bg-[var(--ev-surface)] !text-[var(--ev-accent)] px-4 shrink-0 whitespace-nowrap",
                "disabledWhen": {
-                "op": "or",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": {
-                   "op": "count",
-                   "from": "products",
-                   "where": "enabled=true"
-                  },
-                  "b": 0
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": {
-                    "op": "count",
-                    "from": "products",
-                    "where": "enabled=true"
-                   },
-                   "b": {
-                    "op": "count",
-                    "from": "products",
-                    "where": "enabled=true",
-                    "slot": "image"
-                   }
-                  }
-                 }
-                ]
+                "op": "eq",
+                "a": {
+                 "op": "count",
+                 "from": "products",
+                 "where": "enabled=true"
+                },
+                "b": 0
                },
-               "reason": "ทุกงานที่ใช้ต้องมีรูปของหลักก่อน"
+               "reason": "เพิ่มงานอย่างน้อย 1 งาน แล้วติ๊ก \"ใช้\" ก่อน"
               },
               {
                "el": "gen-phase",
