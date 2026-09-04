@@ -4252,6 +4252,100 @@
                 },
                 {
                   "el": "row",
+                  "className": "items-center gap-3.5 bg-red-500/[0.07] border border-red-500/25 rounded-2xl p-3.5",
+                  "style": {
+                    "flexWrap": "nowrap"
+                  },
+                  "card": [
+                    {
+                      "el": "box",
+                      "className": "w-[40px] h-[40px] rounded-xl bg-red-500/[0.14] flex items-center justify-center shrink-0",
+                      "card": [
+                        {
+                          "el": "icon",
+                          "icon": "error",
+                          "textSize": "text-[20px]",
+                          "className": "!text-red-500 leading-none flex items-center justify-center"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-1 flex-1 min-w-0",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": {
+                            "op": "concat",
+                            "parts": [
+                              "เขียนบทไม่สำเร็จ ",
+                              {
+                                "op": "count",
+                                "from": "products",
+                                "where": "status=error"
+                              },
+                              " สินค้า — ยังไม่ได้เริ่มผลิต"
+                            ]
+                          },
+                          "className": "!text-[15px] min-[640px]:!text-[14px] !text-red-500 font-bold leading-relaxed"
+                        },
+                        {
+                          "el": "text",
+                          "value": "กดปุ่มเริ่มอีกครั้งเพื่อลองใหม่ · ถ้ากดหลายครั้งแล้วยังไม่ผ่าน ให้เข้า “จัดการสินค้า” แล้วลองแก้ชื่อหรือจุดเด่นให้สั้นลง (บางคำทำให้ AI ไม่ยอมเขียนบทให้)",
+                          "className": "!text-[13.5px] min-[640px]:!text-[13px] !text-red-500/85 leading-relaxed"
+                        }
+                      ]
+                    }
+                  ],
+                  "when": {
+                    "op": "and",
+                    "a": {
+                      "op": "not",
+                      "a": {
+                        "op": "or",
+                        "list": [
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "running"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "cooldown"
+                          },
+                          {
+                            "op": "eq",
+                            "a": "{values.__runState}",
+                            "b": "retrying"
+                          }
+                        ]
+                      }
+                    },
+                    "b": {
+                      "op": "and",
+                      "a": {
+                        "op": "eq",
+                        "a": {
+                          "op": "count",
+                          "from": "tasks"
+                        },
+                        "b": 0
+                      },
+                      "b": {
+                        "op": "gt",
+                        "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "status=error"
+                        },
+                        "b": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "el": "row",
                   "className": "items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3.5",
                   "style": {
                     "flexWrap": "nowrap"
