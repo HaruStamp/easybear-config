@@ -6880,16 +6880,88 @@
                                   }
                                 },
                                 "b": {
+                                  "op": "and",
+                                  "a": {
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "where": "status=error"
+                                    },
+                                    "b": 0
+                                  },
+                                  "b": {
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "sub",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      }
+                                    },
+                                    "b": 0
+                                  }
+                                }
+                              },
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-red-500"
+                            },
+                            {
+                              "el": "text",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "คลิปครบแล้ว ",
+                                  {
+                                    "op": "count",
+                                    "from": "tasks",
+                                    "where": "status=error",
+                                    "slot": "video"
+                                  },
+                                  " ตัว แต่ครั้งล่าสุดที่สั่งทำใหม่ไม่สำเร็จ — ของเดิมยังใช้ได้ตามปกติ · ถ้าจะลองใหม่ กดปุ่ม “Gen ใหม่” ที่การ์ดคลิปข้างล่าง"
+                                ]
+                              },
+                              "when": {
+                                "op": "and",
+                                "a": {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "running"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "cooldown"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.__runState}",
+                                        "b": "retrying"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "b": {
                                   "op": "gt",
                                   "a": {
                                     "op": "count",
                                     "from": "tasks",
-                                    "where": "status=error"
+                                    "where": "status=error",
+                                    "slot": "video"
                                   },
                                   "b": 0
                                 }
                               },
-                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold truncate !text-red-500"
+                              "className": "!text-[13.5px] min-[640px]:!text-[13px] font-bold !text-amber-500"
                             },
                             {
                               "el": "text",
@@ -7271,13 +7343,32 @@
                                   }
                                 },
                                 "b": {
-                                  "op": "gt",
+                                  "op": "and",
                                   "a": {
-                                    "op": "count",
-                                    "from": "tasks",
-                                    "where": "status=error"
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "count",
+                                      "from": "tasks",
+                                      "where": "status=error"
+                                    },
+                                    "b": 0
                                   },
-                                  "b": 0
+                                  "b": {
+                                    "op": "gt",
+                                    "a": {
+                                      "op": "sub",
+                                      "a": {
+                                        "op": "count",
+                                        "from": "tasks"
+                                      },
+                                      "b": {
+                                        "op": "count",
+                                        "from": "tasks",
+                                        "slot": "video"
+                                      }
+                                    },
+                                    "b": 0
+                                  }
                                 }
                               },
                               "className": "justify-center !h-12 !rounded-xl !text-[15px] font-bold !bg-gradient-to-b !from-[#ef5350] !to-[#d32f2f] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap"
