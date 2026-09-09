@@ -393,28 +393,29 @@ LBL_CLS = ('!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-
 SUB_CLS = '!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5'
 
 
+def field_label(icon, text):
+    """ป้ายหัวช่อง = ไอคอนนำหน้า + ข้อความ (แบบเดียวกับ FieldLabel ของ hardsell · พี่หมีสั่ง 2026-09-09)
+       ★ใช้ชุด class ของ minimal เอง ไม่ลอก class ของ hardsell มา — เอาแค่ 'ทรง' ไม่เอาธีม"""
+    return {'el': 'row', 'className': 'items-center gap-1.5 px-0.5', 'style': {'flexWrap': 'nowrap'}, 'card': [
+        {'el': 'icon', 'icon': icon, 'textSize': 'text-[16px]',
+         'className': '!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0'},
+        {'el': 'text', 'value': text, 'className': LBL_CLS + ' !px-0'},
+    ]}
+
+
 def len_picker():
-    """การ์ดเลือกความยาว — วางในกลุ่ม 3 การผลิต ต่อจากตัวนับจำนวนคลิป (ชุด class ยกจากตัวนับตัวนั้นมาเลย)"""
-    return {'el': 'box', 'className': 'flex flex-col gap-2.5', 'card': [
-        {'el': 'box', 'className': 'flex flex-col gap-1', 'card': [
-            {'el': 'text', 'value': 'ความยาวคลิป', 'className': LBL_CLS},
-            {'el': 'text', 'className': SUB_CLS,
-             'value': 'ยาวขึ้น = เรื่องยาวขึ้น ไม่ใช่คลิปเดิมยืดออก · หมีเขียนบทรอบเดียวให้จบพอดีตามวินาทีที่เลือก'},
-        ]},
+    """ความยาวคลิป — toggle สั้น ๆ 10/20/30 วิ ไม่มีคำอธิบาย (พี่หมีสั่งให้ทำแบบ hardsell)
+       🪤 ตั้งใจไม่มีบรรทัดบอกจำนวนช่วง/โควตาแล้ว — ข้อมูลนั้นยังโผล่ตอนรันใน log ('กำลังสร้างวิดีโอช่วงที่ 2')"""
+    return {'el': 'box', 'className': 'flex flex-col gap-1.5', 'card': [
+        field_label('timer', 'ความยาวคลิป'),
         {'el': 'segmented', 'field': 'svSec',
-         'labelClass': '!text-[18px] @[640px]:!text-[17px]',
-         'options': [{'value': '10', 'label': '10 วินาที', 'icon': 'timer'},
-                     {'value': '20', 'label': '20 วินาที', 'icon': 'timer'},
-                     {'value': '30', 'label': '30 วินาที', 'icon': 'timer'}],
+         'labelClass': '!text-[16px] @[640px]:!text-[15px]',
+         'options': [{'value': '10', 'label': '10 วิ'},
+                     {'value': '20', 'label': '20 วิ'},
+                     {'value': '30', 'label': '30 วิ'}],
          'selClass': '!bg-[var(--ev-accent)] !text-white !border-transparent',
          'className': ('!min-h-[48px] @[420px]:!min-h-0 [&>div:last-child]:!grid '
-                       '[&>div:last-child]:!grid-cols-3 @[420px]:[&>div:last-child]:!flex')},
-        # ★บอกราคาไปเลยตั้งแต่ตอนเลือก — ยาวขึ้น = ยิงโมเดลวิดีโอมากขึ้นตามตรง ไม่ใช่ของฟรี
-        {'el': 'text', 'when': 'values.svSec>10', 'className': SUB_CLS + ' !opacity-90',
-         'value': {'op': 'concat', 'parts': [
-             'คลิปนี้จะถูกสร้างเป็น ',
-             {'op': 'max', 'a': {'op': 'div', 'a': '{values.svSec}', 'b': 10}, 'b': 1},
-             ' ช่วง ช่วงละ 10 วินาที แล้วต่อกันให้อัตโนมัติ — ใช้โควตาวิดีโอเท่าจำนวนช่วง']}},
+                       '[&>div:last-child]:!grid-cols-3')},
     ]}
 
 
@@ -461,7 +462,7 @@ def patch_ui(cfg):
            and n['card'][0].get('el') == 'media-slot':
             n['card'] += extra_board_slots(); n_board += 1
 
-    # ④ ปุ่มเลือกความยาว — กลุ่ม "การผลิต" ต่อจากตัวนับจำนวนคลิป
+    # ④ กลุ่ม "การผลิต" — ★ความยาวคลิปต้องมา **ก่อน** จำนวนคลิป (ลำดับเดียวกับ hardsell) + ป้ายหัวช่องมีไอคอน
     n_pick = 0
     for _, n in walk(cfg.get('phases')):
         if isinstance(n, dict) and n.get('el') == 'group' and isinstance(n.get('card'), list):
@@ -469,9 +470,40 @@ def patch_ui(cfg):
             if '"clipsPerProduct"' in body and '"svSec"' not in body:
                 at = next((i for i, c in enumerate(n['card'])
                            if '"clipsPerProduct"' in json.dumps(c, ensure_ascii=False)), 0)
-                n['card'].insert(at + 1, len_picker()); n_pick += 1
+                n['card'].insert(at, len_picker()); n_pick += 1     # insert(at) = แทรกไว้ข้างหน้า
+    n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
-    return n_seg, n_phase, n_board, n_pick, n_rows
+    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl
+
+
+# ป้ายหัวช่องในหน้าตั้งค่า: (ข้อความเดิม) → (ไอคอน, ข้อความใหม่, คำอธิบายใหม่ · None = เอาคำอธิบายออก)
+SETUP_LABELS = {
+    'ชื่อโปรเจกต์': ('folder', 'ชื่อโปรเจกต์ (ไม่บังคับ)', 'เว้นว่าง = ตั้งให้จากชื่อสินค้าตัวแรก'),
+    'จำนวนคลิป/สินค้า': ('content_copy', 'จำนวนคลิป/สินค้า', 'แต่ละคลิปบท/มุมกล้องต่างกัน · สูงสุด 10'),
+}
+
+
+def patch_setup_labels(cfg):
+    """เติมไอคอนหน้าป้ายหัวช่อง + ย่อคำอธิบายให้กระชับ (พี่หมีสั่ง — ให้หน้าตาเป็นตระกูลเดียวกับ hardsell)"""
+    hit = 0
+    # 🪤 ต้องเก็บรายชื่อกล่องให้ครบ **ก่อน** แก้ — ป้ายใหม่ที่สร้างมีข้อความเดิมอยู่ข้างใน
+    #    ถ้าแก้ไปเดินไป walk จะเดินเข้าไปเจอข้อความนั้นแล้วแทนตัวเองซ้อนไปเรื่อย ๆ (RecursionError)
+    for box in [b for _, b in list(walk(cfg.get('phases')))]:
+        if not (isinstance(box, dict) and isinstance(box.get('card'), list)): continue
+        for i, c in enumerate(box['card']):
+            # 🪤 value เป็น Binding (dict) ได้ — ต้องเช็คว่าเป็นสตริงก่อน ไม่งั้น `in SETUP_LABELS` โยน unhashable
+            if not (isinstance(c, dict) and c.get('el') == 'text'
+                    and isinstance(c.get('value'), str) and c['value'] in SETUP_LABELS): continue
+            icon, label, sub = SETUP_LABELS[c['value']]
+            box['card'][i] = field_label(icon, label)
+            # คำอธิบายคือ text ตัวถัดไปในกล่องเดียวกัน — แก้ให้กระชับ หรือถอดทิ้งถ้า sub เป็น None
+            nx = box['card'][i + 1] if i + 1 < len(box['card']) else None
+            if isinstance(nx, dict) and nx.get('el') == 'text' and isinstance(nx.get('value'), str):
+                if sub is None: box['card'].pop(i + 1)
+                else: nx['value'] = sub
+            hit += 1
+            break
+    return hit
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -579,11 +611,11 @@ def main():
         patch_queue(cfg)
         patch_plan(cfg)
         patch_ops(cfg)
-        ns, np_, nb, npk, nr = patch_ui(cfg)
+        ns, np_, nb, npk, nr, nl = patch_ui(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl))
 
 
 if __name__ == '__main__':
