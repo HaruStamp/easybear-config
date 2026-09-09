@@ -539,9 +539,34 @@ def patch_ui(cfg):
                 n['card'].insert(at, len_picker()); n_pick += 1     # insert(at) = แทรกไว้ข้างหน้า
     n_chip = patch_step_chips(cfg)
     n_dur = patch_duration_labels(cfg)
+    n_ta = patch_toggle_all(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
-    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur
+    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur, n_ta
+
+
+def patch_toggle_all(cfg):
+    """ปุ่ม "ใช้ทั้งหมด / ปิดทั้งหมด" ในหน้าจัดการสินค้า — ข้อความตกบรรทัดบนมือถือ (พี่หมีเจอ 2026-09-09)
+       🪤 ต้นเหตุ: กลุ่มปุ่มมี `flex-1 min-w-0` ⇒ **ยุบได้ต่ำกว่าความกว้างของข้อความ** แล้วตัวหนังสือก็ตกบรรทัด
+          (min-w-0 ใส่ไว้กันล้น แต่มันกันเกินไป — ของที่ยุบไม่ได้จริง ๆ ไม่ควรใส่)
+       ✅ ถอด min-w-0 ออก ⇒ ความกว้างต่ำสุดของกลุ่ม = ความกว้างข้อความ
+          ถ้าจอแคบจนไม่พอจริง แถวนอกมี `flex-wrap` อยู่แล้ว มันจะขึ้นบรรทัดใหม่ให้เอง = ไม่มีทางล้น
+       + ใส่ whitespace-nowrap ที่ตัวปุ่มเป็นชั้นที่ 2 (กันไว้ตรง ๆ ว่าข้อความห้ามหัก)
+       ★ทั้งสองปุ่มเป็นคู่แฝด แก้พร้อมกันเสมอ"""
+    n_grp = n_btn = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'button' and n.get('action') == 'set-all'): continue
+        cls = n.get('className') or ''
+        if 'whitespace-nowrap' not in cls:
+            n['className'] = (cls + ' whitespace-nowrap').strip(); n_btn += 1
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'row' and isinstance(n.get('card'), list)): continue
+        kids = [c for c in n['card'] if isinstance(c, dict)]
+        if not kids or not all(c.get('action') == 'set-all' for c in kids): continue   # กลุ่มที่มีแต่ปุ่ม set-all
+        cls = n.get('className') or ''
+        if 'min-w-0' in cls:
+            n['className'] = ' '.join(x for x in cls.split() if x != 'min-w-0'); n_grp += 1
+    return n_grp, n_btn
 
 
 def patch_step_chips(cfg):
@@ -716,11 +741,11 @@ def main():
         patch_queue(cfg)
         patch_plan(cfg)
         patch_ops(cfg)
-        ns, np_, nb, npk, nr, nl, nc, nd = patch_ui(cfg)
+        ns, np_, nb, npk, nr, nl, nc, nd, nta = patch_ui(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta))
 
 
 if __name__ == '__main__':
