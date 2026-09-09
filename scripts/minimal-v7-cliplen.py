@@ -345,6 +345,13 @@ def make_segment_op(cfg, base_id, seg):
 
     if base_id == 'mnBoard':
         o['prompt'] = map_strings(o['prompt'], lambda s: _board_seg_text(s, seg, off))
+        # 🎯 ให้บอร์ดช่วงนี้ **เห็นบอร์ดของช่วงก่อนหน้า** — ไม่งั้นมันเจนแยกกันคนละครั้ง แสง/ฉากหลัง/โทนหลุดกันได้
+        #   (พิสูจน์แล้วว่าโมเดลวิดีโอตามบอร์ด 80-90% ⇒ บอร์ดที่หลุดโทนกัน = คลิปหลุดโทนตาม)
+        #   ★ต่อท้าย also ⇒ รูปสินค้ายังเป็นตัวหลัก (product fidelity เป็น hard lock ของแอปนี้ ห้ามลดชั้น)
+        prev = 'board' if seg == 2 else 'board%d' % (seg - 1)
+        o['refs'] = copy.deepcopy(o['refs'])
+        o['refs'].setdefault('also', []).append({'from': 'tasks', 'by': '{item.id}', 'slot': prev})
+        o['prompt'] = map_strings(o['prompt'], lambda s: _board_prev_note(s, seg))
         o['logRun'] = '[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดช่วงที่ %d' % seg
         o['logDone'] = '[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วงที่ %d เสร็จแล้ว' % seg
     else:
@@ -364,6 +371,16 @@ def _shift_label_keys(node, off):
                 old = int(m.group(1))
                 n['key'] = '{values.svSec}|%d' % (old + off)
                 n['fallback'] = ''      # ช่วง 2/3 มีได้เฉพาะตอน svSec>10 ⇒ ไม่มีทางตกมา fallback
+
+
+def _board_prev_note(s, seg):
+    """บอกโมเดลภาพว่ารูปสุดท้ายคือบอร์ดช่วงก่อนหน้า ให้ยึดโทนตาม — แทรกต่อจากกติกาสไตล์ภาพรวม"""
+    anchor = 'กติกาสำคัญ: ใช้ "สินค้าที่แนบมา" เป็นต้นแบบ'
+    if anchor not in s or 'บอร์ดของช่วงก่อนหน้า' in s: return s
+    add = ('กติกาความต่อเนื่อง: รูปสุดท้ายที่แนบมาคือ**บอร์ดของช่วงก่อนหน้าในคลิปเดียวกัน** — '
+           'ต้องใช้โทนสี แสง ฉากหลัง พื้นผิว และสไตล์ตัวหนังสือชุดเดียวกันกับบอร์ดนั้นทุกประการ '
+           'เพื่อให้คลิปที่ต่อกันดูเป็นคลิปเดียว · แต่ **ห้ามลอกภาพในช่องมาซ้ำ** — ฉากในแผงนี้เป็นฉากใหม่ที่เล่าต่อไปข้างหน้า\n\n')
+    return s.replace(anchor, add + anchor, 1)
 
 
 def _board_seg_text(s, seg, off):
@@ -540,9 +557,82 @@ def patch_ui(cfg):
     n_chip = patch_step_chips(cfg)
     n_dur = patch_duration_labels(cfg)
     n_ta = patch_toggle_all(cfg)
+    n_ch = patch_item_chains(cfg)
+    n_bt = patch_board_tiles(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
-    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur, n_ta
+    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur, n_ta, n_ch, n_bt
+
+
+# ปุ่มรายคลิป (ในการ์ดงาน) ต้องทำครบทุกช่วง ไม่ใช่แค่ช่วงแรก (พี่หมีสั่ง 2026-09-09)
+#   gen-button ส่งได้ op เดียว ⇒ คลิป 20/30 วิ กดแล้วได้บอร์ด/วิดีโอใบเดียว **แล้วดูเหมือนเสร็จ**
+#   ✅ engine รองรับ el.chain (รันหลาย op บน item เดียว ผ่าน on.chainItem) แล้ว — แค่เปลี่ยน op → chain
+#   ★ลำดับเดียวกับ stages: ช่วงท้ายก่อน ⇒ slots.board/video ของช่วงแรกยังเป็นตัวชี้ว่า "ครบแล้ว"
+CHAINS = {'mnBoard': ['mnBoard3', 'mnBoard2', 'mnBoard'], 'mnVideo': ['mnVideo3', 'mnVideo2', 'mnVideo']}
+
+
+def patch_item_chains(cfg):
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') in ('gen-button', 'retry-button')): continue
+        base = n.get('op')
+        if base not in CHAINS or n.get('chain'): continue
+        n['chain'] = list(CHAINS[base])
+        hit += 1
+    return hit
+
+
+# ประตูแบบ Binding (ไม่ใช่ predicate string) — ต้องใช้แบบนี้เมื่อจะ **ผสมกับ when เดิม**
+#   🪤 string predicate ('values.svSec>10') เอาไปใส่ใน and/not ไม่ได้ — resolveValue จะอ่านเป็น path/ข้อความ ไม่ใช่เงื่อนไข
+def GT(a, b): return {'op': 'gt', 'a': a, 'b': b}
+def NOT(a): return {'op': 'not', 'a': a}
+def _and(a, b):
+    if b is None: return a
+    assert not isinstance(b, str), 'when เดิมเป็น predicate string — ผสมกับ and ไม่ได้ (ต้องแปลงเป็น Binding ก่อน)'
+    return {'op': 'and', 'a': a, 'b': b}
+
+
+# ── การ์ดงานในโหมดทำทีละขั้น: คลิป 20/30 วิ มีบอร์ดหลายใบ แต่การ์ดโชว์ใบเดียว ────────
+#   ⇒ ผู้ใช้กด "ภาพโอเค — สร้างวิดีโอ" โดยเห็นแผนแค่ครึ่งเดียว (อีกครึ่งไปโผล่ตอนได้คลิปแล้ว = สายไป)
+#   ✅ 10 วิ ใช้ของเดิมทุกพิกเซล (ประตู not(svSec>10) → ไฟล์เซฟเก่าที่ svSec ว่างก็เข้าทางเดิม)
+#      >10 วิ = สลับเป็นแถวไทล์เท่ากันทุกใบ **ไม่ใช่ใบใหญ่ 1 + ใบเล็ก 2** เพราะครึ่งหลังก็ต้องตรวจเท่ากัน
+#   🪤 ป้ายต้องเป็นเลขลอย ๆ (1/2/3) ห้ามใช้คำว่า "ช่วง" — ผู้ใช้ไม่ต้องรู้ว่าเบื้องหลังแบ่งเป็นช่วง
+def patch_board_tiles(cfg):
+    hit = 0
+    # 🪤 ต้องเก็บรายชื่อโหนดให้ครบ**ก่อน**แล้วค่อยแก้ — ของที่แทรกเข้าไปมี media-slot ตัวเดิมอยู่ข้างใน
+    #    ถ้าแก้ระหว่างเดิน walk จะเดินเข้าไปเจอสำเนาแล้วแตกซ้ำไม่รู้จบ (RecursionError · เจอจริง)
+    nodes = [n for _, n in walk(cfg.get('phases')) if isinstance(n, dict) and isinstance(n.get('card'), list)]
+    for n in nodes:
+        # ★ไล่จากท้ายมาหน้า + ห้าม break — ในคอลัมน์สื่อของการ์ดมีกล่องบอร์ด **มากกว่า 1 สถานะ**
+        #   (สถานะ 'รีวิวภาพ' กับสถานะ 'ได้ภาพแล้วรอวิดีโอ' ใช้บอร์ดคนละกล่อง) · เคยแตะแค่กล่องแรกแล้วอีกกล่องยังโชว์ใบเดียว
+        #   ไล่ถอยหลังเพราะการแทรกทำให้ดัชนีตัวหลังเลื่อน
+        for i in range(len(n['card']) - 1, -1, -1):
+            ch = n['card'][i]
+            if not (isinstance(ch, dict) and ch.get('el') == 'box' and isinstance(ch.get('card'), list)): continue
+            ms = ch['card'][0] if ch['card'] else None
+            if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
+
+            single = copy.deepcopy(ch)
+            single['when'] = _and(NOT(GT('{values.svSec}', 10)), ch.get('when'))
+
+            multi = copy.deepcopy(ch)
+            multi['when'] = _and(GT('{values.svSec}', 10), ch.get('when'))
+            tiles = []
+            for k in range(1, 4):
+                slot = 'board' if k == 1 else 'board%d' % k
+                t = {'el': 'box', 'className': 'relative flex-1 min-w-0', 'card': [
+                    dict(copy.deepcopy(ms), src='{item.slots.%s}' % slot, className='ring-2 ring-[var(--ev-accent)]/50 w-full'),
+                    {'el': 'text', 'value': str(k),
+                     'className': ('absolute top-1 left-1 z-20 w-5 h-5 rounded-md bg-white text-[#17253a] '
+                                   '!text-[11px] font-black flex items-center justify-center pointer-events-none')},
+                ]}
+                if k > 1: t['when'] = GT('{values.svSec}', (k - 1) * 10)
+                tiles.append(t)
+            multi['card'][0] = {'el': 'row', 'className': 'gap-1.5 items-start', 'style': {'flexWrap': 'nowrap'}, 'card': tiles}
+
+            n['card'][i:i + 1] = [single, multi]
+            hit += 1
+    return hit
 
 
 def patch_toggle_all(cfg):
@@ -741,11 +831,11 @@ def main():
         patch_queue(cfg)
         patch_plan(cfg)
         patch_ops(cfg)
-        ns, np_, nb, npk, nr, nl, nc, nd, nta = patch_ui(cfg)
+        ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt = patch_ui(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt))
 
 
 if __name__ == '__main__':
