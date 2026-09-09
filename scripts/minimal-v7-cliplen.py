@@ -403,19 +403,50 @@ def field_label(icon, text):
     ]}
 
 
+# ⚡ เครดิตที่โมเดลวิดีโอกินต่อ 1 ช่วง (10 วินาที) — ตัวเลขจากพี่หมี · แก้ที่นี่ที่เดียวแล้วการ์ดคิดใหม่เอง
+CREDIT_PER_SEG = 15
+SEG_COUNT = {'op': 'div', 'a': '{values.svSec}', 'b': 10}                  # จำนวนช่วง = วินาที / 10
+#   🪤 ห้ามตั้งชื่อว่า SEGS — ชนกับ SEGS ที่เป็นรายชื่อ slot ของ el.segments (เคยชนจริง: ทางออกวิดีโอ 8 จุด
+#      กลายเป็นสูตรหารแทนรายชื่อ slot = การรวมคลิปพังทั้งแอป · เทสข้อ ⑥ จับได้)
+CREDIT_TOTAL = {'op': 'mul', 'a': CREDIT_PER_SEG, 'b': dict(SEG_COUNT)}    # เครดิตรวมต่อคลิป
+
+
+def credit_card():
+    """การ์ดเตือนเครดิต — โผล่เฉพาะตอนเลือก 20/30 วิ (พี่หมีสั่ง 2026-09-09)
+       ★ตัวเลขคำนวณจาก values.svSec ทั้งหมด ไม่ได้พิมพ์ค่าตายตัว ⇒ เพิ่มความยาวใหม่วันหลังการ์ดถูกเอง
+       ใช้ทรงการ์ดเตือนสีเหลืองที่แอปนี้ใช้อยู่แล้ว (ชุดเดียวกับ 'ยังไม่มีรูปใบหน้า')"""
+    return {'el': 'row', 'when': 'values.svSec>10',
+            'className': ('items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 '
+                          'rounded-2xl p-3 @[420px]:p-4 mt-0.5'),
+            'style': {'flexWrap': 'nowrap'}, 'card': [
+        {'el': 'box', 'className': 'w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0',
+         'card': [{'el': 'icon', 'icon': 'bolt', 'textSize': 'text-[20px]',
+                   'className': '!text-amber-500 leading-none flex items-center justify-center'}]},
+        {'el': 'box', 'className': 'flex-1 min-w-0 flex flex-col gap-0.5', 'card': [
+            {'el': 'text', 'className': '!text-[16px] @[640px]:!text-[15px] font-bold !text-amber-600',
+             'value': {'op': 'concat', 'parts': [
+                 'คลิป ', '{values.svSec}', ' วินาที ใช้เครดิต ', dict(SEG_COUNT), ' เท่า']}},
+            {'el': 'text', 'className': '!text-[14px] @[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed',
+             'value': {'op': 'concat', 'parts': [
+                 str(CREDIT_PER_SEG), ' เครดิต × ', dict(SEG_COUNT), ' ช่วง = ', dict(CREDIT_TOTAL),
+                 ' เครดิต ต่อ 1 คลิป · ทำหลายคลิปคูณเพิ่มตามจำนวน']}},
+        ]},
+    ]}
+
+
 def len_picker():
-    """ความยาวคลิป — toggle สั้น ๆ 10/20/30 วิ ไม่มีคำอธิบาย (พี่หมีสั่งให้ทำแบบ hardsell)
-       🪤 ตั้งใจไม่มีบรรทัดบอกจำนวนช่วง/โควตาแล้ว — ข้อมูลนั้นยังโผล่ตอนรันใน log ('กำลังสร้างวิดีโอช่วงที่ 2')"""
+    """ความยาวคลิป — toggle สั้น ๆ 10/20/30 วิ (พี่หมีสั่งให้ทำแบบ hardsell)
+       ไม่มีคำอธิบายใต้ toggle · มีแต่การ์ดเตือนเครดิตที่โผล่เฉพาะตอนเลือก 20/30 วิ"""
     return {'el': 'box', 'className': 'flex flex-col gap-1.5', 'card': [
         field_label('timer', 'ความยาวคลิป'),
-        {'el': 'segmented', 'field': 'svSec',
-         'labelClass': '!text-[16px] @[640px]:!text-[15px]',
-         'options': [{'value': '10', 'label': '10 วิ'},
-                     {'value': '20', 'label': '20 วิ'},
-                     {'value': '30', 'label': '30 วิ'}],
-         'selClass': '!bg-[var(--ev-accent)] !text-white !border-transparent',
-         'className': ('!min-h-[48px] @[420px]:!min-h-0 [&>div:last-child]:!grid '
-                       '[&>div:last-child]:!grid-cols-3')},
+        # ★การ์ดเดียว 3 ตัวเลือก ทรงเดียวกับ "สไตล์ตัวอักษร" (พี่หมีสั่ง) — `contained` = กรอบเดียวครอบทั้งชุด
+        #   🪤 ไม่ตั้ง mobile.cols = 1 เหมือนสไตล์ตัวอักษร เพราะป้ายสั้น ("10 วิ") 3 ช่องเรียงแถวเดียวได้แม้จอ 390
+        {'el': 'grid-select', 'field': 'svSec', 'cols': 3, 'contained': True,
+         # ★2 บรรทัดต่อตัวเลือก: label = ความยาว · desc = เครดิต (พี่หมีสั่ง — บอกราคาในปุ่มเลย ดีกว่ามีการ์ดเตือนแยก)
+         #   เลขเครดิตคิดจาก CREDIT_PER_SEG ที่เดียว ⇒ แก้ค่าเดียวแล้วทั้ง 3 ตัวเลือกถูกพร้อมกัน
+         'options': [{'value': str(sec), 'label': '%d วิ' % sec,
+                      'desc': 'ใช้ %d เครดิต' % (CREDIT_PER_SEG * segs_of(sec))} for sec in LENS],
+         'className': '!min-h-[48px] @[420px]:!min-h-0'},
     ]}
 
 
@@ -471,9 +502,26 @@ def patch_ui(cfg):
                 at = next((i for i, c in enumerate(n['card'])
                            if '"clipsPerProduct"' in json.dumps(c, ensure_ascii=False)), 0)
                 n['card'].insert(at, len_picker()); n_pick += 1     # insert(at) = แทรกไว้ข้างหน้า
+    n_chip = patch_step_chips(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
-    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl
+    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip
+
+
+def patch_step_chips(cfg):
+    """ชิปแถบขั้นตอน (1 ตั้งค่า · 2 ผลิต · 3 คลังคลิป) — ป้ายห้ามตกบรรทัด (พี่หมีเจอ 2026-09-09)
+       🪤 ต้นเหตุ: ชิปที่ **active** เป็น el:row ซึ่งมี whitespace-nowrap อยู่แล้ว
+          แต่ชิปที่ยังไม่ active เป็น el:button ที่ไม่มี ⇒ หน้าไหนที่ชิปนั้นไม่ active ป้ายก็ตกบรรทัด
+          = ตัวเดียวกันแท้ ๆ แต่หน้าตาต่างกันตามสถานะ — เห็นแล้วงงว่าทำไมบางหน้าตกบางหน้าไม่ตก
+       ⇒ เติม whitespace-nowrap ให้ปุ่มชิปทุกตัว (แถวมี overflow-x-auto อยู่แล้ว เลื่อนได้ ไม่ล้น)"""
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'button' and n.get('to') == '__page'): continue
+        if not (isinstance(n.get('label'), str) and re.match(r'^[1-4] \S', n['label'])): continue
+        cls = n.get('className') or ''
+        if 'whitespace-nowrap' not in cls:
+            n['className'] = (cls + ' whitespace-nowrap').strip(); hit += 1
+    return hit
 
 
 # ป้ายหัวช่องในหน้าตั้งค่า: (ข้อความเดิม) → (ไอคอน, ข้อความใหม่, คำอธิบายใหม่ · None = เอาคำอธิบายออก)
@@ -611,11 +659,11 @@ def main():
         patch_queue(cfg)
         patch_plan(cfg)
         patch_ops(cfg)
-        ns, np_, nb, npk, nr, nl = patch_ui(cfg)
+        ns, np_, nb, npk, nr, nl, nc = patch_ui(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc))
 
 
 if __name__ == '__main__':
