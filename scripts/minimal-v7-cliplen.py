@@ -345,13 +345,24 @@ def make_segment_op(cfg, base_id, seg):
 
     if base_id == 'mnBoard':
         o['prompt'] = map_strings(o['prompt'], lambda s: _board_seg_text(s, seg, off))
-        # 🎯 ให้บอร์ดช่วงนี้ **เห็นบอร์ดของช่วงก่อนหน้า** — ไม่งั้นมันเจนแยกกันคนละครั้ง แสง/ฉากหลัง/โทนหลุดกันได้
+        # 🎯 ให้บอร์ดช่วงนี้ **เห็นบอร์ดที่ผลิตไปแล้ว** — ไม่งั้นมันเจนแยกกันคนละครั้ง แสง/ฉากหลัง/โทนหลุดกันได้
         #   (พิสูจน์แล้วว่าโมเดลวิดีโอตามบอร์ด 80-90% ⇒ บอร์ดที่หลุดโทนกัน = คลิปหลุดโทนตาม)
         #   ★ต่อท้าย also ⇒ รูปสินค้ายังเป็นตัวหลัก (product fidelity เป็น hard lock ของแอปนี้ ห้ามลดชั้น)
-        prev = 'board' if seg == 2 else 'board%d' % (seg - 1)
-        o['refs'] = copy.deepcopy(o['refs'])
-        o['refs'].setdefault('also', []).append({'from': 'tasks', 'by': '{item.id}', 'slot': prev})
-        o['prompt'] = map_strings(o['prompt'], lambda s: _board_prev_note(s, seg))
+        #
+        # 🔴🔴 ต้องอ้าง "ช่วงที่ผลิตไปแล้ว" ไม่ใช่ "ช่วงก่อนหน้าตามเลข" — ผมเขียนผิดทางนี้มาแล้ว 1 รอบ
+        #   ลำดับ op คือ mnBoard3 → mnBoard2 → mnBoard (ช่วงท้ายก่อน · ห้ามสลับ ดูกฎข้างบน)
+        #   ⇒ ตอน mnBoard2 ทำงาน slot `board` **ยังว่าง** · lookupRefs กรอง slot ว่างทิ้ง**เงียบ**
+        #   ⇒ ได้ config ที่หน้าตาเหมือนมีความต่อเนื่อง แต่ไม่เคยแนบรูปสักใบ **และไม่มี error ให้เห็นเลย**
+        #   ✅ สไตล์/แสง/ฉากหลังเป็นของ **สมมาตร** (ใครตามใครก็ได้ ขอให้ชุดเดียวกัน) ⇒ กลับทางแล้วไม่เสียอะไร
+        # ★ช่วง 3 ผลิต **เป็นใบแรก** ⇒ ยังไม่มีอะไรให้อ้าง — ต้องข้าม ไม่ใช่ไปอ้าง board2 ที่ยังว่าง
+        #   (เทสจับได้จริงตอนแก้: 'บอร์ดใบแรกที่ผลิตไม่อ้างบอร์ดใคร')
+        prev = 'board3' if seg == 2 else None
+        if prev:
+            o['refs'] = copy.deepcopy(o['refs'])
+            # 🪤 ประตูรายตัว: ที่ 20 วิ ช่วง 3 ไม่ถูกผลิตเลย ⇒ ref นี้จะชี้ slot ว่าง (ถูกกรองทิ้งเงียบ ไม่พังแต่ก็ไม่ควรมี)
+            #   ใส่ประตูให้ตรงกับ "ช่วงนั้นถูกผลิตจริงไหม" — เจตนาอ่านออกจาก config ไม่ต้องไปนึกเอง
+            o['refs'].setdefault('also', []).append({'from': 'tasks', 'by': '{item.id}', 'slot': prev, 'when': 'values.svSec>20'})
+            o['prompt'] = map_strings(o['prompt'], lambda s: _board_prev_note(s, seg))
         o['logRun'] = '[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดช่วงที่ %d' % seg
         o['logDone'] = '[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วงที่ %d เสร็จแล้ว' % seg
     else:
@@ -373,13 +384,25 @@ def _shift_label_keys(node, off):
                 n['fallback'] = ''      # ช่วง 2/3 มีได้เฉพาะตอน svSec>10 ⇒ ไม่มีทางตกมา fallback
 
 
+def _board_seg1_continuity(cfg):
+    """ช่วงที่ 1 ผลิต **ท้ายสุด** ⇒ เห็นบอร์ดช่วง 3 (หมุด) + ช่วง 2 (ตัวก่อนหน้า) ได้จริงทั้งคู่
+    🪤 ต้อง gate ราย entry ด้วย svSec — คลิป 10 วิ ไม่มี board2/board3 · `also` รองรับ `when` รายตัว
+       (ไม่ gate ก็ไม่พัง เพราะ slot ว่างถูกกรองทิ้ง แต่ gate ไว้ = เจตนาอ่านออกจาก config)"""
+    o = next(x for x in cfg['ops'] if x['id'] == 'mnBoard')
+    also = o.setdefault('refs', {}).setdefault('also', [])
+    for slot, sec in (('board3', 20), ('board2', 10)):   # หมุดก่อน แล้วตัวที่ผลิตติดกันอยู่ท้าย = โมเดลเห็นเป็นตัวล่าสุด
+        also.append({'from': 'tasks', 'by': '{item.id}', 'slot': slot, 'when': 'values.svSec>%d' % sec})
+    o['prompt'] = map_strings(o['prompt'], lambda s: _board_prev_note(s, 1))
+    return 1
+
+
 def _board_prev_note(s, seg):
     """บอกโมเดลภาพว่ารูปสุดท้ายคือบอร์ดช่วงก่อนหน้า ให้ยึดโทนตาม — แทรกต่อจากกติกาสไตล์ภาพรวม"""
     anchor = 'กติกาสำคัญ: ใช้ "สินค้าที่แนบมา" เป็นต้นแบบ'
-    if anchor not in s or 'บอร์ดของช่วงก่อนหน้า' in s: return s
-    add = ('กติกาความต่อเนื่อง: รูปสุดท้ายที่แนบมาคือ**บอร์ดของช่วงก่อนหน้าในคลิปเดียวกัน** — '
+    if anchor not in s or 'บอร์ดของช่วงอื่นในคลิปเดียวกัน' in s: return s
+    add = ('กติกาความต่อเนื่อง: **ถ้ามี**บอร์ดของช่วงอื่นในคลิปเดียวกันแนบมาด้วย (รูปท้าย ๆ) — '
            'ต้องใช้โทนสี แสง ฉากหลัง พื้นผิว และสไตล์ตัวหนังสือชุดเดียวกันกับบอร์ดนั้นทุกประการ '
-           'เพื่อให้คลิปที่ต่อกันดูเป็นคลิปเดียว · แต่ **ห้ามลอกภาพในช่องมาซ้ำ** — ฉากในแผงนี้เป็นฉากใหม่ที่เล่าต่อไปข้างหน้า\n\n')
+           'เพื่อให้คลิปที่ต่อกันดูเป็นคลิปเดียว · แต่ **ห้ามลอกภาพในช่องมาซ้ำ** — ฉากในแผงนี้เป็นฉากของตัวเองตามบทด้านล่าง\n\n')
     return s.replace(anchor, add + anchor, 1)
 
 
@@ -559,6 +582,7 @@ def patch_ui(cfg):
     n_ta = patch_toggle_all(cfg)
     n_ch = patch_item_chains(cfg)
     n_bt = patch_board_tiles(cfg)
+    _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
     return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur, n_ta, n_ch, n_bt
