@@ -373,7 +373,15 @@ def patch_ops(cfg):
     by = {o['id']: o for o in cfg['ops']}
     for o in new: by[o['id']] = o
     cfg['ops'] = [by[i] for i in order if i in by] + [o for o in cfg['ops'] if o['id'] not in order]
-    cfg['stages'] = [{'op': i} for i in order] + [s for s in cfg['stages'] if 'checkpoint' in s]
+    # ⚠️ ทีม hardsell ทักว่า "ความถูกต้องผูกกับลำดับที่มองไม่เห็นในโค้ด = เปราะ" — จริง
+    #   คนที่มาอ่านทีหลังจะนึกว่าเรียงมั่วแล้ว "จัดระเบียบ" ให้เป็น 1→2→3 ⇒ แอปพังเงียบ ไม่มี error
+    #   ⇒ เขียนเหตุผลไว้ **ตรงจุดที่คนจะไปแก้** (engine อ่านแค่ s.op — คีย์อื่นถูกมองข้าม)
+    #   🪤 ถ้าวันไหนเพิ่ม field สถานะจริง (แบบที่ hardsell ใช้) ต้องลบโน้ตนี้ด้วย ไม่งั้นกลายเป็นคำเตือนที่หมดอายุ
+    WHY = ('★ลำดับนี้ตั้งใจกลับด้าน — ช่วงท้ายต้องเสร็จก่อน ห้ามเรียงเป็น 1→2→3 '
+           'เพราะทั้งแอปตัดสิน "คลิปเสร็จหรือยัง" จาก slots.video ของช่วงแรก '
+           '(แกลเลอรี · zip · ประตูปุ่ม · หน้า derived) ⇒ สลับแล้วจะบอกว่าเสร็จตั้งแต่ได้ 10 วิแรก โดยไม่มี error')
+    cfg['stages'] = [({'op': i, '__why': WHY} if i in ('mnBoard3', 'mnVideo3') else {'op': i}) for i in order] \
+        + [s for s in cfg['stages'] if 'checkpoint' in s]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
