@@ -180,6 +180,7 @@ def build_lookups(cfg):
 
     # ── ข้อความ UI ─────────────────────────────────────────────────────────
     lk['lenLabel'] = {'10': '10 วินาที', '20': '20 วินาที', '30': '30 วินาที'}
+    lk['lenSecs'] = {str(x): str(x) for x in LENS}   # เลขล้วน ไว้ประกอบป้ายบนหน้าจอ
     lk['lenScenes'] = {str(s): str(scenes_of(s)) for s in LENS}
     return lk
 
@@ -503,9 +504,10 @@ def patch_ui(cfg):
                            if '"clipsPerProduct"' in json.dumps(c, ensure_ascii=False)), 0)
                 n['card'].insert(at, len_picker()); n_pick += 1     # insert(at) = แทรกไว้ข้างหน้า
     n_chip = patch_step_chips(cfg)
+    n_dur = patch_duration_labels(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
-    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip
+    return n_seg, n_phase, n_board, n_pick, n_rows, n_lbl, n_chip, n_dur
 
 
 def patch_step_chips(cfg):
@@ -521,6 +523,27 @@ def patch_step_chips(cfg):
         cls = n.get('className') or ''
         if 'whitespace-nowrap' not in cls:
             n['className'] = (cls + ' whitespace-nowrap').strip(); hit += 1
+    return hit
+
+
+# ป้ายความยาวคลิปบนหน้าจอ — เดิมฮาร์ดโค้ด "10 วิ" ทุกที่ (พี่หมีเจอ 2026-09-09: เลือก 20/30 แล้วป้ายยังขึ้น 10)
+#   🪤 ป้ายที่โกหกอันตรายกว่าที่คิด — มันทำให้แยกไม่ออกว่า "ระบบทำผิด" หรือ "ป้ายเขียนผิด"
+#      ⇒ พอทำให้ป้ายพูดความจริง มันกลายเป็นเครื่องมือวินิจฉัยไปในตัว
+SEC = {'op': 'lookup', 'table': 'lenSecs', 'key': '{values.svSec}', 'fallback': '10'}
+DURATION_LABELS = {
+    '10 วิ / คลิป':                 [dict(SEC), ' วิ / คลิป'],
+    'Omni 1.1 Flash · 10 วิ · 9:16': ['Omni 1.1 Flash · ', dict(SEC), ' วิ · 9:16'],
+}
+
+
+def patch_duration_labels(cfg):
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'text'): continue
+        v = n.get('value')
+        if isinstance(v, str) and v in DURATION_LABELS:
+            n['value'] = {'op': 'concat', 'parts': copy.deepcopy(DURATION_LABELS[v])}
+            hit += 1
     return hit
 
 
@@ -659,11 +682,11 @@ def main():
         patch_queue(cfg)
         patch_plan(cfg)
         patch_ops(cfg)
-        ns, np_, nb, npk, nr, nl, nc = patch_ui(cfg)
+        ns, np_, nb, npk, nr, nl, nc, nd = patch_ui(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd))
 
 
 if __name__ == '__main__':
