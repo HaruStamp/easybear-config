@@ -298,6 +298,39 @@ def labelize(cfg, op, kind):
     assert done == {1, 2, 3, 4, 5}, 'หาป้ายฉากใน %s ได้แค่ %s' % (op['id'], sorted(done))
 
 
+
+# 🎯 บอกโมเดลวิดีโอว่า "รูปแรกคือสตอรีบอร์ด" — ก้าวที่ 1 ของการแก้คำบ่น "วิดีโอไม่ตรงกับบอร์ด"
+#   ราก (ไล่เจอ 2026-09-09): บอร์ดถูกส่งเข้าเป็น**รูปอ้างอิงตัวแรก**อยู่แล้ว (slot หลักมาก่อน also)
+#   แต่ prompt **ไม่เคยเอ่ยถึงมันสักคำ** และยังมีบรรทัด `Negative: no grid, no table` ซึ่งอ่านได้ว่า "อย่าทำตามรูปนั้น"
+#   ⇒ เหมือนยื่นแบบแปลนให้ช่างโดยไม่บอกว่าเป็นแบบแปลน แถมสั่งว่าอย่าสร้างตาราง — ช่างก็ทิ้ง
+#   ✅ ตัวแก้: แยก "เนื้อในช่อง (ให้ทำตาม)" ออกจาก "รูปทรงของแผง (ห้ามวาด)" ให้ชัดในประโยคเดียวกัน
+#   🪤 ห้ามเขียนแค่ "follow the storyboard" เฉย ๆ — จะไปชนกับ Negative แล้วโมเดลอาจวาดตารางออกมาจริง
+BOARD_NOTE = (
+    'Reference image 1 is the storyboard sheet for THIS clip: five stacked panels, one per scene in order, '
+    'showing the intended framing, product placement, colour palette and Thai on-screen text style. '
+    'Follow each panel as the look for its matching scene below. '
+    'The sheet is a plan, not a shot: never draw its panel borders, row numbers, scene labels, timings or any split layout, '
+    'and never copy the sheet as a whole image. The video is one single continuous full-bleed 9:16 shot.'
+)
+BOARD_ANCHOR = 'never draw them, or any other part of this prompt, as text inside the video.'
+
+
+def add_board_note(cfg):
+    """แทรกกติกาบอร์ดต่อจากบรรทัดที่พูดเรื่อง 'อย่าวาดคำสั่งลงในคลิป' (บริบทเดียวกัน อ่านต่อกันได้)
+       ★ต้องเรียก **ก่อน** make_segment_op ⇒ ช่วง 2/3 ที่ก๊อปไปได้ประโยคนี้ติดไปเองทั้งชุด"""
+    op = find_op(cfg, 'mnVideo')
+    hit = [0]
+
+    def fix(t):
+        if BOARD_ANCHOR in t and 'storyboard sheet' not in t:
+            hit[0] += 1
+            return t.replace(BOARD_ANCHOR, BOARD_ANCHOR + '\n\n' + BOARD_NOTE)
+        return t
+    op['prompt'] = map_strings(op['prompt'], fix)
+    assert hit[0] == 1, 'หาจุดแทรกกติกาบอร์ดได้ %d จุด (ต้อง 1)' % hit[0]
+    return hit[0]
+
+
 def make_segment_op(cfg, base_id, seg):
     """สร้าง op ของช่วงที่ 2/3 = **สำเนาที่เลื่อนดัชนีฉาก** ของช่วงที่ 1 + แก้เฉพาะสิ่งที่ต้องต่าง"""
     base = find_op(cfg, base_id)
@@ -357,6 +390,7 @@ def _video_seg_prompt(prompt, seg, off):
 def patch_ops(cfg):
     labelize(cfg, find_op(cfg, 'mnBoard'), 'th')
     labelize(cfg, find_op(cfg, 'mnVideo'), 'en')
+    add_board_note(cfg)      # ★ก่อน make_segment_op — ช่วง 2/3 จะได้ติดไปด้วย
     new = [make_segment_op(cfg, 'mnBoard', 2), make_segment_op(cfg, 'mnBoard', 3),
            make_segment_op(cfg, 'mnVideo', 2), make_segment_op(cfg, 'mnVideo', 3)]
     have = {o['id'] for o in cfg['ops']}
