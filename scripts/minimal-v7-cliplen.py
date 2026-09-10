@@ -1021,10 +1021,12 @@ def _step_bar():
             'card': [arw(True),
                      {'el': 'row', 'style': {'flexWrap': 'nowrap'},
                       'className': 'flex-1 items-center justify-center gap-1',
+                      # ★ขนาดเท่ากันทั้งคู่ (11.5px) — ต่างกันที่ **น้ำหนักตัวอักษร** อย่างเดียว (พี่หมีสั่ง)
+                      #   เลขไม่ต้องใหญ่ แค่หนาก็พอ ⇒ แถบดูสงบขึ้น ไม่มีตัวไหนกระโดดออกมา
                       'card': [{'el': 'text', 'value': 'บอร์ด',
-                                'className': '!text-[10.5px] font-bold !text-[var(--ev-text)] opacity-55 whitespace-nowrap'},
+                                'className': '!text-[11.5px] font-bold !text-[var(--ev-text)] opacity-55 whitespace-nowrap'},
                                {'el': 'text', 'value': {'op': 'concat', 'parts': [CUR, '/', NB]},
-                                'className': '!text-[14px] font-black !text-[var(--ev-text)] tabular-nums'}]},
+                                'className': '!text-[11.5px] font-black !text-[var(--ev-text)] tabular-nums'}]},
                      arw(False)]}
 
 
