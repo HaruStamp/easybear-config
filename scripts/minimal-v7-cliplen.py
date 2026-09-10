@@ -880,8 +880,9 @@ def patch_video_placeholder(cfg):
     body = [
         {'el': 'icon', 'icon': 'movie', 'textSize': 'text-[26px]', 'when': IDLE,
          'className': 'opacity-25 leading-none flex items-center justify-center'},
+        # 🪤 opacity ต้อง ≥0.6 — กฎในโปรเจกต์ (จางกว่านี้พี่หมี reject) · วัดของเดิมได้ 0.45 = ผิดกฎตัวเอง
         {'el': 'text', 'value': 'รอสร้างวิดีโอ', 'when': IDLE,
-         'className': '!text-[13px] font-bold opacity-45'},
+         'className': '!text-[13px] font-bold opacity-60'},
         {'el': 'spinner', 'className': '!text-[24px]', 'when': BUSY},
         {'el': 'text', 'when': BUSY, 'className': '!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2',
          'value': {'op': 'lookup', 'table': 'opNames', 'key': '{values.__runStage}', 'fallback': 'กำลังทำ…'}},
