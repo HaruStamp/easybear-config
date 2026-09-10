@@ -972,32 +972,32 @@ def _is_grid_bar(c):
 
 
 def _chip_bar():
-    """ลิสต์: ชิปเลือกบอร์ด — ทำเป็น **การ์ดเดียวเต็มความกว้าง** ให้หน้าตาเป็นชุดเดียวกับปุ่ม [บอร์ด|วิดีโอ]
-       (พี่หมีเสนอ 2026-09-10 — ของเดิมเป็นชิปเล็กลอยกลาง วางซ้อนบนแถบเต็มความกว้าง = 2 ภาษาคนละแบบ)
+    """ลิสต์: ตัวสลับบอร์ด = **‹ บอร์ด N/N ›  ไม่มีกล่อง** (พี่หมีเลือกหลังเทียบ 3 แบบ 2026-09-10)
 
-    🔴 **ห้ามเปลี่ยนไปใช้ `el:'segmented'` แม้หน้าตาจะเหมือนกันเป๊ะ** — `segmented` เรียก `fm.set` ที่
-       **ไม่มี `quiet`** ⇒ แค่กดดูบอร์ด คลิปที่ `done` จะกลาย `stale` แล้วถูกจับเข้าคิวผลิตซ้ำ = เสียเครดิตฟรี
-       ⇒ ใช้ปุ่มธรรมดาที่มี `quiet:true` แล้ว **แต่งให้เหมือน `variant:'tab'`** แทน
-    ★className ฐานห้ามมีสี (กฎ !important ชนกัน) ⇒ แยก 2 สถานะเป็น classWhen คนละข้อ
+    เทียบของจริงในแล็บ 3 แบบ:
+      A ชิป [1][2][3]      กดถึงทุกใบใน 1 คลิก **แต่ชิปที่ไฮไลต์เป็นสีฟ้า ไปแข่งกับปุ่ม [บอร์ด] ที่ฟ้าเหมือนกัน**
+                           และตัวมันเองเป็น "กล่องมีช่อง" = ภาษาเดียวกับ toggle ⇒ อ่านเป็นของระดับเดียวกัน
+      B ลูกศร + กล่อง       ยังเป็นกล่อง + มีปุ่มทึบ 2 ปุ่ม ⇒ **หนักกว่า A ด้วยซ้ำ** ไม่ได้แก้ปัญหาที่ตั้งใจแก้
+      C ลูกศร ไม่มีกล่อง ✅  การ์ดเหลือ **กล่องควบคุมเดียว** คือ [บอร์ด|วิดีโอ] · ตัวสลับบอร์ดกลายเป็นคำบรรยาย
+                           + ลูกศรเสมอขอบนอกของ toggle พอดี · และได้คำว่า "บอร์ด" กลับมาซึ่ง A ไม่มี
+    ⇒ ข้อแลกเปลี่ยนที่ยอมรับ: ไปใบที่ 3 ต้องกด 2 ครั้ง (A กดครั้งเดียว) — ที่ 2-3 ใบถือว่าน้อยมาก
+    🔴 quiet:true ยังต้องมี — ไม่งั้นแค่เลื่อนดูบอร์ด คลิปที่ done กลาย stale แล้วถูกผลิตซ้ำ เสียเครดิตฟรี
     """
-    chips = []
-    for k in (1, 2, 3):
-        on = {'op': 'eq', 'a': CUR, 'b': k}
-        c = {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True,
-             'label': str(k), 'value': str(k),
-             # ★จอคอมเตี้ยกว่าปุ่ม [บอร์ด|วิดีโอ] (32 vs 40) = ลำดับความสำคัญอ่านออกทันที ไม่แข่งกัน
-             #   มือถือคง 44px ตามกฎ tap target (ยาม mobile-tier เฝ้าอยู่) ⇒ เตี้ยได้เฉพาะจอใหญ่
-             'className': ('flex-1 justify-center !h-11 @[420px]:!h-8 !min-h-0 !px-2 '
-                           '!rounded-lg !text-[11.5px] font-black !border-0'),
-             'classWhen': [{'when': on, 'class': '!bg-[var(--ev-accent)] !text-white'},
-                           {'when': {'op': 'not', 'a': on},
-                            'class': '!bg-transparent !text-[var(--ev-text)] opacity-70'}]}
-        if k > 1: c['when'] = GT('{values.svSec}', (k - 1) * 10)
-        chips.append(c)
+    def arw(left):
+        return {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'label': '',
+                'icon': 'chevron_left' if left else 'chevron_right',
+                'value': ({'op': 'max', 'a': {'op': 'sub', 'a': CUR, 'b': 1}, 'b': 1} if left
+                          else {'op': 'min', 'a': {'op': 'add', 'a': CUR, 'b': 1}, 'b': NB}),
+                # ★มือถือ 44px ตามกฎ tap target · จอคอม 32px = เตี้ยกว่าปุ่ม [บอร์ด|วิดีโอ] (40) ไม่แข่งกัน
+                'className': ('justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 '
+                              '!rounded-lg !bg-transparent !text-[var(--ev-text)] !border-0')}
     return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
-            'className': ('w-full mt-2 items-center gap-1 rounded-xl border p-1 '
-                          '@[420px]:mt-1.5 @[420px]:rounded-lg @[420px]:p-0.5 '
-                          'bg-[var(--ev-surface)] border-[var(--ev-border)]'), 'card': chips}
+            # ★w-full ทำให้ลูกศรเริ่ม/จบตรงขอบนอกของ toggle ด้านล่างพอดี (พี่หมีสั่งให้เสมอกัน)
+            'className': 'w-full mt-2 @[420px]:mt-1.5 items-center',
+            'card': [arw(True),
+                     {'el': 'text', 'value': {'op': 'concat', 'parts': ['บอร์ด ', CUR, '/', NB]},
+                      'className': 'flex-1 text-center !text-[11.5px] font-black !text-[var(--ev-text)] opacity-80'},
+                     arw(False)]}
 
 
 def _is_video_tab(when):
