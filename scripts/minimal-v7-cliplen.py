@@ -573,6 +573,8 @@ def patch_ui(cfg):
     n_bt += patch_default_tab(cfg)
     n_bt += patch_media_col_mobile(cfg)
     n_bt += patch_done_card_tint(cfg)
+    n_bt += patch_drop_eng(cfg)
+    n_bt += patch_grid_drop_bar(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -797,6 +799,89 @@ def patch_media_col_mobile(cfg):
     return hit
 
 
+def patch_drop_eng(cfg):
+    """ตัดคำว่า "เอง" ออกจากป้ายปุ่มเลือกไฟล์ (พี่หมีสั่ง 2026-09-10 · ข้อความตกบรรทัดในกริด)
+
+    "เลือกวิดีโอเอง" ยาว 13 ตัวอักษร ⇒ ในโปสเตอร์กริดที่ปุ่มกว้างแค่ ~130px มันตกเป็น 2 บรรทัด
+    ★ความหมายไม่หาย เพราะมันอยู่คู่กับ "Gen วิดีโอ" อยู่แล้ว — Gen = ให้ AI สร้าง · เลือก = หยิบไฟล์ที่มี
+    """
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if isinstance(n, dict) and isinstance(n.get('label'), str) and n['label'].endswith('เอง'):
+            n['label'] = n['label'][:-3].rstrip(); hit += 1
+    return hit
+
+
+def patch_grid_drop_bar(cfg):
+    """กริด: เอาแถบ ‹ บอร์ด N/N › ออก แล้วย้ายการสลับใบไปอยู่ใน "จอเต็ม" แทน (พี่หมีถาม 2026-09-10)
+
+    เหตุผล (ทำไมเอาออกดีกว่าออกแบบใหม่):
+      ① **กริดคือแผ่นคอนแทค ไม่ใช่ที่ตรวจแผน** — โปสเตอร์กว้าง ~180px อ่านบทไม่ออกอยู่แล้ว
+         การสลับใบตรงนั้นจึงได้ประโยชน์น้อย แต่จ่ายด้วยการบังฉากที่ 5 ทุกใบ
+      ② **ของที่มันทำ มีที่อื่นทำได้ดีกว่าอยู่แล้ว** — แตะภาพ = เปิดจอเต็ม ซึ่งมี ‹ › + ตัวนับ +
+         ลูกศรคีย์บอร์ด (`el.gallery` ของ v1.7.6) และภาพใหญ่พอให้อ่านบทได้จริง
+      ③ ⇒ ได้โปสเตอร์ที่ **ไม่มีอะไรทับเลย** = ตรงกับหลักเดิมของรอบนี้ (สตอรีบอร์ด = เอกสาร)
+    ★แต่ยังต้องบอกให้รู้ว่า "คลิปนี้มีหลายใบ" ⇒ เติมตัวเลขลง **แถบชื่อล่างที่มีอยู่แล้ว**
+      (ไม่ใช่ป้ายลอยใบใหม่ — พี่หมีเคยสั่งเอาป้าย "N บอร์ด" แบบลอยออกไปแล้วเพราะเกะกะ)
+    """
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and isinstance(n.get('card'), list)): continue
+        before = len(n['card'])
+        n['card'] = [c for c in n['card'] if not _is_grid_bar(c)]
+        hit += before - len(n['card'])
+    # เติมตัวนับลงแถบชื่อล่างของโปสเตอร์ (แถบเดิม ไม่ได้สร้างใหม่)
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'row' and isinstance(n.get('card'), list)): continue
+        cn = str(n.get('className') or '')
+        if 'absolute bottom-0' not in cn or 'from-black/70' not in cn: continue
+        if any(isinstance(c, dict) and 'ภาพ' in str(c.get('value') or '') for c in n['card']): continue
+        n['card'].append({
+            'el': 'text', 'when': GT('{values.svSec}', 10),
+            'value': {'op': 'concat', 'parts': [NB, ' ภาพ']},
+            'className': ('!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] '
+                          '!text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center')})
+        hit += 1
+    return hit
+
+
+def _is_grid_bar(c):
+    """แถบ ‹ บอร์ด N/N › ของกริด — จับจาก **สิ่งที่มันเป็น** (แถบ absolute ที่มีปุ่ม bview + ข้อความมีคำว่าบอร์ด)
+       🪤 ห้ามจับด้วย className อย่างเดียว — เดี๋ยวไปโดนแถบชื่อล่างที่ absolute เหมือนกัน"""
+    if not (isinstance(c, dict) and c.get('el') == 'row' and isinstance(c.get('card'), list)): return False
+    if 'absolute' not in str(c.get('className') or ''): return False
+    kids = c['card']
+    has_nav = any(isinstance(k, dict) and k.get('to') == 'bview' for k in kids)
+    has_lbl = 'บอร์ด ' in json.dumps(kids, ensure_ascii=False)
+    return has_nav and has_lbl
+
+
+def _chip_bar():
+    """ลิสต์: ชิปเลือกบอร์ด — ทำเป็น **การ์ดเดียวเต็มความกว้าง** ให้หน้าตาเป็นชุดเดียวกับปุ่ม [บอร์ด|วิดีโอ]
+       (พี่หมีเสนอ 2026-09-10 — ของเดิมเป็นชิปเล็กลอยกลาง วางซ้อนบนแถบเต็มความกว้าง = 2 ภาษาคนละแบบ)
+
+    🔴 **ห้ามเปลี่ยนไปใช้ `el:'segmented'` แม้หน้าตาจะเหมือนกันเป๊ะ** — `segmented` เรียก `fm.set` ที่
+       **ไม่มี `quiet`** ⇒ แค่กดดูบอร์ด คลิปที่ `done` จะกลาย `stale` แล้วถูกจับเข้าคิวผลิตซ้ำ = เสียเครดิตฟรี
+       ⇒ ใช้ปุ่มธรรมดาที่มี `quiet:true` แล้ว **แต่งให้เหมือน `variant:'tab'`** แทน
+    ★className ฐานห้ามมีสี (กฎ !important ชนกัน) ⇒ แยก 2 สถานะเป็น classWhen คนละข้อ
+    """
+    chips = []
+    for k in (1, 2, 3):
+        on = {'op': 'eq', 'a': CUR, 'b': k}
+        c = {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True,
+             'label': str(k), 'value': str(k),
+             'className': ('flex-1 justify-center !h-11 @[420px]:!h-10 !min-h-0 !px-2 '
+                           '!rounded-lg !text-[12px] font-black !border-0'),
+             'classWhen': [{'when': on, 'class': '!bg-[var(--ev-accent)] !text-white'},
+                           {'when': {'op': 'not', 'a': on},
+                            'class': '!bg-transparent !text-[var(--ev-text)] opacity-70'}]}
+        if k > 1: c['when'] = GT('{values.svSec}', (k - 1) * 10)
+        chips.append(c)
+    return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
+            'className': ('w-full mt-2 items-center gap-1 rounded-xl border p-1 '
+                          'bg-[var(--ev-surface)] border-[var(--ev-border)]'), 'card': chips}
+
+
 def _is_video_tab(when):
     """แท็บนี้เป็นฝั่ง "วิดีโอ" ไหม — ตัดสินจาก **กฎ** คือมี `{item.view} == "video"` อยู่ในเงื่อนไข
 
@@ -939,7 +1024,7 @@ def patch_board_carousel(cfg):
         else:
             # ลิสต์ = กล่อง flex-col (ภาพ แล้วปุ่มด้านล่าง) ⇒ ต้องห่อเฉพาะภาพด้วย relative
             #   ไม่งั้นปุ่มจะไปอยู่กลางกล่องทั้งใบ ไม่ใช่กลางภาพ · มุมขวาบนของกล่องนี้ว่าง
-            cd[0:1] = _board_frames(ms) + [_board_chips()]
+            cd[0:1] = _board_frames(ms) + [_chip_bar()]
         hit += 1
     return hit
 
