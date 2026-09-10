@@ -569,6 +569,9 @@ def patch_ui(cfg):
     n_bt = patch_board_carousel(cfg)
     n_bt += patch_viewmode_align(cfg)
     n_bt += patch_drop_col_divider(cfg)
+    n_bt += patch_video_placeholder(cfg)
+    n_bt += patch_default_tab(cfg)
+    n_bt += patch_media_col_mobile(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -672,6 +675,42 @@ def _counter(cls, label=''):
                       'className': '!text-[11px] font-black !text-white tabular-nums whitespace-nowrap'}]}
 
 
+def _board_chips():
+    """แถวชิป [1][2][3] ใต้ภาพ — ลิสต์ใช้ตัวนี้แทนปุ่มทับภาพ
+
+    🔴 ทำไมไม่ทับภาพเหมือนกริด: **สตอรีบอร์ดเป็นเอกสาร ไม่ใช่รูปสินค้า**
+       5 แถว × 4 คอลัมน์ (เลขฉาก · ภาพ · มุมกล้อง · บทพูด) — ทุกตารางนิ้วมีของที่ต้องอ่าน
+       ปุ่มทับกลางภาพ = บังฉาก 3-4 · ป้าย n/n ทับหัวเรื่อง (พี่หมีเห็นกับตา 2026-09-10)
+       ลิสต์มีที่ว่างใต้ภาพอยู่แล้ว (เหนือปุ่ม บอร์ด|วิดีโอ) ⇒ ไม่มีเหตุผลต้องทับ
+    ★ชิปที่เลือกอยู่ = ตัวบอกว่ากำลังดูใบไหน ⇒ **ไม่ต้องมีป้าย n/n แยกอีก** ภาพสะอาดขึ้นอีกชั้น
+    ★3 ใบกดตรงไปเลย ไม่ต้องกด › สองครั้งเพื่อไปใบสุดท้าย
+    ★ไม่มีคำว่า "บอร์ด" ในแถวนี้ — บรรทัดถัดลงไปคือปุ่ม [บอร์ด|วิดีโอ] อยู่แล้ว และกล่องนี้ทั้งกล่อง
+      โผล่เฉพาะตอน view != video ⇒ เขียนซ้ำ = คำเดียวกันโผล่ 2 บรรทัดติดกัน
+      (กริดต้องมีคำนี้ เพราะกริดไม่มีปุ่ม บอร์ด|วิดีโอ ให้อ้าง — คนละสถานการณ์ อย่ายกไปใช้ข้ามกัน)
+
+    🔴 **ห้ามใส่ `!bg-…` ใน className ฐาน แล้วหวังให้ classWhen ทับ** — วัดจริงในแล็บรอบนี้:
+       ชิปที่เลือกอยู่ได้ทั้ง `!bg-surface2` และ `!bg-accent` พร้อมกัน **ทั้งคู่เป็น !important**
+       ⇒ ผู้ชนะตัดสินด้วย**ลำดับใน stylesheet ไม่ใช่ลำดับใน class** (โรคเดียวกับ flex-1 ทับ basis-full)
+       ผลจริงที่วัดได้: bg = rgb(234,239,245) ซีด + text = ขาว ⇒ **ชิปที่กำลังเลือกอยู่อ่านไม่ออก**
+       ⇒ แยกสองสถานะเป็น classWhen คนละข้อที่ไม่มีวันจริงพร้อมกัน แล้ว className ฐานห้ามมีสี
+    """
+    chips = []
+    for k in (1, 2, 3):
+        on = {'op': 'eq', 'a': CUR, 'b': k}
+        c = {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True,
+             'label': str(k), 'value': str(k),
+             'className': ('justify-center !min-w-[40px] !h-11 @[420px]:!h-8 !min-h-0 !px-2 !rounded-lg '
+                           '!text-[12px] font-black border'),
+             'classWhen': [{'when': on,
+                            'class': '!bg-[var(--ev-accent)] !text-white !border-[var(--ev-accent)]'},
+                           {'when': {'op': 'not', 'a': on},
+                            'class': '!bg-[var(--ev-surface2)] !text-[var(--ev-text)] !border-[var(--ev-border)]'}]}
+        if k > 1: c['when'] = GT('{values.svSec}', (k - 1) * 10)
+        chips.append(c)
+    return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
+            'className': 'items-center gap-1.5 mt-2 justify-center', 'card': chips}
+
+
 def _grid_bar():
     """กริด: แถบเดียวใต้ภาพ  ‹ บอร์ด 1/3 ›  — พี่หมีสั่งรวมคำว่าบอร์ดไว้ในแถบ (ป้าย 'N บอร์ด' แยกเกะกะ เอาออกแล้ว)"""
     # 🪤 มือถือต้อง ≥44px เหมือนกัน (ด่าน mobile-tier จับได้) — โปสเตอร์กริดกว้าง ~180px
@@ -716,14 +755,144 @@ def patch_drop_col_divider(cfg):
     return hit
 
 
-def patch_board_carousel(cfg):
-    """คลิป 20/30 วิ มีบอร์ดหลายใบ → เลื่อนดูด้วยปุ่ม < > ข้างภาพ + ป้าย n/n
+def patch_media_col_mobile(cfg):
+    """คอลัมน์สื่อของการ์ดงาน: มือถือขยายภาพให้ใหญ่ขึ้น (พี่หมีสั่งตั้งแต่รอบออกแบบ 3 คอลัมน์)
 
-    🔴 บทเรียน 3 รอบก่อนหน้า (พี่หมีเจอกับตาทุกรอบ):
+    ของเดิม `w-[170px]` ใช้เลขเดียวกันทุกจอ ⇒ บนมือถือกว้าง 390 การ์ดกว้าง ~330
+    แต่สตอรีบอร์ดได้แค่ 168px = **5 แถว × 4 คอลัมน์ในความกว้างเท่านิ้วโป้ง อ่านไม่ออกจริง ๆ**
+    (เดสก์ท็อป 170 ถูกแล้ว เพราะข้าง ๆ ยังมีอีก 2 คอลัมน์ที่ต้องได้ที่)
+    ⇒ ≤420px ใช้ 230px · เกินนั้นกลับเป็น 170 เท่าเดิม ⇒ **เดสก์ท็อปไม่ขยับสักพิกเซล**
+    """
+    OLD, NEW = 'relative w-[170px] mx-auto @[420px]:mx-0', 'relative w-[230px] @[420px]:w-[170px] mx-auto @[420px]:mx-0'
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if isinstance(n, dict) and n.get('className') == OLD:
+            n['className'] = NEW; hit += 1
+    return hit
+
+
+def _is_video_tab(when):
+    """แท็บนี้เป็นฝั่ง "วิดีโอ" ไหม — ตัดสินจาก **กฎ** คือมี `{item.view} == "video"` อยู่ในเงื่อนไข
+
+    🪤 ของเดิมเช็คด้วย substring `'"video"' in json.dumps(when)` ⇒ พังทันทีที่เงื่อนไขไหน
+       อ้าง `{item.slots.video}` (ซึ่ง patch_default_tab ทำให้เกิดขึ้นทุกโหนด) — คำว่า video โผล่
+       ในชื่อ slot ด้วย ไม่ใช่แค่ค่าของแท็บ ⇒ ยามจะเหมาเอาโหนดฝั่งบอร์ดเป็นฝั่งวิดีโอแล้วข้ามทิ้งเงียบ
+       (ตระกูลเดียวกับกฎ "ยามต้องผูกกับกฎ ไม่ใช่รูปทรง")
+    """
+    found = [False]
+    def go(w):
+        if isinstance(w, dict):
+            if w.get('op') == 'eq' and w.get('a') == '{item.view}' and w.get('b') == 'video':
+                found[0] = True
+            for v in w.values(): go(v)
+        elif isinstance(w, list):
+            for v in w: go(v)
+    go(when)
+    return found[0]
+
+
+# เงื่อนไข "แท็บ default" 2 ก้อนที่กระจายอยู่ทั้ง config (ลิสต์ + กริด · ก้อนละ 8 ที่)
+#   ของเดิมผูกกับ **บอร์ด**: มีบอร์ดแล้ว → default = แท็บวิดีโอ
+_DEF_VID = {'op': 'and', 'a': {'op': 'eq', 'a': '{item.view}', 'b': ''},
+            'b': {'op': 'not', 'a': {'op': 'eq', 'a': '{item.slots.board}', 'b': ''}}}
+_DEF_BRD = {'op': 'and', 'a': {'op': 'eq', 'a': '{item.view}', 'b': ''},
+            'b': {'op': 'eq', 'a': '{item.slots.board}', 'b': ''}}
+
+
+def patch_default_tab(cfg):
+    """แท็บที่เปิดให้เองตอนยังไม่ได้กดเลือก = **ของชิ้นล่าสุดที่มีจริง** (มีวิดีโอ→วิดีโอ · ไม่มี→บอร์ด)
+
+    🔴 ทำไมต้องมาคู่กับ patch_video_placeholder เสมอ ห้ามทำอันเดียว:
+       กฎเดิมคือ "มีบอร์ดแล้ว = default ไปแท็บวิดีโอ" แล้วแท็บวิดีโอ **ยืมภาพบอร์ดมาโชว์**
+       พร้อมป้าย "ได้ภาพแล้ว — รอวิดีโอ" ⇒ มันเลยดูเหมือนใช้ได้
+       พอเอาภาพยืมออก (ตามที่พี่หมีสั่ง) แท็บ default จะกลายเป็น**การ์ดเปล่า**ทันทีหลังกดสร้างภาพเสร็จ
+       = ผู้ใช้เพิ่งสร้างบอร์ด แต่จอไม่โชว์บอร์ด ต้องไปกดแท็บเอง (แย่กว่าเดิม)
+    ⇒ ย้ายหลักจาก `slots.board` เป็น `slots.video` ⇒ ทั้ง 3 สถานะเข้าที่พร้อมกัน:
+       ยังไม่มีบอร์ด → แท็บบอร์ด "รอวาดภาพ" · มีบอร์ดยังไม่มีวิดีโอ → แท็บบอร์ด (เห็นบอร์ดที่เพิ่งสร้าง)
+       มีวิดีโอแล้ว → แท็บวิดีโอ (เห็นคลิป)
+    ★เป็นการสลับ "ชื่อ slot" ตัวเดียวในก้อนเงื่อนไขที่มีรูปเป๊ะ ๆ — ไม่แตะโครงสร้างอะไรเลย
+    ★`el:segmented field:view` 3 ตัวใช้ก้อนเดียวกันนี้เป็น when ⇒ ปุ่มที่ไฮไลต์ตรงกับของที่โชว์เองอัตโนมัติ
+    """
+    sv, sb = json.dumps(_DEF_VID, sort_keys=True), json.dumps(_DEF_BRD, sort_keys=True)
+    hit = 0
+
+    def go(n):
+        nonlocal hit
+        if isinstance(n, dict):
+            for k, v in list(n.items()):
+                if isinstance(v, dict) and json.dumps(v, sort_keys=True) in (sv, sb):
+                    v['b'] = json.loads(json.dumps(v['b']).replace('{item.slots.board}', '{item.slots.video}'))
+                    hit += 1
+                else:
+                    go(v)
+        elif isinstance(n, list):
+            for i, v in enumerate(n):
+                if isinstance(v, dict) and json.dumps(v, sort_keys=True) in (sv, sb):
+                    v['b'] = json.loads(json.dumps(v['b']).replace('{item.slots.board}', '{item.slots.video}'))
+                    hit += 1
+                else:
+                    go(v)
+    go(cfg.get('phases'))
+    return hit
+
+
+def patch_video_placeholder(cfg):
+    """แท็บ "วิดีโอ" ตอนยังไม่มีวิดีโอ = **การ์ดขอบเส้นประ "รอสร้างวิดีโอ"** (พี่หมีสั่ง 2026-09-10)
+
+    ของเดิม: แท็บวิดีโอ **เอาภาพบอร์ดมาโชว์** แล้วแปะป้าย "ได้ภาพแล้ว — รอวิดีโอ" ทับล่างภาพ
+      ⇒ ① ป้ายทับฉากที่ 5 ของสตอรีบอร์ด (โรคเดียวกับปุ่ม ‹ › ที่เพิ่งเอาออก)
+         ② คนดูนึกว่าภาพนั้น "คือวิดีโอ" ทั้งที่เป็นบอร์ด — แท็บบอกอย่าง ของที่เห็นเป็นอีกอย่าง
+    ⇒ เปลี่ยนเป็นการ์ดเส้นประแบบเดียวกับฝั่งบอร์ด ("รอวาดภาพ") — ภาษาเดิมของแอป ไม่ได้คิดของใหม่
+    ★สถานะ "กำลังทำ/พักก่อนลองใหม่" ไม่หาย — ย้ายเข้ามาอยู่ในการ์ดเส้นประ (สปินเนอร์ + ข้อความ)
+      เหมือนที่ฝั่งบอร์ดทำอยู่แล้ว ⇒ ไม่มีอะไรทับภาพ และไม่เสีย feedback ระหว่างรัน
+    ★สถานะ error มีสาขาของตัวเอง — ไม่งั้นพังแล้วยังขึ้นว่า "รอสร้างวิดีโอ" = โกหก
+    """
+    BUSY = {'op': 'or', 'list': [{'op': 'eq', 'a': '{item.status}', 'b': 'running'},
+                                 {'op': 'eq', 'a': '{item.meta.retrying}', 'b': '1'}]}
+    ERR = {'op': 'eq', 'a': '{item.status}', 'b': 'error'}
+    IDLE = {'op': 'and', 'a': {'op': 'not', 'a': BUSY}, 'b': {'op': 'not', 'a': ERR}}
+    body = [
+        {'el': 'icon', 'icon': 'movie', 'textSize': 'text-[26px]', 'when': IDLE,
+         'className': 'opacity-25 leading-none flex items-center justify-center'},
+        {'el': 'text', 'value': 'รอสร้างวิดีโอ', 'when': IDLE,
+         'className': '!text-[13px] font-bold opacity-45'},
+        {'el': 'spinner', 'className': '!text-[24px]', 'when': BUSY},
+        {'el': 'text', 'when': BUSY, 'className': '!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2',
+         'value': {'op': 'lookup', 'table': 'opNames', 'key': '{values.__runStage}', 'fallback': 'กำลังทำ…'}},
+        {'el': 'icon', 'icon': 'error_outline', 'textSize': 'text-[26px]', 'when': ERR,
+         'className': '!text-rose-500 opacity-70 leading-none flex items-center justify-center'},
+        {'el': 'text', 'value': 'สร้างวิดีโอไม่สำเร็จ', 'when': ERR,
+         'className': '!text-[13px] font-bold !text-rose-500 text-center px-2'},
+    ]
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and isinstance(n.get('card'), list)): continue
+        cd = n['card']
+        if not (cd and isinstance(cd[0], dict) and cd[0].get('el') == 'media-slot'
+                and cd[0].get('src') == '{item.slots.board}'): continue
+        if not _is_video_tab(n.get('when')): continue
+        # ★ต้องเป็นสาขา "ยังไม่มีวิดีโอ" เท่านั้น — สาขาที่มีวิดีโอแล้วเป็นคนละโหนด (src = slots.video)
+        if '"{item.slots.video}", "b": ""' not in json.dumps(n.get('when'), ensure_ascii=False): continue
+        n['card'] = [dict(b) for b in body]
+        n['className'] = ('aspect-[9/16] rounded-2xl border-2 border-dashed border-[var(--ev-border)] '
+                          'bg-[var(--ev-bg)]/60 flex flex-col items-center justify-center gap-2')
+        hit += 1
+    return hit
+
+
+def patch_board_carousel(cfg):
+    """คลิป 20/30 วิ มีบอร์ดหลายใบ → ดูทีละใบเต็มกรอบ แล้วสลับใบด้วยตัวควบคุมนอกภาพ
+
+    🔴 บทเรียน 4 รอบก่อนหน้า (พี่หมีเจอกับตาทุกรอบ):
       รอบ 1 เอาไทล์ไปแทน media-slot ทุกที่ ⇒ กริด (โปสเตอร์ที่ของ absolute ทับภาพ) ยุบ กองทับกัน
       รอบ 2 บีบ 3 ใบให้พอดีกรอบ ⇒ ใบละ 100px อ่านไม่ออก · และโหมด "วิดีโอ" ก็โชว์ 3 ใบด้วย (งง)
       รอบ 3 แถบเลื่อนแนวนอน ⇒ พี่หมีว่าปุ่มสลับสวยกว่าและใช้ง่ายกว่า
-    ⇒ จบที่ **ภาพเดียวเต็มกรอบ + ปุ่มข้างภาพ** — เหมือนกันทั้ง 2 มุมมอง ไม่ต้องเรียนรู้ 2 แบบ
+      รอบ 4 ปุ่ม ‹ › ทับกลางภาพทั้ง 2 มุมมอง ⇒ **บังเนื้อสตอรีบอร์ดจริง** (ฉาก 3-4 กับหัวเรื่อง)
+
+    ⇒ จบที่ **คนละท่าตามที่ว่างที่มีจริง ไม่ใช่ท่าเดียวกันทุกที่**:
+      · ลิสต์ = ชิป [1][2][3] **ใต้ภาพ** — ภาพไม่โดนบังสักตารางนิ้ว + กดถึงใบที่ต้องการทันที
+      · กริด = แถบ ‹ บอร์ด 1/3 › ทับล่าง — เพราะช่องกริดเป็นโปสเตอร์ ไม่มีที่ว่างใต้ภาพให้วางอะไร
+        และภาพกริดเป็นรูปย่อ (ดูคร่าว ๆ) ไม่ใช่ที่ที่ผู้ใช้อ่านบท ⇒ ยอมให้ทับได้
     ★โหมด "วิดีโอ" ไม่แตะ (บอร์ดตรงนั้นเป็นตัวแทนช่องวิดีโอที่ยังว่าง ไม่ใช่ที่ตรวจแผน)
     """
     gids = _grid_view_ids(cfg)
@@ -733,7 +902,7 @@ def patch_board_carousel(cfg):
         cd = n['card']
         if not (cd and isinstance(cd[0], dict) and cd[0].get('el') == 'media-slot'
                 and cd[0].get('src') == '{item.slots.board}'): continue
-        if '"video"' in json.dumps(n.get('when'), ensure_ascii=False): continue   # โหมดวิดีโอ = กรอบเดียวเหมือนเดิม
+        if _is_video_tab(n.get('when')): continue   # โหมดวิดีโอ = กรอบเดียวเหมือนเดิม
         ms = cd[0]
         if id(n) in gids:
             # กริด = โปสเตอร์ · ของ absolute เกาะกล่องนี้อยู่แล้ว → ใส่ปุ่ม/ป้ายลงไปตรง ๆ ได้
@@ -743,8 +912,7 @@ def patch_board_carousel(cfg):
         else:
             # ลิสต์ = กล่อง flex-col (ภาพ แล้วปุ่มด้านล่าง) ⇒ ต้องห่อเฉพาะภาพด้วย relative
             #   ไม่งั้นปุ่มจะไปอยู่กลางกล่องทั้งใบ ไม่ใช่กลางภาพ · มุมขวาบนของกล่องนี้ว่าง
-            cd[0:1] = [{'el': 'box', 'className': 'relative',
-                        'card': _board_frames(ms) + [_arrow(-1), _arrow(1), _counter('absolute top-1.5 right-1.5')]}]
+            cd[0:1] = _board_frames(ms) + [_board_chips()]
         hit += 1
     return hit
 

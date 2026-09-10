@@ -11952,7 +11952,7 @@
                    "card": [
                     {
                      "el": "box",
-                     "className": "relative w-[170px] mx-auto @[420px]:mx-0",
+                     "className": "relative w-[230px] @[420px]:w-[170px] mx-auto @[420px]:mx-0",
                      "card": [
                       {
                        "el": "md",
@@ -12104,7 +12104,7 @@
                             },
                             "b": {
                              "op": "eq",
-                             "a": "{item.slots.board}",
+                             "a": "{item.slots.video}",
                              "b": ""
                             }
                            }
@@ -12170,7 +12170,7 @@
                              },
                              "b": {
                               "op": "eq",
-                              "a": "{item.slots.board}",
+                              "a": "{item.slots.video}",
                               "b": ""
                              }
                             }
@@ -12200,28 +12200,201 @@
                        "className": "",
                        "card": [
                         {
-                         "el": "box",
-                         "className": "relative",
+                         "el": "media-slot",
+                         "src": "{item.slots.board}",
+                         "aspect": "9:16",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]",
+                         "gallery": [
+                          "{item.slots.board}",
+                          "{item.slots.board2}",
+                          "{item.slots.board3}"
+                         ],
+                         "when": {
+                          "op": "not",
+                          "a": {
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "max",
+                              "a": {
+                               "op": "concat",
+                               "parts": [
+                                "{item.bview}"
+                               ]
+                              },
+                              "b": 1
+                             },
+                             "b": 2
+                            },
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "max",
+                              "a": {
+                               "op": "concat",
+                               "parts": [
+                                "{item.bview}"
+                               ]
+                              },
+                              "b": 1
+                             },
+                             "b": 3
+                            }
+                           ]
+                          }
+                         }
+                        },
+                        {
+                         "el": "media-slot",
+                         "src": "{item.slots.board2}",
+                         "aspect": "9:16",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]",
+                         "gallery": [
+                          "{item.slots.board}",
+                          "{item.slots.board2}",
+                          "{item.slots.board3}"
+                         ],
+                         "when": {
+                          "op": "eq",
+                          "a": {
+                           "op": "max",
+                           "a": {
+                            "op": "concat",
+                            "parts": [
+                             "{item.bview}"
+                            ]
+                           },
+                           "b": 1
+                          },
+                          "b": 2
+                         }
+                        },
+                        {
+                         "el": "media-slot",
+                         "src": "{item.slots.board3}",
+                         "aspect": "9:16",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]",
+                         "gallery": [
+                          "{item.slots.board}",
+                          "{item.slots.board2}",
+                          "{item.slots.board3}"
+                         ],
+                         "when": {
+                          "op": "eq",
+                          "a": {
+                           "op": "max",
+                           "a": {
+                            "op": "concat",
+                            "parts": [
+                             "{item.bview}"
+                            ]
+                           },
+                           "b": 1
+                          },
+                          "b": 3
+                         }
+                        },
+                        {
+                         "el": "row",
+                         "when": {
+                          "op": "gt",
+                          "a": "{values.svSec}",
+                          "b": 10
+                         },
+                         "style": {
+                          "flexWrap": "nowrap"
+                         },
+                         "className": "items-center gap-1.5 mt-2 justify-center",
                          "card": [
                           {
-                           "el": "media-slot",
-                           "src": "{item.slots.board}",
-                           "aspect": "9:16",
-                           "style": {
-                            "borderRadius": "16px"
-                           },
-                           "className": "ring-1 ring-[var(--ev-border)]",
-                           "gallery": [
-                            "{item.slots.board}",
-                            "{item.slots.board2}",
-                            "{item.slots.board3}"
-                           ],
-                           "when": {
-                            "op": "not",
-                            "a": {
-                             "op": "or",
-                             "list": [
-                              {
+                           "el": "button",
+                           "action": "setField",
+                           "to": "bview",
+                           "quiet": true,
+                           "label": "1",
+                           "value": "1",
+                           "className": "justify-center !min-w-[40px] !h-11 @[420px]:!h-8 !min-h-0 !px-2 !rounded-lg !text-[12px] font-black border",
+                           "classWhen": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "max",
+                               "a": {
+                                "op": "concat",
+                                "parts": [
+                                 "{item.bview}"
+                                ]
+                               },
+                               "b": 1
+                              },
+                              "b": 1
+                             },
+                             "class": "!bg-[var(--ev-accent)] !text-white !border-[var(--ev-accent)]"
+                            },
+                            {
+                             "when": {
+                              "op": "not",
+                              "a": {
+                               "op": "eq",
+                               "a": {
+                                "op": "max",
+                                "a": {
+                                 "op": "concat",
+                                 "parts": [
+                                  "{item.bview}"
+                                 ]
+                                },
+                                "b": 1
+                               },
+                               "b": 1
+                              }
+                             },
+                             "class": "!bg-[var(--ev-surface2)] !text-[var(--ev-text)] !border-[var(--ev-border)]"
+                            }
+                           ]
+                          },
+                          {
+                           "el": "button",
+                           "action": "setField",
+                           "to": "bview",
+                           "quiet": true,
+                           "label": "2",
+                           "value": "2",
+                           "className": "justify-center !min-w-[40px] !h-11 @[420px]:!h-8 !min-h-0 !px-2 !rounded-lg !text-[12px] font-black border",
+                           "classWhen": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "max",
+                               "a": {
+                                "op": "concat",
+                                "parts": [
+                                 "{item.bview}"
+                                ]
+                               },
+                               "b": 1
+                              },
+                              "b": 2
+                             },
+                             "class": "!bg-[var(--ev-accent)] !text-white !border-[var(--ev-accent)]"
+                            },
+                            {
+                             "when": {
+                              "op": "not",
+                              "a": {
                                "op": "eq",
                                "a": {
                                 "op": "max",
@@ -12234,8 +12407,47 @@
                                 "b": 1
                                },
                                "b": 2
+                              }
+                             },
+                             "class": "!bg-[var(--ev-surface2)] !text-[var(--ev-text)] !border-[var(--ev-border)]"
+                            }
+                           ],
+                           "when": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           }
+                          },
+                          {
+                           "el": "button",
+                           "action": "setField",
+                           "to": "bview",
+                           "quiet": true,
+                           "label": "3",
+                           "value": "3",
+                           "className": "justify-center !min-w-[40px] !h-11 @[420px]:!h-8 !min-h-0 !px-2 !rounded-lg !text-[12px] font-black border",
+                           "classWhen": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "max",
+                               "a": {
+                                "op": "concat",
+                                "parts": [
+                                 "{item.bview}"
+                                ]
+                               },
+                               "b": 1
                               },
-                              {
+                              "b": 3
+                             },
+                             "class": "!bg-[var(--ev-accent)] !text-white !border-[var(--ev-accent)]"
+                            },
+                            {
+                             "when": {
+                              "op": "not",
+                              "a": {
                                "op": "eq",
                                "a": {
                                 "op": "max",
@@ -12249,173 +12461,15 @@
                                },
                                "b": 3
                               }
-                             ]
+                             },
+                             "class": "!bg-[var(--ev-surface2)] !text-[var(--ev-text)] !border-[var(--ev-border)]"
                             }
-                           }
-                          },
-                          {
-                           "el": "media-slot",
-                           "src": "{item.slots.board2}",
-                           "aspect": "9:16",
-                           "style": {
-                            "borderRadius": "16px"
-                           },
-                           "className": "ring-1 ring-[var(--ev-border)]",
-                           "gallery": [
-                            "{item.slots.board}",
-                            "{item.slots.board2}",
-                            "{item.slots.board3}"
                            ],
                            "when": {
-                            "op": "eq",
-                            "a": {
-                             "op": "max",
-                             "a": {
-                              "op": "concat",
-                              "parts": [
-                               "{item.bview}"
-                              ]
-                             },
-                             "b": 1
-                            },
-                            "b": 2
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 20
                            }
-                          },
-                          {
-                           "el": "media-slot",
-                           "src": "{item.slots.board3}",
-                           "aspect": "9:16",
-                           "style": {
-                            "borderRadius": "16px"
-                           },
-                           "className": "ring-1 ring-[var(--ev-border)]",
-                           "gallery": [
-                            "{item.slots.board}",
-                            "{item.slots.board2}",
-                            "{item.slots.board3}"
-                           ],
-                           "when": {
-                            "op": "eq",
-                            "a": {
-                             "op": "max",
-                             "a": {
-                              "op": "concat",
-                              "parts": [
-                               "{item.bview}"
-                              ]
-                             },
-                             "b": 1
-                            },
-                            "b": 3
-                           }
-                          },
-                          {
-                           "el": "button",
-                           "action": "setField",
-                           "to": "bview",
-                           "quiet": true,
-                           "label": "",
-                           "icon": "chevron_left",
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           },
-                           "value": {
-                            "op": "max",
-                            "a": {
-                             "op": "sub",
-                             "a": {
-                              "op": "max",
-                              "a": {
-                               "op": "concat",
-                               "parts": [
-                                "{item.bview}"
-                               ]
-                              },
-                              "b": 1
-                             },
-                             "b": 1
-                            },
-                            "b": 1
-                           },
-                           "className": "absolute left-1 top-1/2 -translate-y-1/2 z-30 justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-[#17253a]/75 !text-white !border-0 backdrop-blur-sm"
-                          },
-                          {
-                           "el": "button",
-                           "action": "setField",
-                           "to": "bview",
-                           "quiet": true,
-                           "label": "",
-                           "icon": "chevron_right",
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           },
-                           "value": {
-                            "op": "min",
-                            "a": {
-                             "op": "add",
-                             "a": {
-                              "op": "max",
-                              "a": {
-                               "op": "concat",
-                               "parts": [
-                                "{item.bview}"
-                               ]
-                              },
-                              "b": 1
-                             },
-                             "b": 1
-                            },
-                            "b": {
-                             "op": "div",
-                             "a": "{values.svSec}",
-                             "b": 10
-                            }
-                           },
-                           "className": "absolute right-1 top-1/2 -translate-y-1/2 z-30 justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-[#17253a]/75 !text-white !border-0 backdrop-blur-sm"
-                          },
-                          {
-                           "el": "row",
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           },
-                           "style": {
-                            "flexWrap": "nowrap"
-                           },
-                           "className": "absolute top-1.5 right-1.5 z-30 items-center px-2 py-1 rounded-lg bg-[#17253a]/80 backdrop-blur-sm pointer-events-none",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": {
-                              "op": "concat",
-                              "parts": [
-                               "",
-                               {
-                                "op": "max",
-                                "a": {
-                                 "op": "concat",
-                                 "parts": [
-                                  "{item.bview}"
-                                 ]
-                                },
-                                "b": 1
-                               },
-                               "/",
-                               {
-                                "op": "div",
-                                "a": "{values.svSec}",
-                                "b": 10
-                               }
-                              ]
-                             },
-                             "className": "!text-[11px] font-black !text-white tabular-nums whitespace-nowrap"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -12439,7 +12493,7 @@
                            },
                            "b": {
                             "op": "eq",
-                            "a": "{item.slots.board}",
+                            "a": "{item.slots.video}",
                             "b": ""
                            }
                           }
@@ -12494,7 +12548,7 @@
                              "op": "not",
                              "a": {
                               "op": "eq",
-                              "a": "{item.slots.board}",
+                              "a": "{item.slots.video}",
                               "b": ""
                              }
                             }
@@ -12516,128 +12570,141 @@
                       },
                       {
                        "el": "box",
-                       "className": "relative",
+                       "className": "aspect-[9/16] rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-[var(--ev-bg)]/60 flex flex-col items-center justify-center gap-2",
                        "card": [
                         {
-                         "el": "media-slot",
-                         "src": "{item.slots.board}",
-                         "aspect": "9:16",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-2 ring-[var(--ev-accent)]/50"
-                        },
-                        {
-                         "el": "row",
-                         "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#17253a]/75 backdrop-blur-sm pointer-events-none",
-                         "style": {
-                          "flexWrap": "nowrap"
-                         },
-                         "card": [
-                          {
-                           "el": "icon",
-                           "icon": "movie",
-                           "textSize": "text-[14px]",
-                           "className": "!text-white leading-none flex items-center justify-center"
-                          },
-                          {
-                           "el": "text",
-                           "value": "ได้ภาพแล้ว — รอวิดีโอ",
-                           "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
-                          }
-                         ],
+                         "el": "icon",
+                         "icon": "movie",
+                         "textSize": "text-[26px]",
                          "when": {
                           "op": "and",
-                          "list": [
-                           {
-                            "op": "not",
-                            "a": {
-                             "op": "or",
-                             "list": [
-                              {
-                               "op": "eq",
-                               "a": "{item.status}",
-                               "b": "running"
-                              },
-                              {
-                               "op": "eq",
-                               "a": "{item.meta.retrying}",
-                               "b": "1"
-                              }
-                             ]
-                            }
-                           },
-                           {
-                            "op": "not",
-                            "a": {
-                             "op": "eq",
-                             "a": "{item.status}",
-                             "b": "error"
-                            }
+                          "a": {
+                           "op": "not",
+                           "a": {
+                            "op": "or",
+                            "list": [
+                             {
+                              "op": "eq",
+                              "a": "{item.status}",
+                              "b": "running"
+                             },
+                             {
+                              "op": "eq",
+                              "a": "{item.meta.retrying}",
+                              "b": "1"
+                             }
+                            ]
                            }
-                          ]
-                         }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.status}",
+                            "b": "error"
+                           }
+                          }
+                         },
+                         "className": "opacity-25 leading-none flex items-center justify-center"
                         },
                         {
-                         "el": "row",
-                         "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--ev-accent)]/90 backdrop-blur-sm pointer-events-none",
-                         "style": {
-                          "flexWrap": "nowrap"
-                         },
-                         "card": [
-                          {
-                           "el": "spinner",
-                           "className": "!text-[14px]"
-                          },
-                          {
-                           "el": "text",
-                           "value": "กำลังสร้างวิดีโอ…",
-                           "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
-                          }
-                         ],
-                         "when": {
-                          "op": "eq",
-                          "a": "{item.status}",
-                          "b": "running"
-                         }
-                        },
-                        {
-                         "el": "row",
-                         "className": "absolute bottom-2 left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/90 backdrop-blur-sm pointer-events-none",
-                         "style": {
-                          "flexWrap": "nowrap"
-                         },
-                         "card": [
-                          {
-                           "el": "icon",
-                           "icon": "hourglass_top",
-                           "textSize": "text-[13px]",
-                           "className": "!text-white leading-none flex items-center justify-center"
-                          },
-                          {
-                           "el": "text",
-                           "value": "กำลังพักก่อนลองใหม่…",
-                           "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
-                          }
-                         ],
+                         "el": "text",
+                         "value": "รอสร้างวิดีโอ",
                          "when": {
                           "op": "and",
+                          "a": {
+                           "op": "not",
+                           "a": {
+                            "op": "or",
+                            "list": [
+                             {
+                              "op": "eq",
+                              "a": "{item.status}",
+                              "b": "running"
+                             },
+                             {
+                              "op": "eq",
+                              "a": "{item.meta.retrying}",
+                              "b": "1"
+                             }
+                            ]
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.status}",
+                            "b": "error"
+                           }
+                          }
+                         },
+                         "className": "!text-[13px] font-bold opacity-45"
+                        },
+                        {
+                         "el": "spinner",
+                         "className": "!text-[24px]",
+                         "when": {
+                          "op": "or",
                           "list": [
+                           {
+                            "op": "eq",
+                            "a": "{item.status}",
+                            "b": "running"
+                           },
                            {
                             "op": "eq",
                             "a": "{item.meta.retrying}",
                             "b": "1"
-                           },
-                           {
-                            "op": "not",
-                            "a": {
-                             "op": "eq",
-                             "a": "{item.status}",
-                             "b": "running"
-                            }
                            }
                           ]
                          }
+                        },
+                        {
+                         "el": "text",
+                         "when": {
+                          "op": "or",
+                          "list": [
+                           {
+                            "op": "eq",
+                            "a": "{item.status}",
+                            "b": "running"
+                           },
+                           {
+                            "op": "eq",
+                            "a": "{item.meta.retrying}",
+                            "b": "1"
+                           }
+                          ]
+                         },
+                         "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                         "value": {
+                          "op": "lookup",
+                          "table": "opNames",
+                          "key": "{values.__runStage}",
+                          "fallback": "กำลังทำ…"
+                         }
+                        },
+                        {
+                         "el": "icon",
+                         "icon": "error_outline",
+                         "textSize": "text-[26px]",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.status}",
+                          "b": "error"
+                         },
+                         "className": "!text-rose-500 opacity-70 leading-none flex items-center justify-center"
+                        },
+                        {
+                         "el": "text",
+                         "value": "สร้างวิดีโอไม่สำเร็จ",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.status}",
+                          "b": "error"
+                         },
+                         "className": "!text-[13px] font-bold !text-rose-500 text-center px-2"
                         }
                        ],
                        "when": {
@@ -12662,7 +12729,7 @@
                              "op": "not",
                              "a": {
                               "op": "eq",
-                              "a": "{item.slots.board}",
+                              "a": "{item.slots.video}",
                               "b": ""
                              }
                             }
@@ -12732,7 +12799,7 @@
                             "op": "not",
                             "a": {
                              "op": "eq",
-                             "a": "{item.slots.board}",
+                             "a": "{item.slots.video}",
                              "b": ""
                             }
                            }
@@ -12819,7 +12886,7 @@
                       },
                       "b": {
                        "op": "eq",
-                       "a": "{item.slots.board}",
+                       "a": "{item.slots.video}",
                        "b": ""
                       }
                      }
@@ -12854,7 +12921,7 @@
                        "op": "not",
                        "a": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -16646,7 +16713,7 @@
                        },
                        "b": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -16739,7 +16806,7 @@
                        "op": "not",
                        "a": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -16814,7 +16881,7 @@
                        },
                        "b": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -16865,7 +16932,7 @@
                       },
                       "b": {
                        "op": "eq",
-                       "a": "{item.slots.board}",
+                       "a": "{item.slots.video}",
                        "b": ""
                       }
                      }
@@ -16946,7 +17013,7 @@
                      },
                      "b": {
                       "op": "eq",
-                      "a": "{item.slots.board}",
+                      "a": "{item.slots.video}",
                       "b": ""
                      }
                     }
@@ -17025,7 +17092,7 @@
                        "op": "not",
                        "a": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -17136,7 +17203,7 @@
                        "op": "not",
                        "a": {
                         "op": "eq",
-                        "a": "{item.slots.board}",
+                        "a": "{item.slots.video}",
                         "b": ""
                        }
                       }
@@ -17256,7 +17323,7 @@
                       "op": "not",
                       "a": {
                        "op": "eq",
-                       "a": "{item.slots.board}",
+                       "a": "{item.slots.video}",
                        "b": ""
                       }
                      }
