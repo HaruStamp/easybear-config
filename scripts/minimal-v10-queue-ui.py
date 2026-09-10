@@ -22,6 +22,7 @@ WAIT_BOARD = 'รอคิววาดสตอรีบอร์ด'
 WAIT_VIDEO = 'รอคิวสร้างวิดีโอ'
 BEAT = 'animate-evbeat'          # ★ต้องมี @keyframes evbeat ใน framework/app-css.ts ไม่งั้นคลาสนี้ประกาศแล้วไม่มีผล
 REAL_BADGE = 'คลิปที่ {item.clipIndex}/{values.clipsPerProduct}'   # ป้ายบนการ์ดจริง = ต้นแบบของป้ายบนการ์ดผี
+WRAP_TOKENS = ['!whitespace-normal', '@[420px]:!whitespace-nowrap']   # ยกมาจากชื่อสินค้าบนการ์ดจริง
 
 
 def boxes(n, path='$'):
@@ -148,6 +149,14 @@ def patch(cfg):
         if chip is not None:
             b['card'].remove(chip)
             log.append('  · เอาชิป [N คลิป] ออก @%s' % path[-46:])
+        # ชื่อสินค้า: การ์ดจริงตัดบรรทัดได้บนมือถือ (ภาพที่พี่หมีชี้เป็นแบบนั้น) การ์ดผีตัดด้วย … ⇒ ให้เหมือนกัน
+        #   🪤 ลอกเฉพาะ "โทเคนเรื่องการตัดบรรทัด" ห้ามลอกทั้งชุด — การ์ดจริงมี !text-white เพราะนั่งบนแถบไล่สีเข้ม
+        nm = next((c for c in kids if c.get('el') == 'text' and c.get('value') == '{item.name}'), None)
+        if nm is not None:
+            for tok in WRAP_TOKENS:
+                if tok not in (nm.get('className') or ''):
+                    nm['className'] = ((nm.get('className') or '') + ' ' + tok).strip()
+                    log.append('  · ชื่อสินค้าตัดบรรทัดได้เหมือนการ์ดจริง (%s)' % tok)
         if idx is not None and not (len(idx['value'].get('parts', [])) == 4 and idx.get('className') == BADGE_CLS):
             idx['value'] = {"op": "concat", "parts": ["คลิปที่ ",
                                                      {"op": "add", "a": {"op": "index"}, "b": 1},
