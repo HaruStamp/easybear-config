@@ -572,6 +572,7 @@ def patch_ui(cfg):
     n_bt += patch_video_placeholder(cfg)
     n_bt += patch_default_tab(cfg)
     n_bt += patch_media_col_mobile(cfg)
+    n_bt += patch_done_card_tint(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -752,6 +753,31 @@ def patch_drop_col_divider(cfg):
         if '@[880px]:border-l' in cn:
             n['className'] = cn.replace('@[880px]:border-l ', '').replace('@[880px]:border-l', '').strip()
             hit += 1
+    return hit
+
+
+def patch_done_card_tint(cfg):
+    """การ์ดคลิปที่เสร็จแล้ว: พื้นเขียวไม่เคยขึ้นเลย เพราะ gradient ทับอยู่ (ทีม showhow ชี้ 2026-09-10)
+
+    ต้นเหตุ — **`!important` ที่ไม่ได้ทับอะไรเลย** (ร้ายกว่าแบบชนกันเอง เพราะดูเหมือนบังคับแล้ว):
+      className ฐาน  : `bg-gradient-to-br from-[var(--ev-surface)] to-[var(--ev-bg)]` = **background-image**
+      classWhen เสร็จ: `!bg-green-500/[0.05]`                                        = **background-color**
+      ⇒ คนละ property กัน `!` ไม่ได้แข่งกับใคร · และ background-image วาดทับ background-color เสมอ
+      ⇒ ธีมสว่าง (#ffffff → #f4f6f9 ทึบทั้งคู่) = **สีเขียวถูกบังสนิท 100%**
+    วัดจริงในเบราว์เซอร์ (ไม่ใช่อ่านจากโค้ด): bgColor `rgba(34,197,94,0.05)` มาแล้วจริง
+      แต่ bgImage `linear-gradient(…, rgb(255,255,255), rgb(244,246,249))` ทับหมด · ขอบเขียวขึ้นปกติ
+    ⇒ เติม `!bg-none` เพื่อล้าง background-image ก่อน สีพื้นถึงจะโผล่
+    🪤 ยาม ⑯ ใน minimal-cliplen เฝ้าคู่ "gradient ↔ สีพื้น" ไว้แล้ว — ห้ามถอด !bg-none ออกเฉย ๆ
+    """
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not isinstance(n, dict) or not isinstance(n.get('classWhen'), list): continue
+        base = str(n.get('className') or '')
+        if 'bg-gradient-' not in base or 'bg-none' in base: continue
+        for w in n['classWhen']:
+            cls = str((w or {}).get('class') or '')
+            if re.search(r'(^|\s)!?bg-(?!gradient|none|\[url)', cls) and 'bg-none' not in cls:
+                w['class'] = '!bg-none ' + cls; hit += 1
     return hit
 
 
