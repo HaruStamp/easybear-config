@@ -1362,6 +1362,34 @@ def retime_row(row, n):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+def patch_auto_gens(cfg):
+    """🔴 โหมดออโต้เดินคนละทางกับปุ่มทั้งหมด — `auto.productLoop.gens` ไม่ได้ถูกอัปเดตตอนทำ 20/30 วิ
+
+    อาการที่พี่หมีเจอบน Android (2026-09-10): เลือก 30 วิ · โหมดออโต้ → **ได้บอร์ดใบเดียว
+    แล้วต่อวิดีโอเลย ได้คลิป 10 วิ** โดยไม่มี error สักตัว
+
+    ราก: `runProductLoop` ไล่ `cfg.gens` ตามลำดับต่อคลิป · ค่าเดิมคือ ['mnBoard','mnVideo']
+      = op ของ **ช่วงที่ 1 เท่านั้น** ⇒ ช่วง 2/3 ไม่เคยถูกเรียกเลย
+      ซ้ำร้าย `loopItemDone` ก็ดูแค่ gens เดียวกัน ⇒ **สินค้านั้นถูกนับว่า "ครบแล้ว"** ⇒ ไม่มีรอบไหนกลับมาทำต่อ
+
+    🪤 บทเรียน: รอบ v7 คูณ op + แก้ `stages` + แก้ปุ่มครบ 17 จุด **แต่ลืมทางเดินที่ไม่ใช่ปุ่ม**
+       `auto.productLoop` เป็น "รายชื่อ op ชุดที่ 3" ที่ไม่ได้อยู่ในปุ่มและไม่ได้อยู่ใน stages
+       ⇒ เวลาคูณ op ต้องไล่ **ทุกที่ที่มีรายชื่อ op** ไม่ใช่แค่ที่ที่มองเห็นบนจอ
+    """
+    pl = (cfg.get('auto') or {}).get('productLoop')
+    assert pl, 'ไม่มี auto.productLoop — config เปลี่ยนโครง?'
+    ids = {o['id'] for o in cfg['ops']}
+    # ★ประกอบจาก op ที่มีอยู่จริง ไม่ใช่รายชื่อตายตัว — เพิ่มช่วงที่ 4 เมื่อไหร่ ตัวนี้ตามเอง
+    want = [b for b in ('mnBoard3', 'mnBoard2', 'mnBoard') if b in ids] \
+         + [v for v in ('mnVideo3', 'mnVideo2', 'mnVideo') if v in ids]
+    assert len(want) == len(LENS) * 2, 'จำนวน op ที่จะให้ออโต้เดินไม่ตรงกับจำนวนช่วง (%d)' % len(want)
+    # ★ลำดับต้องเป็น "ช่วงท้ายก่อน" เหมือน stages เป๊ะ — กติกาเดียวกับที่หัวไฟล์อธิบายไว้
+    assert want[0] == 'mnBoard3' and want[2] == 'mnBoard' and want[3] == 'mnVideo3', 'ลำดับ gens ผิด (ต้องช่วงท้ายก่อน)'
+    old = list(pl.get('gens') or [])
+    pl['gens'] = want
+    return 0 if old == want else 1
+
+
 def main():
     files = sys.argv[1:] or ['minimal-lab.json']
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1380,10 +1408,11 @@ def main():
         #    ⇒ รันก่อน = anchor หาย แล้วบล็อกความต่อเนื่องไม่ถูกแทรก **แบบเงียบ ๆ** (ยาม ⑪ จับได้)
         #    📌 บทเรียน: ข้อความใน prompt เป็น 'จุดยึด' ของ patch ตัวอื่นได้ — แทนที่เมื่อไหร่ต้องไล่ดูว่าใครใช้มันเป็น anchor
         n_pl = patch_product_lock(cfg) + patch_vo_fill(cfg) + patch_vo_seam(cfg)
+        n_ag = patch_auto_gens(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d · ล็อกสินค้า+บทพูดเต็ม %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt, n_pl))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d · ล็อกสินค้า+บทพูดเต็ม %d · แก้ชุด op ของโหมดออโต้ %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt, n_pl, n_ag))
 
 
 if __name__ == '__main__':
