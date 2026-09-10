@@ -6021,7 +6021,7 @@
              "card": [
               {
                "el": "icon",
-               "icon": "brush",
+               "icon": "schedule",
                "textSize": "text-[18px]",
                "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
               },
@@ -12002,7 +12002,7 @@
                        "card": [
                         {
                          "el": "icon",
-                         "icon": "brush",
+                         "icon": "schedule",
                          "textSize": "text-[28px]",
                          "className": "!text-[var(--ev-accent)] opacity-60 leading-none flex items-center justify-center",
                          "when": {
@@ -12048,23 +12048,15 @@
                          }
                         },
                         {
-                         "el": "spinner",
-                         "className": "!text-[24px]",
-                         "when": {
-                          "op": "or",
-                          "list": [
-                           {
-                            "op": "eq",
-                            "a": "{item.status}",
-                            "b": "running"
-                           },
-                           {
-                            "op": "eq",
-                            "a": "{item.meta.retrying}",
-                            "b": "1"
-                           }
-                          ]
-                         }
+                         "el": "icon",
+                         "icon": {
+                          "op": "lookup",
+                          "table": "opIcons",
+                          "key": "{values.__runStage}",
+                          "fallback": "autorenew"
+                         },
+                         "textSize": "text-[13px]",
+                         "className": "!text-[24px]"
                         },
                         {
                          "el": "text",
@@ -12593,23 +12585,15 @@
                          "className": "!text-[13px] font-bold opacity-60"
                         },
                         {
-                         "el": "spinner",
-                         "className": "!text-[24px]",
-                         "when": {
-                          "op": "or",
-                          "list": [
-                           {
-                            "op": "eq",
-                            "a": "{item.status}",
-                            "b": "running"
-                           },
-                           {
-                            "op": "eq",
-                            "a": "{item.meta.retrying}",
-                            "b": "1"
-                           }
-                          ]
-                         }
+                         "el": "icon",
+                         "icon": {
+                          "op": "lookup",
+                          "table": "opIcons",
+                          "key": "{values.__runStage}",
+                          "fallback": "autorenew"
+                         },
+                         "textSize": "text-[13px]",
+                         "className": "!text-[24px]"
                         },
                         {
                          "el": "text",
@@ -12944,7 +12928,14 @@
                    },
                    "card": [
                     {
-                     "el": "spinner",
+                     "el": "icon",
+                     "icon": {
+                      "op": "lookup",
+                      "table": "opIcons",
+                      "key": "{values.__runStage}",
+                      "fallback": "autorenew"
+                     },
+                     "textSize": "text-[13px]",
                      "className": "!text-[13px] !text-white"
                     },
                     {
@@ -12979,7 +12970,7 @@
                    "card": [
                     {
                      "el": "icon",
-                     "icon": "hourglass_top",
+                     "icon": "schedule",
                      "textSize": "text-[13px]",
                      "className": "!text-white leading-none flex items-center justify-center"
                     },
@@ -13063,7 +13054,7 @@
                    "card": [
                     {
                      "el": "icon",
-                     "icon": "hourglass_empty",
+                     "icon": "schedule",
                      "textSize": "text-[13px]",
                      "className": "!text-white leading-none flex items-center justify-center"
                     },
@@ -17414,27 +17405,19 @@
                "className": "rounded-[26px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] py-10 px-3 @[420px]:px-6 flex flex-col items-center justify-center gap-2.5",
                "card": [
                 {
-                 "el": "spinner",
-                 "className": "!text-[24px]",
-                 "when": {
-                  "op": "or",
-                  "list": [
-                   {
-                    "op": "eq",
-                    "a": "{item.status}",
-                    "b": "running"
-                   },
-                   {
-                    "op": "eq",
-                    "a": "{item.fields.name}",
-                    "b": "{values.__runLoopProd}"
-                   }
-                  ]
-                 }
+                 "el": "icon",
+                 "icon": {
+                  "op": "lookup",
+                  "table": "opIcons",
+                  "key": "{values.__runStage}",
+                  "fallback": "autorenew"
+                 },
+                 "textSize": "text-[13px]",
+                 "className": "!text-[24px]"
                 },
                 {
                  "el": "icon",
-                 "icon": "hourglass_empty",
+                 "icon": "schedule",
                  "textSize": "text-[22px]",
                  "className": "opacity-30 leading-none flex items-center justify-center",
                  "when": {
@@ -17897,7 +17880,7 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "brush",
+                 "icon": "schedule",
                  "textSize": "text-[24px]",
                  "className": "opacity-25 leading-none flex items-center justify-center",
                  "when": {
@@ -17955,58 +17938,15 @@
                  }
                 },
                 {
-                 "el": "spinner",
-                 "className": "!text-[26px]",
-                 "when": {
-                  "op": "and",
-                  "a": {
-                   "op": "or",
-                   "list": [
-                    {
-                     "op": "eq",
-                     "a": "{item.status}",
-                     "b": "running"
-                    },
-                    {
-                     "op": "eq",
-                     "a": "{item.meta.retrying}",
-                     "b": "1"
-                    }
-                   ]
-                  },
-                  "b": {
-                   "op": "not",
-                   "a": {
-                    "op": "and",
-                    "a": {
-                     "op": "not",
-                     "a": {
-                      "op": "eq",
-                      "a": "{values.mode}",
-                      "b": "auto"
-                     }
-                    },
-                    "b": {
-                     "op": "not",
-                     "a": {
-                      "op": "or",
-                      "list": [
-                       {
-                        "op": "eq",
-                        "a": "{item.status}",
-                        "b": "running"
-                       },
-                       {
-                        "op": "eq",
-                        "a": "{item.meta.retrying}",
-                        "b": "1"
-                       }
-                      ]
-                     }
-                    }
-                   }
-                  }
-                 }
+                 "el": "icon",
+                 "icon": {
+                  "op": "lookup",
+                  "table": "opIcons",
+                  "key": "{values.__runStage}",
+                  "fallback": "autorenew"
+                 },
+                 "textSize": "text-[13px]",
+                 "className": "!text-[26px]"
                 },
                 {
                  "el": "text",
@@ -18403,7 +18343,14 @@
                },
                "card": [
                 {
-                 "el": "spinner",
+                 "el": "icon",
+                 "icon": {
+                  "op": "lookup",
+                  "table": "opIcons",
+                  "key": "{values.__runStage}",
+                  "fallback": "autorenew"
+                 },
+                 "textSize": "text-[13px]",
                  "className": "!text-[13px] !text-white !w-[15px] shrink-0"
                 },
                 {
@@ -18438,7 +18385,7 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "hourglass_top",
+                 "icon": "schedule",
                  "textSize": "text-[13px]",
                  "className": "!text-white leading-none flex items-center justify-center !w-[15px] shrink-0"
                 },
@@ -18540,7 +18487,7 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "hourglass_empty",
+                 "icon": "schedule",
                  "textSize": "text-[13px]",
                  "className": "!text-white leading-none flex items-center justify-center !w-[15px] shrink-0"
                 },
@@ -18743,27 +18690,19 @@
                  "className": "aspect-[9/16] rounded-[18px] border-2 border-dashed border-[var(--ev-accent)]/40 bg-[var(--ev-accent)]/[0.04] flex flex-col items-center justify-center gap-2.5 px-3",
                  "card": [
                   {
-                   "el": "spinner",
-                   "className": "!text-[26px]",
-                   "when": {
-                    "op": "or",
-                    "list": [
-                     {
-                      "op": "eq",
-                      "a": "{item.status}",
-                      "b": "running"
-                     },
-                     {
-                      "op": "eq",
-                      "a": "{item.fields.name}",
-                      "b": "{values.__runLoopProd}"
-                     }
-                    ]
-                   }
+                   "el": "icon",
+                   "icon": {
+                    "op": "lookup",
+                    "table": "opIcons",
+                    "key": "{values.__runStage}",
+                    "fallback": "autorenew"
+                   },
+                   "textSize": "text-[13px]",
+                   "className": "!text-[26px]"
                   },
                   {
                    "el": "icon",
-                   "icon": "hourglass_empty",
+                   "icon": "schedule",
                    "textSize": "text-[24px]",
                    "className": "opacity-30 leading-none flex items-center justify-center",
                    "when": {
@@ -20058,7 +19997,11 @@
    "mnPlan": "กำลังเขียนบท",
    "mnQueue": "กำลังจัดคิวคลิป",
    "mnBoard": "กำลังวาดสตอรีบอร์ด",
-   "mnVideo": "กำลังสร้างวิดีโอ"
+   "mnVideo": "กำลังสร้างวิดีโอ",
+   "mnBoard2": "กำลังวาดสตอรีบอร์ด",
+   "mnBoard3": "กำลังวาดสตอรีบอร์ด",
+   "mnVideo2": "กำลังสร้างวิดีโอ",
+   "mnVideo3": "กำลังสร้างวิดีโอ"
   },
   "charPlan": {
    "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ห้ามมีคนในทุกฉาก สินค้าเป็นพระเอกล้วน (มือสะอาดตามธรรมชาติโผล่สั้นๆ ได้เฉพาะฉากสาธิตที่จำเป็น) — เขียนบท s*th/s*en ให้ไม่มีบุคคล",
@@ -20250,6 +20193,16 @@
    "10": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 10 วินาที มี 5 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo5 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- ฉากละ 5-7 คำไทย รวมทั้งคลิป 25-35 คำ — ให้พูดเต็ม 2 วินาทีของฉากนั้นพอดี ไม่เหลือช่องเงียบ\n- เขียนให้ vo1 ถึง vo5 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 10 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน (แยกกันเมื่อไหร่จะเกิดช่วงเงียบคั่นระหว่างฉาก)",
    "20": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 20 วินาที มี 10 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo10 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- ฉากละ 5-7 คำไทย รวมทั้งคลิป 50-70 คำ — ให้พูดเต็ม 2 วินาทีของฉากนั้นพอดี ไม่เหลือช่องเงียบ\n- เขียนให้ vo1 ถึง vo10 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 20 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน (แยกกันเมื่อไหร่จะเกิดช่วงเงียบคั่นระหว่างฉาก)",
    "30": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 30 วินาที มี 15 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo15 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- ฉากละ 5-7 คำไทย รวมทั้งคลิป 75-105 คำ — ให้พูดเต็ม 2 วินาทีของฉากนั้นพอดี ไม่เหลือช่องเงียบ\n- เขียนให้ vo1 ถึง vo15 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 30 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน (แยกกันเมื่อไหร่จะเกิดช่วงเงียบคั่นระหว่างฉาก)"
+  },
+  "opIcons": {
+   "mnPlan": "edit_note",
+   "mnQueue": "playlist_add",
+   "mnBoard": "image",
+   "mnBoard2": "image",
+   "mnBoard3": "image",
+   "mnVideo": "movie",
+   "mnVideo2": "movie",
+   "mnVideo3": "movie"
   }
  },
  "seed": {

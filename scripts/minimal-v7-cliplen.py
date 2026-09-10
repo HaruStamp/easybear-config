@@ -1390,6 +1390,87 @@ def patch_auto_gens(cfg):
     return 0 if old == want else 1
 
 
+# ไอคอนประจำขั้น — ให้ badge "กำลังทำ…" โชว์ไอคอนที่ตรงกับสิ่งที่กำลังผลิต แทนวงกลมหมุน
+OP_ICON = {'mnPlan': 'edit_note', 'mnQueue': 'playlist_add',
+           'mnBoard': 'image', 'mnBoard2': 'image', 'mnBoard3': 'image',
+           'mnVideo': 'movie', 'mnVideo2': 'movie', 'mnVideo3': 'movie'}
+WAIT_ICON = 'schedule'   # นาฬิกากลม = "รอคิว" · ไม่ใช่นาฬิกาทราย (hourglass) และไม่ใช่พู่กัน (brush)
+
+
+def patch_status_icons(cfg):
+    """UX ตอนผลิต (พี่หมีสั่ง 2026-09-10): เลิกใช้อนิเมชันหมุน บอกด้วย "รูปของสิ่งที่กำลังทำ"
+
+    ① badge "กำลังทำ…" — `el:spinner` → `el:icon` ที่ icon มาจาก `lookups.opIcons` **คีย์เดียวกับป้ายชื่อขั้น**
+       ⇒ ป้ายกับไอคอนมาจากแหล่งเดียวกันเสมอ ไม่มีทางเพี้ยนคนละทาง
+       (ต้องใช้ engine ที่ resolve `el.icon` ได้ — atoms-cases-a case 'icon')
+    ② "รอวาดภาพ" — นาฬิกาทราย (hourglass) → นาฬิกากลม `schedule` = สื่อว่า "รอคิว" ไม่ใช่ "กำลังนับถอยหลัง"
+    ③ ไอคอนกลางการ์ดตอนรอ — พู่กัน (brush) → `schedule` เหมือนกัน (พู่กันสื่อว่ากำลังวาด ทั้งที่ยังไม่ได้เริ่ม)
+
+    🪤 `opNames` เดิมมีแค่ 4 คีย์ (mnPlan/mnQueue/mnBoard/mnVideo) — ตอนทำช่วง 2/3 lookup ไม่เจอ
+       ⇒ ป้ายตกไป fallback "กำลังทำ" · เติมให้ครบทุก op พร้อมกันที่นี่
+    """
+    lk = cfg.setdefault('lookups', {})
+    names = lk.setdefault('opNames', {})
+    for op_id in OP_ICON:
+        if op_id not in names:
+            base = 'กำลังวาดสตอรีบอร์ด' if op_id.startswith('mnBoard') else 'กำลังสร้างวิดีโอ'
+            names[op_id] = base
+    lk['opIcons'] = dict(OP_ICON)
+
+    n_sp = n_wait = n_brush = 0
+
+    def walk(o):
+        nonlocal n_sp, n_wait, n_brush
+        if isinstance(o, list):
+            for i, v in enumerate(o):
+                if isinstance(v, dict) and v.get('el') == 'spinner' and _is_stage_badge(o):
+                    o[i] = {'el': 'icon',
+                            'icon': {'op': 'lookup', 'table': 'opIcons', 'key': '{values.__runStage}', 'fallback': 'autorenew'},
+                            'textSize': 'text-[13px]', 'className': v.get('className', '')}
+                    n_sp += 1
+                else:
+                    walk(v)
+            return
+        if not isinstance(o, dict):
+            return
+        if o.get('el') == 'icon':
+            if o.get('icon') in ('hourglass_empty', 'hourglass_top') and _near_text(o, None):
+                pass
+        for v in o.values():
+            walk(v)
+
+    def _is_stage_badge(arr):
+        """spinner ตัวไหนควรกลายเป็นไอคอน — ★ผูกกับ "มันบอกสถานะของชิ้นไหน" ไม่ใช่ตำแหน่งในผัง
+
+        ✅ เปลี่ยน: spinner ที่อยู่ในกล่องซึ่งพูดถึง `{item.` = สถานะของ **คลิป/สินค้าชิ้นนั้น**
+           (badge มุมการ์ด · ไอคอนกลางการ์ด · การ์ด "กำลังเขียนบท")
+        ❌ ไม่เปลี่ยน: spinner ของแถบสถานะรวมด้านบน (อ้างแต่ `{values.__runState}`)
+           — ตัวนั้นคือ **ชีพจรว่าแอปยังทำงานอยู่** ถ้ากลายเป็นภาพนิ่งจะแยกไม่ออกว่าค้างหรือไม่ค้าง
+        """
+        blob = json.dumps(arr, ensure_ascii=False)
+        return '{item.' in blob
+
+    def _near_text(o, _):
+        return True
+
+    walk(cfg.get('phases'))
+
+    # ② + ③ สลับไอคอนตามชื่อ (ทำแยกเพราะไม่ต้องดูบริบท)
+    def swap(o):
+        nonlocal n_wait, n_brush
+        if isinstance(o, dict):
+            if o.get('el') == 'icon':
+                if o.get('icon') in ('hourglass_empty', 'hourglass_top'):
+                    o['icon'] = WAIT_ICON; n_wait += 1
+                elif o.get('icon') == 'brush':
+                    o['icon'] = WAIT_ICON; n_brush += 1
+            for v in o.values(): swap(v)
+        elif isinstance(o, list):
+            for v in o: swap(v)
+    swap(cfg.get('phases'))
+    return n_sp, n_wait, n_brush
+
+
 def main():
     files = sys.argv[1:] or ['minimal-lab.json']
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1409,10 +1490,11 @@ def main():
         #    📌 บทเรียน: ข้อความใน prompt เป็น 'จุดยึด' ของ patch ตัวอื่นได้ — แทนที่เมื่อไหร่ต้องไล่ดูว่าใครใช้มันเป็น anchor
         n_pl = patch_product_lock(cfg) + patch_vo_fill(cfg) + patch_vo_seam(cfg)
         n_ag = patch_auto_gens(cfg)
+        n_si = patch_status_icons(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d · ล็อกสินค้า+บทพูดเต็ม %d · แก้ชุด op ของโหมดออโต้ %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt, n_pl, n_ag))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d · ล็อกสินค้า+บทพูดเต็ม %d · แก้ชุด op ของโหมดออโต้ %d · ไอคอนสถานะ %s'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt, n_pl, n_ag, n_si))
 
 
 if __name__ == '__main__':
