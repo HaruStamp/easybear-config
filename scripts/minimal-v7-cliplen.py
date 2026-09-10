@@ -971,32 +971,64 @@ def _is_grid_bar(c):
     return has_nav and has_lbl
 
 
-def _chip_bar():
-    """ลิสต์: ตัวสลับบอร์ด = **‹ บอร์ด N/N ›  ไม่มีกล่อง** (พี่หมีเลือกหลังเทียบ 3 แบบ 2026-09-10)
+# วัดจริงในแล็บ 2026-09-10 — ความกว้างชิปเมื่อแบ่งเต็มคอลัมน์สื่อ:
+#   3 ใบ คอม 49 · มือถือ 68   ✅        5 ใบ คอม 26 · มือถือ 38   ❌
+#   4 ใบ คอม 35 · มือถือ 49   ✅        6 ใบ คอม 23 · มือถือ 30   ❌ (เล็กกว่ามาตรฐาน 44px ถึง 1 ใน 3)
+# ⇒ เส้นแบ่งอยู่ระหว่าง 4 กับ 5 — ไม่ใช่การเดา
+CHIP_MAX_SEC = 40   # ≤ 40 วิ (4 ใบ) = ชิป · เกินนี้ = ตัวเดินหน้าถอยหลัง
 
-    เทียบของจริงในแล็บ 3 แบบ:
-      A ชิป [1][2][3]      กดถึงทุกใบใน 1 คลิก **แต่ชิปที่ไฮไลต์เป็นสีฟ้า ไปแข่งกับปุ่ม [บอร์ด] ที่ฟ้าเหมือนกัน**
-                           และตัวมันเองเป็น "กล่องมีช่อง" = ภาษาเดียวกับ toggle ⇒ อ่านเป็นของระดับเดียวกัน
-      B ลูกศร + กล่อง       ยังเป็นกล่อง + มีปุ่มทึบ 2 ปุ่ม ⇒ **หนักกว่า A ด้วยซ้ำ** ไม่ได้แก้ปัญหาที่ตั้งใจแก้
-      C ลูกศร ไม่มีกล่อง ✅  การ์ดเหลือ **กล่องควบคุมเดียว** คือ [บอร์ด|วิดีโอ] · ตัวสลับบอร์ดกลายเป็นคำบรรยาย
-                           + ลูกศรเสมอขอบนอกของ toggle พอดี · และได้คำว่า "บอร์ด" กลับมาซึ่ง A ไม่มี
-    ⇒ ข้อแลกเปลี่ยนที่ยอมรับ: ไปใบที่ 3 ต้องกด 2 ครั้ง (A กดครั้งเดียว) — ที่ 2-3 ใบถือว่าน้อยมาก
-    🔴 quiet:true ยังต้องมี — ไม่งั้นแค่เลื่อนดูบอร์ด คลิปที่ done กลาย stale แล้วถูกผลิตซ้ำ เสียเครดิตฟรี
+
+def _chip_bar():
+    """≤4 ใบ: ชิป [1][2][3][4] — พี่หมีเลือกแบบนี้หลังเทียบของจริง 3 แบบ
+
+    ★กดถึงทุกใบใน 1 คลิก · เห็นจำนวนใบทั้งหมดโดยไม่ต้องอ่านตัวหนังสือ
+    🔴 quiet:true ต้องมี — ไม่งั้นแค่เลื่อนดูบอร์ด คลิปที่ done กลาย stale แล้วถูกผลิตซ้ำ เสียเครดิตฟรี
+    🔴 className ฐานห้ามมีสี (กฎ !important ชนกัน) ⇒ แยก 2 สถานะเป็น classWhen คนละข้อ
+    ★จอคอมเตี้ยกว่าปุ่ม [บอร์ด|วิดีโอ] (32 vs 40) = ไม่แข่งกัน · มือถือคง 44px ตามกฎ tap target
+    """
+    chips = []
+    for k in range(1, CHIP_MAX_SEC // 10 + 1):
+        on = {'op': 'eq', 'a': CUR, 'b': k}
+        c = {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True,
+             'label': str(k), 'value': str(k),
+             'className': ('flex-1 justify-center !h-11 @[420px]:!h-8 !min-h-0 !px-2 '
+                           '!rounded-lg !text-[11.5px] font-black !border-0'),
+             'classWhen': [{'when': on, 'class': '!bg-[var(--ev-accent)] !text-white'},
+                           {'when': {'op': 'not', 'a': on},
+                            'class': '!bg-transparent !text-[var(--ev-text)] opacity-70'}]}
+        if k > 1: c['when'] = GT('{values.svSec}', (k - 1) * 10)
+        chips.append(c)
+    return {'el': 'row', 'style': {'flexWrap': 'nowrap'},
+            'when': {'op': 'and', 'a': GT('{values.svSec}', 10),
+                     'b': {'op': 'not', 'a': GT('{values.svSec}', CHIP_MAX_SEC)}},
+            'className': ('w-full mt-2 @[420px]:mt-1.5 items-center gap-1 rounded-xl border p-1 '
+                          '@[420px]:rounded-lg @[420px]:p-0.5 '
+                          'bg-[var(--ev-surface)] border-[var(--ev-border)]'), 'card': chips}
+
+
+def _step_bar():
+    """>4 ใบ: ‹ 3/6 › — สำรองไว้สำหรับคลิป 50/60 วิ ในอนาคต (พี่หมีสั่งเก็บไว้ 2026-09-10)
+
+    🔴 ทำไมต้องมี: ชิปที่ 5 ใบ เหลือกว้าง 38px บนมือถือ · 6 ใบ เหลือ 30px = **ต่ำกว่ามาตรฐาน 44px**
+       (วัดจริง ไม่ได้เดา — ตัวเลขอยู่ในคอมเมนต์ CHIP_MAX_SEC ข้างบน)
+    ★ไม่มีคำว่า "บอร์ด" — ปุ่ม [บอร์ด|วิดีโอ] ที่อยู่ใต้ลงไปบอกอยู่แล้ว · เลขตัวใหญ่เด่นแทน (พี่หมีสั่ง)
+    ⏳ **ตอนนี้ยังไม่มีทางเข้าถึง** เพราะ svSec สูงสุด 30 — เป็นของที่เตรียมไว้ล่วงหน้าโดยตั้งใจ
+       ⇒ ยามต้องเช็คว่ามันยังอยู่และประตูไม่ทับกัน ไม่งั้นวันที่เปิด 60 วิ จะไม่มีใครรู้ว่ามันตายไปแล้ว
     """
     def arw(left):
         return {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'label': '',
                 'icon': 'chevron_left' if left else 'chevron_right',
                 'value': ({'op': 'max', 'a': {'op': 'sub', 'a': CUR, 'b': 1}, 'b': 1} if left
                           else {'op': 'min', 'a': {'op': 'add', 'a': CUR, 'b': 1}, 'b': NB}),
-                # ★มือถือ 44px ตามกฎ tap target · จอคอม 32px = เตี้ยกว่าปุ่ม [บอร์ด|วิดีโอ] (40) ไม่แข่งกัน
                 'className': ('justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 '
-                              '!rounded-lg !bg-transparent !text-[var(--ev-text)] !border-0')}
-    return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
-            # ★w-full ทำให้ลูกศรเริ่ม/จบตรงขอบนอกของ toggle ด้านล่างพอดี (พี่หมีสั่งให้เสมอกัน)
-            'className': 'w-full mt-2 @[420px]:mt-1.5 items-center',
+                              '!rounded-lg !bg-[var(--ev-surface2)] !text-[var(--ev-text)] !border-0')}
+    return {'el': 'row', 'when': GT('{values.svSec}', CHIP_MAX_SEC), 'style': {'flexWrap': 'nowrap'},
+            'className': ('w-full mt-2 @[420px]:mt-1.5 items-center gap-1 rounded-xl border p-1 '
+                          '@[420px]:rounded-lg @[420px]:p-0.5 '
+                          'bg-[var(--ev-surface)] border-[var(--ev-border)]'),
             'card': [arw(True),
-                     {'el': 'text', 'value': {'op': 'concat', 'parts': ['บอร์ด ', CUR, '/', NB]},
-                      'className': 'flex-1 text-center !text-[11.5px] font-black !text-[var(--ev-text)] opacity-80'},
+                     {'el': 'text', 'value': {'op': 'concat', 'parts': [CUR, '/', NB]},
+                      'className': 'flex-1 text-center !text-[14px] font-black !text-[var(--ev-text)] tabular-nums'},
                      arw(False)]}
 
 
@@ -1142,7 +1174,7 @@ def patch_board_carousel(cfg):
         else:
             # ลิสต์ = กล่อง flex-col (ภาพ แล้วปุ่มด้านล่าง) ⇒ ต้องห่อเฉพาะภาพด้วย relative
             #   ไม่งั้นปุ่มจะไปอยู่กลางกล่องทั้งใบ ไม่ใช่กลางภาพ · มุมขวาบนของกล่องนี้ว่าง
-            cd[0:1] = _board_frames(ms) + [_chip_bar()]
+            cd[0:1] = _board_frames(ms) + [_chip_bar(), _step_bar()]
         hit += 1
     return hit
 
