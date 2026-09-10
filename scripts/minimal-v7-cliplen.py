@@ -946,11 +946,16 @@ def patch_grid_drop_bar(cfg):
         cn = str(n.get('className') or '')
         if 'absolute bottom-0' not in cn or 'from-black/70' not in cn: continue
         if any(isinstance(c, dict) and 'ภาพ' in str(c.get('value') or '') for c in n['card']): continue
+        # ★ไอคอน+เลข ชิดขวา — ไม่ใช้คำ เพราะแถบนี้แคบและมีชื่อสินค้าแย่งที่อยู่แล้ว
+        #   `ml-auto` ดันไปสุดขอบขวา ⇒ ชื่อสินค้ากับ "คลิปที่ N/N" อยู่ซ้าย จำนวนบอร์ดอยู่ขวา = อ่านเป็น 2 กลุ่ม
         n['card'].append({
-            'el': 'text', 'when': GT('{values.svSec}', 10),
-            'value': {'op': 'concat', 'parts': [NB, ' ภาพ']},
-            'className': ('!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] '
-                          '!text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center')})
+            'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
+            'className': ('ml-auto shrink-0 items-center gap-1 px-1.5 py-0.5 rounded-md '
+                          'bg-[var(--ev-surface2)] opacity-85 leading-none'),
+            'card': [{'el': 'icon', 'icon': 'burst_mode', 'textSize': 'text-[14px]',
+                      'className': '!text-[var(--ev-text)] leading-none flex items-center'},
+                     {'el': 'text', 'value': NB,
+                      'className': '!text-[11px] font-bold !text-[var(--ev-text)] whitespace-nowrap leading-none flex items-center'}]})
         hit += 1
     return hit
 
@@ -980,8 +985,10 @@ def _chip_bar():
         on = {'op': 'eq', 'a': CUR, 'b': k}
         c = {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True,
              'label': str(k), 'value': str(k),
-             'className': ('flex-1 justify-center !h-11 @[420px]:!h-10 !min-h-0 !px-2 '
-                           '!rounded-lg !text-[12px] font-black !border-0'),
+             # ★จอคอมเตี้ยกว่าปุ่ม [บอร์ด|วิดีโอ] (32 vs 40) = ลำดับความสำคัญอ่านออกทันที ไม่แข่งกัน
+             #   มือถือคง 44px ตามกฎ tap target (ยาม mobile-tier เฝ้าอยู่) ⇒ เตี้ยได้เฉพาะจอใหญ่
+             'className': ('flex-1 justify-center !h-11 @[420px]:!h-8 !min-h-0 !px-2 '
+                           '!rounded-lg !text-[11.5px] font-black !border-0'),
              'classWhen': [{'when': on, 'class': '!bg-[var(--ev-accent)] !text-white'},
                            {'when': {'op': 'not', 'a': on},
                             'class': '!bg-transparent !text-[var(--ev-text)] opacity-70'}]}
@@ -989,6 +996,7 @@ def _chip_bar():
         chips.append(c)
     return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
             'className': ('w-full mt-2 items-center gap-1 rounded-xl border p-1 '
+                          '@[420px]:mt-1.5 @[420px]:rounded-lg @[420px]:p-0.5 '
                           'bg-[var(--ev-surface)] border-[var(--ev-border)]'), 'card': chips}
 
 
