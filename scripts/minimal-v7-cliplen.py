@@ -575,6 +575,7 @@ def patch_ui(cfg):
     n_bt += patch_done_card_tint(cfg)
     n_bt += patch_drop_eng(cfg)
     n_bt += patch_grid_drop_bar(cfg)
+    n_bt += patch_grid_no_hover(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -906,6 +907,24 @@ def patch_vo_seam(cfg):
         if f[:60] in txt or a not in txt: continue
         o['prompt'] = json.loads(txt.replace(a, f, 1)); hit += 1
     assert hit > 0, 'patch_vo_seam ไม่ได้แทนอะไรเลย — anchor เปลี่ยน?'
+    return hit
+
+
+def patch_grid_no_hover(cfg):
+    """กริด: ไม่ต้องมีไอคอนลูกตาตอน hover (พี่หมีสั่ง 2026-09-10) — ลิสต์ยังมีเหมือนเดิม
+
+    เหตุผล: โปสเตอร์กริด **มี overlay ของตัวเองอยู่แล้ว** (ปุ่ม Gen วิดีโอ / เลือกวิดีโอ กลางภาพ)
+      ⇒ พอเอาเมาส์ไปวาง จะได้ไอคอนลูกตา 42px ซ้อนทับปุ่มอีกชั้น = รก และกดอะไรก็ไม่รู้
+    ★ลิสต์ไม่เป็น เพราะภาพในลิสต์สะอาด ไม่มีปุ่มทับ ⇒ ไอคอนลูกตาเป็นตัวบอกว่า "กดดูใหญ่ได้" ที่มีประโยชน์
+    ⚠️ ใช้ `el.hoverIcon: false` ของ engine (เพิ่มใหม่รอบเดียวกัน) — **ต้อง deploy engine ก่อนถึงจะมีผล**
+    """
+    gids = _grid_view_ids(cfg)
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and n.get('el') == 'media-slot'): continue
+        if id(n) not in gids: continue
+        if n.get('hoverIcon') is False: continue
+        n['hoverIcon'] = False; hit += 1
     return hit
 
 
