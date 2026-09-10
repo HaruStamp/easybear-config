@@ -12192,7 +12192,7 @@
                         },
                         {
                          "el": "text",
-                         "value": "รอวาดภาพ",
+                         "value": "รอคิววาดสตอรีบอร์ด",
                          "className": "!text-[13px] font-bold !text-[var(--ev-accent)] opacity-70",
                          "when": {
                           "op": "not",
@@ -12222,7 +12222,22 @@
                           "fallback": "autorenew"
                          },
                          "textSize": "text-[13px]",
-                         "className": "!text-[24px]"
+                         "className": "!text-[24px] animate-evbeat",
+                         "when": {
+                          "op": "or",
+                          "list": [
+                           {
+                            "op": "eq",
+                            "a": "{item.status}",
+                            "b": "running"
+                           },
+                           {
+                            "op": "eq",
+                            "a": "{item.meta.retrying}",
+                            "b": "1"
+                           }
+                          ]
+                         }
                         },
                         {
                          "el": "text",
@@ -12233,29 +12248,47 @@
                           "fallback": "กำลังทำ…"
                          },
                          "when": {
-                          "op": "not",
+                          "op": "and",
                           "a": {
-                           "op": "and",
+                           "op": "not",
                            "a": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           },
-                           "b": {
-                            "op": "or",
-                            "list": [
-                             {
-                              "op": "contains",
-                              "a": "{values.__runStage}",
-                              "b": "Board"
-                             },
-                             {
-                              "op": "contains",
-                              "a": "{values.__runStage}",
-                              "b": "Video"
-                             }
-                            ]
+                            "op": "and",
+                            "a": {
+                             "op": "gt",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            },
+                            "b": {
+                             "op": "or",
+                             "list": [
+                              {
+                               "op": "contains",
+                               "a": "{values.__runStage}",
+                               "b": "Board"
+                              },
+                              {
+                               "op": "contains",
+                               "a": "{values.__runStage}",
+                               "b": "Video"
+                              }
+                             ]
+                            }
                            }
+                          },
+                          "b": {
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": "{item.status}",
+                             "b": "running"
+                            },
+                            {
+                             "op": "eq",
+                             "a": "{item.meta.retrying}",
+                             "b": "1"
+                            }
+                           ]
                           }
                          },
                          "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2"
@@ -12266,14 +12299,32 @@
                          "when": {
                           "op": "and",
                           "a": {
-                           "op": "gt",
-                           "a": "{values.svSec}",
-                           "b": 10
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "b": {
+                            "op": "contains",
+                            "a": "{values.__runStage}",
+                            "b": "Board"
+                           }
                           },
                           "b": {
-                           "op": "contains",
-                           "a": "{values.__runStage}",
-                           "b": "Board"
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": "{item.status}",
+                             "b": "running"
+                            },
+                            {
+                             "op": "eq",
+                             "a": "{item.meta.retrying}",
+                             "b": "1"
+                            }
+                           ]
                           }
                          },
                          "value": {
@@ -12352,14 +12403,32 @@
                          "when": {
                           "op": "and",
                           "a": {
-                           "op": "gt",
-                           "a": "{values.svSec}",
-                           "b": 10
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "b": {
+                            "op": "contains",
+                            "a": "{values.__runStage}",
+                            "b": "Video"
+                           }
                           },
                           "b": {
-                           "op": "contains",
-                           "a": "{values.__runStage}",
-                           "b": "Video"
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": "{item.status}",
+                             "b": "running"
+                            },
+                            {
+                             "op": "eq",
+                             "a": "{item.meta.retrying}",
+                             "b": "1"
+                            }
+                           ]
                           }
                          },
                          "value": {
@@ -12901,7 +12970,7 @@
                         },
                         {
                          "el": "text",
-                         "value": "รอสร้างวิดีโอ",
+                         "value": "รอคิวสร้างวิดีโอ",
                          "when": {
                           "op": "and",
                           "a": {
@@ -12942,33 +13011,100 @@
                           "fallback": "autorenew"
                          },
                          "textSize": "text-[13px]",
-                         "className": "!text-[24px]"
-                        },
-                        {
-                         "el": "text",
+                         "className": "!text-[24px] animate-evbeat",
                          "when": {
                           "op": "not",
                           "a": {
                            "op": "and",
                            "a": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
+                            "op": "not",
+                            "a": {
+                             "op": "or",
+                             "list": [
+                              {
+                               "op": "eq",
+                               "a": "{item.status}",
+                               "b": "running"
+                              },
+                              {
+                               "op": "eq",
+                               "a": "{item.meta.retrying}",
+                               "b": "1"
+                              }
+                             ]
+                            }
                            },
                            "b": {
-                            "op": "or",
-                            "list": [
-                             {
-                              "op": "contains",
-                              "a": "{values.__runStage}",
-                              "b": "Board"
-                             },
-                             {
-                              "op": "contains",
-                              "a": "{values.__runStage}",
-                              "b": "Video"
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.status}",
+                             "b": "error"
+                            }
+                           }
+                          }
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "not",
+                           "a": {
+                            "op": "and",
+                            "a": {
+                             "op": "gt",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            },
+                            "b": {
+                             "op": "or",
+                             "list": [
+                              {
+                               "op": "contains",
+                               "a": "{values.__runStage}",
+                               "b": "Board"
+                              },
+                              {
+                               "op": "contains",
+                               "a": "{values.__runStage}",
+                               "b": "Video"
+                              }
+                             ]
+                            }
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "and",
+                            "a": {
+                             "op": "not",
+                             "a": {
+                              "op": "or",
+                              "list": [
+                               {
+                                "op": "eq",
+                                "a": "{item.status}",
+                                "b": "running"
+                               },
+                               {
+                                "op": "eq",
+                                "a": "{item.meta.retrying}",
+                                "b": "1"
+                               }
+                              ]
                              }
-                            ]
+                            },
+                            "b": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": "{item.status}",
+                              "b": "error"
+                             }
+                            }
                            }
                           }
                          },
@@ -12986,14 +13122,49 @@
                          "when": {
                           "op": "and",
                           "a": {
-                           "op": "gt",
-                           "a": "{values.svSec}",
-                           "b": 10
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "b": {
+                            "op": "contains",
+                            "a": "{values.__runStage}",
+                            "b": "Board"
+                           }
                           },
                           "b": {
-                           "op": "contains",
-                           "a": "{values.__runStage}",
-                           "b": "Board"
+                           "op": "not",
+                           "a": {
+                            "op": "and",
+                            "a": {
+                             "op": "not",
+                             "a": {
+                              "op": "or",
+                              "list": [
+                               {
+                                "op": "eq",
+                                "a": "{item.status}",
+                                "b": "running"
+                               },
+                               {
+                                "op": "eq",
+                                "a": "{item.meta.retrying}",
+                                "b": "1"
+                               }
+                              ]
+                             }
+                            },
+                            "b": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": "{item.status}",
+                              "b": "error"
+                             }
+                            }
+                           }
                           }
                          },
                          "value": {
@@ -13072,14 +13243,49 @@
                          "when": {
                           "op": "and",
                           "a": {
-                           "op": "gt",
-                           "a": "{values.svSec}",
-                           "b": 10
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "b": {
+                            "op": "contains",
+                            "a": "{values.__runStage}",
+                            "b": "Video"
+                           }
                           },
                           "b": {
-                           "op": "contains",
-                           "a": "{values.__runStage}",
-                           "b": "Video"
+                           "op": "not",
+                           "a": {
+                            "op": "and",
+                            "a": {
+                             "op": "not",
+                             "a": {
+                              "op": "or",
+                              "list": [
+                               {
+                                "op": "eq",
+                                "a": "{item.status}",
+                                "b": "running"
+                               },
+                               {
+                                "op": "eq",
+                                "a": "{item.meta.retrying}",
+                                "b": "1"
+                               }
+                              ]
+                             }
+                            },
+                            "b": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": "{item.status}",
+                              "b": "error"
+                             }
+                            }
+                           }
                           }
                          },
                          "value": {
@@ -18309,7 +18515,22 @@
                   "fallback": "autorenew"
                  },
                  "textSize": "text-[13px]",
-                 "className": "!text-[24px]"
+                 "className": "!text-[24px] animate-evbeat",
+                 "when": {
+                  "op": "or",
+                  "list": [
+                   {
+                    "op": "eq",
+                    "a": "{item.status}",
+                    "b": "running"
+                   },
+                   {
+                    "op": "eq",
+                    "a": "{item.fields.name}",
+                    "b": "{values.__runLoopProd}"
+                   }
+                  ]
+                 }
                 },
                 {
                  "el": "icon",
@@ -18834,6 +19055,64 @@
                  }
                 },
                 {
+                 "el": "text",
+                 "value": "รอคิววาดสตอรีบอร์ด",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "not",
+                   "a": {
+                    "op": "or",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.status}",
+                      "b": "running"
+                     },
+                     {
+                      "op": "eq",
+                      "a": "{item.meta.retrying}",
+                      "b": "1"
+                     }
+                    ]
+                   }
+                  },
+                  "b": {
+                   "op": "not",
+                   "a": {
+                    "op": "and",
+                    "a": {
+                     "op": "not",
+                     "a": {
+                      "op": "eq",
+                      "a": "{values.mode}",
+                      "b": "auto"
+                     }
+                    },
+                    "b": {
+                     "op": "not",
+                     "a": {
+                      "op": "or",
+                      "list": [
+                       {
+                        "op": "eq",
+                        "a": "{item.status}",
+                        "b": "running"
+                       },
+                       {
+                        "op": "eq",
+                        "a": "{item.meta.retrying}",
+                        "b": "1"
+                       }
+                      ]
+                     }
+                    }
+                   }
+                  }
+                 },
+                 "className": "!text-[12.5px] font-bold opacity-45 text-center px-2"
+                },
+                {
                  "el": "icon",
                  "icon": {
                   "op": "lookup",
@@ -18842,7 +19121,63 @@
                   "fallback": "autorenew"
                  },
                  "textSize": "text-[13px]",
-                 "className": "!text-[26px]"
+                 "className": "!text-[26px] animate-evbeat",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "and",
+                   "a": {
+                    "op": "not",
+                    "a": {
+                     "op": "or",
+                     "list": [
+                      {
+                       "op": "eq",
+                       "a": "{item.status}",
+                       "b": "running"
+                      },
+                      {
+                       "op": "eq",
+                       "a": "{item.meta.retrying}",
+                       "b": "1"
+                      }
+                     ]
+                    }
+                   },
+                   "b": {
+                    "op": "not",
+                    "a": {
+                     "op": "and",
+                     "a": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{values.mode}",
+                       "b": "auto"
+                      }
+                     },
+                     "b": {
+                      "op": "not",
+                      "a": {
+                       "op": "or",
+                       "list": [
+                        {
+                         "op": "eq",
+                         "a": "{item.status}",
+                         "b": "running"
+                        },
+                        {
+                         "op": "eq",
+                         "a": "{item.meta.retrying}",
+                         "b": "1"
+                        }
+                       ]
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
                 },
                 {
                  "el": "text",
@@ -18853,28 +19188,87 @@
                   "fallback": "กำลังทำ…"
                  },
                  "when": {
-                  "op": "not",
+                  "op": "and",
                   "a": {
-                   "op": "and",
+                   "op": "not",
                    "a": {
-                    "op": "gt",
-                    "a": "{values.svSec}",
-                    "b": 10
-                   },
-                   "b": {
-                    "op": "or",
-                    "list": [
-                     {
-                      "op": "contains",
-                      "a": "{values.__runStage}",
-                      "b": "Board"
-                     },
-                     {
-                      "op": "contains",
-                      "a": "{values.__runStage}",
-                      "b": "Video"
+                    "op": "and",
+                    "a": {
+                     "op": "gt",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    },
+                    "b": {
+                     "op": "or",
+                     "list": [
+                      {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Board"
+                      },
+                      {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Video"
+                      }
+                     ]
+                    }
+                   }
+                  },
+                  "b": {
+                   "op": "not",
+                   "a": {
+                    "op": "and",
+                    "a": {
+                     "op": "not",
+                     "a": {
+                      "op": "or",
+                      "list": [
+                       {
+                        "op": "eq",
+                        "a": "{item.status}",
+                        "b": "running"
+                       },
+                       {
+                        "op": "eq",
+                        "a": "{item.meta.retrying}",
+                        "b": "1"
+                       }
+                      ]
                      }
-                    ]
+                    },
+                    "b": {
+                     "op": "not",
+                     "a": {
+                      "op": "and",
+                      "a": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{values.mode}",
+                        "b": "auto"
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "or",
+                        "list": [
+                         {
+                          "op": "eq",
+                          "a": "{item.status}",
+                          "b": "running"
+                         },
+                         {
+                          "op": "eq",
+                          "a": "{item.meta.retrying}",
+                          "b": "1"
+                         }
+                        ]
+                       }
+                      }
+                     }
+                    }
                    }
                   }
                  },
@@ -18886,14 +19280,73 @@
                  "when": {
                   "op": "and",
                   "a": {
-                   "op": "gt",
-                   "a": "{values.svSec}",
-                   "b": 10
+                   "op": "and",
+                   "a": {
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
+                   "b": {
+                    "op": "contains",
+                    "a": "{values.__runStage}",
+                    "b": "Board"
+                   }
                   },
                   "b": {
-                   "op": "contains",
-                   "a": "{values.__runStage}",
-                   "b": "Board"
+                   "op": "not",
+                   "a": {
+                    "op": "and",
+                    "a": {
+                     "op": "not",
+                     "a": {
+                      "op": "or",
+                      "list": [
+                       {
+                        "op": "eq",
+                        "a": "{item.status}",
+                        "b": "running"
+                       },
+                       {
+                        "op": "eq",
+                        "a": "{item.meta.retrying}",
+                        "b": "1"
+                       }
+                      ]
+                     }
+                    },
+                    "b": {
+                     "op": "not",
+                     "a": {
+                      "op": "and",
+                      "a": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{values.mode}",
+                        "b": "auto"
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "or",
+                        "list": [
+                         {
+                          "op": "eq",
+                          "a": "{item.status}",
+                          "b": "running"
+                         },
+                         {
+                          "op": "eq",
+                          "a": "{item.meta.retrying}",
+                          "b": "1"
+                         }
+                        ]
+                       }
+                      }
+                     }
+                    }
+                   }
                   }
                  },
                  "value": {
@@ -18972,14 +19425,73 @@
                  "when": {
                   "op": "and",
                   "a": {
-                   "op": "gt",
-                   "a": "{values.svSec}",
-                   "b": 10
+                   "op": "and",
+                   "a": {
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
+                   "b": {
+                    "op": "contains",
+                    "a": "{values.__runStage}",
+                    "b": "Video"
+                   }
                   },
                   "b": {
-                   "op": "contains",
-                   "a": "{values.__runStage}",
-                   "b": "Video"
+                   "op": "not",
+                   "a": {
+                    "op": "and",
+                    "a": {
+                     "op": "not",
+                     "a": {
+                      "op": "or",
+                      "list": [
+                       {
+                        "op": "eq",
+                        "a": "{item.status}",
+                        "b": "running"
+                       },
+                       {
+                        "op": "eq",
+                        "a": "{item.meta.retrying}",
+                        "b": "1"
+                       }
+                      ]
+                     }
+                    },
+                    "b": {
+                     "op": "not",
+                     "a": {
+                      "op": "and",
+                      "a": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{values.mode}",
+                        "b": "auto"
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "or",
+                        "list": [
+                         {
+                          "op": "eq",
+                          "a": "{item.status}",
+                          "b": "running"
+                         },
+                         {
+                          "op": "eq",
+                          "a": "{item.meta.retrying}",
+                          "b": "1"
+                         }
+                        ]
+                       }
+                      }
+                     }
+                    }
+                   }
                   }
                  },
                  "value": {
@@ -19940,7 +20452,22 @@
                     "fallback": "autorenew"
                    },
                    "textSize": "text-[13px]",
-                   "className": "!text-[26px]"
+                   "className": "!text-[26px] animate-evbeat",
+                   "when": {
+                    "op": "or",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.status}",
+                      "b": "running"
+                     },
+                     {
+                      "op": "eq",
+                      "a": "{item.fields.name}",
+                      "b": "{values.__runLoopProd}"
+                     }
+                    ]
+                   }
                   },
                   {
                    "el": "icon",
@@ -20025,26 +20552,6 @@
                   },
                   {
                    "el": "text",
-                   "value": "[{values.clipsPerProduct} คลิป]",
-                   "className": "!text-[12px] font-black tabular-nums shrink-0 !text-[var(--ev-accent)]",
-                   "when": {
-                    "op": "or",
-                    "list": [
-                     {
-                      "op": "eq",
-                      "a": "{item.status}",
-                      "b": "running"
-                     },
-                     {
-                      "op": "eq",
-                      "a": "{item.fields.name}",
-                      "b": "{values.__runLoopProd}"
-                     }
-                    ]
-                   }
-                  },
-                  {
-                   "el": "text",
                    "value": {
                     "op": "concat",
                     "parts": [
@@ -20055,10 +20562,12 @@
                        "op": "index"
                       },
                       "b": 1
-                     }
+                     },
+                     "/",
+                     "{values.clipsPerProduct}"
                     ]
                    },
-                   "className": "!text-[11px] font-bold !text-[var(--ev-text)] opacity-45 whitespace-nowrap ml-auto"
+                   "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto"
                   }
                  ]
                 }
