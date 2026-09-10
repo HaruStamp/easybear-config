@@ -1471,6 +1471,122 @@ def patch_status_icons(cfg):
     return n_sp, n_wait, n_brush
 
 
+# ── ความคืบหน้าในการ์ด: "กำลังทำ ภาพที่ 2/3" · "ไม่สำเร็จ วิดีโอที่ 2/3" ─────────────
+#   นับจาก **จำนวนช่องที่เต็มแล้ว** ไม่ใช่เลขช่วง — ถูกเสมอไม่ว่าลำดับผลิตจะเป็น 3→2→1 หรือ 1→2→3
+BOARD_SLOTS = ['board', 'board2', 'board3']
+VIDEO_SLOTS = ['video', 'video2', 'video3']
+SEG_TOTAL = {'op': 'max', 'a': 1, 'b': {'op': 'div', 'a': '{values.svSec}', 'b': 10}}
+
+
+def _filled_count(slots):
+    """ผลรวมของ 'ช่องนี้ไม่ว่าง' — boolean → Number(true)=1 ใน combinator add"""
+    node = {'op': 'not', 'a': {'op': 'eq', 'a': '{item.slots.%s}' % slots[0], 'b': ''}}
+    for sl in slots[1:]:
+        node = {'op': 'add', 'a': node, 'b': {'op': 'not', 'a': {'op': 'eq', 'a': '{item.slots.%s}' % sl, 'b': ''}}}
+    return node
+
+
+def _nth_of(slots):
+    """ชิ้นที่กำลังทำ = ที่เต็มแล้ว + 1 · clamp กันเลข 4/3 ตอนชิ้นสุดท้ายเพิ่งเสร็จ"""
+    return {'op': 'min', 'a': {'op': 'add', 'a': _filled_count(slots), 'b': 1}, 'b': SEG_TOTAL}
+
+
+def _stage_is(kind):
+    return {'op': 'contains', 'a': '{values.__runStage}', 'b': kind}
+
+
+def patch_card_progress(cfg):
+    """เห็นความคืบหน้าในการ์ด + ล้มเหลวตรงไหน + ลองใหม่แล้วทำต่อ (พี่หมีสั่ง 2026-09-10)
+
+    ① badge "กำลังทำ…" — คลิปหลายช่วงเติม "ภาพที่ 2/3" / "วิดีโอที่ 2/3"
+       🔴 นับจาก **ช่องที่เต็มแล้ว + 1** ไม่ใช่เลขช่วง — ลำดับผลิตเป็น 3→2→1 ⇒ ใช้เลขช่วงจะนับถอยหลัง
+    ② badge "ไม่สำเร็จ" — บอกว่าค้างตรงไหน
+    ③ 🔴 ปุ่ม **"ลองใหม่"** (หลังพัง) ต้องเป็น `gen-button` = ไม่ force ⇒ **ทำต่อจากช่วงที่ค้าง**
+       ส่วนปุ่ม "Gen ภาพใหม่/Gen วิดีโอใหม่/Gen ใหม่" (ตั้งใจทำใหม่) คง `retry-button` = force ⇒ ทำใหม่ทั้งชุด
+       พบว่ามุมมองกริดใช้ retry-button กับปุ่ม "ลองใหม่" ของวิดีโอตัวเดียว ทั้งที่ของบอร์ดเป็น gen-button
+       ⇒ พังที่ช่วง 2 แล้วกดลองใหม่ = ทำใหม่ทั้ง 3 ช่วง เผาเครดิตทิ้ง (คู่แฝดไม่สมมาตรในการ์ดเดียวกัน)
+
+    ★เส้นทาง 10 วิ ไม่ขยับ: ข้อความใหม่ทุกตัวมี `when: svSec>10` · ของเดิมได้ when กลับด้าน
+    🪤 **เก็บรายชื่อโหนดให้ครบก่อนแก้** — โหนดที่แทรกเข้าไปมีคำว่า opNames เหมือนกัน
+       เดินแก้ระหว่าง walk = จับตัวเองซ้ำไม่รู้จบ (โรคเดียวกับ patch_board_tiles/patch_setup_labels)
+    """
+    MULTI = GT('{values.svSec}', 10)
+
+    def collect(node, pred, out):
+        """เก็บ (array, index) ของโหนดที่ตรงเงื่อนไข — **อ่านอย่างเดียว ไม่แก้อะไร**"""
+        if isinstance(node, list):
+            for i, v in enumerate(node):
+                if isinstance(v, dict) and pred(v):
+                    out.append((node, i))
+                collect(v, pred, out)
+        elif isinstance(node, dict):
+            for v in node.values():
+                collect(v, pred, out)
+
+    def collect_in_repeat(node, pred, out, inside=False):
+        """เก็บเฉพาะโหนดที่อยู่ **ใต้ `el:repeat`** = ของ item นั้นจริง ๆ
+
+        🪤 เคยลองแยกด้วย "กล่องที่ห่ออยู่พูดถึง {item.} ไหม" — **หลวมเกิน** เพราะ array ใหญ่ ๆ
+           มี {item.} อยู่ในโหนดพี่น้องเสมอ ⇒ จับแถบระดับรอบติดมาด้วย (7 ตัวเท่าเดิม ไม่กรองอะไรเลย)
+        ✅ `repeat` เป็นตัวแยกที่ตรงความหมาย: ข้างในคือ "ต่อ item" ข้างนอกคือ "ของทั้งรอบ"
+           วัดแล้ว: 5 ตัวในลูป (badge บนการ์ด) · 2 ตัวนอกลูป (แถบ "กำลังทำสินค้าที่ N/M" + แถบสถานะรวม)
+        """
+        if isinstance(node, list):
+            for v in node:
+                if inside and isinstance(v, dict) and pred(v):
+                    out.append((node, node.index(v)))
+                collect_in_repeat(v, pred, out, inside)
+        elif isinstance(node, dict):
+            here = inside or node.get('el') == 'repeat'
+            for v in node.values():
+                collect_in_repeat(v, pred, out, here)
+
+    ph = cfg.get('phases')
+
+    # ① badge "กำลังทำ…" (ข้อความที่ lookup จาก opNames) — **เฉพาะที่อยู่ในกล่องของคลิปนั้น**
+    #  🔴 มีข้อความ opNames อยู่ 2 ระดับ: ต่อคลิป (badge บนการ์ด) และ **ระดับรอบ** ("กำลังทำสินค้าที่ 2/5 — …")
+    #     ตัวระดับรอบไม่มี item ใน ctx ⇒ ตัวนับจะได้ 1/3 ค้างตลอด และไปทับตัวนับสินค้าที่มีประโยชน์อยู่แล้ว
+    #     ⇒ กฎเดียวกับตอนเลือก spinner: ดูว่ากล่องที่ห่ออยู่พูดถึง `{item.` ไหม
+    runs = []
+    collect_in_repeat(ph, lambda x: x.get('el') == 'text' and 'opNames' in json.dumps(x, ensure_ascii=False), runs)
+    for arr, idx in sorted(runs, key=lambda t: -t[1]):   # ★แก้จากท้ายมาหน้า ดัชนีที่เก็บไว้จึงไม่เลื่อน
+        v = arr[idx]
+        base = v.get('className', '')
+        plain = dict(v)
+        plain['when'] = {'op': 'not', 'a': {'op': 'and', 'a': MULTI,
+                                            'b': {'op': 'or', 'list': [_stage_is('Board'), _stage_is('Video')]}}}
+        def mk(kind, slots):
+            return {'el': 'text', 'className': base,
+                    'when': {'op': 'and', 'a': MULTI, 'b': _stage_is(kind)},
+                    'value': {'op': 'concat', 'parts': [
+                        {'op': 'lookup', 'table': 'opNames', 'key': '{values.__runStage}', 'fallback': 'กำลังทำ'},
+                        ' ', _nth_of(slots), '/', SEG_TOTAL, '…']}}
+        arr[idx:idx + 1] = [plain, mk('Board', BOARD_SLOTS), mk('Video', VIDEO_SLOTS)]
+
+    # ② badge "ไม่สำเร็จ"
+    errs = []
+    collect_in_repeat(ph, lambda x: x.get('el') == 'text' and x.get('value') == 'ไม่สำเร็จ', errs)
+    for arr, idx in sorted(errs, key=lambda t: -t[1]):
+        v = arr[idx]
+        base = v.get('className', '')
+        plain = dict(v)
+        plain['when'] = {'op': 'not', 'a': MULTI}
+        def mke(kind, slots, word):
+            return {'el': 'text', 'className': base,
+                    'when': {'op': 'and', 'a': MULTI, 'b': _stage_is(kind)},
+                    'value': {'op': 'concat', 'parts': ['ไม่สำเร็จ ' + word + 'ที่ ', _nth_of(slots), '/', SEG_TOTAL]}}
+        # ★ตอนพัง __runStage ยังค้างอยู่ที่ขั้นที่พัง ⇒ ใช้แยกบอร์ด/วิดีโอได้
+        arr[idx:idx + 1] = [plain, mke('Board', BOARD_SLOTS, 'ภาพ'), mke('Video', VIDEO_SLOTS, 'วิดีโอ')]
+
+    # ③ ปุ่ม "ลองใหม่" ต้องไม่ force
+    btns = []
+    collect(ph, lambda x: x.get('el') == 'retry-button' and x.get('label') == 'ลองใหม่', btns)
+    for arr, idx in btns:
+        arr[idx]['el'] = 'gen-button'
+
+    return len(runs), len(errs), len(btns)
+
+
 def main():
     files = sys.argv[1:] or ['minimal-lab.json']
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -11992,7 +11992,173 @@
                         {
                          "el": "text",
                          "value": "ไม่สำเร็จ",
-                         "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
+                         "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                         "when": {
+                          "op": "not",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          }
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Board"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           "ไม่สำเร็จ ภาพที่ ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.board3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           }
+                          ]
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Video"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           "ไม่สำเร็จ วิดีโอที่ ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.video3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           }
+                          ]
+                         }
                         }
                        ]
                       },
@@ -12067,21 +12233,204 @@
                           "fallback": "กำลังทำ…"
                          },
                          "when": {
-                          "op": "or",
-                          "list": [
-                           {
-                            "op": "eq",
-                            "a": "{item.status}",
-                            "b": "running"
+                          "op": "not",
+                          "a": {
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
                            },
-                           {
-                            "op": "eq",
-                            "a": "{item.meta.retrying}",
-                            "b": "1"
+                           "b": {
+                            "op": "or",
+                            "list": [
+                             {
+                              "op": "contains",
+                              "a": "{values.__runStage}",
+                              "b": "Board"
+                             },
+                             {
+                              "op": "contains",
+                              "a": "{values.__runStage}",
+                              "b": "Video"
+                             }
+                            ]
                            }
-                          ]
+                          }
                          },
                          "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2"
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Board"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           {
+                            "op": "lookup",
+                            "table": "opNames",
+                            "key": "{values.__runStage}",
+                            "fallback": "กำลังทำ"
+                           },
+                           " ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.board3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           },
+                           "…"
+                          ]
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Video"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           {
+                            "op": "lookup",
+                            "table": "opNames",
+                            "key": "{values.__runStage}",
+                            "fallback": "กำลังทำ"
+                           },
+                           " ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.video3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           },
+                           "…"
+                          ]
+                         }
                         }
                        ],
                        "when": {
@@ -12598,19 +12947,30 @@
                         {
                          "el": "text",
                          "when": {
-                          "op": "or",
-                          "list": [
-                           {
-                            "op": "eq",
-                            "a": "{item.status}",
-                            "b": "running"
+                          "op": "not",
+                          "a": {
+                           "op": "and",
+                           "a": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
                            },
-                           {
-                            "op": "eq",
-                            "a": "{item.meta.retrying}",
-                            "b": "1"
+                           "b": {
+                            "op": "or",
+                            "list": [
+                             {
+                              "op": "contains",
+                              "a": "{values.__runStage}",
+                              "b": "Board"
+                             },
+                             {
+                              "op": "contains",
+                              "a": "{values.__runStage}",
+                              "b": "Video"
+                             }
+                            ]
                            }
-                          ]
+                          }
                          },
                          "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
                          "value": {
@@ -12618,6 +12978,178 @@
                           "table": "opNames",
                           "key": "{values.__runStage}",
                           "fallback": "กำลังทำ…"
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Board"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           {
+                            "op": "lookup",
+                            "table": "opNames",
+                            "key": "{values.__runStage}",
+                            "fallback": "กำลังทำ"
+                           },
+                           " ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.board2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.board3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           },
+                           "…"
+                          ]
+                         }
+                        },
+                        {
+                         "el": "text",
+                         "className": "!text-[13px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                         "when": {
+                          "op": "and",
+                          "a": {
+                           "op": "gt",
+                           "a": "{values.svSec}",
+                           "b": 10
+                          },
+                          "b": {
+                           "op": "contains",
+                           "a": "{values.__runStage}",
+                           "b": "Video"
+                          }
+                         },
+                         "value": {
+                          "op": "concat",
+                          "parts": [
+                           {
+                            "op": "lookup",
+                            "table": "opNames",
+                            "key": "{values.__runStage}",
+                            "fallback": "กำลังทำ"
+                           },
+                           " ",
+                           {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "add",
+                              "a": {
+                               "op": "add",
+                               "a": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video}",
+                                 "b": ""
+                                }
+                               },
+                               "b": {
+                                "op": "not",
+                                "a": {
+                                 "op": "eq",
+                                 "a": "{item.slots.video2}",
+                                 "b": ""
+                                }
+                               }
+                              },
+                              "b": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": "{item.slots.video3}",
+                                "b": ""
+                               }
+                              }
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "max",
+                             "a": 1,
+                             "b": {
+                              "op": "div",
+                              "a": "{values.svSec}",
+                              "b": 10
+                             }
+                            }
+                           },
+                           "/",
+                           {
+                            "op": "max",
+                            "a": 1,
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           },
+                           "…"
+                          ]
                          }
                         },
                         {
@@ -12952,7 +13484,205 @@
                        "…"
                       ]
                      },
-                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "and",
+                       "a": {
+                        "op": "gt",
+                        "a": "{values.svSec}",
+                        "b": 10
+                       },
+                       "b": {
+                        "op": "or",
+                        "list": [
+                         {
+                          "op": "contains",
+                          "a": "{values.__runStage}",
+                          "b": "Board"
+                         },
+                         {
+                          "op": "contains",
+                          "a": "{values.__runStage}",
+                          "b": "Video"
+                         }
+                        ]
+                       }
+                      }
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "and",
+                      "a": {
+                       "op": "gt",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      },
+                      "b": {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Board"
+                      }
+                     },
+                     "value": {
+                      "op": "concat",
+                      "parts": [
+                       {
+                        "op": "lookup",
+                        "table": "opNames",
+                        "key": "{values.__runStage}",
+                        "fallback": "กำลังทำ"
+                       },
+                       " ",
+                       {
+                        "op": "min",
+                        "a": {
+                         "op": "add",
+                         "a": {
+                          "op": "add",
+                          "a": {
+                           "op": "add",
+                           "a": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.board}",
+                             "b": ""
+                            }
+                           },
+                           "b": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.board2}",
+                             "b": ""
+                            }
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.slots.board3}",
+                            "b": ""
+                           }
+                          }
+                         },
+                         "b": 1
+                        },
+                        "b": {
+                         "op": "max",
+                         "a": 1,
+                         "b": {
+                          "op": "div",
+                          "a": "{values.svSec}",
+                          "b": 10
+                         }
+                        }
+                       },
+                       "/",
+                       {
+                        "op": "max",
+                        "a": 1,
+                        "b": {
+                         "op": "div",
+                         "a": "{values.svSec}",
+                         "b": 10
+                        }
+                       },
+                       "…"
+                      ]
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "and",
+                      "a": {
+                       "op": "gt",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      },
+                      "b": {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Video"
+                      }
+                     },
+                     "value": {
+                      "op": "concat",
+                      "parts": [
+                       {
+                        "op": "lookup",
+                        "table": "opNames",
+                        "key": "{values.__runStage}",
+                        "fallback": "กำลังทำ"
+                       },
+                       " ",
+                       {
+                        "op": "min",
+                        "a": {
+                         "op": "add",
+                         "a": {
+                          "op": "add",
+                          "a": {
+                           "op": "add",
+                           "a": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.video}",
+                             "b": ""
+                            }
+                           },
+                           "b": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.video2}",
+                             "b": ""
+                            }
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.slots.video3}",
+                            "b": ""
+                           }
+                          }
+                         },
+                         "b": 1
+                        },
+                        "b": {
+                         "op": "max",
+                         "a": 1,
+                         "b": {
+                          "op": "div",
+                          "a": "{values.svSec}",
+                          "b": 10
+                         }
+                        }
+                       },
+                       "/",
+                       {
+                        "op": "max",
+                        "a": 1,
+                        "b": {
+                         "op": "div",
+                         "a": "{values.svSec}",
+                         "b": 10
+                        }
+                       },
+                       "…"
+                      ]
+                     }
                     }
                    ],
                    "when": {
@@ -13015,7 +13745,173 @@
                     {
                      "el": "text",
                      "value": "ไม่สำเร็จ",
-                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap"
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "gt",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      }
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "and",
+                      "a": {
+                       "op": "gt",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      },
+                      "b": {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Board"
+                      }
+                     },
+                     "value": {
+                      "op": "concat",
+                      "parts": [
+                       "ไม่สำเร็จ ภาพที่ ",
+                       {
+                        "op": "min",
+                        "a": {
+                         "op": "add",
+                         "a": {
+                          "op": "add",
+                          "a": {
+                           "op": "add",
+                           "a": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.board}",
+                             "b": ""
+                            }
+                           },
+                           "b": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.board2}",
+                             "b": ""
+                            }
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.slots.board3}",
+                            "b": ""
+                           }
+                          }
+                         },
+                         "b": 1
+                        },
+                        "b": {
+                         "op": "max",
+                         "a": 1,
+                         "b": {
+                          "op": "div",
+                          "a": "{values.svSec}",
+                          "b": 10
+                         }
+                        }
+                       },
+                       "/",
+                       {
+                        "op": "max",
+                        "a": 1,
+                        "b": {
+                         "op": "div",
+                         "a": "{values.svSec}",
+                         "b": 10
+                        }
+                       }
+                      ]
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "className": "!text-[11px] font-bold !text-white whitespace-nowrap",
+                     "when": {
+                      "op": "and",
+                      "a": {
+                       "op": "gt",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      },
+                      "b": {
+                       "op": "contains",
+                       "a": "{values.__runStage}",
+                       "b": "Video"
+                      }
+                     },
+                     "value": {
+                      "op": "concat",
+                      "parts": [
+                       "ไม่สำเร็จ วิดีโอที่ ",
+                       {
+                        "op": "min",
+                        "a": {
+                         "op": "add",
+                         "a": {
+                          "op": "add",
+                          "a": {
+                           "op": "add",
+                           "a": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.video}",
+                             "b": ""
+                            }
+                           },
+                           "b": {
+                            "op": "not",
+                            "a": {
+                             "op": "eq",
+                             "a": "{item.slots.video2}",
+                             "b": ""
+                            }
+                           }
+                          },
+                          "b": {
+                           "op": "not",
+                           "a": {
+                            "op": "eq",
+                            "a": "{item.slots.video3}",
+                            "b": ""
+                           }
+                          }
+                         },
+                         "b": 1
+                        },
+                        "b": {
+                         "op": "max",
+                         "a": 1,
+                         "b": {
+                          "op": "div",
+                          "a": "{values.svSec}",
+                          "b": 10
+                         }
+                        }
+                       },
+                       "/",
+                       {
+                        "op": "max",
+                        "a": 1,
+                        "b": {
+                         "op": "div",
+                         "a": "{values.svSec}",
+                         "b": 10
+                        }
+                       }
+                      ]
+                     }
                     }
                    ],
                    "when": {
@@ -17957,56 +18853,204 @@
                   "fallback": "กำลังทำ…"
                  },
                  "when": {
-                  "op": "and",
+                  "op": "not",
                   "a": {
-                   "op": "or",
-                   "list": [
-                    {
-                     "op": "eq",
-                     "a": "{item.status}",
-                     "b": "running"
-                    },
-                    {
-                     "op": "eq",
-                     "a": "{item.meta.retrying}",
-                     "b": "1"
-                    }
-                   ]
-                  },
-                  "b": {
-                   "op": "not",
+                   "op": "and",
                    "a": {
-                    "op": "and",
-                    "a": {
-                     "op": "not",
-                     "a": {
-                      "op": "eq",
-                      "a": "{values.mode}",
-                      "b": "auto"
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
+                   "b": {
+                    "op": "or",
+                    "list": [
+                     {
+                      "op": "contains",
+                      "a": "{values.__runStage}",
+                      "b": "Board"
+                     },
+                     {
+                      "op": "contains",
+                      "a": "{values.__runStage}",
+                      "b": "Video"
                      }
-                    },
-                    "b": {
-                     "op": "not",
-                     "a": {
-                      "op": "or",
-                      "list": [
-                       {
-                        "op": "eq",
-                        "a": "{item.status}",
-                        "b": "running"
-                       },
-                       {
-                        "op": "eq",
-                        "a": "{item.meta.retrying}",
-                        "b": "1"
-                       }
-                      ]
-                     }
-                    }
+                    ]
                    }
                   }
                  },
                  "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] text-center px-2"
+                },
+                {
+                 "el": "text",
+                 "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "gt",
+                   "a": "{values.svSec}",
+                   "b": 10
+                  },
+                  "b": {
+                   "op": "contains",
+                   "a": "{values.__runStage}",
+                   "b": "Board"
+                  }
+                 },
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำ"
+                   },
+                   " ",
+                   {
+                    "op": "min",
+                    "a": {
+                     "op": "add",
+                     "a": {
+                      "op": "add",
+                      "a": {
+                       "op": "add",
+                       "a": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.board}",
+                         "b": ""
+                        }
+                       },
+                       "b": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.board2}",
+                         "b": ""
+                        }
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.board3}",
+                        "b": ""
+                       }
+                      }
+                     },
+                     "b": 1
+                    },
+                    "b": {
+                     "op": "max",
+                     "a": 1,
+                     "b": {
+                      "op": "div",
+                      "a": "{values.svSec}",
+                      "b": 10
+                     }
+                    }
+                   },
+                   "/",
+                   {
+                    "op": "max",
+                    "a": 1,
+                    "b": {
+                     "op": "div",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    }
+                   },
+                   "…"
+                  ]
+                 }
+                },
+                {
+                 "el": "text",
+                 "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] text-center px-2",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "gt",
+                   "a": "{values.svSec}",
+                   "b": 10
+                  },
+                  "b": {
+                   "op": "contains",
+                   "a": "{values.__runStage}",
+                   "b": "Video"
+                  }
+                 },
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำ"
+                   },
+                   " ",
+                   {
+                    "op": "min",
+                    "a": {
+                     "op": "add",
+                     "a": {
+                      "op": "add",
+                      "a": {
+                       "op": "add",
+                       "a": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video}",
+                         "b": ""
+                        }
+                       },
+                       "b": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video2}",
+                         "b": ""
+                        }
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.video3}",
+                        "b": ""
+                       }
+                      }
+                     },
+                     "b": 1
+                    },
+                    "b": {
+                     "op": "max",
+                     "a": 1,
+                     "b": {
+                      "op": "div",
+                      "a": "{values.svSec}",
+                      "b": 10
+                     }
+                    }
+                   },
+                   "/",
+                   {
+                    "op": "max",
+                    "a": 1,
+                    "b": {
+                     "op": "div",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    }
+                   },
+                   "…"
+                  ]
+                 }
                 },
                 {
                  "el": "gen-button",
@@ -18208,7 +19252,7 @@
                  "when": "item.meta.error!="
                 },
                 {
-                 "el": "retry-button",
+                 "el": "gen-button",
                  "op": "mnVideo",
                  "label": "ลองใหม่",
                  "icon": "replay",
@@ -18367,7 +19411,205 @@
                    "…"
                   ]
                  },
-                 "className": "!text-[11px] font-bold !text-white truncate min-w-0"
+                 "className": "!text-[11px] font-bold !text-white truncate min-w-0",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "and",
+                   "a": {
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
+                   "b": {
+                    "op": "or",
+                    "list": [
+                     {
+                      "op": "contains",
+                      "a": "{values.__runStage}",
+                      "b": "Board"
+                     },
+                     {
+                      "op": "contains",
+                      "a": "{values.__runStage}",
+                      "b": "Video"
+                     }
+                    ]
+                   }
+                  }
+                 }
+                },
+                {
+                 "el": "text",
+                 "className": "!text-[11px] font-bold !text-white truncate min-w-0",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "gt",
+                   "a": "{values.svSec}",
+                   "b": 10
+                  },
+                  "b": {
+                   "op": "contains",
+                   "a": "{values.__runStage}",
+                   "b": "Board"
+                  }
+                 },
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำ"
+                   },
+                   " ",
+                   {
+                    "op": "min",
+                    "a": {
+                     "op": "add",
+                     "a": {
+                      "op": "add",
+                      "a": {
+                       "op": "add",
+                       "a": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.board}",
+                         "b": ""
+                        }
+                       },
+                       "b": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.board2}",
+                         "b": ""
+                        }
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.board3}",
+                        "b": ""
+                       }
+                      }
+                     },
+                     "b": 1
+                    },
+                    "b": {
+                     "op": "max",
+                     "a": 1,
+                     "b": {
+                      "op": "div",
+                      "a": "{values.svSec}",
+                      "b": 10
+                     }
+                    }
+                   },
+                   "/",
+                   {
+                    "op": "max",
+                    "a": 1,
+                    "b": {
+                     "op": "div",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    }
+                   },
+                   "…"
+                  ]
+                 }
+                },
+                {
+                 "el": "text",
+                 "className": "!text-[11px] font-bold !text-white truncate min-w-0",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "gt",
+                   "a": "{values.svSec}",
+                   "b": 10
+                  },
+                  "b": {
+                   "op": "contains",
+                   "a": "{values.__runStage}",
+                   "b": "Video"
+                  }
+                 },
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "lookup",
+                    "table": "opNames",
+                    "key": "{values.__runStage}",
+                    "fallback": "กำลังทำ"
+                   },
+                   " ",
+                   {
+                    "op": "min",
+                    "a": {
+                     "op": "add",
+                     "a": {
+                      "op": "add",
+                      "a": {
+                       "op": "add",
+                       "a": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video}",
+                         "b": ""
+                        }
+                       },
+                       "b": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video2}",
+                         "b": ""
+                        }
+                       }
+                      },
+                      "b": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.video3}",
+                        "b": ""
+                       }
+                      }
+                     },
+                     "b": 1
+                    },
+                    "b": {
+                     "op": "max",
+                     "a": 1,
+                     "b": {
+                      "op": "div",
+                      "a": "{values.svSec}",
+                      "b": 10
+                     }
+                    }
+                   },
+                   "/",
+                   {
+                    "op": "max",
+                    "a": 1,
+                    "b": {
+                     "op": "div",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    }
+                   },
+                   "…"
+                  ]
+                 }
                 }
                ],
                "when": {
