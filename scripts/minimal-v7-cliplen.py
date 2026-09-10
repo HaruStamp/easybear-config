@@ -584,6 +584,8 @@ def patch_ui(cfg):
     n_bt = patch_board_tiles(cfg)
     n_bt += patch_media_col_width(cfg)
     n_bt += patch_grid_board_count(cfg)
+    n_bt += patch_card_dividers(cfg)
+    n_bt += patch_grid_carousel(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -662,6 +664,11 @@ def patch_board_tiles(cfg):
             if not (isinstance(ch, dict) and ch.get('el') == 'box' and isinstance(ch.get('card'), list)): continue
             ms = ch['card'][0] if ch['card'] else None
             if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
+            # 🔴 คอลัมน์สื่อมีกล่องที่โชว์ "บอร์ด" อยู่ 2 สถานะ — และมีแค่สถานะเดียวที่ควรเป็นแถบไทล์
+            #   · โหมด "บอร์ด"  = ที่ที่ผู้ใช้ **ตรวจแผน** ⇒ ต้องเห็นครบทุกใบ
+            #   · โหมด "วิดีโอ" = บอร์ดถูกใช้เป็น **ตัวแทนช่องวิดีโอที่ยังว่าง** (ป้าย "ได้ภาพแล้ว — รอวิดีโอ")
+            #     ⇒ ต้องเป็นกรอบเดียวเหมือนเดิม · โชว์ 3 ใบตรงนี้ = สลับไปดูวิดีโอแล้วยังเจอบอร์ด 3 ใบ งง (พี่หมีทัก)
+            if '"video"' in json.dumps(ch.get('when'), ensure_ascii=False): continue
 
             single = copy.deepcopy(ch)
             single['when'] = _and(NOT(GT('{values.svSec}', 10)), ch.get('when'))
@@ -669,22 +676,103 @@ def patch_board_tiles(cfg):
             tiles = []
             for k in range(1, 4):
                 slot = 'board' if k == 1 else 'board%d' % k
-                t = {'el': 'box', 'className': 'relative flex-1 min-w-0', 'card': [
-                    dict(copy.deepcopy(ms), src='{item.slots.%s}' % slot, className='ring-2 ring-[var(--ev-accent)]/50 w-full'),
+                if k > 1:   # ลูกศรคั่นระหว่างใบ — บอกว่า "เรื่องเดินต่อไปทางขวา" ไม่ใช่ภาพ 3 ใบที่ไม่เกี่ยวกัน
+                    tiles.append({'el': 'icon', 'icon': 'double_arrow', 'textSize': 'text-[16px]',
+                                  'className': 'self-center shrink-0 opacity-30 leading-none flex items-center justify-center',
+                                  'when': GT('{values.svSec}', (k - 1) * 10)})
+                t = {'el': 'box', 'className': 'relative shrink-0 snap-start w-[190px] @[880px]:w-[170px]', 'card': [
+                    dict(copy.deepcopy(ms), src='{item.slots.%s}' % slot, gallery=BOARD_GALLERY,
+                         className='ring-2 ring-[var(--ev-accent)]/50 w-full'),
                     {'el': 'text', 'value': str(k),
-                     'className': ('absolute top-1 left-1 z-20 w-5 h-5 rounded-md bg-white text-[#17253a] '
-                                   '!text-[11px] font-black flex items-center justify-center pointer-events-none')},
+                     # 🪤 มุมซ้ายบนมี "ป้ายเลขคลิป" ของการ์ดจับจองอยู่แล้ว (absolute top-1.5 left-1.5)
+                     #    วางเลขบอร์ดตรงนั้นด้วย = ไทล์ใบแรกมีเลข 2 อันซ้อนกัน (เจอจริงตอนดูจอคอม)
+                     'className': ('absolute top-1.5 right-1.5 z-20 w-7 h-7 rounded-xl bg-white text-[#17253a] '
+                                   'border border-[var(--ev-border)] !text-[12px] font-black flex items-center '
+                                   'justify-center pointer-events-none shadow-sm')},
                 ]}
                 if k > 1: t['when'] = GT('{values.svSec}', (k - 1) * 10)
                 tiles.append(t)
             # ★เหลือแค่แถวไทล์ — **ตัดป้ายสถานะ absolute ทิ้ง** เพราะ
             #   ① ป้ายวางไว้สำหรับภาพสูง พอไทล์เตี้ยมันทับกลางภาพ  ② หัวการ์ดมีป้ายสถานะเดียวกันอยู่แล้ว = ซ้ำซ้อน
+            # 🪤 `overflow-x-auto` ปลอดภัยกับ media-slot — ตัวที่ห้ามคือ `transform` (ทำให้ lightbox position:fixed ยึดผิดจุด)
             multi = {'el': 'box', 'className': ch.get('className') or '',
                      'when': _and(GT('{values.svSec}', 10), ch.get('when')),
-                     'card': [{'el': 'row', 'className': 'gap-1.5 items-start', 'style': {'flexWrap': 'nowrap'}, 'card': tiles}]}
+                     'card': [{'el': 'row', 'className': 'gap-2 items-start overflow-x-auto pb-1 -mx-1 px-1 snap-x snap-mandatory',
+                               'style': {'flexWrap': 'nowrap'}, 'card': tiles}]}
 
             n['card'][i:i + 1] = [single, multi]
             hit += 1
+    return hit
+
+# ชุดภาพให้ไลท์บ็อกซ์กด < > สลับ — ใบที่ยังไม่มี engine กรองทิ้งเอง (ตัวนับ N/M จึงตรงเสมอ)
+BOARD_GALLERY = ['{item.slots.board}', '{item.slots.board2}', '{item.slots.board3}']
+
+
+# ── มุมมองกริด: เลื่อนดูบอร์ดในโปสเตอร์ด้วย < > ────────────────────────────────
+#   กริดเป็นโปสเตอร์กรอบเดียว จะยัดไทล์ไม่ได้ (ของ absolute ทับภาพจะกองกัน — พังมาแล้ว)
+#   ⇒ ใช้ "เลื่อนทีละใบ" แทน · state อยู่ที่ `item.bview` (field ของ task) เขียนด้วย action:'setField'
+#   ★ค่าว่าง = ใบที่ 1 เสมอ ⇒ ไฟล์เซฟเก่า/คลิป 10 วิ ไม่ต้องมี field นี้ก็ทำงานถูก
+NB = {'op': 'div', 'a': '{values.svSec}', 'b': 10}                    # จำนวนบอร์ดทั้งหมด
+# 🔴 ต้องบีบเป็นสตริงก่อนด้วย concat — field ที่ยังไม่เคยถูกเขียนจะ resolve เป็น `undefined`
+#    แล้ว Number(undefined) = NaN ⇒ max(NaN,1) = NaN ⇒ ตัวนับขึ้น "NaN / 3" และ **ไม่มีบอร์ดใบไหนแมตช์เลย**
+#    ⇒ โปสเตอร์ว่าง ความสูงยุบ ของ absolute กองทับกันหมด (เจอจริง เห็นกับตาใน UI Lab)
+#    concat ใช้ resolveStr ซึ่งคืน '' เมื่อไม่มีค่า → Number('') = 0 → max = 1 ✓
+CUR = {'op': 'max', 'a': {'op': 'concat', 'parts': ['{item.bview}']}, 'b': 1}   # ใบที่กำลังดู (ว่าง → 1)
+
+
+def patch_grid_carousel(cfg):
+    gids = _grid_view_ids(cfg)
+    hit = 0
+    for _, m in walk(cfg.get('phases')):
+        if id(m) not in gids or not (isinstance(m, dict) and isinstance(m.get('card'), list)): continue
+        ms = m['card'][0] if m['card'] else None
+        if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
+        # ใบที่ 1 = ของเดิม (โชว์เมื่อ cur=1) · ใบ 2/3 = สำเนาที่โชว์ตาม cur
+        # ★ใบที่ 1 เป็น "ค่าตั้งต้น" ไม่ใช่การแมตช์เลข 1 เป๊ะ — ค่าแปลก ๆ ก็ยังมีภาพโชว์เสมอ
+        #   ถ้าเขียนเป็น eq(cur,1) แล้ว cur เพี้ยนเมื่อไหร่ โปสเตอร์ว่าง → การ์ดยุบ → ของ absolute กองทับกัน
+        ms['when'] = {'op': 'not', 'a': {'op': 'or', 'list': [{'op': 'eq', 'a': CUR, 'b': 2}, {'op': 'eq', 'a': CUR, 'b': 3}]}}
+        ms['gallery'] = BOARD_GALLERY
+        for k in (2, 3):
+            m['card'].insert(k - 1, dict(copy.deepcopy(ms), src='{item.slots.board%d}' % k,
+                                         gallery=BOARD_GALLERY, when={'op': 'eq', 'a': CUR, 'b': k}))
+        m['card'].append({'el': 'row', 'when': GT('{values.svSec}', 10),
+            'className': ('absolute bottom-9 left-1/2 -translate-x-1/2 z-30 items-center gap-1 px-1 py-1 '
+                          'rounded-full bg-[#17253a]/85 backdrop-blur-sm'),
+            'style': {'flexWrap': 'nowrap'},
+            'card': [
+                {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'icon': 'chevron_left', 'label': '',
+                 'value': {'op': 'max', 'a': {'op': 'sub', 'a': CUR, 'b': 1}, 'b': 1},
+                 # ★มือถือต้องกดง่าย (มาตรฐานสัมผัส 44px) แล้วค่อยหดที่จอใหญ่ — ด่าน mobile-tier อ่านเฉพาะคลาสฐาน
+                 'className': 'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0'},
+                {'el': 'text', 'value': {'op': 'concat', 'parts': [CUR, ' / ', NB]},
+                 'className': '!text-[11px] font-black !text-white tabular-nums px-1.5 whitespace-nowrap'},
+                {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'icon': 'chevron_right', 'label': '',
+                 'value': {'op': 'min', 'a': {'op': 'add', 'a': CUR, 'b': 1}, 'b': NB},
+                 # ★มือถือต้องกดง่าย (มาตรฐานสัมผัส 44px) แล้วค่อยหดที่จอใหญ่ — ด่าน mobile-tier อ่านเฉพาะคลาสฐาน
+                 'className': 'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0'},
+            ]})
+        hit += 1
+    return hit
+
+
+def patch_card_dividers(cfg):
+    """เส้นคั่น 3 คอลัมน์ของการ์ดงาน (พรีวิว | ตั้งค่า | ปุ่มสั่งงาน)
+
+    ของเดิมมีเส้นเฉพาะระหว่าง [ตั้งค่า]↔[ปุ่ม] ⇒ ตาอ่านว่าเป็น 2 ก้อน ไม่ใช่ 3
+    🪤 การ์ดเป็น flex-col ที่จอแคบ แล้วค่อยเป็น flex-row ที่ ≥880 ⇒ เส้นตั้ง (border-l/r) ต้องติดเฉพาะ @[880px]
+       ที่จอแคบใช้เส้นนอน (border-t) แทน ไม่งั้นเส้นตั้งจะลอยขวางกลางการ์ดแนวตั้ง
+    """
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not (isinstance(n, dict) and isinstance(n.get('card'), list) and len(n['card']) == 3): continue
+        cn = str(n.get('className') or '')
+        if '@[880px]:flex-row' not in cn or 'rounded-[26px]' not in cn: continue
+        prev, mid, ctrl = n['card']
+        if '@[880px]:pr-0' not in str(prev.get('className') or ''): continue
+        prev['className'] = str(prev.get('className')) + ' @[880px]:border-r border-[var(--ev-border)]'
+        mid['className'] = str(mid.get('className')) + ' border-t @[880px]:border-t-0 border-[var(--ev-border)]/70'
+        ctrl['className'] = str(ctrl.get('className')).replace('@[880px]:border-l', 'border-t @[880px]:border-t-0 @[880px]:border-l')
+        hit += 1
     return hit
 
 
@@ -698,10 +786,15 @@ def patch_media_col_width(cfg):
     for _, n in walk(cfg.get('phases')):
         if not isinstance(n, dict): continue
         cn = str(n.get('className') or '')
-        if 'w-[170px]' in cn and 'relative' in cn:
+        # 🪤 ห้ามเช็คแค่ `'w-[170px]' in cn` — ไทล์เองก็มี `@[880px]:w-[170px]` อยู่ในสตริง
+        #    ⇒ ไทล์โดนยัด !w-full ไปด้วย แล้วบานเต็มการ์ด (เจอจริง วัดได้ 990px)
+        #    ต้องเจาะจงว่าเป็น "กล่องสื่อของการ์ด" = ขึ้นต้นด้วย relative w-[170px] mx-auto
+        if cn.startswith('relative w-[170px] mx-auto'):
             n.setdefault('classWhen', []).append({'when': WIDE, 'class': '!w-full'}); hit += 1
         elif '@[420px]:w-[194px]' in cn:
-            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '@[420px]:!w-[340px]'}); hit += 1
+            # ★ไม่ยัด 3 ใบให้พอดีกรอบ (จะได้ใบละ 100px = ภาพถูกบีบ) — ให้กว้างพอ **1 ใบเต็มความสูง + ครึ่งใบถัดไป**
+            #   ที่เหลือเลื่อนไปขวา · ครึ่งใบที่โผล่ = สัญญาณว่ายังมีต่อ (affordance) ไม่ต้องมีคำอธิบาย
+            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '@[420px]:!w-[262px]'}); hit += 1
     return hit
 
 
