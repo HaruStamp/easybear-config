@@ -582,6 +582,8 @@ def patch_ui(cfg):
     n_ta = patch_toggle_all(cfg)
     n_ch = patch_item_chains(cfg)
     n_bt = patch_board_tiles(cfg)
+    n_bt += patch_media_col_width(cfg)
+    n_bt += patch_grid_board_count(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -621,15 +623,40 @@ def _and(a, b):
 #   ✅ 10 วิ ใช้ของเดิมทุกพิกเซล (ประตู not(svSec>10) → ไฟล์เซฟเก่าที่ svSec ว่างก็เข้าทางเดิม)
 #      >10 วิ = สลับเป็นแถวไทล์เท่ากันทุกใบ **ไม่ใช่ใบใหญ่ 1 + ใบเล็ก 2** เพราะครึ่งหลังก็ต้องตรวจเท่ากัน
 #   🪤 ป้ายต้องเป็นเลขลอย ๆ (1/2/3) ห้ามใช้คำว่า "ช่วง" — ผู้ใช้ไม่ต้องรู้ว่าเบื้องหลังแบ่งเป็นช่วง
+def _grid_view_ids(cfg):
+    """โหนดทั้งหมดที่อยู่ใต้บล็อก "มุมมองกริด" ของหน้าผลิต
+
+    🪤 ห้ามใช้ `'grid-cols-2' in className` เป็นตัวแยก — วัดแล้วมันแมตช์ **28 โหนด**ทั่วแอป
+       (`grid-cols-1 @[900px]:grid-cols-2` ของฟอร์มธรรมดาก็ติด) ⇒ ตัดของที่ไม่ควรตัดเพียบ
+       ใช้ "สิ่งที่บล็อกนั้นเป็นจริง ๆ" แทน = บล็อกที่ `when` ผูกกับ `values.viewMode == 'grid'`
+       (ตระกูลเดียวกับบทเรียน "ยามต้องผูกกับกฎ ไม่ใช่รูปทรง")
+    """
+    ids = set()
+    for _, n in walk(cfg.get('phases')):
+        if not isinstance(n, dict) or 'when' not in n: continue
+        w = json.dumps(n.get('when'), ensure_ascii=False)
+        if '{values.viewMode}' in w and '"grid"' in w:
+            for _, m in walk(n): ids.add(id(m))
+    return ids
+
+
+
 def patch_board_tiles(cfg):
+    """คลิป 20/30 วิ มีบอร์ดหลายใบ แต่การ์ดโชว์ใบเดียว ⇒ กด "ภาพโอเค" โดยเห็นแผนครึ่งเดียว
+
+    🔴 บทเรียนรอบแรก (พี่หมีเจอกับตา · แก้รอบนี้): เอาไทล์ไปแทน media-slot **ทุกที่** = พังทั้ง 2 มุมมอง
+      · การ์ดในมุมมองกริด = **โปสเตอร์** — ทุกอย่าง (เลข/ป้ายสถานะ/ชื่อ/ปุ่ม hover) absolute ทับบนภาพ 9:16
+        พอเปลี่ยนเป็นแถวไทล์เตี้ย (98px) พื้นที่ยุบ ⇒ ของทุกชิ้นกองทับกันหมด
+      · การ์ดในมุมมองลิสต์ = คอลัมน์สื่อกว้าง **170px ตายตัว** (ทำไว้ให้ภาพ 9:16 ใบเดียว)
+        3 ไทล์ = ใบละ 52px อ่านไม่ออก · แถมป้ายสถานะ absolute bottom-2 ที่เคยสวยบนภาพสูง กลายเป็นทับกลางไทล์
+    ⇒ กติกาใหม่: **ไทล์เฉพาะที่มีที่ให้ตรวจจริง (มุมมองลิสต์) · มุมมองกริดคงโปสเตอร์ไว้**
+    """
+    grid_ids = _grid_view_ids(cfg)   # ทุกโหนดใต้มุมมองกริด = ห้ามแตะ (โปสเตอร์ต้องอยู่ครบ)
+
     hit = 0
-    # 🪤 ต้องเก็บรายชื่อโหนดให้ครบ**ก่อน**แล้วค่อยแก้ — ของที่แทรกเข้าไปมี media-slot ตัวเดิมอยู่ข้างใน
-    #    ถ้าแก้ระหว่างเดิน walk จะเดินเข้าไปเจอสำเนาแล้วแตกซ้ำไม่รู้จบ (RecursionError · เจอจริง)
     nodes = [n for _, n in walk(cfg.get('phases')) if isinstance(n, dict) and isinstance(n.get('card'), list)]
     for n in nodes:
-        # ★ไล่จากท้ายมาหน้า + ห้าม break — ในคอลัมน์สื่อของการ์ดมีกล่องบอร์ด **มากกว่า 1 สถานะ**
-        #   (สถานะ 'รีวิวภาพ' กับสถานะ 'ได้ภาพแล้วรอวิดีโอ' ใช้บอร์ดคนละกล่อง) · เคยแตะแค่กล่องแรกแล้วอีกกล่องยังโชว์ใบเดียว
-        #   ไล่ถอยหลังเพราะการแทรกทำให้ดัชนีตัวหลังเลื่อน
+        if id(n) in grid_ids: continue
         for i in range(len(n['card']) - 1, -1, -1):
             ch = n['card'][i]
             if not (isinstance(ch, dict) and ch.get('el') == 'box' and isinstance(ch.get('card'), list)): continue
@@ -639,8 +666,6 @@ def patch_board_tiles(cfg):
             single = copy.deepcopy(ch)
             single['when'] = _and(NOT(GT('{values.svSec}', 10)), ch.get('when'))
 
-            multi = copy.deepcopy(ch)
-            multi['when'] = _and(GT('{values.svSec}', 10), ch.get('when'))
             tiles = []
             for k in range(1, 4):
                 slot = 'board' if k == 1 else 'board%d' % k
@@ -652,9 +677,59 @@ def patch_board_tiles(cfg):
                 ]}
                 if k > 1: t['when'] = GT('{values.svSec}', (k - 1) * 10)
                 tiles.append(t)
-            multi['card'][0] = {'el': 'row', 'className': 'gap-1.5 items-start', 'style': {'flexWrap': 'nowrap'}, 'card': tiles}
+            # ★เหลือแค่แถวไทล์ — **ตัดป้ายสถานะ absolute ทิ้ง** เพราะ
+            #   ① ป้ายวางไว้สำหรับภาพสูง พอไทล์เตี้ยมันทับกลางภาพ  ② หัวการ์ดมีป้ายสถานะเดียวกันอยู่แล้ว = ซ้ำซ้อน
+            multi = {'el': 'box', 'className': ch.get('className') or '',
+                     'when': _and(GT('{values.svSec}', 10), ch.get('when')),
+                     'card': [{'el': 'row', 'className': 'gap-1.5 items-start', 'style': {'flexWrap': 'nowrap'}, 'card': tiles}]}
 
             n['card'][i:i + 1] = [single, multi]
+            hit += 1
+    return hit
+
+
+def patch_media_col_width(cfg):
+    """คอลัมน์สื่อของการ์ดลิสต์กว้าง 170px ตายตัว (ทำไว้ให้ภาพใบเดียว) ⇒ 3 ไทล์ = ใบละ 52px อ่านไม่ออก
+    ขยายเฉพาะตอนคลิปยาว ด้วย classWhen — 10 วิ ไม่ขยับสักพิกเซล
+    🪤 ต้องใช้ `!` (important) — classWhen ต่อคลาสท้ายสตริง แต่ Tailwind ตัดสินจากลำดับใน stylesheet ไม่ใช่ลำดับใน class
+    """
+    WIDE = GT('{values.svSec}', 10)
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not isinstance(n, dict): continue
+        cn = str(n.get('className') or '')
+        if 'w-[170px]' in cn and 'relative' in cn:
+            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '!w-full'}); hit += 1
+        elif '@[420px]:w-[194px]' in cn:
+            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '@[420px]:!w-[340px]'}); hit += 1
+    return hit
+
+
+def patch_grid_board_count(cfg):
+    """มุมมองกริดคงโปสเตอร์ (ภาพเดียวเต็มกรอบ) — แต่ต้องบอกให้รู้ว่ามีบอร์ดหลายใบ
+    ไม่งั้นผู้ใช้เห็นใบเดียวแล้วนึกว่าครบ (ตระกูล 'ช่องมีของ ≠ งานเสร็จ')
+    """
+    hit = 0
+    gids = _grid_view_ids(cfg)
+    for _, m in walk(cfg.get('phases')):
+        if id(m) not in gids: continue
+        if True:
+            if not (isinstance(m, dict) and isinstance(m.get('card'), list)): continue
+            ms = m['card'][0] if m['card'] else None
+            if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
+            m['card'].append({'el': 'row', 'when': GT('{values.svSec}', 10),
+                # 🪤 วางตำแหน่งชนของเดิม 2 ชิ้น: bottom-left ทับแถบชื่อ (absolute bottom-0 left-0 right-0)
+            #    และชนปุ่ม 'เมนู' ลอยมุมซ้ายล่างของแอปด้วย · top-right มีป้ายสถานะอยู่แล้ว
+            #    ⇒ ใต้เลขคลิป (top-11) = ช่องว่างจริงช่องเดียวที่เหลือ
+            'className': ('absolute top-11 left-1.5 z-30 items-center gap-1 px-2 py-1 rounded-lg '
+                              'bg-[#17253a]/80 backdrop-blur-sm pointer-events-none'),
+                'style': {'flexWrap': 'nowrap'},
+                'card': [
+                    {'el': 'icon', 'icon': 'burst_mode', 'textSize': 'text-[13px]',
+                     'className': '!text-white leading-none flex items-center justify-center'},
+                    {'el': 'text', 'value': {'op': 'concat', 'parts': [{'op': 'div', 'a': '{values.svSec}', 'b': 10}, ' บอร์ด']},
+                     'className': '!text-[10.5px] font-bold !text-white whitespace-nowrap'},
+                ]})
             hit += 1
     return hit
 
