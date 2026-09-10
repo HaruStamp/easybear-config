@@ -799,6 +799,116 @@ def patch_media_col_mobile(cfg):
     return hit
 
 
+# ═══ ล็อกความเหมือนของสินค้า + บทพูดต้องเต็มความยาว (พี่หมีเจอจากการทดสอบ 2026-09-10) ═══
+
+_PROD_OLD = 'กติกาสำคัญ: ใช้ "สินค้าที่แนบมา" เป็นต้นแบบ คงรูปทรง สี ฉลาก และดีไซน์ของสินค้า 100% ห้ามเปลี่ยนแปลงรายละเอียดสินค้า'
+
+_PROD_NEW = (
+    'กติกาเหล็ก — ความเหมือนของสินค้า (สำคัญกว่าความสวยของภาพ):\n'
+    '- สินค้าในทุกช่องต้องเป็นชิ้นเดียวกันกับรูปที่แนบมาแบบเป๊ะ — ถือรูปที่แนบเป็นภาพถ่ายของจริง ไม่ใช่แค่แรงบันดาลใจ\n'
+    '- ห้ามเปลี่ยน: สี เฉดสี รูปทรง สัดส่วน ขนาด วัสดุ พื้นผิว ฉลาก โลโก้ ตัวอักษรบนสินค้า จำนวนชิ้นและส่วนประกอบ\n'
+    '- ห้ามวาดใหม่ ห้ามตีความใหม่ ห้ามทำให้เป็นภาพวาดหรือการ์ตูน ห้ามเพิ่มหรือลบรายละเอียดใดของตัวสินค้า\n'
+    '- สไตล์มินิมอลสแกนดิเนเวียนและโทนพาสเทลใช้กับ ฉาก พื้นหลัง แสง และเลย์เอาต์ของแผง เท่านั้น '
+    'ห้ามใช้กับตัวสินค้า — ตัวสินค้าคงสีและวัสดุจริงตามรูปที่แนบเสมอ\n'
+    '- ถ้ามุมกล้องที่บทระบุเป็นมุมที่รูปที่แนบไม่มี ให้ใช้มุมที่ใกล้เคียงที่สุดจากรูปที่แนบ '
+    'และห้ามเดารายละเอียดด้านที่มองไม่เห็น')
+
+_VID_OLD = ('Keep the product 100% identical to the reference image throughout — same shape, color, label, and design.')
+
+_VID_NEW = (
+    'PRODUCT LOCK (this outranks every style instruction): the product must be the exact same physical object '
+    'as in the attached reference photo. Treat the reference as a real photograph of the real product, not as inspiration. '
+    'Never change its colour, shade, shape, proportion, size, material, texture, label, logo, on-product lettering, '
+    'or the number of parts. Do not redraw, restyle, illustrate or cartoonify it, and never add or remove any part of it. '
+    'The Scandinavian-minimal pastel styling applies ONLY to the set, background, lighting and composition — never to the '
+    'product itself. If a shot calls for an angle the reference does not show, use the closest angle the reference does show '
+    'and never invent unseen details.')
+
+
+def patch_product_lock(cfg):
+    """สินค้าเพี้ยนตอนวาดสตอรีบอร์ด (พี่หมีเจอจากการทดสอบจริง)
+
+    🔴 ราก = **ตระกูลเดียวกับ "มินิมอลหลุดเข้าบทขาย" ที่เคยแก้ไปแล้ว** — คำสั่งสไตล์ไม่ได้บอกขอบเขต
+       prompt เดิมวาง "สไตล์ภาพรวม: มินิมอลสแกนดิเนเวียน พื้นหลังโทนพาสเทล" ไว้ **ก่อน** และยาวกว่า
+       กติกาความเหมือนสินค้าซึ่งเป็นประโยคเดียวสั้น ๆ ⇒ โมเดลคลี่ความขัดแย้งด้วยการ **จับสินค้าเข้าสไตล์**
+    ⇒ ยาคือบอกขอบเขตให้ชัด: **สไตล์เป็นของฉาก ไม่ใช่ของสินค้า** + ระบุรายการที่ห้ามเปลี่ยนเป็นข้อ ๆ
+    ★ต้องมี "ทางออก" ให้ด้วย (ถ้ามุมที่บทขอไม่มีในรูป ให้ใช้มุมใกล้สุด) — ห้ามล้วน ๆ โดยไม่มีทางออก
+      โมเดลจะเดารายละเอียดเองอยู่ดี (บทเรียนเดิม: กฎ "ชนิด" ต้องมาคู่กฎ "จำนวน/ทางเลือก")
+    """
+    hit = 0
+    for o in cfg['ops']:
+        if not o['id'].startswith(('mnBoard', 'mnVideo')): continue
+        txt = json.dumps(o['prompt'], ensure_ascii=False)
+        old, new = (_PROD_OLD, _PROD_NEW) if o['id'].startswith('mnBoard') else (_VID_OLD, _VID_NEW)
+        j_old = json.dumps(old, ensure_ascii=False)[1:-1]
+        j_new = json.dumps(new, ensure_ascii=False)[1:-1]
+        if j_old not in txt: continue
+        o['prompt'] = json.loads(txt.replace(j_old, j_new))
+        hit += 1
+    return hit
+
+
+def _vo_rule(sec):
+    """กฎความยาวบทพูดต่อความยาวคลิป — ต้องสเกลตามจำนวนฉาก ไม่ใช่เลขตายตัว"""
+    scenes = sec // 2
+    lo, hi = scenes * 5, scenes * 7
+    return ('กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n'
+            '- คลิปนี้ยาว %d วินาที มี %d ฉาก ฉากละ 2 วินาที — vo1 ถึง vo%d ต้องมีบทพูดครบทุกฉาก '
+            'ห้ามเว้นว่างแม้แต่ฉากเดียว\n'
+            '- ฉากละ 5-7 คำไทย รวมทั้งคลิป %d-%d คำ — ให้พูดเต็ม 2 วินาทีของฉากนั้นพอดี ไม่เหลือช่องเงียบ\n'
+            '- เขียนให้ vo1 ถึง vo%d ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี %d วินาที '
+            'ไม่ใช่วลีสั้นที่จบห้วนแยกกัน (แยกกันเมื่อไหร่จะเกิดช่วงเงียบคั่นระหว่างฉาก)'
+            % (sec, scenes, scenes, lo, hi, scenes, sec))
+
+
+def patch_vo_fill(cfg):
+    """คลิป 20/30 วิ มีช่วงเงียบยาว (พี่หมีเจอจากการทดสอบจริง)
+
+    🔴 ราก **วัดเป็นตัวเลขได้**: กฎเดิมเขียนตายตัวว่า "รวมทั้งคลิป 20-30 คำไทย เฉลี่ย 4-6 คำต่อฉาก"
+       และมันอยู่ในส่วนของ sys ที่ **ไม่ผูกกับความยาว** ⇒ คลิป 30 วิ ก็ยังได้งบ 20-30 คำเท่าเดิม
+       ภาษาไทยพูดจังหวะโฆษณา ~3 คำ/วินาที ⇒ 25 คำ ≈ 8 วินาที ⇒ **คลิป 30 วิ เงียบไปกว่า 20 วินาที**
+    ⇒ ย้ายงบคำไปเป็น lookup ต่อความยาว (ฉากละ 5-7 คำ × จำนวนฉาก) แล้วต่อท้าย systemInstruction
+    ★สั่ง "เขียนต่อกันเป็นย่อหน้าเดียว" ด้วย — ไม่งั้นได้วลีสั้น N ชิ้นที่จบห้วน แล้วเกิดช่องเงียบคั่นอยู่ดี
+    """
+    lk = cfg['lookups']
+    lk['lenVo'] = {str(s): _vo_rule(s) for s in (10, 20, 30)}
+    op = find_op(cfg, 'mnPlan')
+    si = op['systemInstruction']
+    assert isinstance(si, dict) and si.get('op') == 'concat', 'systemInstruction ไม่ใช่ concat — patch_plan ยังไม่ได้รัน?'
+    if any(isinstance(x, dict) and x.get('table') == 'lenVo' for x in si['parts']): return 0
+    tail = {'op': 'lookup', 'table': 'lenVo', 'key': '{values.svSec}', 'fallback': lk['lenVo']['10']}
+    si['parts'] = si['parts'][:-1] + ['\n\n', tail, '\n\n'] + si['parts'][-1:]
+    # เลขตายตัวในตัวกลางต้องออก ไม่งั้นขัดกับกฎใหม่ (โมเดลจะเลือกอันที่เจอก่อน)
+    OLDL = '- รวมทั้งคลิป 20-30 คำไทย เฉลี่ย 4-6 คำต่อฉาก พูดต่อเนื่องลื่นไหล น้ำเสียงอบอุ่นเป็นมิตร'
+    NEWL = '- พูดต่อเนื่องลื่นไหล น้ำเสียงอบอุ่นเป็นมิตร (จำนวนคำต่อฉากดูที่กฎความยาวบทพูดท้ายคำสั่ง)'
+    assert OLDL in cfg['brain']['mn']['sys'], 'ไม่เจอบรรทัดงบคำเดิมใน sys'
+    cfg['brain']['mn']['sys'] = cfg['brain']['mn']['sys'].replace(OLDL, NEWL, 1)
+    return 1
+
+
+_AUD_ANCHOR = "\n\nAudio: "
+_AUD_FILL = ('The narration must run continuously for the whole clip — start speaking at 0.0s and keep speaking '
+             'until the last second. No silent gap at the start, between scenes, or at the end. ')
+
+
+def patch_vo_seam(cfg):
+    """รอยต่อระหว่างช่วง: โมเดลสร้างทีละ 10 วิ ⇒ ถ้าเว้นจังหวะท้ายช่วง + ต้นช่วงถัดไป จะได้ช่องเงียบคู่ตรงรอยต่อ
+       ★แทนบนข้อความ JSON ⇒ ต้องแปลง anchor ด้วย json.dumps ก่อน (ขึ้นบรรทัดใหม่ในไฟล์ = `\\n` สองตัวอักษร)
+       🪤 รอบแรกเขียน anchor เป็นสตริงที่มีขึ้นบรรทัดจริง แล้ว **ไม่แมตช์อะไรเลยแบบเงียบ ๆ** (hit=0 ไม่มี error)
+          ⇒ ต้องมี assert ว่าแทนได้จริง ไม่ใช่ปล่อยให้ 0 ผ่านไป (ตระกูลยามหลับ)
+    """
+    a = json.dumps(_AUD_ANCHOR, ensure_ascii=False)[1:-1]
+    f = json.dumps(_AUD_ANCHOR + _AUD_FILL, ensure_ascii=False)[1:-1]
+    hit = 0
+    for o in cfg['ops']:
+        if not o['id'].startswith('mnVideo'): continue
+        txt = json.dumps(o['prompt'], ensure_ascii=False)
+        if f[:60] in txt or a not in txt: continue
+        o['prompt'] = json.loads(txt.replace(a, f, 1)); hit += 1
+    assert hit > 0, 'patch_vo_seam ไม่ได้แทนอะไรเลย — anchor เปลี่ยน?'
+    return hit
+
+
 def patch_drop_eng(cfg):
     """ตัดคำว่า "เอง" ออกจากป้ายปุ่มเลือกไฟล์ (พี่หมีสั่ง 2026-09-10 · ข้อความตกบรรทัดในกริด)
 
@@ -1227,10 +1337,15 @@ def main():
         patch_plan(cfg)
         patch_ops(cfg)
         ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt = patch_ui(cfg)
+        # 🔴 ต้องรัน **หลัง** patch_ui — ประโยค 'กติกาสำคัญ: ใช้ "สินค้าที่แนบมา" เป็นต้นแบบ' ที่ patch นี้แทนที่
+        #    เป็น **anchor ของ _board_prev_note** (บล็อกกติกาความต่อเนื่อง) ที่ patch_ui เรียก
+        #    ⇒ รันก่อน = anchor หาย แล้วบล็อกความต่อเนื่องไม่ถูกแทรก **แบบเงียบ ๆ** (ยาม ⑪ จับได้)
+        #    📌 บทเรียน: ข้อความใน prompt เป็น 'จุดยึด' ของ patch ตัวอื่นได้ — แทนที่เมื่อไหร่ต้องไล่ดูว่าใครใช้มันเป็น anchor
+        n_pl = patch_product_lock(cfg) + patch_vo_fill(cfg) + patch_vo_seam(cfg)
         json.dump(cfg, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         open(p, 'a', encoding='utf-8').write('\n')
-        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d'
-              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt))
+        print('✅ %-18s ops=%d · ป้ายฉาก %d คีย์ · ทางออกวิดีโอรวมช่วง %d · ปุ่มรันชุด %d · กล่องบอร์ด %d · ปุ่มเลือกความยาว %d · ชุดแถวบท %d · ป้ายหัวช่อง %d · ชิปขั้นตอน %d · ป้ายความยาว %d · ปุ่มทั้งหมด %s · ปุ่มรายคลิปทำครบช่วง %d · การ์ดโชว์บอร์ดครบ %d · ล็อกสินค้า+บทพูดเต็ม %d'
+              % (os.path.basename(p), len(cfg['ops']), len(cfg['lookups']['sceneLab']), ns, np_, nb, npk, nr, nl, nc, nd, nta, nch, nbt, n_pl))
 
 
 if __name__ == '__main__':
