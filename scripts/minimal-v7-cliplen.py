@@ -525,19 +525,6 @@ def len_picker():
     ]}
 
 
-def extra_board_slots():
-    """บอร์ดช่วง 2/3 — ต่อท้ายกล่องบอร์ดเดิม โผล่เฉพาะตอนคลิปยาวพอ"""
-    out = []
-    for seg in (2, 3):
-        out.append({'el': 'box', 'className': 'flex flex-col gap-1 mt-2',
-                    'when': 'values.svSec>%d' % ((seg - 1) * 10), 'card': [
-                        {'el': 'text', 'value': 'สตอรีบอร์ดช่วงที่ %d (ฉาก %d-%d)' % (seg, (seg - 1) * 5 + 1, seg * 5),
-                         'className': LBL_CLS},
-                        {'el': 'media-slot', 'src': '{item.slots.board%d}' % seg, 'aspect': '9:16',
-                         'style': {'borderRadius': '16px'}, 'className': 'ring-1 ring-[var(--ev-border)]'},
-                    ]})
-    return out
-
 
 def patch_ui(cfg):
     """UI: ทางออกวิดีโอต้องรวมช่วง · ปุ่มรันต้องเรียก op ครบ · ปุ่มเลือกความยาว · บอร์ดช่วง 2/3 · แถวบทฉาก 6-15"""
@@ -562,11 +549,9 @@ def patch_ui(cfg):
                     i = ops.index(base)
                     ops[i:i + 1] = [base + '3', base + '2', base]
                     n_phase += 1
-        # ③ กล่องที่มีแต่บอร์ดช่วงแรก → ต่อบอร์ดช่วง 2/3 ท้ายกล่อง
-        if el == 'box' and isinstance(n.get('card'), list) and len(n['card']) == 1 \
-           and isinstance(n['card'][0], dict) and n['card'][0].get('src') == '{item.slots.board}' \
-           and n['card'][0].get('el') == 'media-slot':
-            n['card'] += extra_board_slots(); n_board += 1
+        # ③ (เลิกใช้ 2026-09-10) เดิมต่อบอร์ดช่วง 2/3 เป็นกล่องแยกมีป้ายกำกับต่อท้ายกล่องเดิม
+        #    ตอนนี้ใช้ตัวเลื่อน < > ในกรอบเดียว (patch_board_carousel) แทน — พี่หมีว่าสวยกว่าและใช้ง่ายกว่า
+        #    🪤 ถ้าปล่อยของเดิมไว้ = บอร์ด 2/3 โผล่ซ้ำใต้กรอบที่เลื่อนได้อยู่แล้ว (เจอจริงบนจอคอม)
 
     # ④ กลุ่ม "การผลิต" — ★ความยาวคลิปต้องมา **ก่อน** จำนวนคลิป (ลำดับเดียวกับ hardsell) + ป้ายหัวช่องมีไอคอน
     n_pick = 0
@@ -581,11 +566,9 @@ def patch_ui(cfg):
     n_dur = patch_duration_labels(cfg)
     n_ta = patch_toggle_all(cfg)
     n_ch = patch_item_chains(cfg)
-    n_bt = patch_board_tiles(cfg)
-    n_bt += patch_media_col_width(cfg)
-    n_bt += patch_grid_board_count(cfg)
-    n_bt += patch_card_dividers(cfg)
-    n_bt += patch_grid_carousel(cfg)
+    n_bt = patch_board_carousel(cfg)
+    n_bt += patch_viewmode_align(cfg)
+    n_bt += patch_drop_col_divider(cfg)
     _board_seg1_continuity(cfg)
     n_lbl = patch_setup_labels(cfg)
     n_rows = patch_script_rows(cfg)
@@ -643,188 +626,128 @@ def _grid_view_ids(cfg):
 
 
 
-def patch_board_tiles(cfg):
-    """คลิป 20/30 วิ มีบอร์ดหลายใบ แต่การ์ดโชว์ใบเดียว ⇒ กด "ภาพโอเค" โดยเห็นแผนครึ่งเดียว
-
-    🔴 บทเรียนรอบแรก (พี่หมีเจอกับตา · แก้รอบนี้): เอาไทล์ไปแทน media-slot **ทุกที่** = พังทั้ง 2 มุมมอง
-      · การ์ดในมุมมองกริด = **โปสเตอร์** — ทุกอย่าง (เลข/ป้ายสถานะ/ชื่อ/ปุ่ม hover) absolute ทับบนภาพ 9:16
-        พอเปลี่ยนเป็นแถวไทล์เตี้ย (98px) พื้นที่ยุบ ⇒ ของทุกชิ้นกองทับกันหมด
-      · การ์ดในมุมมองลิสต์ = คอลัมน์สื่อกว้าง **170px ตายตัว** (ทำไว้ให้ภาพ 9:16 ใบเดียว)
-        3 ไทล์ = ใบละ 52px อ่านไม่ออก · แถมป้ายสถานะ absolute bottom-2 ที่เคยสวยบนภาพสูง กลายเป็นทับกลางไทล์
-    ⇒ กติกาใหม่: **ไทล์เฉพาะที่มีที่ให้ตรวจจริง (มุมมองลิสต์) · มุมมองกริดคงโปสเตอร์ไว้**
-    """
-    grid_ids = _grid_view_ids(cfg)   # ทุกโหนดใต้มุมมองกริด = ห้ามแตะ (โปสเตอร์ต้องอยู่ครบ)
-
-    hit = 0
-    nodes = [n for _, n in walk(cfg.get('phases')) if isinstance(n, dict) and isinstance(n.get('card'), list)]
-    for n in nodes:
-        if id(n) in grid_ids: continue
-        for i in range(len(n['card']) - 1, -1, -1):
-            ch = n['card'][i]
-            if not (isinstance(ch, dict) and ch.get('el') == 'box' and isinstance(ch.get('card'), list)): continue
-            ms = ch['card'][0] if ch['card'] else None
-            if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
-            # 🔴 คอลัมน์สื่อมีกล่องที่โชว์ "บอร์ด" อยู่ 2 สถานะ — และมีแค่สถานะเดียวที่ควรเป็นแถบไทล์
-            #   · โหมด "บอร์ด"  = ที่ที่ผู้ใช้ **ตรวจแผน** ⇒ ต้องเห็นครบทุกใบ
-            #   · โหมด "วิดีโอ" = บอร์ดถูกใช้เป็น **ตัวแทนช่องวิดีโอที่ยังว่าง** (ป้าย "ได้ภาพแล้ว — รอวิดีโอ")
-            #     ⇒ ต้องเป็นกรอบเดียวเหมือนเดิม · โชว์ 3 ใบตรงนี้ = สลับไปดูวิดีโอแล้วยังเจอบอร์ด 3 ใบ งง (พี่หมีทัก)
-            if '"video"' in json.dumps(ch.get('when'), ensure_ascii=False): continue
-
-            single = copy.deepcopy(ch)
-            single['when'] = _and(NOT(GT('{values.svSec}', 10)), ch.get('when'))
-
-            tiles = []
-            for k in range(1, 4):
-                slot = 'board' if k == 1 else 'board%d' % k
-                if k > 1:   # ลูกศรคั่นระหว่างใบ — บอกว่า "เรื่องเดินต่อไปทางขวา" ไม่ใช่ภาพ 3 ใบที่ไม่เกี่ยวกัน
-                    tiles.append({'el': 'icon', 'icon': 'double_arrow', 'textSize': 'text-[16px]',
-                                  'className': 'self-center shrink-0 opacity-30 leading-none flex items-center justify-center',
-                                  'when': GT('{values.svSec}', (k - 1) * 10)})
-                t = {'el': 'box', 'className': 'relative shrink-0 snap-start w-[190px] @[880px]:w-[170px]', 'card': [
-                    dict(copy.deepcopy(ms), src='{item.slots.%s}' % slot, gallery=BOARD_GALLERY,
-                         className='ring-2 ring-[var(--ev-accent)]/50 w-full'),
-                    {'el': 'text', 'value': str(k),
-                     # 🪤 มุมซ้ายบนมี "ป้ายเลขคลิป" ของการ์ดจับจองอยู่แล้ว (absolute top-1.5 left-1.5)
-                     #    วางเลขบอร์ดตรงนั้นด้วย = ไทล์ใบแรกมีเลข 2 อันซ้อนกัน (เจอจริงตอนดูจอคอม)
-                     'className': ('absolute top-1.5 right-1.5 z-20 w-7 h-7 rounded-xl bg-white text-[#17253a] '
-                                   'border border-[var(--ev-border)] !text-[12px] font-black flex items-center '
-                                   'justify-center pointer-events-none shadow-sm')},
-                ]}
-                if k > 1: t['when'] = GT('{values.svSec}', (k - 1) * 10)
-                tiles.append(t)
-            # ★เหลือแค่แถวไทล์ — **ตัดป้ายสถานะ absolute ทิ้ง** เพราะ
-            #   ① ป้ายวางไว้สำหรับภาพสูง พอไทล์เตี้ยมันทับกลางภาพ  ② หัวการ์ดมีป้ายสถานะเดียวกันอยู่แล้ว = ซ้ำซ้อน
-            # 🪤 `overflow-x-auto` ปลอดภัยกับ media-slot — ตัวที่ห้ามคือ `transform` (ทำให้ lightbox position:fixed ยึดผิดจุด)
-            multi = {'el': 'box', 'className': ch.get('className') or '',
-                     'when': _and(GT('{values.svSec}', 10), ch.get('when')),
-                     'card': [{'el': 'row', 'className': 'gap-2 items-start overflow-x-auto pb-1 -mx-1 px-1 snap-x snap-mandatory',
-                               'style': {'flexWrap': 'nowrap'}, 'card': tiles}]}
-
-            n['card'][i:i + 1] = [single, multi]
-            hit += 1
-    return hit
-
 # ชุดภาพให้ไลท์บ็อกซ์กด < > สลับ — ใบที่ยังไม่มี engine กรองทิ้งเอง (ตัวนับ N/M จึงตรงเสมอ)
 BOARD_GALLERY = ['{item.slots.board}', '{item.slots.board2}', '{item.slots.board3}']
-
-
-# ── มุมมองกริด: เลื่อนดูบอร์ดในโปสเตอร์ด้วย < > ────────────────────────────────
-#   กริดเป็นโปสเตอร์กรอบเดียว จะยัดไทล์ไม่ได้ (ของ absolute ทับภาพจะกองกัน — พังมาแล้ว)
-#   ⇒ ใช้ "เลื่อนทีละใบ" แทน · state อยู่ที่ `item.bview` (field ของ task) เขียนด้วย action:'setField'
-#   ★ค่าว่าง = ใบที่ 1 เสมอ ⇒ ไฟล์เซฟเก่า/คลิป 10 วิ ไม่ต้องมี field นี้ก็ทำงานถูก
 NB = {'op': 'div', 'a': '{values.svSec}', 'b': 10}                    # จำนวนบอร์ดทั้งหมด
 # 🔴 ต้องบีบเป็นสตริงก่อนด้วย concat — field ที่ยังไม่เคยถูกเขียนจะ resolve เป็น `undefined`
-#    แล้ว Number(undefined) = NaN ⇒ max(NaN,1) = NaN ⇒ ตัวนับขึ้น "NaN / 3" และ **ไม่มีบอร์ดใบไหนแมตช์เลย**
-#    ⇒ โปสเตอร์ว่าง ความสูงยุบ ของ absolute กองทับกันหมด (เจอจริง เห็นกับตาใน UI Lab)
+#    แล้ว Number(undefined) = NaN ⇒ max(NaN,1) = NaN ⇒ ป้ายขึ้น "NaN / 3" และไม่มีใบไหนแมตช์เลย
 #    concat ใช้ resolveStr ซึ่งคืน '' เมื่อไม่มีค่า → Number('') = 0 → max = 1 ✓
 CUR = {'op': 'max', 'a': {'op': 'concat', 'parts': ['{item.bview}']}, 'b': 1}   # ใบที่กำลังดู (ว่าง → 1)
 
 
-def patch_grid_carousel(cfg):
-    gids = _grid_view_ids(cfg)
-    hit = 0
-    for _, m in walk(cfg.get('phases')):
-        if id(m) not in gids or not (isinstance(m, dict) and isinstance(m.get('card'), list)): continue
-        ms = m['card'][0] if m['card'] else None
-        if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
-        # ใบที่ 1 = ของเดิม (โชว์เมื่อ cur=1) · ใบ 2/3 = สำเนาที่โชว์ตาม cur
-        # ★ใบที่ 1 เป็น "ค่าตั้งต้น" ไม่ใช่การแมตช์เลข 1 เป๊ะ — ค่าแปลก ๆ ก็ยังมีภาพโชว์เสมอ
-        #   ถ้าเขียนเป็น eq(cur,1) แล้ว cur เพี้ยนเมื่อไหร่ โปสเตอร์ว่าง → การ์ดยุบ → ของ absolute กองทับกัน
-        ms['when'] = {'op': 'not', 'a': {'op': 'or', 'list': [{'op': 'eq', 'a': CUR, 'b': 2}, {'op': 'eq', 'a': CUR, 'b': 3}]}}
-        ms['gallery'] = BOARD_GALLERY
-        for k in (2, 3):
-            m['card'].insert(k - 1, dict(copy.deepcopy(ms), src='{item.slots.board%d}' % k,
-                                         gallery=BOARD_GALLERY, when={'op': 'eq', 'a': CUR, 'b': k}))
-        m['card'].append({'el': 'row', 'when': GT('{values.svSec}', 10),
+
+def _board_frames(ms, extra_cls=''):
+    """3 ใบซ้อนกัน โชว์ทีละใบตาม item.bview — ใบแรกเป็น "ค่าตั้งต้น" ไม่ใช่ eq(cur,1)
+    (field ที่ยังไม่เคยเขียน = NaN ⇒ ถ้าใช้ eq เป๊ะจะไม่มีใบไหนแมตช์ → กล่องยุบ ของ absolute กองทับกัน)"""
+    out = []
+    for k in range(1, 4):
+        slot = 'board' if k == 1 else 'board%d' % k
+        f = dict(copy.deepcopy(ms), src='{item.slots.%s}' % slot, gallery=BOARD_GALLERY)
+        if extra_cls: f['className'] = (f.get('className') or '') + ' ' + extra_cls
+        f['when'] = ({'op': 'not', 'a': {'op': 'or', 'list': [{'op': 'eq', 'a': CUR, 'b': 2}, {'op': 'eq', 'a': CUR, 'b': 3}]}}
+                     if k == 1 else {'op': 'eq', 'a': CUR, 'b': k})
+        out.append(f)
+    return out
+
+
+def _arrow(side):
+    """ปุ่มเลื่อน — วาง**ข้างภาพ** (ซ้าย/ขวา กลางแนวตั้ง) ตามที่พี่หมีสั่ง
+    🪤 มือถือต้อง ≥44px (ด่าน mobile-tier) แล้วค่อยหดที่จอใหญ่ · quiet=True ไม่งั้นแค่เลื่อนดูภาพ คลิปกลาย stale"""
+    left = side < 0
+    return {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'label': '',
+            'icon': 'chevron_left' if left else 'chevron_right',
+            'when': GT('{values.svSec}', 10),
+            'value': ({'op': 'max', 'a': {'op': 'sub', 'a': CUR, 'b': 1}, 'b': 1} if left
+                      else {'op': 'min', 'a': {'op': 'add', 'a': CUR, 'b': 1}, 'b': NB}),
+            'className': ('absolute ' + ('left-1' if left else 'right-1') + ' top-1/2 -translate-y-1/2 z-30 '
+                          'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 '
+                          '!rounded-full !bg-[#17253a]/75 !text-white !border-0 backdrop-blur-sm')}
+
+
+def _counter(cls, label=''):
+    """ป้ายบอกว่ากำลังดูใบไหน — label ใส่คำว่า 'บอร์ด' นำหน้าได้ (แถบล่างของกริด)"""
+    return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
+            'className': cls + ' z-30 items-center px-2 py-1 rounded-lg bg-[#17253a]/80 backdrop-blur-sm pointer-events-none',
+            'card': [{'el': 'text', 'value': {'op': 'concat', 'parts': [label, CUR, '/', NB]},
+                      'className': '!text-[11px] font-black !text-white tabular-nums whitespace-nowrap'}]}
+
+
+def _grid_bar():
+    """กริด: แถบเดียวใต้ภาพ  ‹ บอร์ด 1/3 ›  — พี่หมีสั่งรวมคำว่าบอร์ดไว้ในแถบ (ป้าย 'N บอร์ด' แยกเกะกะ เอาออกแล้ว)"""
+    # 🪤 มือถือต้อง ≥44px เหมือนกัน (ด่าน mobile-tier จับได้) — โปสเตอร์กริดกว้าง ~180px
+    #    แถบ 44+44+ตัวเลข ≈ 138px ยังอยู่ในกรอบ · จอใหญ่ค่อยหดเป็น 32px ให้ไม่เกะกะ
+    mk = lambda side: dict(_arrow(side), className=(
+        'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 '
+        '!rounded-full !bg-white/15 !text-white !border-0'))
+    return {'el': 'row', 'when': GT('{values.svSec}', 10), 'style': {'flexWrap': 'nowrap'},
             'className': ('absolute bottom-9 left-1/2 -translate-x-1/2 z-30 items-center gap-1 px-1 py-1 '
                           'rounded-full bg-[#17253a]/85 backdrop-blur-sm'),
-            'style': {'flexWrap': 'nowrap'},
-            'card': [
-                {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'icon': 'chevron_left', 'label': '',
-                 'value': {'op': 'max', 'a': {'op': 'sub', 'a': CUR, 'b': 1}, 'b': 1},
-                 # ★มือถือต้องกดง่าย (มาตรฐานสัมผัส 44px) แล้วค่อยหดที่จอใหญ่ — ด่าน mobile-tier อ่านเฉพาะคลาสฐาน
-                 'className': 'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0'},
-                {'el': 'text', 'value': {'op': 'concat', 'parts': [CUR, ' / ', NB]},
-                 'className': '!text-[11px] font-black !text-white tabular-nums px-1.5 whitespace-nowrap'},
-                {'el': 'button', 'action': 'setField', 'to': 'bview', 'quiet': True, 'icon': 'chevron_right', 'label': '',
-                 'value': {'op': 'min', 'a': {'op': 'add', 'a': CUR, 'b': 1}, 'b': NB},
-                 # ★มือถือต้องกดง่าย (มาตรฐานสัมผัส 44px) แล้วค่อยหดที่จอใหญ่ — ด่าน mobile-tier อ่านเฉพาะคลาสฐาน
-                 'className': 'justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0'},
-            ]})
-        hit += 1
-    return hit
+            'card': [mk(-1),
+                     {'el': 'text', 'value': {'op': 'concat', 'parts': ['บอร์ด ', CUR, '/', NB]},
+                      'className': '!text-[11px] font-black !text-white tabular-nums px-1.5 whitespace-nowrap'},
+                     mk(1)]}
 
 
-def patch_card_dividers(cfg):
-    """เส้นคั่น 3 คอลัมน์ของการ์ดงาน (พรีวิว | ตั้งค่า | ปุ่มสั่งงาน)
-
-    ของเดิมมีเส้นเฉพาะระหว่าง [ตั้งค่า]↔[ปุ่ม] ⇒ ตาอ่านว่าเป็น 2 ก้อน ไม่ใช่ 3
-    🪤 การ์ดเป็น flex-col ที่จอแคบ แล้วค่อยเป็น flex-row ที่ ≥880 ⇒ เส้นตั้ง (border-l/r) ต้องติดเฉพาะ @[880px]
-       ที่จอแคบใช้เส้นนอน (border-t) แทน ไม่งั้นเส้นตั้งจะลอยขวางกลางการ์ดแนวตั้ง
+def patch_viewmode_align(cfg):
+    """ปุ่มสลับมุมมอง (ลิสต์/กริด) ต้องชิดขวาบนจอคอม
+    🪤 ของเดิมเขียน `@[420px]:justify-start` = พอพ้นจอมือถือกลับไปชิดซ้าย ⇒ ลอยอยู่กลางแถบเปล่า ๆ
     """
-    hit = 0
-    for _, n in walk(cfg.get('phases')):
-        if not (isinstance(n, dict) and isinstance(n.get('card'), list) and len(n['card']) == 3): continue
-        cn = str(n.get('className') or '')
-        if '@[880px]:flex-row' not in cn or 'rounded-[26px]' not in cn: continue
-        prev, mid, ctrl = n['card']
-        if '@[880px]:pr-0' not in str(prev.get('className') or ''): continue
-        prev['className'] = str(prev.get('className')) + ' @[880px]:border-r border-[var(--ev-border)]'
-        mid['className'] = str(mid.get('className')) + ' border-t @[880px]:border-t-0 border-[var(--ev-border)]/70'
-        ctrl['className'] = str(ctrl.get('className')).replace('@[880px]:border-l', 'border-t @[880px]:border-t-0 @[880px]:border-l')
-        hit += 1
-    return hit
-
-
-def patch_media_col_width(cfg):
-    """คอลัมน์สื่อของการ์ดลิสต์กว้าง 170px ตายตัว (ทำไว้ให้ภาพใบเดียว) ⇒ 3 ไทล์ = ใบละ 52px อ่านไม่ออก
-    ขยายเฉพาะตอนคลิปยาว ด้วย classWhen — 10 วิ ไม่ขยับสักพิกเซล
-    🪤 ต้องใช้ `!` (important) — classWhen ต่อคลาสท้ายสตริง แต่ Tailwind ตัดสินจากลำดับใน stylesheet ไม่ใช่ลำดับใน class
-    """
-    WIDE = GT('{values.svSec}', 10)
     hit = 0
     for _, n in walk(cfg.get('phases')):
         if not isinstance(n, dict): continue
         cn = str(n.get('className') or '')
-        # 🪤 ห้ามเช็คแค่ `'w-[170px]' in cn` — ไทล์เองก็มี `@[880px]:w-[170px]` อยู่ในสตริง
-        #    ⇒ ไทล์โดนยัด !w-full ไปด้วย แล้วบานเต็มการ์ด (เจอจริง วัดได้ 990px)
-        #    ต้องเจาะจงว่าเป็น "กล่องสื่อของการ์ด" = ขึ้นต้นด้วย relative w-[170px] mx-auto
-        if cn.startswith('relative w-[170px] mx-auto'):
-            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '!w-full'}); hit += 1
-        elif '@[420px]:w-[194px]' in cn:
-            # ★ไม่ยัด 3 ใบให้พอดีกรอบ (จะได้ใบละ 100px = ภาพถูกบีบ) — ให้กว้างพอ **1 ใบเต็มความสูง + ครึ่งใบถัดไป**
-            #   ที่เหลือเลื่อนไปขวา · ครึ่งใบที่โผล่ = สัญญาณว่ายังมีต่อ (affordance) ไม่ต้องมีคำอธิบาย
-            n.setdefault('classWhen', []).append({'when': WIDE, 'class': '@[420px]:!w-[262px]'}); hit += 1
-    return hit
-
-
-def patch_grid_board_count(cfg):
-    """มุมมองกริดคงโปสเตอร์ (ภาพเดียวเต็มกรอบ) — แต่ต้องบอกให้รู้ว่ามีบอร์ดหลายใบ
-    ไม่งั้นผู้ใช้เห็นใบเดียวแล้วนึกว่าครบ (ตระกูล 'ช่องมีของ ≠ งานเสร็จ')
-    """
-    hit = 0
-    gids = _grid_view_ids(cfg)
-    for _, m in walk(cfg.get('phases')):
-        if id(m) not in gids: continue
-        if True:
-            if not (isinstance(m, dict) and isinstance(m.get('card'), list)): continue
-            ms = m['card'][0] if m['card'] else None
-            if not (isinstance(ms, dict) and ms.get('el') == 'media-slot' and ms.get('src') == '{item.slots.board}'): continue
-            m['card'].append({'el': 'row', 'when': GT('{values.svSec}', 10),
-                # 🪤 วางตำแหน่งชนของเดิม 2 ชิ้น: bottom-left ทับแถบชื่อ (absolute bottom-0 left-0 right-0)
-            #    และชนปุ่ม 'เมนู' ลอยมุมซ้ายล่างของแอปด้วย · top-right มีป้ายสถานะอยู่แล้ว
-            #    ⇒ ใต้เลขคลิป (top-11) = ช่องว่างจริงช่องเดียวที่เหลือ
-            'className': ('absolute top-11 left-1.5 z-30 items-center gap-1 px-2 py-1 rounded-lg '
-                              'bg-[#17253a]/80 backdrop-blur-sm pointer-events-none'),
-                'style': {'flexWrap': 'nowrap'},
-                'card': [
-                    {'el': 'icon', 'icon': 'burst_mode', 'textSize': 'text-[13px]',
-                     'className': '!text-white leading-none flex items-center justify-center'},
-                    {'el': 'text', 'value': {'op': 'concat', 'parts': [{'op': 'div', 'a': '{values.svSec}', 'b': 10}, ' บอร์ด']},
-                     'className': '!text-[10.5px] font-bold !text-white whitespace-nowrap'},
-                ]})
+        if '@[420px]:w-auto @[420px]:justify-start' in cn and 'justify-end' in cn:
+            n['className'] = cn.replace('@[420px]:w-auto @[420px]:justify-start', '@[420px]:justify-end')
             hit += 1
     return hit
+
+
+def patch_drop_col_divider(cfg):
+    """เอาเส้นคั่นระหว่างคอลัมน์ของการ์ดงานออก (พี่หมีสั่ง — "ของคอลัมน์ออกก็ได้")
+    ★เส้นนี้มีมาก่อนงานคลิปยาว (ของเดิมในดีไซน์) ไม่ใช่ของที่เพิ่มรอบนี้ ⇒ จดไว้ว่าเป็นการถอดของเดิมโดยตั้งใจ
+    """
+    hit = 0
+    for _, n in walk(cfg.get('phases')):
+        if not isinstance(n, dict): continue
+        cn = str(n.get('className') or '')
+        if '@[880px]:border-l' in cn:
+            n['className'] = cn.replace('@[880px]:border-l ', '').replace('@[880px]:border-l', '').strip()
+            hit += 1
+    return hit
+
+
+def patch_board_carousel(cfg):
+    """คลิป 20/30 วิ มีบอร์ดหลายใบ → เลื่อนดูด้วยปุ่ม < > ข้างภาพ + ป้าย n/n
+
+    🔴 บทเรียน 3 รอบก่อนหน้า (พี่หมีเจอกับตาทุกรอบ):
+      รอบ 1 เอาไทล์ไปแทน media-slot ทุกที่ ⇒ กริด (โปสเตอร์ที่ของ absolute ทับภาพ) ยุบ กองทับกัน
+      รอบ 2 บีบ 3 ใบให้พอดีกรอบ ⇒ ใบละ 100px อ่านไม่ออก · และโหมด "วิดีโอ" ก็โชว์ 3 ใบด้วย (งง)
+      รอบ 3 แถบเลื่อนแนวนอน ⇒ พี่หมีว่าปุ่มสลับสวยกว่าและใช้ง่ายกว่า
+    ⇒ จบที่ **ภาพเดียวเต็มกรอบ + ปุ่มข้างภาพ** — เหมือนกันทั้ง 2 มุมมอง ไม่ต้องเรียนรู้ 2 แบบ
+    ★โหมด "วิดีโอ" ไม่แตะ (บอร์ดตรงนั้นเป็นตัวแทนช่องวิดีโอที่ยังว่าง ไม่ใช่ที่ตรวจแผน)
+    """
+    gids = _grid_view_ids(cfg)
+    hit = 0
+    nodes = [n for _, n in walk(cfg.get('phases')) if isinstance(n, dict) and isinstance(n.get('card'), list)]
+    for n in nodes:
+        cd = n['card']
+        if not (cd and isinstance(cd[0], dict) and cd[0].get('el') == 'media-slot'
+                and cd[0].get('src') == '{item.slots.board}'): continue
+        if '"video"' in json.dumps(n.get('when'), ensure_ascii=False): continue   # โหมดวิดีโอ = กรอบเดียวเหมือนเดิม
+        ms = cd[0]
+        if id(n) in gids:
+            # กริด = โปสเตอร์ · ของ absolute เกาะกล่องนี้อยู่แล้ว → ใส่ปุ่ม/ป้ายลงไปตรง ๆ ได้
+            #   มุมขวาบนมีป้ายสถานะ · ซ้ายบนมีเลขคลิป · ล่างมีแถบชื่อ ⇒ ป้าย n/n ลงใต้เลขคลิป
+            cd[0:1] = _board_frames(ms)
+            cd.append(_grid_bar())
+        else:
+            # ลิสต์ = กล่อง flex-col (ภาพ แล้วปุ่มด้านล่าง) ⇒ ต้องห่อเฉพาะภาพด้วย relative
+            #   ไม่งั้นปุ่มจะไปอยู่กลางกล่องทั้งใบ ไม่ใช่กลางภาพ · มุมขวาบนของกล่องนี้ว่าง
+            cd[0:1] = [{'el': 'box', 'className': 'relative',
+                        'card': _board_frames(ms) + [_arrow(-1), _arrow(1), _counter('absolute top-1.5 right-1.5')]}]
+        hit += 1
+    return hit
+
 
 
 def patch_toggle_all(cfg):

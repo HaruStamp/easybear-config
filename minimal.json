@@ -11740,7 +11740,7 @@
              "style": {
               "flexWrap": "nowrap"
              },
-             "className": "items-center shrink-0 w-full justify-end @[420px]:w-auto @[420px]:justify-start",
+             "className": "items-center shrink-0 w-full justify-end @[420px]:justify-end",
              "card": [
               {
                "el": "segmented",
@@ -11940,7 +11940,7 @@
              "card": [
               {
                "el": "box",
-               "className": "shrink-0 flex justify-center @[880px]:justify-start p-3 @[420px]:p-5 @[880px]:p-6 pb-0 @[880px]:pb-6 @[880px]:pr-0 @[880px]:border-r border-[var(--ev-border)]",
+               "className": "shrink-0 flex justify-center @[880px]:justify-start p-3 @[420px]:p-5 @[880px]:p-6 pb-0 @[880px]:pb-6 @[880px]:pr-0",
                "card": [
                 {
                  "el": "box",
@@ -12200,23 +12200,58 @@
                        "className": "",
                        "card": [
                         {
-                         "el": "media-slot",
-                         "src": "{item.slots.board}",
-                         "aspect": "9:16",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
-                        },
-                        {
                          "el": "box",
-                         "className": "flex flex-col gap-1 mt-2",
-                         "when": "values.svSec>10",
+                         "className": "relative",
                          "card": [
                           {
-                           "el": "text",
-                           "value": "สตอรีบอร์ดช่วงที่ 2 (ฉาก 6-10)",
-                           "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
+                           "el": "media-slot",
+                           "src": "{item.slots.board}",
+                           "aspect": "9:16",
+                           "style": {
+                            "borderRadius": "16px"
+                           },
+                           "className": "ring-1 ring-[var(--ev-border)]",
+                           "gallery": [
+                            "{item.slots.board}",
+                            "{item.slots.board2}",
+                            "{item.slots.board3}"
+                           ],
+                           "when": {
+                            "op": "not",
+                            "a": {
+                             "op": "or",
+                             "list": [
+                              {
+                               "op": "eq",
+                               "a": {
+                                "op": "max",
+                                "a": {
+                                 "op": "concat",
+                                 "parts": [
+                                  "{item.bview}"
+                                 ]
+                                },
+                                "b": 1
+                               },
+                               "b": 2
+                              },
+                              {
+                               "op": "eq",
+                               "a": {
+                                "op": "max",
+                                "a": {
+                                 "op": "concat",
+                                 "parts": [
+                                  "{item.bview}"
+                                 ]
+                                },
+                                "b": 1
+                               },
+                               "b": 3
+                              }
+                             ]
+                            }
+                           }
                           },
                           {
                            "el": "media-slot",
@@ -12225,19 +12260,26 @@
                            "style": {
                             "borderRadius": "16px"
                            },
-                           "className": "ring-1 ring-[var(--ev-border)]"
-                          }
-                         ]
-                        },
-                        {
-                         "el": "box",
-                         "className": "flex flex-col gap-1 mt-2",
-                         "when": "values.svSec>20",
-                         "card": [
-                          {
-                           "el": "text",
-                           "value": "สตอรีบอร์ดช่วงที่ 3 (ฉาก 11-15)",
-                           "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
+                           "className": "ring-1 ring-[var(--ev-border)]",
+                           "gallery": [
+                            "{item.slots.board}",
+                            "{item.slots.board2}",
+                            "{item.slots.board3}"
+                           ],
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "max",
+                             "a": {
+                              "op": "concat",
+                              "parts": [
+                               "{item.bview}"
+                              ]
+                             },
+                             "b": 1
+                            },
+                            "b": 2
+                           }
                           },
                           {
                            "el": "media-slot",
@@ -12246,7 +12288,134 @@
                            "style": {
                             "borderRadius": "16px"
                            },
-                           "className": "ring-1 ring-[var(--ev-border)]"
+                           "className": "ring-1 ring-[var(--ev-border)]",
+                           "gallery": [
+                            "{item.slots.board}",
+                            "{item.slots.board2}",
+                            "{item.slots.board3}"
+                           ],
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "max",
+                             "a": {
+                              "op": "concat",
+                              "parts": [
+                               "{item.bview}"
+                              ]
+                             },
+                             "b": 1
+                            },
+                            "b": 3
+                           }
+                          },
+                          {
+                           "el": "button",
+                           "action": "setField",
+                           "to": "bview",
+                           "quiet": true,
+                           "label": "",
+                           "icon": "chevron_left",
+                           "when": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "value": {
+                            "op": "max",
+                            "a": {
+                             "op": "sub",
+                             "a": {
+                              "op": "max",
+                              "a": {
+                               "op": "concat",
+                               "parts": [
+                                "{item.bview}"
+                               ]
+                              },
+                              "b": 1
+                             },
+                             "b": 1
+                            },
+                            "b": 1
+                           },
+                           "className": "absolute left-1 top-1/2 -translate-y-1/2 z-30 justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-[#17253a]/75 !text-white !border-0 backdrop-blur-sm"
+                          },
+                          {
+                           "el": "button",
+                           "action": "setField",
+                           "to": "bview",
+                           "quiet": true,
+                           "label": "",
+                           "icon": "chevron_right",
+                           "when": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "value": {
+                            "op": "min",
+                            "a": {
+                             "op": "add",
+                             "a": {
+                              "op": "max",
+                              "a": {
+                               "op": "concat",
+                               "parts": [
+                                "{item.bview}"
+                               ]
+                              },
+                              "b": 1
+                             },
+                             "b": 1
+                            },
+                            "b": {
+                             "op": "div",
+                             "a": "{values.svSec}",
+                             "b": 10
+                            }
+                           },
+                           "className": "absolute right-1 top-1/2 -translate-y-1/2 z-30 justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-[#17253a]/75 !text-white !border-0 backdrop-blur-sm"
+                          },
+                          {
+                           "el": "row",
+                           "when": {
+                            "op": "gt",
+                            "a": "{values.svSec}",
+                            "b": 10
+                           },
+                           "style": {
+                            "flexWrap": "nowrap"
+                           },
+                           "className": "absolute top-1.5 right-1.5 z-30 items-center px-2 py-1 rounded-lg bg-[#17253a]/80 backdrop-blur-sm pointer-events-none",
+                           "card": [
+                            {
+                             "el": "text",
+                             "value": {
+                              "op": "concat",
+                              "parts": [
+                               "",
+                               {
+                                "op": "max",
+                                "a": {
+                                 "op": "concat",
+                                 "parts": [
+                                  "{item.bview}"
+                                 ]
+                                },
+                                "b": 1
+                               },
+                               "/",
+                               {
+                                "op": "div",
+                                "a": "{values.svSec}",
+                                "b": 10
+                               }
+                              ]
+                             },
+                             "className": "!text-[11px] font-black !text-white tabular-nums whitespace-nowrap"
+                            }
+                           ]
                           }
                          ]
                         }
@@ -12254,212 +12423,37 @@
                        "when": {
                         "op": "and",
                         "a": {
-                         "op": "not",
-                         "a": {
-                          "op": "gt",
-                          "a": "{values.svSec}",
-                          "b": 10
-                         }
-                        },
-                        "b": {
-                         "op": "and",
-                         "a": {
-                          "op": "or",
-                          "list": [
-                           {
+                         "op": "or",
+                         "list": [
+                          {
+                           "op": "eq",
+                           "a": "{item.view}",
+                           "b": "board"
+                          },
+                          {
+                           "op": "and",
+                           "a": {
                             "op": "eq",
                             "a": "{item.view}",
-                            "b": "board"
+                            "b": ""
                            },
-                           {
-                            "op": "and",
-                            "a": {
-                             "op": "eq",
-                             "a": "{item.view}",
-                             "b": ""
-                            },
-                            "b": {
-                             "op": "eq",
-                             "a": "{item.slots.board}",
-                             "b": ""
-                            }
-                           }
-                          ]
-                         },
-                         "b": {
-                          "op": "not",
-                          "a": {
-                           "op": "eq",
-                           "a": "{item.slots.board}",
-                           "b": ""
-                          }
-                         }
-                        }
-                       }
-                      },
-                      {
-                       "el": "box",
-                       "className": "",
-                       "when": {
-                        "op": "and",
-                        "a": {
-                         "op": "gt",
-                         "a": "{values.svSec}",
-                         "b": 10
-                        },
-                        "b": {
-                         "op": "and",
-                         "a": {
-                          "op": "or",
-                          "list": [
-                           {
+                           "b": {
                             "op": "eq",
-                            "a": "{item.view}",
-                            "b": "board"
-                           },
-                           {
-                            "op": "and",
-                            "a": {
-                             "op": "eq",
-                             "a": "{item.view}",
-                             "b": ""
-                            },
-                            "b": {
-                             "op": "eq",
-                             "a": "{item.slots.board}",
-                             "b": ""
-                            }
-                           }
-                          ]
-                         },
-                         "b": {
-                          "op": "not",
-                          "a": {
-                           "op": "eq",
-                           "a": "{item.slots.board}",
-                           "b": ""
-                          }
-                         }
-                        }
-                       },
-                       "card": [
-                        {
-                         "el": "row",
-                         "className": "gap-2 items-start overflow-x-auto pb-1 -mx-1 px-1 snap-x snap-mandatory",
-                         "style": {
-                          "flexWrap": "nowrap"
-                         },
-                         "card": [
-                          {
-                           "el": "box",
-                           "className": "relative shrink-0 snap-start w-[190px] @[880px]:w-[170px]",
-                           "card": [
-                            {
-                             "el": "media-slot",
-                             "src": "{item.slots.board}",
-                             "aspect": "9:16",
-                             "style": {
-                              "borderRadius": "16px"
-                             },
-                             "className": "ring-2 ring-[var(--ev-accent)]/50 w-full",
-                             "gallery": [
-                              "{item.slots.board}",
-                              "{item.slots.board2}",
-                              "{item.slots.board3}"
-                             ]
-                            },
-                            {
-                             "el": "text",
-                             "value": "1",
-                             "className": "absolute top-1.5 right-1.5 z-20 w-7 h-7 rounded-xl bg-white text-[#17253a] border border-[var(--ev-border)] !text-[12px] font-black flex items-center justify-center pointer-events-none shadow-sm"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "icon",
-                           "icon": "double_arrow",
-                           "textSize": "text-[16px]",
-                           "className": "self-center shrink-0 opacity-30 leading-none flex items-center justify-center",
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           }
-                          },
-                          {
-                           "el": "box",
-                           "className": "relative shrink-0 snap-start w-[190px] @[880px]:w-[170px]",
-                           "card": [
-                            {
-                             "el": "media-slot",
-                             "src": "{item.slots.board2}",
-                             "aspect": "9:16",
-                             "style": {
-                              "borderRadius": "16px"
-                             },
-                             "className": "ring-2 ring-[var(--ev-accent)]/50 w-full",
-                             "gallery": [
-                              "{item.slots.board}",
-                              "{item.slots.board2}",
-                              "{item.slots.board3}"
-                             ]
-                            },
-                            {
-                             "el": "text",
-                             "value": "2",
-                             "className": "absolute top-1.5 right-1.5 z-20 w-7 h-7 rounded-xl bg-white text-[#17253a] border border-[var(--ev-border)] !text-[12px] font-black flex items-center justify-center pointer-events-none shadow-sm"
-                            }
-                           ],
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 10
-                           }
-                          },
-                          {
-                           "el": "icon",
-                           "icon": "double_arrow",
-                           "textSize": "text-[16px]",
-                           "className": "self-center shrink-0 opacity-30 leading-none flex items-center justify-center",
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 20
-                           }
-                          },
-                          {
-                           "el": "box",
-                           "className": "relative shrink-0 snap-start w-[190px] @[880px]:w-[170px]",
-                           "card": [
-                            {
-                             "el": "media-slot",
-                             "src": "{item.slots.board3}",
-                             "aspect": "9:16",
-                             "style": {
-                              "borderRadius": "16px"
-                             },
-                             "className": "ring-2 ring-[var(--ev-accent)]/50 w-full",
-                             "gallery": [
-                              "{item.slots.board}",
-                              "{item.slots.board2}",
-                              "{item.slots.board3}"
-                             ]
-                            },
-                            {
-                             "el": "text",
-                             "value": "3",
-                             "className": "absolute top-1.5 right-1.5 z-20 w-7 h-7 rounded-xl bg-white text-[#17253a] border border-[var(--ev-border)] !text-[12px] font-black flex items-center justify-center pointer-events-none shadow-sm"
-                            }
-                           ],
-                           "when": {
-                            "op": "gt",
-                            "a": "{values.svSec}",
-                            "b": 20
+                            "a": "{item.slots.board}",
+                            "b": ""
                            }
                           }
                          ]
+                        },
+                        "b": {
+                         "op": "not",
+                         "a": {
+                          "op": "eq",
+                          "a": "{item.slots.board}",
+                          "b": ""
+                         }
                         }
-                       ]
+                       }
                       },
                       {
                        "el": "box",
@@ -12795,16 +12789,6 @@
                         ]
                        }
                       }
-                     ],
-                     "classWhen": [
-                      {
-                       "when": {
-                        "op": "gt",
-                        "a": "{values.svSec}",
-                        "b": 10
-                       },
-                       "class": "!w-full"
-                      }
                      ]
                     },
                     {
@@ -12906,23 +12890,13 @@
                     }
                    ]
                   }
-                 ],
-                 "classWhen": [
-                  {
-                   "when": {
-                    "op": "gt",
-                    "a": "{values.svSec}",
-                    "b": 10
-                   },
-                   "class": "@[420px]:!w-[262px]"
-                  }
                  ]
                 }
                ]
               },
               {
                "el": "box",
-               "className": "flex-1 min-w-0 p-3 @[420px]:p-5 @[880px]:py-6 @[880px]:px-6 flex flex-col gap-3.5 border-t @[880px]:border-t-0 border-[var(--ev-border)]/70",
+               "className": "flex-1 min-w-0 p-3 @[420px]:p-5 @[880px]:py-6 @[880px]:px-6 flex flex-col gap-3.5",
                "card": [
                 {
                  "el": "row",
@@ -16600,7 +16574,7 @@
               },
               {
                "el": "box",
-               "className": "w-full @[880px]:w-[212px] shrink-0 p-3 @[420px]:p-5 @[880px]:p-5 border-t @[880px]:border-t-0 @[880px]:border-l border-[var(--ev-border)] flex flex-col gap-2.5 justify-start @[880px]:py-6",
+               "className": "w-full @[880px]:w-[212px] shrink-0 p-3 @[420px]:p-5 @[880px]:p-5 border-[var(--ev-border)] flex flex-col gap-2.5 justify-start @[880px]:py-6",
                "card": [
                 {
                  "el": "box",
@@ -17709,6 +17683,11 @@
                   "borderRadius": "18px"
                  },
                  "className": "ring-1 ring-[var(--ev-border)]",
+                 "gallery": [
+                  "{item.slots.board}",
+                  "{item.slots.board2}",
+                  "{item.slots.board3}"
+                 ],
                  "when": {
                   "op": "not",
                   "a": {
@@ -17744,12 +17723,7 @@
                     }
                    ]
                   }
-                 },
-                 "gallery": [
-                  "{item.slots.board}",
-                  "{item.slots.board2}",
-                  "{item.slots.board3}"
-                 ]
+                 }
                 },
                 {
                  "el": "media-slot",
@@ -17759,6 +17733,11 @@
                   "borderRadius": "18px"
                  },
                  "className": "ring-1 ring-[var(--ev-border)]",
+                 "gallery": [
+                  "{item.slots.board}",
+                  "{item.slots.board2}",
+                  "{item.slots.board3}"
+                 ],
                  "when": {
                   "op": "eq",
                   "a": {
@@ -17772,12 +17751,7 @@
                    "b": 1
                   },
                   "b": 2
-                 },
-                 "gallery": [
-                  "{item.slots.board}",
-                  "{item.slots.board2}",
-                  "{item.slots.board3}"
-                 ]
+                 }
                 },
                 {
                  "el": "media-slot",
@@ -17787,6 +17761,11 @@
                   "borderRadius": "18px"
                  },
                  "className": "ring-1 ring-[var(--ev-border)]",
+                 "gallery": [
+                  "{item.slots.board}",
+                  "{item.slots.board2}",
+                  "{item.slots.board3}"
+                 ],
                  "when": {
                   "op": "eq",
                   "a": {
@@ -17800,12 +17779,7 @@
                    "b": 1
                   },
                   "b": 3
-                 },
-                 "gallery": [
-                  "{item.slots.board}",
-                  "{item.slots.board2}",
-                  "{item.slots.board3}"
-                 ]
+                 }
                 },
                 {
                  "el": "box",
@@ -17884,53 +17858,23 @@
                   "a": "{values.svSec}",
                   "b": 10
                  },
-                 "className": "absolute top-11 left-1.5 z-30 items-center gap-1 px-2 py-1 rounded-lg bg-[#17253a]/80 backdrop-blur-sm pointer-events-none",
                  "style": {
                   "flexWrap": "nowrap"
-                 },
-                 "card": [
-                  {
-                   "el": "icon",
-                   "icon": "burst_mode",
-                   "textSize": "text-[13px]",
-                   "className": "!text-white leading-none flex items-center justify-center"
-                  },
-                  {
-                   "el": "text",
-                   "value": {
-                    "op": "concat",
-                    "parts": [
-                     {
-                      "op": "div",
-                      "a": "{values.svSec}",
-                      "b": 10
-                     },
-                     " บอร์ด"
-                    ]
-                   },
-                   "className": "!text-[10.5px] font-bold !text-white whitespace-nowrap"
-                  }
-                 ]
-                },
-                {
-                 "el": "row",
-                 "when": {
-                  "op": "gt",
-                  "a": "{values.svSec}",
-                  "b": 10
                  },
                  "className": "absolute bottom-9 left-1/2 -translate-x-1/2 z-30 items-center gap-1 px-1 py-1 rounded-full bg-[#17253a]/85 backdrop-blur-sm",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
                  "card": [
                   {
                    "el": "button",
                    "action": "setField",
                    "to": "bview",
                    "quiet": true,
-                   "icon": "chevron_left",
                    "label": "",
+                   "icon": "chevron_left",
+                   "when": {
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
                    "value": {
                     "op": "max",
                     "a": {
@@ -17949,13 +17893,14 @@
                     },
                     "b": 1
                    },
-                   "className": "justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0"
+                   "className": "justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0"
                   },
                   {
                    "el": "text",
                    "value": {
                     "op": "concat",
                     "parts": [
+                     "บอร์ด ",
                      {
                       "op": "max",
                       "a": {
@@ -17966,7 +17911,7 @@
                       },
                       "b": 1
                      },
-                     " / ",
+                     "/",
                      {
                       "op": "div",
                       "a": "{values.svSec}",
@@ -17981,8 +17926,13 @@
                    "action": "setField",
                    "to": "bview",
                    "quiet": true,
-                   "icon": "chevron_right",
                    "label": "",
+                   "icon": "chevron_right",
+                   "when": {
+                    "op": "gt",
+                    "a": "{values.svSec}",
+                    "b": 10
+                   },
                    "value": {
                     "op": "min",
                     "a": {
@@ -18005,7 +17955,7 @@
                      "b": 10
                     }
                    },
-                   "className": "justify-center !gap-0 !w-11 !h-11 @[420px]:!w-7 @[420px]:!h-7 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0"
+                   "className": "justify-center !gap-0 !w-11 !h-11 @[420px]:!w-8 @[420px]:!h-8 !min-h-0 !p-0 !rounded-full !bg-white/15 !text-white !border-0"
                   }
                  ]
                 }
