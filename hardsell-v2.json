@@ -90,7 +90,8 @@
   "textStyleId": "golden-triangle",
   "imageModel": "🍌 Nano Banana Pro",
   "videoModel": "Veo 3.1 - Fast",
-  "styleCat": "ugc"
+  "styleCat": "ugc",
+  "camLocks": ""
  },
  "collections": {
   "control": {
@@ -300,53 +301,60 @@
         "key": "{values.toneId}",
         "fallback": ""
        },
-       "\n(ลำดับความสำคัญโทนสี: ของสินค้า > ของโปรเจกต์ > ค่าว่างทั้งคู่ = เลือกเองตามหมวดสินค้า)",
-       {
-        "op": "lookup",
-        "table": "lenActHead",
-        "key": "{values.svSec}",
-        "fallback": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\n"
-       },
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|1",
-        "fallback": "ฉาก 1 เปิดตัว"
-       },
-       " — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|2",
-        "fallback": "ฉาก 2 จุดเด่น"
-       },
-       " — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|3",
-        "fallback": "ฉาก 3 ใช้จริง"
-       },
-       " — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|4",
-        "fallback": "ฉาก 4 หลากหลาย"
-       },
-       " — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|5",
-        "fallback": "ฉาก 5 ชวนซื้อ"
-       },
        "",
        {
-        "op": "lookup",
-        "table": "lenActTail",
-        "key": "{values.svSec}",
-        "fallback": ""
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": "values.camLocks=on",
+          "value": {
+           "op": "concat",
+           "parts": [
+            {
+             "op": "lookup",
+             "table": "lenActHead",
+             "key": "{values.svSec}",
+             "fallback": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\n"
+            },
+            {
+             "op": "lookup",
+             "table": "lenAct",
+             "key": "{values.svSec}|1",
+             "fallback": "ฉาก 1 เปิดตัว"
+            },
+            " — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\n",
+            {
+             "op": "lookup",
+             "table": "lenAct",
+             "key": "{values.svSec}|2",
+             "fallback": "ฉาก 2 จุดเด่น"
+            },
+            " — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\n",
+            {
+             "op": "lookup",
+             "table": "lenAct",
+             "key": "{values.svSec}|3",
+             "fallback": "ฉาก 3 ใช้จริง"
+            },
+            " — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\n",
+            {
+             "op": "lookup",
+             "table": "lenAct",
+             "key": "{values.svSec}|4",
+             "fallback": "ฉาก 4 หลากหลาย"
+            },
+            " — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\n",
+            {
+             "op": "lookup",
+             "table": "lenActTail",
+             "key": "{values.svSec}",
+             "fallback": ""
+            }
+           ]
+          }
+         }
+        ]
        },
        "\n",
        "ย้ำ: ชื่อเทมเพลตและสไตล์ภาพ",
@@ -4959,7 +4967,8 @@
               }
              ]
             }
-           ]
+           ],
+           "when": "values.camLocks=on"
           },
           {
            "el": "box",
