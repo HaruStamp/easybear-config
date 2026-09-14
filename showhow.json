@@ -110,13 +110,23 @@
     "enabled",
     "hasProduct",
     "usp",
-    "hero",
     "arc",
     "itemName1",
     "itemName2",
     "itemName3",
     "itemName4",
-    "itemName5"
+    "itemName5",
+    "prodName",
+    "itemInfo1",
+    "itemInfo2",
+    "itemInfo3",
+    "itemInfo4",
+    "itemInfo5",
+    "hero1",
+    "hero2",
+    "hero3",
+    "hero4",
+    "hero5"
    ],
    "slots": [
     "image",
@@ -313,11 +323,213 @@
             }
            ]
           },
-          "value": "→ สินค้า 1 ชิ้น · รูปที่แนบ (ถ้ามี) = หลายมุมของชิ้นเดียวกัน\nรายละเอียดสินค้า: {item.description} {item.info}\nจุดขายที่ต่างจากของทั่วไป (ว่าง = คิดเอง · มีค่า = ต้องได้ฉาก 2): {item.usp}\n"
+          "value": "→ สินค้า 1 ชิ้น · รูปที่แนบ (ถ้ามี) = หลายมุมของชิ้นเดียวกัน\nชื่อสินค้า (ว่าง = ดูจากรูป): {item.prodName}\nรายละเอียดสินค้า: {item.description} {item.info}\nจุดขายที่ต่างจากของทั่วไป (ว่าง = คิดเอง · มีค่า = ต้องได้ฉาก 2): {item.usp}\n"
          },
          {
           "when": "item.hasProduct=หลายชิ้น",
-          "value": "→ สินค้าหลายชิ้น · รูปที่แนบเรียงตามลำดับ ชิ้นละ 1 รูป: 1) {item.itemName1} 2) {item.itemName2} 3) {item.itemName3} 4) {item.itemName4} 5) {item.itemName5} (ชื่อว่าง = ดูจากรูป)\nพระเอก: {item.hero} (ว่าง = ไม่เน้น ทุกชิ้นได้จังหวะเท่ากัน) · แต่ละชิ้นต้องได้อย่างน้อย 1 จังหวะที่เห็นถูกใช้จริง\nรายละเอียดสินค้า: {item.description} {item.info}\n"
+          "value": {
+           "op": "concat",
+           "parts": [
+            "→ สินค้าหลายชิ้น · รูปที่แนบเรียงตามลำดับชิ้น ชิ้นละ 1 รูป (ชื่อว่าง = ดูจากรูป):\n",
+            {
+             "op": "block",
+             "sep": "",
+             "parts": [
+              {
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName1}",
+                  "b": ""
+                 }
+                }
+               },
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "1) {item.itemName1} — {item.itemInfo1}",
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": "item.hero1=true",
+                    "value": " ★ พระเอก"
+                   }
+                  ]
+                 },
+                 "\n"
+                ]
+               }
+              },
+              {
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image2}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName2}",
+                  "b": ""
+                 }
+                }
+               },
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "2) {item.itemName2} — {item.itemInfo2}",
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": "item.hero2=true",
+                    "value": " ★ พระเอก"
+                   }
+                  ]
+                 },
+                 "\n"
+                ]
+               }
+              },
+              {
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image3}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName3}",
+                  "b": ""
+                 }
+                }
+               },
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "3) {item.itemName3} — {item.itemInfo3}",
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": "item.hero3=true",
+                    "value": " ★ พระเอก"
+                   }
+                  ]
+                 },
+                 "\n"
+                ]
+               }
+              },
+              {
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image4}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName4}",
+                  "b": ""
+                 }
+                }
+               },
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "4) {item.itemName4} — {item.itemInfo4}",
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": "item.hero4=true",
+                    "value": " ★ พระเอก"
+                   }
+                  ]
+                 },
+                 "\n"
+                ]
+               }
+              },
+              {
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image5}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName5}",
+                  "b": ""
+                 }
+                }
+               },
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "5) {item.itemName5} — {item.itemInfo5}",
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": "item.hero5=true",
+                    "value": " ★ พระเอก"
+                   }
+                  ]
+                 },
+                 "\n"
+                ]
+               }
+              }
+             ]
+            },
+            "(ชิ้นที่มี ★ = พระเอก ได้จังหวะมากกว่า · ไม่มี ★ เลย = ทุกชิ้นได้จังหวะเท่ากัน) · แต่ละชิ้นต้องได้อย่างน้อย 1 จังหวะที่เห็นถูกใช้จริง · เรียงตามลำดับการใช้จริงในงาน\n"
+           ]
+          }
          },
          {
           "when": "item.hasProduct!=ไม่มี",
@@ -9193,34 +9405,81 @@
           },
           {
            "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-2.5",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
            "card": [
             {
              "el": "row",
-             "className": "items-center gap-1.5 px-0.5",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
              "card": [
               {
-               "el": "icon",
-               "icon": "help",
-               "textSize": "text-[16px]",
-               "className": "!text-[var(--ev-accent)] leading-none shrink-0"
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "construction",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
               },
               {
                "el": "text",
-               "value": "คลิปนี้มีสินค้าไหม",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
+               "value": "① งานนี้ทำอะไรให้ดู",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
                "el": "text",
-               "value": "เลือกก่อน",
-               "className": "!text-[12px] opacity-55 font-bold"
+               "value": "บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
               }
              ]
             },
             {
+             "el": "input",
+             "field": "name",
+             "placeholder": "เช่น ขัดห้องน้ำคราบเหลือง · ผัดกะเพราด้วยกระทะนี้ · แต่งห้องเกมเมอร์ด้วยไฟ RGB",
+             "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
+            },
+            {
              "el": "text",
-             "value": "ไม่มี = โชว์การทำอะไรสักอย่างล้วน ๆ (ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร) · มีสินค้า = ของถูกใช้ในงานหรือโชว์การใช้",
+             "value": "ช่องเดียวที่ต้องกรอก — ที่เหลือว่างได้ หมีคิดต่อให้เอง",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "inventory_2",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "② สินค้าในคลิป",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              }
+             ]
             },
             {
              "el": "grid-select",
@@ -9251,666 +9510,667 @@
                "icon": "inventory"
               }
              ]
-            }
-           ]
-          },
-          {
-           "el": "row",
-           "className": "gap-3 flex-wrap @[420px]:flex-nowrap",
-           "card": [
+            },
             {
-             "el": "box",
-             "className": "flex flex-col gap-2 flex-1 min-w-0 !basis-full @[420px]:!basis-auto",
-             "card": [
-              {
-               "el": "text",
-               "value": "ทำอะไรให้ดู *",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-              },
-              {
-               "el": "text",
-               "value": "ช่องเดียวที่ต้องกรอก — ที่เหลือว่างได้ หมีคิดต่อให้เอง",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
-              },
-              {
-               "el": "input",
-               "field": "name",
-               "placeholder": "เช่น ขัดห้องน้ำคราบเหลือง · ผัดกะเพราด้วยกระทะนี้ · แต่งห้องเกมเมอร์ด้วยไฟ RGB",
-               "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3.5",
-           "card": [
-            {
-             "el": "row",
-             "className": "items-center gap-3.5 mb-2 flex-wrap @[420px]:flex-nowrap",
-             "card": [
-              {
-               "el": "box",
-               "className": "w-[46px] h-[46px] rounded-2xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "photo_camera",
-                 "textSize": "text-[22px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex-1 min-w-0 flex flex-col gap-0.5 !basis-full @[420px]:!basis-auto",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "รูปสินค้า",
-                 "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
-                },
-                {
-                 "el": "text",
-                 "value": "รูปแรก = รูปหลัก — หมีล็อกรูปทรง สี ฉลาก ตามรูปทุกมุมที่แนบ",
-                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed",
-                 "when": {
-                  "op": "and",
-                  "list": [
-                   {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.hasProduct}",
-                     "b": "ไม่มี"
-                    }
-                   },
-                   {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.hasProduct}",
-                     "b": "หลายชิ้น"
-                    }
-                   }
-                  ]
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "ชิ้นละ 1 รูป สูงสุด 5 ชิ้น — ใส่ชื่อชิ้นใต้รูป · หมีล็อกหน้าตาแต่ละชิ้นตามรูป",
-                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed",
-                 "when": "item.hasProduct=หลายชิ้น"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[var(--ev-accent)]/10 self-center w-full @[420px]:w-auto",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "filter_5",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                },
-                {
-                 "el": "text",
-                 "value": "สูงสุด 5 มุม",
-                 "className": "!text-[13px] @[640px]:!text-[12px] font-bold !text-[var(--ev-accent)] whitespace-nowrap",
-                 "when": {
-                  "op": "and",
-                  "list": [
-                   {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.hasProduct}",
-                     "b": "ไม่มี"
-                    }
-                   },
-                   {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.hasProduct}",
-                     "b": "หลายชิ้น"
-                    }
-                   }
-                  ]
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "สูงสุด 5 ชิ้น",
-                 "className": "!text-[13px] @[640px]:!text-[12px] font-bold !text-[var(--ev-accent)] whitespace-nowrap",
-                 "when": "item.hasProduct=หลายชิ้น"
-                }
-               ]
-              }
-             ]
+             "el": "text",
+             "value": "ไม่มีสินค้า — คลิปโชว์การลงมือทำล้วน ๆ หมีจะไม่แต่งของหรือแบรนด์ขึ้นมาเอง",
+             "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 pt-1",
+             "when": "item.hasProduct=ไม่มี"
             },
             {
              "el": "box",
-             "className": "flex flex-row flex-wrap gap-3 items-stretch",
+             "className": "flex flex-col gap-3 pt-1",
+             "when": {
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.hasProduct}",
+                 "b": "ไม่มี"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.hasProduct}",
+                 "b": "หลายชิ้น"
+                }
+               }
+              ]
+             },
              "card": [
               {
                "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+               "className": "flex flex-col gap-1.5",
                "card": [
                 {
-                 "el": "media-slot",
-                 "src": "{item.slots.image}",
-                 "aspect": "1:1",
+                 "el": "text",
+                 "value": "ชื่อสินค้า",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                },
+                {
+                 "el": "input",
+                 "field": "prodName",
+                 "placeholder": "เช่น กระทะ XYZ · ไฟ RGB รุ่น A1  (ว่าง = หมีดูจากรูป)",
+                 "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
                  "style": {
-                  "borderRadius": "16px"
+                  "flexWrap": "nowrap"
                  },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "image",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                },
-                {
-                 "el": "box",
-                 "className": "absolute bottom-1.5 left-0 right-0 flex justify-center z-10 pointer-events-none",
                  "card": [
                   {
                    "el": "text",
-                   "value": "รูปหลัก",
-                   "className": "!text-[11px] font-bold !text-white px-2.5 py-0.5 rounded-full bg-[#17253a]/70 backdrop-blur-sm"
-                  }
-                 ],
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.hasProduct}",
-                   "b": "หลายชิ้น"
-                  }
-                 }
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.image}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "image",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "image",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.image}",
-                "b": ""
-               }
-              },
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.image2}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "image2",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.image2}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "image2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "image2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "and",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.slots.image2}",
-                  "b": ""
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image}",
-                   "b": ""
-                  }
-                 }
-                ]
-               }
-              },
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.image3}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "image3",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.image3}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "image3",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "image3",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "and",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.slots.image3}",
-                  "b": ""
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image2}",
-                   "b": ""
-                  }
-                 }
-                ]
-               }
-              },
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.image4}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "image4",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.image4}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "image4",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "image4",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "and",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.slots.image4}",
-                  "b": ""
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image2}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image3}",
-                   "b": ""
-                  }
-                 }
-                ]
-               }
-              },
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.image5}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "image5",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.image5}",
-                 "b": ""
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "image5",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "image5",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ],
-               "when": {
-                "op": "and",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.slots.image5}",
-                  "b": ""
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image2}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image3}",
-                   "b": ""
-                  }
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.image4}",
-                   "b": ""
-                  }
-                 }
-                ]
-               }
-              },
-              {
-               "el": "row",
-               "className": "flex-1 min-w-[220px] items-center gap-3.5 bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/25 rounded-2xl p-3 @[420px]:p-4",
-               "style": {
-                "flexWrap": "nowrap"
-               },
-               "card": [
-                {
-                 "el": "box",
-                 "className": "w-[42px] h-[42px] rounded-xl bg-[var(--ev-accent)]/[0.14] flex items-center justify-center shrink-0",
-                 "card": [
-                  {
-                   "el": "icon",
-                   "icon": "info",
-                   "textSize": "text-[20px]",
-                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ยังไม่มีรูปสินค้า — ไม่มีก็ผลิตได้",
-                   "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-[var(--ev-accent)]"
+                   "value": "รูปสินค้า · 1-5 มุม",
+                   "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
                   },
                   {
                    "el": "text",
-                   "value": "มีรูป = หมีล็อกรูปทรง สี ฉลาก ตามของจริง · ไม่มี = หมีคิดหน้าตาให้เอง",
-                   "className": "!text-[14px] @[640px]:!text-[13px] !text-[var(--ev-accent)] opacity-80 leading-relaxed"
+                   "value": "รูปแรก = รูปหลัก · มีรูป = หมีล็อกหน้าตาตามของจริง",
+                   "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap hidden @[500px]:block"
                   }
                  ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-row flex-wrap gap-3 items-stretch",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    },
+                    {
+                     "el": "box",
+                     "className": "absolute bottom-1.5 left-0 right-0 flex justify-center z-10 pointer-events-none",
+                     "card": [
+                      {
+                       "el": "text",
+                       "value": "รูปหลัก",
+                       "className": "!text-[11px] font-bold !text-white px-2.5 py-0.5 rounded-full bg-[#17253a]/70 backdrop-blur-sm"
+                      }
+                     ],
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.hasProduct}",
+                       "b": "หลายชิ้น"
+                      }
+                     }
+                    }
+                   ],
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.image}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ],
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.image}",
+                    "b": ""
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image2}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image2",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.image2}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ],
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.slots.image2}",
+                      "b": ""
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image}",
+                       "b": ""
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image3}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image3",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.image3}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image3",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image3",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ],
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.slots.image3}",
+                      "b": ""
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image2}",
+                       "b": ""
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image4}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image4",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.image4}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image4",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image4",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ],
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.slots.image4}",
+                      "b": ""
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image2}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image3}",
+                       "b": ""
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image5}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image5",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.image5}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image5",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image5",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ],
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.slots.image5}",
+                      "b": ""
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image2}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image3}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.image4}",
+                       "b": ""
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "row",
+                   "className": "flex-1 min-w-[220px] items-center gap-3.5 bg-[var(--ev-accent)]/[0.07] border border-[var(--ev-accent)]/25 rounded-2xl p-3 @[420px]:p-4",
+                   "style": {
+                    "flexWrap": "nowrap"
+                   },
+                   "card": [
+                    {
+                     "el": "box",
+                     "className": "w-[42px] h-[42px] rounded-xl bg-[var(--ev-accent)]/[0.14] flex items-center justify-center shrink-0",
+                     "card": [
+                      {
+                       "el": "icon",
+                       "icon": "info",
+                       "textSize": "text-[20px]",
+                       "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                      }
+                     ]
+                    },
+                    {
+                     "el": "box",
+                     "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                     "card": [
+                      {
+                       "el": "text",
+                       "value": "ยังไม่มีรูปสินค้า — ไม่มีก็ผลิตได้",
+                       "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-[var(--ev-accent)]"
+                      },
+                      {
+                       "el": "text",
+                       "value": "มีรูป = หมีล็อกรูปทรง สี ฉลาก ตามของจริง · ไม่มี = หมีคิดหน้าตาให้เอง",
+                       "className": "!text-[14px] @[640px]:!text-[13px] !text-[var(--ev-accent)] opacity-80 leading-relaxed"
+                      }
+                     ]
+                    }
+                   ],
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.image}",
+                    "b": ""
+                   }
+                  }
+                 ]
+                },
+                {
+                 "el": "row",
+                 "className": "items-center gap-2.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl px-3.5 py-2.5 mt-1",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "icon",
+                   "icon": "check_circle",
+                   "textSize": "text-[18px]",
+                   "className": "!text-green-600 leading-none flex items-center justify-center"
+                  },
+                  {
+                   "el": "text",
+                   "value": "มีรูปหลักแล้ว — พร้อมผลิต",
+                   "className": "!text-[14px] @[640px]:!text-[13px] !text-green-600 font-bold"
+                  }
+                 ],
+                 "when": "item.slots.image!="
                 }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.image}",
-                "b": ""
-               }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ข้อมูลสินค้า",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                },
+                {
+                 "el": "text",
+                 "value": "จุดเด่น / คุณสมบัติ (ไม่บังคับ)",
+                 "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
+                },
+                {
+                 "el": "textarea",
+                 "field": "description",
+                 "placeholder": "เช่น SPF50+ เนื้อบางเบา ไม่เหนียว — ยิ่งละเอียด หมียิ่งเขียนบทได้ตรง",
+                 "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "จุดขายที่ต่างจากของทั่วไป",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                },
+                {
+                 "el": "text",
+                 "value": "มีค่า = ได้ฉากของตัวเอง (ไม่บังคับ)",
+                 "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
+                },
+                {
+                 "el": "textarea",
+                 "field": "usp",
+                 "placeholder": "เช่น ใช้น้ำมันเก่าได้ · กางง่ายแค่เป่าลม 1 นาที",
+                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+                }
+               ]
               }
              ]
             },
             {
              "el": "box",
-             "className": "flex flex-col gap-2 mt-1",
+             "className": "flex flex-col gap-2.5 pt-1",
              "when": "item.hasProduct=หลายชิ้น",
              "card": [
               {
                "el": "text",
-               "value": "ชื่อแต่ละชิ้น (ตามลำดับรูป)",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+               "value": "ชิ้นละ 1 รูป สูงสุด 5 ชิ้น — กด ★ พระเอก ที่ชิ้นที่อยากให้เด่น (ไม่กด = ทุกชิ้นเท่ากัน) · การ์ดถัดไปโผล่เมื่อใบก่อนมีรูปหรือชื่อ",
+               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
               },
               {
                "el": "box",
-               "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
+               "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)] p-3 flex flex-col gap-2.5",
                "card": [
                 {
                  "el": "row",
@@ -9918,313 +10178,765 @@
                  "style": {
                   "flexWrap": "nowrap"
                  },
-                 "when": "item.slots.image!=",
                  "card": [
                   {
                    "el": "box",
-                   "className": "w-8 h-8 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "className": "h-7 px-2.5 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
                    "card": [
                     {
                      "el": "text",
-                     "value": "1",
-                     "className": "!text-[15px] font-bold opacity-70"
+                     "value": "ชิ้นที่ 1",
+                     "className": "!text-[14px] font-bold opacity-80"
                     }
                    ]
                   },
                   {
-                   "el": "input",
-                   "field": "itemName1",
-                   "placeholder": "ชื่อชิ้นที่ 1",
-                   "className": "flex-1 min-w-0 !h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                   "el": "text",
+                   "value": "ชื่อว่าง = หมีดูจากรูป",
+                   "className": "!text-[12.5px] opacity-45 hidden @[500px]:block"
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1"
+                  },
+                  {
+                   "el": "button",
+                   "action": "toggle",
+                   "field": "hero1",
+                   "icon": "star",
+                   "label": "พระเอก",
+                   "variant": "ghost",
+                   "className": "!h-10 !px-3.5 !rounded-full !text-[14px] font-bold shrink-0 !min-h-[44px] @[420px]:!min-h-0",
+                   "classWhen": [
+                    {
+                     "when": "item.hero1=true",
+                     "class": "!bg-[var(--ev-accent)] !text-white !border-transparent"
+                    },
+                    {
+                     "when": "item.hero1!=true",
+                     "class": "!bg-transparent !text-[var(--ev-text)] opacity-60 !border !border-[var(--ev-border)]"
+                    }
+                   ]
                   }
                  ]
                 },
                 {
                  "el": "row",
-                 "className": "items-center gap-2",
+                 "className": "gap-3 items-stretch",
                  "style": {
                   "flexWrap": "nowrap"
                  },
-                 "when": "item.slots.image2!=",
                  "card": [
                   {
                    "el": "box",
-                   "className": "w-8 h-8 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "className": "relative w-[104px] shrink-0",
+                   "when": "item.slots.image!=",
                    "card": [
                     {
-                     "el": "text",
-                     "value": "2",
-                     "className": "!text-[15px] font-bold opacity-70"
+                     "el": "media-slot",
+                     "src": "{item.slots.image}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
                     }
                    ]
                   },
                   {
-                   "el": "input",
-                   "field": "itemName2",
-                   "placeholder": "ชื่อชิ้นที่ 2",
-                   "className": "flex-1 min-w-0 !h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
-                  }
-                 ]
-                },
-                {
-                 "el": "row",
-                 "className": "items-center gap-2",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
-                 "when": "item.slots.image3!=",
-                 "card": [
-                  {
                    "el": "box",
-                   "className": "w-8 h-8 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "className": "w-[104px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "when": "item.slots.image=",
                    "card": [
                     {
-                     "el": "text",
-                     "value": "3",
-                     "className": "!text-[15px] font-bold opacity-70"
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือก",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-white !text-[#17253a]"
                     }
                    ]
                   },
                   {
-                   "el": "input",
-                   "field": "itemName3",
-                   "placeholder": "ชื่อชิ้นที่ 3",
-                   "className": "flex-1 min-w-0 !h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
-                  }
-                 ]
-                },
-                {
-                 "el": "row",
-                 "className": "items-center gap-2",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
-                 "when": "item.slots.image4!=",
-                 "card": [
-                  {
                    "el": "box",
-                   "className": "w-8 h-8 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "className": "flex-1 min-w-0 flex flex-col gap-2",
                    "card": [
                     {
-                     "el": "text",
-                     "value": "4",
-                     "className": "!text-[15px] font-bold opacity-70"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "input",
-                   "field": "itemName4",
-                   "placeholder": "ชื่อชิ้นที่ 4",
-                   "className": "flex-1 min-w-0 !h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
-                  }
-                 ]
-                },
-                {
-                 "el": "row",
-                 "className": "items-center gap-2",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
-                 "when": "item.slots.image5!=",
-                 "card": [
-                  {
-                   "el": "box",
-                   "className": "w-8 h-8 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                   "card": [
+                     "el": "input",
+                     "field": "itemName1",
+                     "placeholder": "ชื่อสินค้าชิ้นนี้",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                    },
                     {
-                     "el": "text",
-                     "value": "5",
-                     "className": "!text-[15px] font-bold opacity-70"
+                     "el": "input",
+                     "field": "itemInfo1",
+                     "placeholder": "ข้อมูล / จุดเด่น สั้น ๆ (ไม่บังคับ)",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[16px] @[640px]:!text-[15px]"
                     }
                    ]
-                  },
-                  {
-                   "el": "input",
-                   "field": "itemName5",
-                   "placeholder": "ชื่อชิ้นที่ 5",
-                   "className": "flex-1 min-w-0 !h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
                   }
                  ]
                 }
                ]
+              },
+              {
+               "el": "box",
+               "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)] p-3 flex flex-col gap-2.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "h-7 px-2.5 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ชิ้นที่ 2",
+                     "className": "!text-[14px] font-bold opacity-80"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ชื่อว่าง = หมีดูจากรูป",
+                   "className": "!text-[12.5px] opacity-45 hidden @[500px]:block"
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1"
+                  },
+                  {
+                   "el": "button",
+                   "action": "toggle",
+                   "field": "hero2",
+                   "icon": "star",
+                   "label": "พระเอก",
+                   "variant": "ghost",
+                   "className": "!h-10 !px-3.5 !rounded-full !text-[14px] font-bold shrink-0 !min-h-[44px] @[420px]:!min-h-0",
+                   "classWhen": [
+                    {
+                     "when": "item.hero2=true",
+                     "class": "!bg-[var(--ev-accent)] !text-white !border-transparent"
+                    },
+                    {
+                     "when": "item.hero2!=true",
+                     "class": "!bg-transparent !text-[var(--ev-text)] opacity-60 !border !border-[var(--ev-border)]"
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "el": "row",
+                 "className": "gap-3 items-stretch",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] shrink-0",
+                   "when": "item.slots.image2!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image2}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image2",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-[104px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "when": "item.slots.image2=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือก",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1 min-w-0 flex flex-col gap-2",
+                   "card": [
+                    {
+                     "el": "input",
+                     "field": "itemName2",
+                     "placeholder": "ชื่อสินค้าชิ้นนี้",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                    },
+                    {
+                     "el": "input",
+                     "field": "itemInfo2",
+                     "placeholder": "ข้อมูล / จุดเด่น สั้น ๆ (ไม่บังคับ)",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[16px] @[640px]:!text-[15px]"
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName1}",
+                  "b": ""
+                 }
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)] p-3 flex flex-col gap-2.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "h-7 px-2.5 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ชิ้นที่ 3",
+                     "className": "!text-[14px] font-bold opacity-80"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ชื่อว่าง = หมีดูจากรูป",
+                   "className": "!text-[12.5px] opacity-45 hidden @[500px]:block"
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1"
+                  },
+                  {
+                   "el": "button",
+                   "action": "toggle",
+                   "field": "hero3",
+                   "icon": "star",
+                   "label": "พระเอก",
+                   "variant": "ghost",
+                   "className": "!h-10 !px-3.5 !rounded-full !text-[14px] font-bold shrink-0 !min-h-[44px] @[420px]:!min-h-0",
+                   "classWhen": [
+                    {
+                     "when": "item.hero3=true",
+                     "class": "!bg-[var(--ev-accent)] !text-white !border-transparent"
+                    },
+                    {
+                     "when": "item.hero3!=true",
+                     "class": "!bg-transparent !text-[var(--ev-text)] opacity-60 !border !border-[var(--ev-border)]"
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "el": "row",
+                 "className": "gap-3 items-stretch",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] shrink-0",
+                   "when": "item.slots.image3!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image3}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image3",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-[104px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "when": "item.slots.image3=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image3",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือก",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image3",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1 min-w-0 flex flex-col gap-2",
+                   "card": [
+                    {
+                     "el": "input",
+                     "field": "itemName3",
+                     "placeholder": "ชื่อสินค้าชิ้นนี้",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                    },
+                    {
+                     "el": "input",
+                     "field": "itemInfo3",
+                     "placeholder": "ข้อมูล / จุดเด่น สั้น ๆ (ไม่บังคับ)",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[16px] @[640px]:!text-[15px]"
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image2}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName2}",
+                  "b": ""
+                 }
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)] p-3 flex flex-col gap-2.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "h-7 px-2.5 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ชิ้นที่ 4",
+                     "className": "!text-[14px] font-bold opacity-80"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ชื่อว่าง = หมีดูจากรูป",
+                   "className": "!text-[12.5px] opacity-45 hidden @[500px]:block"
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1"
+                  },
+                  {
+                   "el": "button",
+                   "action": "toggle",
+                   "field": "hero4",
+                   "icon": "star",
+                   "label": "พระเอก",
+                   "variant": "ghost",
+                   "className": "!h-10 !px-3.5 !rounded-full !text-[14px] font-bold shrink-0 !min-h-[44px] @[420px]:!min-h-0",
+                   "classWhen": [
+                    {
+                     "when": "item.hero4=true",
+                     "class": "!bg-[var(--ev-accent)] !text-white !border-transparent"
+                    },
+                    {
+                     "when": "item.hero4!=true",
+                     "class": "!bg-transparent !text-[var(--ev-text)] opacity-60 !border !border-[var(--ev-border)]"
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "el": "row",
+                 "className": "gap-3 items-stretch",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] shrink-0",
+                   "when": "item.slots.image4!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image4}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image4",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-[104px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "when": "item.slots.image4=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image4",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือก",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image4",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1 min-w-0 flex flex-col gap-2",
+                   "card": [
+                    {
+                     "el": "input",
+                     "field": "itemName4",
+                     "placeholder": "ชื่อสินค้าชิ้นนี้",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                    },
+                    {
+                     "el": "input",
+                     "field": "itemInfo4",
+                     "placeholder": "ข้อมูล / จุดเด่น สั้น ๆ (ไม่บังคับ)",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[16px] @[640px]:!text-[15px]"
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image3}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName3}",
+                  "b": ""
+                 }
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)] p-3 flex flex-col gap-2.5",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "items-center gap-2",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "h-7 px-2.5 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ชิ้นที่ 5",
+                     "className": "!text-[14px] font-bold opacity-80"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ชื่อว่าง = หมีดูจากรูป",
+                   "className": "!text-[12.5px] opacity-45 hidden @[500px]:block"
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1"
+                  },
+                  {
+                   "el": "button",
+                   "action": "toggle",
+                   "field": "hero5",
+                   "icon": "star",
+                   "label": "พระเอก",
+                   "variant": "ghost",
+                   "className": "!h-10 !px-3.5 !rounded-full !text-[14px] font-bold shrink-0 !min-h-[44px] @[420px]:!min-h-0",
+                   "classWhen": [
+                    {
+                     "when": "item.hero5=true",
+                     "class": "!bg-[var(--ev-accent)] !text-white !border-transparent"
+                    },
+                    {
+                     "when": "item.hero5!=true",
+                     "class": "!bg-transparent !text-[var(--ev-text)] opacity-60 !border !border-[var(--ev-border)]"
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "el": "row",
+                 "className": "gap-3 items-stretch",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] shrink-0",
+                   "when": "item.slots.image5!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image5}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image5",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-[104px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "when": "item.slots.image5=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image5",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือก",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image5",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[44px] !rounded-xl !border-0 font-black !text-[15px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1 min-w-0 flex flex-col gap-2",
+                   "card": [
+                    {
+                     "el": "input",
+                     "field": "itemName5",
+                     "placeholder": "ชื่อสินค้าชิ้นนี้",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[18px] @[640px]:!text-[17px]"
+                    },
+                    {
+                     "el": "input",
+                     "field": "itemInfo5",
+                     "placeholder": "ข้อมูล / จุดเด่น สั้น ๆ (ไม่บังคับ)",
+                     "className": "!h-12 !px-3.5 !rounded-xl !text-[16px] @[640px]:!text-[15px]"
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "or",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.image4}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.itemName4}",
+                  "b": ""
+                 }
+                }
+               }
               }
              ]
-            },
-            {
-             "el": "row",
-             "className": "items-center gap-2.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl px-3.5 py-2.5 mt-1",
-             "style": {
-              "flexWrap": "nowrap"
-             },
-             "card": [
-              {
-               "el": "icon",
-               "icon": "check_circle",
-               "textSize": "text-[18px]",
-               "className": "!text-green-600 leading-none flex items-center justify-center"
-              },
-              {
-               "el": "text",
-               "value": "มีรูปหลักแล้ว — พร้อมผลิต",
-               "className": "!text-[14px] @[640px]:!text-[13px] !text-green-600 font-bold"
-              }
-             ],
-             "when": "item.slots.image!="
-            }
-           ],
-           "when": "item.hasProduct!=ไม่มี"
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-2",
-           "when": {
-            "op": "and",
-            "list": [
-             {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.hasProduct}",
-               "b": "ไม่มี"
-              }
-             },
-             {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.hasProduct}",
-               "b": "หลายชิ้น"
-              }
-             }
-            ]
-           },
-           "card": [
-            {
-             "el": "text",
-             "value": "จุดขายที่ต่างจากของทั่วไป (ไม่บังคับ)",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-            },
-            {
-             "el": "textarea",
-             "field": "usp",
-             "placeholder": "เช่น ใช้น้ำมันเก่าได้ · กางง่ายแค่เป่าลม 1 นาที — จุดนี้จะได้ฉากของตัวเอง",
-             "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
             }
            ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-2",
-           "when": "item.hasProduct=หลายชิ้น",
-           "card": [
-            {
-             "el": "text",
-             "value": "ชิ้นไหนเป็นพระเอก",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-            },
-            {
-             "el": "dropdown",
-             "field": "hero",
-             "label": "",
-             "placeholder": "ไม่เน้น — ทุกชิ้นเท่ากัน",
-             "options": [
-              {
-               "value": "",
-               "label": "ไม่เน้น — ทุกชิ้นได้จังหวะเท่ากัน",
-               "icon": "balance"
-              },
-              {
-               "value": "ชิ้นที่ 1",
-               "label": "ชิ้นที่ 1 (รูปที่ 1)",
-               "icon": "star"
-              },
-              {
-               "value": "ชิ้นที่ 2",
-               "label": "ชิ้นที่ 2 (รูปที่ 2)",
-               "icon": "star"
-              },
-              {
-               "value": "ชิ้นที่ 3",
-               "label": "ชิ้นที่ 3 (รูปที่ 3)",
-               "icon": "star"
-              },
-              {
-               "value": "ชิ้นที่ 4",
-               "label": "ชิ้นที่ 4 (รูปที่ 4)",
-               "icon": "star"
-              },
-              {
-               "value": "ชิ้นที่ 5",
-               "label": "ชิ้นที่ 5 (รูปที่ 5)",
-               "icon": "star"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-2",
-           "when": "item.hasProduct!=ไม่มี",
-           "card": [
-            {
-             "el": "text",
-             "value": "เล่าเรื่องแบบไหน",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-            },
-            {
-             "el": "grid-select",
-             "field": "arc",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[48px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "หมีเลือกจากชื่องานและของ",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "ก่อน → ลงมือ → หลัง",
-               "label": "ก่อน → ลงมือ → หลัง",
-               "desc": "จัดบ้าน ทำอาหาร รีโนเวท ทำของ",
-               "icon": "compare"
-              },
-              {
-               "value": "ปัญหา → แก้แล้ว",
-               "label": "ปัญหา → แก้แล้ว",
-               "desc": "ของที่ติดแล้วจบ — กันฝน กันแมลง ชั้นวาง",
-               "icon": "build"
-              },
-              {
-               "value": "ทัวร์จุดเด่น",
-               "label": "ทัวร์จุดเด่น",
-               "desc": "โชว์ของทำงาน ไล่ทีละจุด / ตามลำดับใช้",
-               "icon": "tour"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-2",
-           "card": [
-            {
-             "el": "text",
-             "value": "ข้อมูลสินค้า — จุดเด่น / คุณสมบัติ (ไม่บังคับ)",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-            },
-            {
-             "el": "textarea",
-             "field": "description",
-             "placeholder": "เช่น SPF50+ เนื้อบางเบา ไม่เหนียว โทนอัพผิว — ยิ่งละเอียด AI ยิ่งเขียนบทได้ตรง",
-             "className": "!min-h-[132px] !p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
-            }
-           ],
-           "when": "item.hasProduct!=ไม่มี"
           },
           {
            "el": "box",
@@ -10252,7 +10964,7 @@
                "card": [
                 {
                  "el": "text",
-                 "value": "รูปพื้นที่จริง",
+                 "value": "③ พื้นที่จริง",
                  "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
                 },
                 {
@@ -10457,43 +11169,92 @@
           },
           {
            "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-2.5",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
            "card": [
             {
              "el": "row",
-             "className": "items-center gap-1.5 px-0.5",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
              "card": [
               {
-               "el": "icon",
-               "icon": "tips_and_updates",
-               "textSize": "text-[16px]",
-               "className": "!text-[var(--ev-accent)] leading-none shrink-0"
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[var(--ev-accent)]/[0.12] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "auto_stories",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
               },
               {
                "el": "text",
-               "value": "ก่อน → หลัง",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
+               "value": "④ เรื่อง",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
                "el": "text",
-               "value": "ไม่บังคับ",
-               "className": "!text-[12px] opacity-55 font-bold"
+               "value": "ไม่บังคับ — ว่าง = หมีคิดให้",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
               }
              ]
             },
             {
-             "el": "text",
-             "value": "เว้นว่างได้ทั้งคู่ — หมีจะคิดสภาพก่อนและผลลัพธ์ที่สมเหตุสมผลให้เอง",
-             "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "เล่าเรื่องแบบไหน",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+              },
+              {
+               "el": "grid-select",
+               "field": "arc",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกจากชื่องานและของ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "ก่อน → ลงมือ → หลัง",
+                 "label": "ก่อน → ลงมือ → หลัง",
+                 "desc": "จัดบ้าน ทำอาหาร รีโนเวท ทำของ",
+                 "icon": "compare"
+                },
+                {
+                 "value": "ปัญหา → แก้แล้ว",
+                 "label": "ปัญหา → แก้แล้ว",
+                 "desc": "ของที่ติดแล้วจบ — กันฝน กันแมลง ชั้นวาง",
+                 "icon": "build"
+                },
+                {
+                 "value": "ทัวร์จุดเด่น",
+                 "label": "ทัวร์จุดเด่น",
+                 "desc": "โชว์ของทำงาน ไล่ทีละจุด / ตามลำดับใช้",
+                 "icon": "tour"
+                }
+               ]
+              }
+             ],
+             "when": "item.hasProduct!=ไม่มี"
             },
             {
              "el": "box",
-             "className": "flex flex-col gap-1",
+             "className": "flex flex-col gap-1.5",
              "card": [
               {
                "el": "text",
                "value": "ตอนนี้สภาพเป็นยังไง",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
+               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "textarea",
@@ -10505,12 +11266,12 @@
             },
             {
              "el": "box",
-             "className": "flex flex-col gap-1",
+             "className": "flex flex-col gap-1.5",
              "card": [
               {
                "el": "text",
                "value": "อยากให้จบแบบไหน",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
+               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "textarea",
@@ -10519,45 +11280,28 @@
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               }
              ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-2.5",
-           "card": [
+            },
             {
-             "el": "row",
-             "className": "items-center gap-1.5 px-0.5",
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
              "card": [
-              {
-               "el": "icon",
-               "icon": "lightbulb",
-               "textSize": "text-[16px]",
-               "className": "!text-[var(--ev-accent)] leading-none shrink-0"
-              },
               {
                "el": "text",
                "value": "ไอเดีย / มุกปิดท้าย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5"
+               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "text",
-               "value": "ไม่บังคับ",
-               "className": "!text-[12px] opacity-55 font-bold"
+               "value": "อยากให้มีอะไรพิเศษ หรือจบด้วย \"การใช้งานแถม\" — เช่น ติดราวเสร็จแล้วเอาผ้ามาตาก",
+               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
+              },
+              {
+               "el": "textarea",
+               "field": "idea",
+               "placeholder": "เช่น จบด้วยเปิดไฟดูตอนกลางคืน · ให้แมวเดินผ่านตอนท้าย",
+               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               }
              ]
-            },
-            {
-             "el": "text",
-             "value": "อยากให้มีอะไรพิเศษ หรือจบด้วย \"การใช้งานแถม\" — เช่น ติดราวเสร็จแล้วเอาผ้ามาตาก · เช็ดเตาให้เงาแล้วโชว์",
-             "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
-            },
-            {
-             "el": "textarea",
-             "field": "idea",
-             "placeholder": "เช่น จบด้วยเปิดไฟดูตอนกลางคืน · ให้แมวเดินผ่านตอนท้าย",
-             "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
             }
            ]
           },
