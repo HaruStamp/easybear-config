@@ -13,12 +13,13 @@ Config สำหรับ Architecture C spike — Flow interpreter app ดึ�
 | `film.json` | การ์ด "การละคร" บน launcher (Engine + film.json) | ✅ live |
 | `flow.json` | การ์ด "หมีทำแทน Flow" | ✅ live |
 | `showhow.json` | การ์ด "ทำให้ดู" + Dev showhow (`9f906e67`) | ✅ live (ทีม showhow) |
-| `hardsell-v2.json` | Dev hardsell (`40489601`) | ✅ live (ทีม hardsell) |
+| `hardsell-v2.json` | Dev เก่า v2.0–v2.6 เท่านั้น (Dev v2.7.0 ย้ายไป -dev แล้ว) — **พี่หมีสั่งลบ 2026-09-17 · รอทีม hardsell เคลียร์ Dev เก่าแล้วลบ** | ⏳ รอลบ |
+| `hardsell-public.json` | public รุ่นถัดไปของ hardsell (สร้าง 2026-09-17 = hardsell-dev · public v1.6.0 ปัจจุบันไม่อ่าน GCS) | ✅ พร้อม · push เฉพาะพี่หมีสั่งออกรุ่น |
 | `hardsell.json` | การ์ด "ขายดุ" บน launcher (hook-pack เดิม) | 🟡 live แต่แอปขายไม่ใช้แล้ว |
 | `minimal.json` | ลูกค้าสาย v1.6.0 (public `3fff3b4c`) — **จะเลิกเมื่อพี่หมีย้ายลูกค้าไป tool v2** (ยุบสายเดียว 2026-09-17) | 🔴 live · ห้าม push/ลบ จนย้ายเสร็จ |
 | `minimal-lab.json` | Lab minimal (`e8bac573`) · ยาม 11 ตัว | ✅ live (ทีม minimal) |
 | `minimal-v2.json` | ลูกค้าสาย v2 — public `bb6139f5` ยังชี้ไฟล์นี้จนขั้น ⑤ ย้ายไป `minimal-public.json` (เนื้อเท่ากัน) · หลังนั้น = alias รอขั้น ⑥ | 🔴 live ลูกค้า · ห้าม push/ลบ จนขั้น ⑤ เสร็จ |
-| `flim-v2-full.json` · โฟลเดอร์ `easybear-flim/` | อยู่บน GCS แต่**ไม่มีใน repo** — ของทีม flim | ❓ ถามทีม flim ก่อนแตะ |
+| ~~`flim-v2-full.json`~~ | ไม่มีใครโหลด (film ตรวจ 2026-09-17) — **ลบออกจาก GCS แล้ว 2026-09-17 (พี่หมีสั่ง · backup ใน scratchpad starter)** · โฟลเดอร์ `easybear-flim/` = brain ของ flim (`flim-dev.s1.json` ใช้อยู่ · `brain.s1-lab.json` alias รอ ⑥) | 🗑️ |
 | `flow-graph-config.json` · `flim-parity-config.json` | ยาม starter `flow-graph-dryrun` / `flim-parity-dryrun` โหลด (ไม่อยู่บน GCS) | 🧪 เก็บไว้เพื่อยาม |
 | ~~15 ไฟล์ยุคทดลอง/showcase~~ (`config.json` `pipeline.json` `starter.json` `framework-default/showcase` `dashboard/widget/wizard-showcase` `storyboard-slice` `tier2-test*` `flim-architect/config` `hardsell-config`) | ไม่อยู่บน GCS · ไม่มีโค้ด/ยามอ้างถึง | 🗑️ **ลบออกจาก repo 2026-09-17** (กู้ได้จาก git ก่อน commit นี้) |
 | `gcs-cors.json` | ตั้งค่า CORS ของ bucket (ใช้ตอน setup bucket) | 🔧 เครื่องมือ ไม่ใช่ config แอป |
