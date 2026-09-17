@@ -13,7 +13,7 @@ Config สำหรับ Architecture C spike — Flow interpreter app ดึ�
 | `film.json` | การ์ด "การละคร" บน launcher (Engine + film.json) | ✅ live |
 | `flow.json` | การ์ด "หมีทำแทน Flow" | ✅ live |
 | `showhow.json` | การ์ด "ทำให้ดู" + Dev showhow (`9f906e67`) | ✅ live (ทีม showhow) |
-| `hardsell-v2.json` | Dev เก่า v2.0–v2.6 เท่านั้น (Dev v2.7.0 ย้ายไป -dev แล้ว) — **พี่หมีสั่งลบ 2026-09-17 · รอทีม hardsell เคลียร์ Dev เก่าแล้วลบ** | ⏳ รอลบ |
+| ~~`hardsell-v2.json`~~ | **ลบจาก GCS + รีโปแล้ว 2026-09-17** (พี่หมีสั่ง · Dev เก่า v2.0–v2.6 rename DELETE- ครบ 7 ตัว · backup ใน scratchpad starter) | 🗑️ |
 | `hardsell-public.json` | public รุ่นถัดไปของ hardsell (สร้าง 2026-09-17 = hardsell-dev · public v1.6.0 ปัจจุบันไม่อ่าน GCS) | ✅ พร้อม · push เฉพาะพี่หมีสั่งออกรุ่น |
 | `hardsell.json` | การ์ด "ขายดุ" บน launcher (hook-pack เดิม) | 🟡 live แต่แอปขายไม่ใช้แล้ว |
 | `minimal.json` | ลูกค้าสาย v1.6.0 (public `3fff3b4c`) — **จะเลิกเมื่อพี่หมีย้ายลูกค้าไป tool v2** (ยุบสายเดียว 2026-09-17) | 🔴 live · ห้าม push/ลบ จนย้ายเสร็จ |
