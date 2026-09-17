@@ -16,7 +16,7 @@
 # รันซ้ำได้ (idempotent)
 import json, sys, pathlib, copy
 
-SRC = pathlib.Path(__file__).resolve().parent.parent / (sys.argv[1] if len(sys.argv) > 1 else 'minimal-lab.json')
+SRC = pathlib.Path(__file__).resolve().parent.parent / (sys.argv[1] if len(sys.argv) > 1 else 'minimal-dev.json')
 c = json.loads(SRC.read_text(encoding='utf-8'))
 log = []
 

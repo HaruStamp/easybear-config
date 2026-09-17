@@ -12,13 +12,13 @@
   ② ยุบบรรทัด 'ปิดท้ายทุกภาพด้วย: "Scandinavian Minimal, Soft Natural Light, 4K, Clean Layout"'
      เข้ากับบรรทัด "สไตล์ภาพรวม:" ที่พูดเรื่องเดียวกัน — คำอังกฤษที่โมเดลภาพใช้ยังอยู่ครบทุกคำ
 
-usage: python3 scripts/minimal-v24-board-fit.py [src.json] [dst.json]   (ค่าตั้งต้น = แก้ minimal-lab.json ในที่)
+usage: python3 scripts/minimal-v24-board-fit.py [src.json] [dst.json]   (ค่าตั้งต้น = แก้ minimal-dev.json ในที่)
 """
 import json, sys, copy, re, collections
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'minimal-lab.json'
+SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'minimal-dev.json'
 DST = Path(sys.argv[2]) if len(sys.argv) > 2 else SRC
 BOARD_OPS = ('mnBoard', 'mnBoard2', 'mnBoard3')
 

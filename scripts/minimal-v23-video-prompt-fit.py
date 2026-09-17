@@ -16,13 +16,13 @@
   🪤 ข้อความเดิม "White text with a soft shadow … doodles" ซ้ำกับ svText ค่าตั้งต้น ⇒ ตัดทิ้ง ให้ svText (สไตล์ที่ผู้ใช้เลือก) เป็นตัวกำหนดตัวเดียว
      ผลข้างเคียงที่ตั้งใจ: เลือกสไตล์ซานเซอริฟ/ตัวหนา จะไม่ถูกบังคับให้มีเงา+doodle อีก (ของเดิมขัดกับที่ผู้ใช้เลือก)
 
-usage: python3 scripts/minimal-v23-video-prompt-fit.py [src.json] [dst.json]   (ค่าตั้งต้น = แก้ minimal-lab.json ในที่)
+usage: python3 scripts/minimal-v23-video-prompt-fit.py [src.json] [dst.json]   (ค่าตั้งต้น = แก้ minimal-dev.json ในที่)
 """
 import json, re, sys, copy, collections
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'minimal-lab.json'
+SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'minimal-dev.json'
 DST = Path(sys.argv[2]) if len(sys.argv) > 2 else SRC
 VIDEO_OPS = ('mnVideo', 'mnVideo2', 'mnVideo3')
 LOOKUPS = ('voiceVideoEN', 'voiceLockEN', 'charVideoEN')

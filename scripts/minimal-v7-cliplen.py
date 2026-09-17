@@ -25,7 +25,7 @@ minimal-v7-cliplen.py — เพิ่ม "ความยาวคลิป 10 
    ทุก lookup ที่เพิ่มมี `fallback` = ข้อความเดิมของ 10 วิ ⇒ ไฟล์เซฟเก่า (ไม่มี values.svSec) = พฤติกรรมเดิมเป๊ะ
    และ gate ใช้ `>` (whenMet แปลง '' เป็น 0) ⇒ ค่าหาย = 1 ช่วง ไม่ใช่ 3 ช่วง
 
-รัน:  python3 scripts/minimal-v7-cliplen.py minimal-lab.json [minimal.json ...]
+รัน:  python3 scripts/minimal-v7-cliplen.py minimal-dev.json [minimal.json ...]
 """
 import json, sys, copy, re, os
 
@@ -1588,7 +1588,7 @@ def patch_card_progress(cfg):
 
 
 def main():
-    files = sys.argv[1:] or ['minimal-lab.json']
+    files = sys.argv[1:] or ['minimal-dev.json']
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for fn in files:
         p = fn if os.path.isabs(fn) else os.path.join(root, fn)
