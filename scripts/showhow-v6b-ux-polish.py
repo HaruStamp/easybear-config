@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # showhow-v6b.py — เก็บรายละเอียดหน้า "เพิ่มงาน" หลังดูจริงบนจอ (รันต่อจาก v6)
 import json, os
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow.json'
+P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
 cfg = json.load(open(P, encoding='utf-8'))
 LBL = ('!text-[13.5px] min-[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 '
        'uppercase tracking-[0.14em] font-black px-0.5 mb-2')

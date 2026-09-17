@@ -3,7 +3,7 @@
 #   ลำดับใหม่เล่าเป็นเรื่อง: ① งานนี้ทำอะไร → ② พื้นที่ → ③ ก่อน→หลัง → ④ ของที่จะใช้ (ไม่บังคับ) → ⑤ ขั้นสูง
 import json, os, copy
 
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow.json'
+P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
 cfg = json.load(open(P, encoding='utf-8'))
 PE = cfg['phases'][0]['form'][2]
 

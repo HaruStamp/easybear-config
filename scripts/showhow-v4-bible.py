@@ -7,7 +7,7 @@
 import json, os
 
 ROOT = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config'
-SRC = DST = os.path.join(ROOT, 'showhow.json')   # rename ทีหลังเมื่อเคาะชื่อ
+SRC = DST = os.path.join(ROOT, 'showhow-dev.json')   # rename ทีหลังเมื่อเคาะชื่อ
 
 raw = open(SRC, encoding='utf-8').read()
 # ── rename แบบข้อความดิบ (ครอบ UI ที่อ้างถึงด้วย) ──
@@ -227,4 +227,4 @@ def retext(n):
 walk(cfg['phases'], retext)
 
 json.dump(cfg, open(DST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print('✓ showhow.json (เนื้อหา v4) →', os.path.getsize(DST), 'bytes')
+print('✓ showhow-dev.json (เนื้อหา v4) →', os.path.getsize(DST), 'bytes')

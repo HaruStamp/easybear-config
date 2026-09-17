@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # showhow-v3 (ประวัติ · one-shot รันไปแล้ว): ปุ่มความยาวคลิป → แถบเต็มการ์ด (grid-select contained)
 import json, os
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow.json'
+P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
 cfg = json.load(open(P, encoding='utf-8'))
 PROD = cfg['phases'][0]['form'][0]['card'][0]['card'][3]
 

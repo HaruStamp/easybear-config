@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# showhow-v2-arc.py — patch showhow.json: โครงเรื่อง 2 ชั้น + ความยาว 10-60 วิ/อัตโนมัติ + ท่าเปิด
+# showhow-v2-arc.py — patch showhow-dev.json: โครงเรื่อง 2 ชั้น + ความยาว 10-60 วิ/อัตโนมัติ + ท่าเปิด
 # showhow-v2 (ประวัติ · one-shot รันไปแล้ว) — แก้จาก config ตัวปัจจุบัน (ไม่ใช่ bootstrap ใหม่) · รันซ้ำได้ (idempotent)
 import json, os, copy
 
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow.json'
+P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
 cfg = json.load(open(P, encoding='utf-8'))
 OPS = {o['id']: o for o in cfg['ops']}
 V = cfg['values']
