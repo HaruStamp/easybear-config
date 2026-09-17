@@ -17,7 +17,8 @@ Config สำหรับ Architecture C spike — Flow interpreter app ดึ�
 | `minimal-lab.json` | Lab minimal (`e8bac573`) · ยาม 11 ตัว | ✅ live (ทีม minimal) |
 | `minimal-v2.json` | ตัวขายรุ่นใหม่ (= minimal-lab ทุกไบต์ ณ 2026-09-13) | 🟡 live รอ cutover ลูกค้า |
 | `flim-v2-full.json` · โฟลเดอร์ `easybear-flim/` | อยู่บน GCS แต่**ไม่มีใน repo** — ของทีม flim | ❓ ถามทีม flim ก่อนแตะ |
-| `config.json` `pipeline.json` `starter.json` `framework-default.json` `framework-showcase.json` `dashboard-showcase.json` `widget-showcase.json` `wizard-showcase.json` `storyboard-slice.json` `tier2-test*.json` `flim-architect.json` `flim-config.json` `flim-parity-config.json` `flow-graph-config.json` `hardsell-config.json` | ไม่อยู่บน GCS · ไม่มีโค้ด/ยามอ้างถึง (ยกเว้น README เก่า) · แก้ล่าสุด มิ.ย.–ก.ย. | ⚪ ไม่ได้ใช้ — เก็บไว้ได้ ยังไม่ลบ (รอพี่หมีเคาะ) |
+| `flow-graph-config.json` · `flim-parity-config.json` | ยาม starter `flow-graph-dryrun` / `flim-parity-dryrun` โหลด (ไม่อยู่บน GCS) | 🧪 เก็บไว้เพื่อยาม |
+| ~~15 ไฟล์ยุคทดลอง/showcase~~ (`config.json` `pipeline.json` `starter.json` `framework-default/showcase` `dashboard/widget/wizard-showcase` `storyboard-slice` `tier2-test*` `flim-architect/config` `hardsell-config`) | ไม่อยู่บน GCS · ไม่มีโค้ด/ยามอ้างถึง | 🗑️ **ลบออกจาก repo 2026-09-17** (กู้ได้จาก git ก่อน commit นี้) |
 | `gcs-cors.json` | ตั้งค่า CORS ของ bucket (ใช้ตอน setup bucket) | 🔧 เครื่องมือ ไม่ใช่ config แอป |
 
 - ไฟล์ที่ **push แล้วลูกค้าเห็นทันที** = ทุกตัวที่อยู่บน GCS (no-cache) ⇒ ก่อน `./push-gcs.sh <file>` ดูตารางนี้ว่าใครโหลดอยู่
