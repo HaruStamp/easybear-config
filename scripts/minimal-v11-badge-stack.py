@@ -67,7 +67,7 @@ def patch(cfg):
 
 def main():
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    files = sys.argv[1:] or [os.path.join(here, 'minimal-dev.json'), os.path.join(here, 'minimal.json')]
+    files = sys.argv[1:] or [os.path.join(here, 'minimal-dev.json')]   # 2026-09-18: minimal.json ปลดระวางแล้ว (ลบจาก GCS+รีโป)
     for f in files:
         cfg = json.load(open(f, encoding='utf-8'))
         before = json.dumps(cfg, ensure_ascii=False, sort_keys=True)
