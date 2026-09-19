@@ -39,9 +39,9 @@ def prompt_for(k):
     parts.append('\nคน: ')
     parts.append({'op': 'lookup', 'table': 'charBoard', 'key': '{values.svChar}|{values.svCharSrc}', 'fallback': ''})
     COLOR = ' · หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป'
-    title_txt = 'เฉพาะแถวแรก (หัวเรื่อง) บรรทัดเดียว ฟอนต์ {values.svText}' + COLOR + ' · แถวอื่นภาพล้วน' if k == 1 else 'ไม่มี — ภาพล้วนทุกช่อง'
+    title_txt = 'เฉพาะแถวแรกตามข้อความที่บทให้ (หัวเรื่อง) บรรทัดเดียว ฟอนต์ {values.svText}' + COLOR + ' · แถวอื่นภาพล้วน' if k == 1 else 'ไม่มี — ภาพล้วนทุกช่อง'
     parts.append('\nตัวหนังสือบนภาพ: ')
-    parts.append(block((f'values.svTextOn={SUB}', 'ทุกช่องตามข้อความในบท บรรทัดเดียว ≤5 คำ ฟอนต์ {values.svText}' + COLOR + ' ไม่ทับจุดที่กำลังทำ'),
+    parts.append(block((f'values.svTextOn={SUB}', 'ใช้ข้อความที่บทให้ไว้ในแต่ละแถวเท่านั้น (แถวไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText}' + COLOR + ' ไม่ทับจุดที่กำลังทำ'),
                        (f'values.svTextOn={TITLE}', title_txt),
                        (f'values.svTextOn={NOTEXT}', 'ไม่มี — ภาพล้วนทุกช่อง (ยกเว้นฉลากจริงบนสินค้า)')))
     parts.append(' · ห้ามพิมพ์ภาษาอังกฤษ ชื่อสไตล์ แบรนด์ที่ไม่ได้แนบ หรือ emoji ลงบนแผง\n')
