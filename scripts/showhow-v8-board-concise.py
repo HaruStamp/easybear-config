@@ -44,7 +44,7 @@ def prompt_for(k):
     parts.append(block((f'values.svTextOn={SUB}', 'ใช้ข้อความที่บทให้ไว้ในแต่ละแถวเท่านั้น (แถวไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText}' + COLOR + ' ไม่ทับจุดที่กำลังทำ'),
                        (f'values.svTextOn={TITLE}', title_txt),
                        (f'values.svTextOn={NOTEXT}', 'ไม่มี — ภาพล้วนทุกช่อง (ยกเว้นฉลากจริงบนสินค้า)')))
-    parts.append(' · ห้ามพิมพ์ภาษาอังกฤษ ชื่อสไตล์ แบรนด์ที่ไม่ได้แนบ หรือ emoji ลงบนแผง\n')
+    parts.append(' · ห้ามพิมพ์ภาษาอังกฤษ ชื่อสไตล์ แบรนด์ที่ไม่ได้แนบ หรือ emoji ลงบนแผง\n\nรายการแถว (ช่อง ① คัดข้อความภาษาไทยต้นบรรทัดตามนี้ ห้ามแปลเป็นภาษาอื่น):')
     for n in range(first, last + 1):
         parts.append({'op': 'concat', 'parts': ['\n', {'op': 'lookup', 'table': 'sceneLab', 'key': '{values.svSec}|' + str(n), 'fallback': f'{n}. ฉาก {n}'},
                                                  ' — {item.s%dth} · มุมกล้อง: {item.cam%d}' % (n, n)]})
