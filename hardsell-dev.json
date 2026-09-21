@@ -14798,12 +14798,30 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วงแรก",
+                                          "desc": "ไฟล์ของคุณแทนช่วงแรก",
+                                          "icon": "looks_one",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วงท้าย",
+                                          "desc": "ไฟล์ของคุณแทนช่วงท้าย",
+                                          "icon": "looks_two",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -14902,24 +14920,61 @@
                                     },
                                     {
                                       "el": "retry-button",
-                                      "op": "mnVideo",
                                       "label": "Gen วิดีโอใหม่",
                                       "icon": "auto_fix_high",
                                       "variant": "ghost",
                                       "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
-                                      "chain": [
-                                        "mnVideo",
-                                        "mnVideo2"
+                                      "menu": [
+                                        {
+                                          "label": "ทั้งคลิป",
+                                          "desc": "ทำใหม่ทุกช่วง รอยต่อตรงกันแน่นอน",
+                                          "icon": "movie",
+                                          "chain": [
+                                            "mnVideo",
+                                            "mnVideo2"
+                                          ]
+                                        },
+                                        {
+                                          "label": "เฉพาะช่วงท้าย",
+                                          "desc": "เก็บช่วงแรกไว้ ทำใหม่เฉพาะช่วงที่ต่อจากมัน",
+                                          "icon": "skip_next",
+                                          "chain": [
+                                            "mnVideo2"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        }
                                       ]
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วงแรก",
+                                          "desc": "ไฟล์ของคุณแทนช่วงแรก",
+                                          "icon": "looks_one",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วงท้าย",
+                                          "desc": "ไฟล์ของคุณแทนช่วงท้าย",
+                                          "icon": "looks_two",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -15190,7 +15245,6 @@
                                       "card": [
                                         {
                                           "el": "retry-button",
-                                          "op": "mnVideo",
                                           "label": "Gen ใหม่",
                                           "icon": "auto_fix_high",
                                           "variant": "ghost",
@@ -15203,9 +15257,29 @@
                                               "b": ""
                                             }
                                           },
-                                          "chain": [
-                                            "mnVideo",
-                                            "mnVideo2"
+                                          "menu": [
+                                            {
+                                              "label": "ทั้งคลิป",
+                                              "desc": "ทำใหม่ทุกช่วง รอยต่อตรงกันแน่นอน",
+                                              "icon": "movie",
+                                              "chain": [
+                                                "mnVideo",
+                                                "mnVideo2"
+                                              ]
+                                            },
+                                            {
+                                              "label": "เฉพาะช่วงท้าย",
+                                              "desc": "เก็บช่วงแรกไว้ ทำใหม่เฉพาะช่วงที่ต่อจากมัน",
+                                              "icon": "skip_next",
+                                              "chain": [
+                                                "mnVideo2"
+                                              ],
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
+                                            }
                                           ]
                                         },
                                         {
@@ -15450,12 +15524,30 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#2a1c12] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#2a1c12] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วงแรก",
+                                          "desc": "ไฟล์ของคุณแทนช่วงแรก",
+                                          "icon": "looks_one",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วงท้าย",
+                                          "desc": "ไฟล์ของคุณแทนช่วงท้าย",
+                                          "icon": "looks_two",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        }
+                                      ]
                                     }
                                   ]
                                 }
