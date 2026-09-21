@@ -14,15 +14,15 @@ raw = open(P, encoding='utf-8').read(); d = json.loads(raw)
 # value = ข้อความที่ถูกแทนใน prompt ทั้งบอร์ดและวิดีโอ (ไทย + วงเล็บอังกฤษให้โมเดลวิดีโอจับได้)
 STYLES = [
     ('ป้ายการ์ดขาว', 'สะอาด อ่านง่าย แบบคลิปสอนในเพจ',
-     'ตัวอักษรไทยหนาสีเข้ม วางบนการ์ดสีขาวมุมมนโค้งมาก ขอบการ์ดเว้นรอบข้อความเท่ากัน มีเงานุ่มใต้การ์ด (bold dark Thai text on a white rounded-corner card with even padding and a soft drop shadow)'),
+     'bold dark Thai text on a white rounded-corner card with even padding and a soft drop shadow'),
     ('เน้นคำสำคัญ', 'เด่นแบบคลิปไวรัล',
-     'ตัวอักษรไทยหนามาก 2 บรรทัด สีขาว มีขอบเข้มบาง · คำสำคัญที่สุดเปลี่ยนเป็นสีเหลืองสดหรือส้มสด 1 คำ (very bold Thai text, two lines, white with thin dark outline, one key word in bright yellow or orange)'),
+     'very bold Thai text, two lines, white with a thin dark outline, one key word in bright yellow or orange'),
     ('ไฮไลต์ปากกา', 'สดใส เป็นกันเอง',
-     'ตัวอักษรไทยหนาสีเข้ม มีแถบสีสดแบบปากกาไฮไลต์ลากทับใต้คำสำคัญ ปลายแถบไม่เรียบเหมือนลากด้วยมือ (bold dark Thai text with a bright hand-drawn highlighter stroke behind the key word)'),
+     'bold dark Thai text with a bright hand-drawn highlighter stroke behind the key word'),
     ('ตัวหนาขอบหนา', 'เรียบง่าย ใช้ได้ทุกพื้นหลัง',
-     'ตัวอักษรไทยหนาใหญ่ สีขาว มีขอบสีเข้มหนารอบตัวอักษรและเงาตกนุ่ม (bold Thai sans-serif, white fill, thick dark outline, soft drop shadow)'),
+     'bold Thai sans-serif, white fill, thick dark outline, soft drop shadow'),
     ('บางมินิมอล', 'เรียบหรู ดูแพง',
-     'ตัวอักษรไทยเส้นบางเรียบ เว้นช่องไฟกว้าง สีขาว เงาบางมาก (clean thin Thai sans-serif, wide letter spacing, white, very soft shadow)'),
+     'clean thin Thai sans-serif, wide letter spacing, white, very soft shadow'),
 ]
 DEFAULT = STYLES[1][2]   # เน้นคำสำคัญ (พี่หมีเลือก 2026-09-21)
 
