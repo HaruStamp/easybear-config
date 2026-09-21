@@ -19284,11 +19284,37 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ],
                                   "when": {
@@ -19452,11 +19478,37 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ],
                                   "when": {
@@ -19561,23 +19613,94 @@
                                     },
                                     {
                                       "el": "retry-button",
-                                      "op": "mnBoard",
                                       "label": "Gen ภาพใหม่",
                                       "icon": "auto_fix_high",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "chain": [
-                                        "mnBoard3",
-                                        "mnBoard2",
-                                        "mnBoard"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ทั้งหมด",
+                                          "desc": "ทำใหม่ทุกช่วง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3",
+                                            "mnBoard2",
+                                            "mnBoard"
+                                          ]
+                                        },
+                                        {
+                                          "label": "ช่วง 1 · 0-10 วิ",
+                                          "desc": "บอร์ด ช่วงแรก",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 2 · 10-20 วิ",
+                                          "desc": "บอร์ด ช่วงกลาง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard2"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 3 · 20-30 วิ",
+                                          "desc": "บอร์ด ช่วงท้าย",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
                                       ]
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -19636,23 +19759,94 @@
                                     },
                                     {
                                       "el": "retry-button",
-                                      "op": "mnBoard",
                                       "label": "Gen ภาพใหม่",
                                       "icon": "auto_fix_high",
-                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
-                                      "chain": [
-                                        "mnBoard3",
-                                        "mnBoard2",
-                                        "mnBoard"
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ทั้งหมด",
+                                          "desc": "ทำใหม่ทุกช่วง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3",
+                                            "mnBoard2",
+                                            "mnBoard"
+                                          ]
+                                        },
+                                        {
+                                          "label": "ช่วง 1 · 0-10 วิ",
+                                          "desc": "บอร์ด ช่วงแรก",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 2 · 10-20 วิ",
+                                          "desc": "บอร์ด ช่วงกลาง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard2"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 3 · 20-30 วิ",
+                                          "desc": "บอร์ด ช่วงท้าย",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
                                       ]
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -19770,11 +19964,37 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ]
                                 },
@@ -19859,12 +20079,38 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -19878,24 +20124,95 @@
                                     },
                                     {
                                       "el": "retry-button",
-                                      "op": "mnBoard",
                                       "label": "Gen ภาพใหม่",
                                       "icon": "auto_fix_high",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
-                                      "chain": [
-                                        "mnBoard3",
-                                        "mnBoard2",
-                                        "mnBoard"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ทั้งหมด",
+                                          "desc": "ทำใหม่ทุกช่วง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3",
+                                            "mnBoard2",
+                                            "mnBoard"
+                                          ]
+                                        },
+                                        {
+                                          "label": "ช่วง 1 · 0-10 วิ",
+                                          "desc": "บอร์ด ช่วงแรก",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 2 · 10-20 วิ",
+                                          "desc": "บอร์ด ช่วงกลาง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard2"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 3 · 20-30 วิ",
+                                          "desc": "บอร์ด ช่วงท้าย",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
                                       ]
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ]
                                 },
@@ -19964,166 +20281,105 @@
                                       "className": "border-t border-[var(--ev-border)] my-1"
                                     },
                                     {
-                                      "el": "box",
-                                      "className": "w-full mn-vid-part",
-                                      "card": [
+                                      "el": "retry-button",
+                                      "label": "Gen วิดีโอใหม่",
+                                      "icon": "auto_fix_high",
+                                      "variant": "ghost",
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
                                         {
-                                          "el": "retry-button",
-                                          "op": "mnVideo",
-                                          "label": "Gen วิดีโอใหม่",
-                                          "icon": "auto_fix_high",
-                                          "variant": "ghost",
-                                          "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
+                                          "label": "ทั้งหมด",
+                                          "desc": "ทำใหม่ทุกช่วง",
+                                          "icon": "movie",
                                           "chain": [
                                             "mnVideo3",
                                             "mnVideo2",
                                             "mnVideo"
+                                          ]
+                                        },
+                                        {
+                                          "label": "ช่วง 1 · 0-10 วิ",
+                                          "desc": "คลิป ช่วงแรก",
+                                          "icon": "movie",
+                                          "chain": [
+                                            "mnVideo"
                                           ],
                                           "when": {
-                                            "op": "not",
-                                            "a": {
-                                              "op": "gt",
-                                              "a": "{values.svSec}",
-                                              "b": 10
-                                            }
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
                                           }
                                         },
                                         {
-                                          "label": "Gen วิดีโอใหม่",
-                                          "icon": "auto_fix_high",
-                                          "variant": "ghost",
-                                          "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
-                                          "el": "button",
-                                          "action": "setField",
-                                          "to": "vpick",
-                                          "value": "1",
+                                          "label": "ช่วง 2 · 10-20 วิ",
+                                          "desc": "คลิป ช่วงกลาง",
+                                          "icon": "movie",
+                                          "chain": [
+                                            "mnVideo2"
+                                          ],
                                           "when": {
-                                            "op": "and",
-                                            "list": [
-                                              {
-                                                "op": "gt",
-                                                "a": "{values.svSec}",
-                                                "b": 10
-                                              },
-                                              {
-                                                "op": "not",
-                                                "a": {
-                                                  "op": "eq",
-                                                  "a": "{item.vpick}",
-                                                  "b": "1"
-                                                }
-                                              }
-                                            ]
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
                                           }
                                         },
                                         {
-                                          "el": "box",
-                                          "className": "w-full flex flex-col gap-1.5 mn-vid-part",
+                                          "label": "ช่วง 3 · 20-30 วิ",
+                                          "desc": "คลิป ช่วงท้าย",
+                                          "icon": "movie",
+                                          "chain": [
+                                            "mnVideo3"
+                                          ],
                                           "when": {
-                                            "op": "and",
-                                            "list": [
-                                              {
-                                                "op": "gt",
-                                                "a": "{values.svSec}",
-                                                "b": 10
-                                              },
-                                              {
-                                                "op": "eq",
-                                                "a": "{item.vpick}",
-                                                "b": "1"
-                                              }
-                                            ]
-                                          },
-                                          "card": [
-                                            {
-                                              "el": "text",
-                                              "value": "เลือกช่วงที่จะทำใหม่ (กินเครดิตช่วงละ 1 คลิป)",
-                                              "className": "!text-[11.5px] font-bold opacity-70 px-0.5 mn-vid-part"
-                                            },
-                                            {
-                                              "el": "row",
-                                              "className": "w-full flex-wrap items-center gap-1.5",
-                                              "card": [
-                                                {
-                                                  "el": "retry-button",
-                                                  "op": "mnVideo",
-                                                  "chain": [
-                                                    "mnVideo3",
-                                                    "mnVideo2",
-                                                    "mnVideo"
-                                                  ],
-                                                  "label": "ทั้งหมด",
-                                                  "icon": "movie",
-                                                  "variant": "ghost",
-                                                  "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                  "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                },
-                                                {
-                                                  "el": "retry-button",
-                                                  "op": "mnVideo",
-                                                  "chain": [
-                                                    "mnVideo"
-                                                  ],
-                                                  "label": "ช่วง 1 · 0-10 วิ",
-                                                  "icon": "movie",
-                                                  "variant": "ghost",
-                                                  "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                  "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                },
-                                                {
-                                                  "el": "retry-button",
-                                                  "op": "mnVideo2",
-                                                  "chain": [
-                                                    "mnVideo2"
-                                                  ],
-                                                  "label": "ช่วง 2 · 10-20 วิ",
-                                                  "icon": "movie",
-                                                  "variant": "ghost",
-                                                  "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                  "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                },
-                                                {
-                                                  "el": "retry-button",
-                                                  "op": "mnVideo3",
-                                                  "chain": [
-                                                    "mnVideo3"
-                                                  ],
-                                                  "label": "ช่วง 3 · 20-30 วิ",
-                                                  "icon": "movie",
-                                                  "variant": "ghost",
-                                                  "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                  "loadingLabel": "กำลังสร้างวิดีโอ...",
-                                                  "when": {
-                                                    "op": "gt",
-                                                    "a": "{values.svSec}",
-                                                    "b": 20
-                                                  }
-                                                },
-                                                {
-                                                  "el": "button",
-                                                  "action": "setField",
-                                                  "to": "vpick",
-                                                  "value": "",
-                                                  "label": "",
-                                                  "icon": "close",
-                                                  "iconOnly": true,
-                                                  "variant": "ghost",
-                                                  "className": "shrink-0 justify-center !gap-0 !w-10 !h-10 !min-h-0 !p-0 !rounded-xl border border-[var(--ev-border)] !bg-[var(--ev-surface)] mn-vid-part"
-                                                }
-                                              ]
-                                            }
-                                          ]
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
                                         }
-                                      ]
+                                      ],
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "gt",
+                                          "a": "{values.svSec}",
+                                          "b": 10
+                                        }
+                                      }
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     },
                                     {
                                       "el": "box",
@@ -20132,24 +20388,95 @@
                                     },
                                     {
                                       "el": "retry-button",
-                                      "op": "mnBoard",
                                       "label": "Gen ภาพใหม่",
                                       "icon": "auto_fix_high",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
-                                      "chain": [
-                                        "mnBoard3",
-                                        "mnBoard2",
-                                        "mnBoard"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ทั้งหมด",
+                                          "desc": "ทำใหม่ทุกช่วง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3",
+                                            "mnBoard2",
+                                            "mnBoard"
+                                          ]
+                                        },
+                                        {
+                                          "label": "ช่วง 1 · 0-10 วิ",
+                                          "desc": "บอร์ด ช่วงแรก",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 2 · 10-20 วิ",
+                                          "desc": "บอร์ด ช่วงกลาง",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard2"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ช่วง 3 · 20-30 วิ",
+                                          "desc": "บอร์ด ช่วงท้าย",
+                                          "icon": "image",
+                                          "chain": [
+                                            "mnBoard3"
+                                          ],
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
                                       ]
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.board}",
                                       "label": "เลือกภาพ",
                                       "icon": "photo_library",
                                       "variant": "ghost",
-                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "photo_library",
+                                          "into": "{item.slots.board3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ]
                                 }
@@ -20454,37 +20781,16 @@
                                       "className": "w-full flex-wrap gap-2 items-stretch",
                                       "card": [
                                         {
-                                          "el": "box",
-                                          "className": "w-full mn-vid-part",
-                                          "card": [
+                                          "el": "retry-button",
+                                          "label": "Gen ใหม่",
+                                          "icon": "auto_fix_high",
+                                          "variant": "ghost",
+                                          "className": "w-full justify-center !h-10 !rounded-xl !text-[13px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                          "menu": [
                                             {
-                                              "el": "retry-button",
-                                              "op": "mnVideo",
-                                              "label": "Gen ใหม่",
-                                              "icon": "auto_fix_high",
-                                              "variant": "ghost",
-                                              "className": "w-full justify-center !h-10 !rounded-xl !text-[13px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0",
-                                              "when": {
-                                                "op": "and",
-                                                "list": [
-                                                  {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "eq",
-                                                      "a": "{item.slots.video}",
-                                                      "b": ""
-                                                    }
-                                                  },
-                                                  {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "gt",
-                                                      "a": "{values.svSec}",
-                                                      "b": 10
-                                                    }
-                                                  }
-                                                ]
-                                              },
+                                              "label": "ทั้งหมด",
+                                              "desc": "ทำใหม่ทุกช่วง",
+                                              "icon": "movie",
                                               "chain": [
                                                 "mnVideo3",
                                                 "mnVideo2",
@@ -20492,165 +20798,128 @@
                                               ]
                                             },
                                             {
-                                              "label": "Gen ใหม่",
-                                              "icon": "auto_fix_high",
-                                              "variant": "ghost",
-                                              "className": "w-full justify-center !h-10 !rounded-xl !text-[13px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0",
-                                              "el": "button",
-                                              "action": "setField",
-                                              "to": "vpick",
-                                              "value": "1",
+                                              "label": "ช่วง 1 · 0-10 วิ",
+                                              "desc": "คลิป ช่วงแรก",
+                                              "icon": "movie",
+                                              "chain": [
+                                                "mnVideo"
+                                              ],
                                               "when": {
-                                                "op": "and",
-                                                "list": [
-                                                  {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "eq",
-                                                      "a": "{item.slots.video}",
-                                                      "b": ""
-                                                    }
-                                                  },
-                                                  {
-                                                    "op": "gt",
-                                                    "a": "{values.svSec}",
-                                                    "b": 10
-                                                  },
-                                                  {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "eq",
-                                                      "a": "{item.vpick}",
-                                                      "b": "1"
-                                                    }
-                                                  }
-                                                ]
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
                                               }
                                             },
                                             {
-                                              "el": "box",
-                                              "className": "w-full flex flex-col gap-1.5 mn-vid-part",
+                                              "label": "ช่วง 2 · 10-20 วิ",
+                                              "desc": "คลิป ช่วงกลาง",
+                                              "icon": "movie",
+                                              "chain": [
+                                                "mnVideo2"
+                                              ],
                                               "when": {
-                                                "op": "and",
-                                                "list": [
-                                                  {
-                                                    "op": "not",
-                                                    "a": {
-                                                      "op": "eq",
-                                                      "a": "{item.slots.video}",
-                                                      "b": ""
-                                                    }
-                                                  },
-                                                  {
-                                                    "op": "gt",
-                                                    "a": "{values.svSec}",
-                                                    "b": 10
-                                                  },
-                                                  {
-                                                    "op": "eq",
-                                                    "a": "{item.vpick}",
-                                                    "b": "1"
-                                                  }
-                                                ]
-                                              },
-                                              "card": [
-                                                {
-                                                  "el": "text",
-                                                  "value": "เลือกช่วงที่จะทำใหม่ (กินเครดิตช่วงละ 1 คลิป)",
-                                                  "className": "!text-[11.5px] font-bold opacity-70 px-0.5 !text-white mn-vid-part"
-                                                },
-                                                {
-                                                  "el": "row",
-                                                  "className": "w-full flex-wrap items-center gap-1.5",
-                                                  "card": [
-                                                    {
-                                                      "el": "retry-button",
-                                                      "op": "mnVideo",
-                                                      "chain": [
-                                                        "mnVideo3",
-                                                        "mnVideo2",
-                                                        "mnVideo"
-                                                      ],
-                                                      "label": "ทั้งหมด",
-                                                      "icon": "movie",
-                                                      "variant": "ghost",
-                                                      "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                      "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                    },
-                                                    {
-                                                      "el": "retry-button",
-                                                      "op": "mnVideo",
-                                                      "chain": [
-                                                        "mnVideo"
-                                                      ],
-                                                      "label": "ช่วง 1 · 0-10 วิ",
-                                                      "icon": "movie",
-                                                      "variant": "ghost",
-                                                      "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                      "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                    },
-                                                    {
-                                                      "el": "retry-button",
-                                                      "op": "mnVideo2",
-                                                      "chain": [
-                                                        "mnVideo2"
-                                                      ],
-                                                      "label": "ช่วง 2 · 10-20 วิ",
-                                                      "icon": "movie",
-                                                      "variant": "ghost",
-                                                      "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                      "loadingLabel": "กำลังสร้างวิดีโอ..."
-                                                    },
-                                                    {
-                                                      "el": "retry-button",
-                                                      "op": "mnVideo3",
-                                                      "chain": [
-                                                        "mnVideo3"
-                                                      ],
-                                                      "label": "ช่วง 3 · 20-30 วิ",
-                                                      "icon": "movie",
-                                                      "variant": "ghost",
-                                                      "className": "!flex-1 !min-w-[118px] justify-center !h-10 !rounded-xl !text-[12.5px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-vid-part",
-                                                      "loadingLabel": "กำลังสร้างวิดีโอ...",
-                                                      "when": {
-                                                        "op": "gt",
-                                                        "a": "{values.svSec}",
-                                                        "b": 20
-                                                      }
-                                                    },
-                                                    {
-                                                      "el": "button",
-                                                      "action": "setField",
-                                                      "to": "vpick",
-                                                      "value": "",
-                                                      "label": "",
-                                                      "icon": "close",
-                                                      "iconOnly": true,
-                                                      "variant": "ghost",
-                                                      "className": "shrink-0 justify-center !gap-0 !w-10 !h-10 !min-h-0 !p-0 !rounded-xl !bg-white/15 !text-white border border-white/35 mn-vid-part"
-                                                    }
-                                                  ]
-                                                }
-                                              ]
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
+                                            },
+                                            {
+                                              "label": "ช่วง 3 · 20-30 วิ",
+                                              "desc": "คลิป ช่วงท้าย",
+                                              "icon": "movie",
+                                              "chain": [
+                                                "mnVideo3"
+                                              ],
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 20
+                                              }
                                             }
-                                          ]
+                                          ],
+                                          "when": {
+                                            "op": "and",
+                                            "list": [
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "eq",
+                                                  "a": "{item.slots.video}",
+                                                  "b": ""
+                                                }
+                                              },
+                                              {
+                                                "op": "not",
+                                                "a": {
+                                                  "op": "gt",
+                                                  "a": "{values.svSec}",
+                                                  "b": 10
+                                                }
+                                              }
+                                            ]
+                                          }
                                         },
                                         {
                                           "el": "retry-button",
-                                          "op": "mnBoard",
                                           "label": "Gen ใหม่",
                                           "icon": "auto_fix_high",
                                           "variant": "ghost",
-                                          "className": "!flex-1 !min-w-[132px] justify-center !h-10 !rounded-xl !text-[13px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0",
+                                          "className": "!flex-1 !min-w-[132px] justify-center !h-10 !rounded-xl !text-[13px] font-bold !bg-white/15 !text-white border border-white/35 backdrop-blur-sm !min-h-[48px] @[420px]:!min-h-0 mn-menu",
                                           "when": {
                                             "op": "eq",
                                             "a": "{item.slots.video}",
                                             "b": ""
                                           },
-                                          "chain": [
-                                            "mnBoard3",
-                                            "mnBoard2",
-                                            "mnBoard"
+                                          "menu": [
+                                            {
+                                              "label": "ทั้งหมด",
+                                              "desc": "ทำใหม่ทุกช่วง",
+                                              "icon": "image",
+                                              "chain": [
+                                                "mnBoard3",
+                                                "mnBoard2",
+                                                "mnBoard"
+                                              ]
+                                            },
+                                            {
+                                              "label": "ช่วง 1 · 0-10 วิ",
+                                              "desc": "บอร์ด ช่วงแรก",
+                                              "icon": "image",
+                                              "chain": [
+                                                "mnBoard"
+                                              ],
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
+                                            },
+                                            {
+                                              "label": "ช่วง 2 · 10-20 วิ",
+                                              "desc": "บอร์ด ช่วงกลาง",
+                                              "icon": "image",
+                                              "chain": [
+                                                "mnBoard2"
+                                              ],
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
+                                            },
+                                            {
+                                              "label": "ช่วง 3 · 20-30 วิ",
+                                              "desc": "บอร์ด ช่วงท้าย",
+                                              "icon": "image",
+                                              "chain": [
+                                                "mnBoard3"
+                                              ],
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 20
+                                              }
+                                            }
                                           ]
                                         },
                                         {
@@ -21176,12 +21445,38 @@
                                     },
                                     {
                                       "el": "pick-button",
-                                      "into": "{item.slots.video}",
                                       "filter": "video",
                                       "label": "เลือกวิดีโอ",
                                       "icon": "video_library",
                                       "variant": "ghost",
-                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0"
+                                      "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                      "menu": [
+                                        {
+                                          "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video}"
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video2}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 10
+                                          }
+                                        },
+                                        {
+                                          "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                          "icon": "movie",
+                                          "into": "{item.slots.video3}",
+                                          "when": {
+                                            "op": "gt",
+                                            "a": "{values.svSec}",
+                                            "b": 20
+                                          }
+                                        }
+                                      ]
                                     }
                                   ]
                                 },
@@ -22159,7 +22454,6 @@
                                 },
                                 {
                                   "el": "pick-button",
-                                  "into": "{item.slots.board}",
                                   "label": "เลือกภาพ",
                                   "icon": "photo_library",
                                   "variant": "ghost",
@@ -22192,7 +22486,34 @@
                                       }
                                     }
                                   },
-                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0"
+                                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/95 !text-[#17253a] border border-[var(--ev-border)] w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0 mn-menu",
+                                  "menu": [
+                                    {
+                                      "label": "ใส่เป็นช่วง 1 · 0-10 วิ",
+                                      "icon": "photo_library",
+                                      "into": "{item.slots.board}"
+                                    },
+                                    {
+                                      "label": "ใส่เป็นช่วง 2 · 10-20 วิ",
+                                      "icon": "photo_library",
+                                      "into": "{item.slots.board2}",
+                                      "when": {
+                                        "op": "gt",
+                                        "a": "{values.svSec}",
+                                        "b": 10
+                                      }
+                                    },
+                                    {
+                                      "label": "ใส่เป็นช่วง 3 · 20-30 วิ",
+                                      "icon": "photo_library",
+                                      "into": "{item.slots.board3}",
+                                      "when": {
+                                        "op": "gt",
+                                        "a": "{values.svSec}",
+                                        "b": 20
+                                      }
+                                    }
+                                  ]
                                 }
                               ],
                               "when": {
