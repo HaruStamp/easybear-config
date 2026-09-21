@@ -17,7 +17,7 @@ STYLES = [
     ('เน้นคำสำคัญ', 'เด่นแบบคลิปไวรัล',
      'ตัวอักษรไทยหนามาก 2 บรรทัด สีขาว มีขอบเข้มบาง · คำสำคัญที่สุดเปลี่ยนเป็นสีเหลืองสดหรือส้มสด 1 คำ (very bold Thai text, two lines, white with thin dark outline, one key word in bright yellow or orange)'),
     ('แถบสีทึบ', 'แนวสปอร์ต สะดุดตาสุด',
-     'ตัวอักษรไทยหนาสีขาว วางบนแถบสีทึบเข้ม 2 แถบเหลื่อมกันเล็กน้อย แถบกว้างพอดีข้อความแต่ละบรรทัด (bold white Thai text on two slightly offset solid dark colour bars sized to each line)'),
+     'ตัวอักษรไทยหนาสีขาว วางบนแถบสีทึบเข้ม แถบละบรรทัด (ข้อความมีกี่บรรทัดก็มีแถบเท่านั้น ห้ามแต่งข้อความเพิ่มให้ครบแถบ) แถบเหลื่อมกันเล็กน้อย กว้างพอดีข้อความแต่ละบรรทัด (bold white Thai text on solid dark colour bars, one bar per line of the given text, slightly offset, sized to each line)'),
     ('ไฮไลต์ปากกา', 'สดใส เป็นกันเอง',
      'ตัวอักษรไทยหนาสีเข้ม มีแถบสีสดแบบปากกาไฮไลต์ลากทับใต้คำสำคัญ ปลายแถบไม่เรียบเหมือนลากด้วยมือ (bold dark Thai text with a bright hand-drawn highlighter stroke behind the key word)'),
     ('ตัวหนาขอบหนา', 'เรียบง่าย ใช้ได้ทุกพื้นหลัง',
