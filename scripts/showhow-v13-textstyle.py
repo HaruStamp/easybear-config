@@ -12,20 +12,20 @@ raw = open(P, encoding='utf-8').read(); d = json.loads(raw)
 
 # value = ข้อความที่ถูกแทนใน prompt ทั้งบอร์ดและวิดีโอ (ไทย + วงเล็บอังกฤษให้โมเดลวิดีโอจับได้)
 STYLES = [
-    ('ตัวหนาขอบหนา', 'อ่านง่ายที่สุด เด่นทุกพื้นหลัง',
+    ('ป้ายการ์ดขาว', 'สะอาด อ่านง่าย แบบคลิปสอนในเพจ',
+     'ตัวอักษรไทยหนาสีเข้ม วางบนการ์ดสีขาวมุมมนโค้งมาก ขอบการ์ดเว้นรอบข้อความเท่ากัน มีเงานุ่มใต้การ์ด (bold dark Thai text on a white rounded-corner card with even padding and a soft drop shadow)'),
+    ('เน้นคำสำคัญ', 'เด่นแบบคลิปไวรัล',
+     'ตัวอักษรไทยหนามาก 2 บรรทัด สีขาว มีขอบเข้มบาง · คำสำคัญที่สุดเปลี่ยนเป็นสีเหลืองสดหรือส้มสด 1 คำ (very bold Thai text, two lines, white with thin dark outline, one key word in bright yellow or orange)'),
+    ('แถบสีทึบ', 'แนวสปอร์ต สะดุดตาสุด',
+     'ตัวอักษรไทยหนาสีขาว วางบนแถบสีทึบเข้ม 2 แถบเหลื่อมกันเล็กน้อย แถบกว้างพอดีข้อความแต่ละบรรทัด (bold white Thai text on two slightly offset solid dark colour bars sized to each line)'),
+    ('ไฮไลต์ปากกา', 'สดใส เป็นกันเอง',
+     'ตัวอักษรไทยหนาสีเข้ม มีแถบสีสดแบบปากกาไฮไลต์ลากทับใต้คำสำคัญ ปลายแถบไม่เรียบเหมือนลากด้วยมือ (bold dark Thai text with a bright hand-drawn highlighter stroke behind the key word)'),
+    ('ตัวหนาขอบหนา', 'เรียบง่าย ใช้ได้ทุกพื้นหลัง',
      'ตัวอักษรไทยหนาใหญ่ สีขาว มีขอบสีเข้มหนารอบตัวอักษรและเงาตกนุ่ม (bold Thai sans-serif, white fill, thick dark outline, soft drop shadow)'),
-    ('ตัวหนาบนแถบสี', 'แบบคลิปไวรัล สะดุดตา',
-     'ตัวอักษรไทยหนาสีขาว วางบนแถบสีทึบสั้น ๆ กว้างพอดีข้อความ มุมมน อยู่ในกรอบภาพ (bold Thai sans-serif, white text on a short solid colour bar sized to the text, rounded corners)'),
-    ('ลายมือ', 'อบอุ่นเป็นกันเอง',
-     'ตัวอักษรลายมือภาษาไทยเส้นโค้งนุ่มหัวกลม สีขาว มีเงานุ่มรองรับ (cute Thai handwritten script, white, soft shadow)'),
     ('บางมินิมอล', 'เรียบหรู ดูแพง',
      'ตัวอักษรไทยเส้นบางเรียบ เว้นช่องไฟกว้าง สีขาว เงาบางมาก (clean thin Thai sans-serif, wide letter spacing, white, very soft shadow)'),
-    ('ตัวใหญ่เรืองแสง', 'นุ่มตา ดูพรีเมียม',
-     'ตัวอักษรไทยหนาใหญ่ สีขาว มีแสงเรืองนวลรอบตัวอักษร (bold Thai sans-serif, white, soft glow halo)'),
-    ('ตัวเข้มบนพื้นสว่าง', 'เหมาะกับฉากสว่างมาก',
-     'ตัวอักษรไทยหนาสีเข้มที่เข้ากับโทนสีของคลิป ไม่มีขอบ เงาบาง (bold Thai sans-serif in a dark tone matching the clip, no outline, light shadow)'),
 ]
-DEFAULT = STYLES[0][2]
+DEFAULT = STYLES[0][2]   # ป้ายการ์ดขาว
 
 n = 0
 def walk(node):
