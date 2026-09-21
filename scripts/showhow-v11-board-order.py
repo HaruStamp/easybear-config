@@ -40,11 +40,14 @@ for op in find_ops(d):
     k = 1 if op['id'] == 'mnBoard' else int(op['id'][len('mnBoard'):])
     also = [a for a in op['refs']['also'] if not (a.get('from') == 'tasks' and str(a.get('slot', '')).startswith('board'))]
     if k >= 2:
-        # หมุดมุมเปิด = บอร์ดช่วง 1 (มีเสมอเมื่อช่วงนี้ทำงาน) · ช่วงก่อนหน้า = K-1 (ถ้าไม่ใช่ช่วง 1 อยู่แล้ว)
-        add = [board_ref('board')]
-        if k >= 3: add.append(board_ref(f'board{k - 1}'))
-        also = also + add
-    op['refs']['also'] = also
+        # 🔑 v16: บอร์ดช่วง 1 ต้องเป็น "รูปอ้างอิงใบแรก" ของช่วง 2+ — โมเดลภาพให้น้ำหนักรูปแรกมากสุด
+        #     เดิมบอร์ดอยู่ท้ายสุด (หลังรูปสินค้า/ห้อง) ⇒ ช่วงท้ายที่ฉากสะอาดหมดแล้วหลุดไปวาดห้องสต็อก
+        prev = [board_ref(f'board{k - 1}')] if k >= 3 else []
+        main_old = {'from': op['refs'].get('from'), 'by': op['refs'].get('by'), 'slot': op['refs']['slot']}   # products/image เดิม ห้ามหาย
+        op['refs'] = {'op': 'lookupRefs', 'from': 'tasks', 'by': '{item.id}', 'slot': 'board',
+                      'also': prev + [main_old] + [dict(a) for a in also]}
+    else:
+        op['refs']['also'] = also
     n += 1
     print(f"  {op['id']}: board refs =", [a['slot'] for a in also if a.get('from') == 'tasks'] or '—', '· refs รวม', 1 + len(also))
 
