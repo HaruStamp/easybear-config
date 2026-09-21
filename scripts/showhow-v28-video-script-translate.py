@@ -94,10 +94,22 @@ def place(n, p):
 walk(cfg, place)
 assert sorted(placed) == list(range(1, N + 1)), f'ต้องวางปุ่มครบ {N} ฉาก (ได้ {sorted(placed)[:5]}… รวม {len(placed)})'
 
+# 🪤 ยามต้องนับจาก **node** ไม่ใช่ substring (hardsell เจอ · minimal ยืนยัน): คำว่า "บทวิดีโอ" ไปโผล่ในป้ายปุ่มและข้อความ log ด้วย
+#    ของเราวัดได้ substring 62 ครั้ง ทั้งที่ป้ายจริง 30 ⇒ นับด้วย count() = ยามหลอกตัวเอง
 after = json.dumps(cfg, ensure_ascii=False)
-assert after.count(BTN_LABEL) == N and after.count(NEW_LABEL) >= N
+def nodes(n):
+    if isinstance(n, dict):
+        yield n
+        for v in n.values(): yield from nodes(v)
+    elif isinstance(n, list):
+        for v in n: yield from nodes(v)
+all_nodes = list(nodes(cfg))
+n_label = sum(1 for x in all_nodes if x.get('el') == 'text' and x.get('value') == NEW_LABEL)
+n_btn = sum(1 for x in all_nodes if x.get('el') == 'gen-phase' and x.get('label') == BTN_LABEL)
+n_ph = sum(1 for x in all_nodes if x.get('el') == 'textarea' and x.get('placeholder') == PLACEHOLDER)
+assert n_label == N and n_btn == N and n_ph == N, f'นับจาก node: ป้าย {n_label} · ปุ่ม {n_btn} · placeholder {n_ph} (ต้องได้ {N} ทั้งหมด)'
 assert 'mnTrA1' not in json.dumps(cfg.get('auto'), ensure_ascii=False), 'op แปลหลุดเข้า auto'
 assert 'mnTrA1' not in json.dumps(cfg.get('stages'), ensure_ascii=False), 'op แปลหลุดเข้า stages'
 assert all(o['setFields'].get('where') for o in apply_ops), 'ยาม where หาย'
 open(P, 'w', encoding='utf-8').write(json.dumps(cfg, ensure_ascii=False, indent=1) + ('\n' if raw.endswith('\n') else ''))
-print(f'✓ v28 · ป้าย {N} · placeholder {N} · op mnTrans + mnTrA1..{N} · ปุ่ม {len(placed)} ·', os.path.getsize(P), 'bytes')
+print(f'✓ v28 · (นับจาก node) ป้าย {n_label} · placeholder {n_ph} · ปุ่ม {n_btn} · op mnTrans + mnTrA1..{N} ·', os.path.getsize(P), 'bytes')
