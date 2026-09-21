@@ -25,7 +25,7 @@ STYLES = [
     ('บางมินิมอล', 'เรียบหรู ดูแพง',
      'ตัวอักษรไทยเส้นบางเรียบ เว้นช่องไฟกว้าง สีขาว เงาบางมาก (clean thin Thai sans-serif, wide letter spacing, white, very soft shadow)'),
 ]
-DEFAULT = STYLES[0][2]   # ป้ายการ์ดขาว
+DEFAULT = STYLES[1][2]   # เน้นคำสำคัญ (พี่หมีเลือก 2026-09-21)
 
 n = 0
 def walk(node):
