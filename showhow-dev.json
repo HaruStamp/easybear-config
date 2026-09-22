@@ -302,7 +302,9 @@
     "s30en",
     "ov30",
     "vo30",
-    "cam30"
+    "cam30",
+    "secAt",
+    "clipsAt"
    ],
    "slots": [
     "board",
@@ -6166,7 +6168,9 @@
      "s30en": "{item.fields.s30en}",
      "ov30": "{item.fields.ov30}",
      "vo30": "{item.fields.vo30}",
-     "cam30": "{item.fields.cam30}"
+     "cam30": "{item.fields.cam30}",
+     "secAt": "{values.svSec}",
+     "clipsAt": "{values.clipsPerProduct}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -26725,8 +26729,26 @@
                    "card": [
                     {
                      "el": "text",
+                     "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
+                     "className": "!text-[11px] font-bold opacity-85 leading-none whitespace-nowrap",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.clipsAt}",
+                       "b": ""
+                      }
+                     }
+                    },
+                    {
+                     "el": "text",
                      "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
-                     "className": "!text-[11px] font-bold opacity-85 leading-none whitespace-nowrap"
+                     "className": "!text-[11px] font-bold opacity-85 leading-none whitespace-nowrap",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.clipsAt}",
+                      "b": ""
+                     }
                     }
                    ]
                   },
@@ -27394,6 +27416,45 @@
                        {
                         "op": "lookup",
                         "table": "lenSecs",
+                        "key": "{item.secAt}",
+                        "fallback": "10"
+                       },
+                       " วิ · 9:16"
+                      ]
+                     },
+                     "className": "flex items-center gap-1 !text-[10.5px] @[420px]:!text-[12px] @[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-green-500/10 !text-green-700 justify-center",
+                     "icon": "movie",
+                     "when": {
+                      "op": "and",
+                      "list": [
+                       {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video}",
+                         "b": ""
+                        }
+                       },
+                       {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.secAt}",
+                         "b": ""
+                        }
+                       }
+                      ]
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "value": {
+                      "op": "concat",
+                      "parts": [
+                       "Omni 1.1 Flash · ",
+                       {
+                        "op": "lookup",
+                        "table": "lenSecs",
                         "key": "{values.svSec}",
                         "fallback": "10"
                        },
@@ -27403,12 +27464,22 @@
                      "className": "flex items-center gap-1 !text-[10.5px] @[420px]:!text-[12px] @[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-green-500/10 !text-green-700 justify-center",
                      "icon": "movie",
                      "when": {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.slots.video}",
-                       "b": ""
-                      }
+                      "op": "and",
+                      "list": [
+                       {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.video}",
+                         "b": ""
+                        }
+                       },
+                       {
+                        "op": "eq",
+                        "a": "{item.secAt}",
+                        "b": ""
+                       }
+                      ]
                      }
                     }
                    ]
@@ -39850,8 +39921,26 @@
                 },
                 {
                  "el": "text",
+                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.clipsAt}",
+                   "b": ""
+                  }
+                 }
+                },
+                {
+                 "el": "text",
                  "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto"
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.clipsAt}",
+                  "b": ""
+                 }
                 }
                ],
                "when": {
@@ -39890,8 +39979,26 @@
                 },
                 {
                  "el": "text",
+                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.clipsAt}",
+                   "b": ""
+                  }
+                 }
+                },
+                {
+                 "el": "text",
                  "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto"
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.clipsAt}",
+                  "b": ""
+                 }
                 }
                ],
                "when": {
@@ -40795,23 +40902,6 @@
                 },
                 {
                  "el": "text",
-                 "value": {
-                  "op": "concat",
-                  "parts": [
-                   {
-                    "op": "lookup",
-                    "table": "lenSecs",
-                    "key": "{values.svSec}",
-                    "fallback": "10"
-                   },
-                   " วิ / คลิป"
-                  ]
-                 },
-                 "className": "flex items-center gap-1 !text-[12px] @[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80 justify-center !whitespace-nowrap",
-                 "icon": "timer"
-                },
-                {
-                 "el": "text",
                  "value": "9:16 แนวตั้ง",
                  "className": "flex items-center gap-1 !text-[12px] @[640px]:!text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80 justify-center !whitespace-nowrap",
                  "icon": "crop_portrait"
@@ -41158,8 +41248,46 @@
                 },
                 {
                  "el": "text",
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   "{item.secAt}",
+                   " วิ"
+                  ]
+                 },
+                 "icon": "timer",
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center gap-1",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.secAt}",
+                   "b": ""
+                  }
+                 }
+                },
+                {
+                 "el": "text",
+                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.clipsAt}",
+                   "b": ""
+                  }
+                 }
+                },
+                {
+                 "el": "text",
                  "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto"
+                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.clipsAt}",
+                  "b": ""
+                 }
                 }
                ]
               },
