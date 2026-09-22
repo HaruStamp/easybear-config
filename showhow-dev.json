@@ -304,7 +304,8 @@
     "vo30",
     "cam30",
     "secAt",
-    "clipsAt"
+    "clipsAt",
+    "arc"
    ],
    "slots": [
     "board",
@@ -702,6 +703,33 @@
              "op": "lookup",
              "table": "camPlan",
              "key": "{values.svCamMode}",
+             "fallback": ""
+            }
+           ]
+          }
+         },
+         {
+          "when": {
+           "op": "and",
+           "a": {
+            "op": "eq",
+            "a": "{values.svCamMode}",
+            "b": ""
+           },
+           "b": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          },
+          "value": {
+           "op": "concat",
+           "parts": [
+            "\n",
+            {
+             "op": "lookup",
+             "table": "camPlan",
+             "key": "ตั้งนิ่งเห็นทั้งพื้นที่",
              "fallback": ""
             }
            ]
@@ -6170,7 +6198,8 @@
      "vo30": "{item.fields.vo30}",
      "cam30": "{item.fields.cam30}",
      "secAt": "{values.svSec}",
-     "clipsAt": "{values.clipsPerProduct}"
+     "clipsAt": "{values.clipsPerProduct}",
+     "arc": "{parent.fields.arc}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
