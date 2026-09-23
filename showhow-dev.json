@@ -58,28 +58,12 @@
   "svTone": "",
   "svText": "bold Thai sans-serif, white fill, thick dark outline, soft shadow",
   "svTextOn": "หัวเรื่องตอนเปิด",
-  "svCam1": "",
-  "svCam2": "",
-  "svCam3": "",
-  "svCam4": "",
-  "svCam5": "",
-  "svPres1": "",
-  "svPres2": "",
-  "svPres3": "",
-  "svPres4": "",
-  "svPres5": "",
   "__page": "",
   "__q": "",
   "__editId": "",
   "__editNew": "",
   "mode": "manual",
-  "svChar": "เห็นแต่มือ ไม่เห็นหน้า",
   "charId": "ch1",
-  "charName": "",
-  "charGender": "",
-  "charAge": "",
-  "charLook": "",
-  "svCharSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
   "__delId": "",
   "__runExitAsk": "",
   "batchDelay": "10",
@@ -87,8 +71,7 @@
   "viewMode": "",
   "svAudio": "ASMR",
   "svVoice": "สุ่มตามสินค้า",
-  "svSec": "20",
-  "svCamMode": ""
+  "svSec": "20"
  },
  "collections": {
   "control": {
@@ -130,7 +113,14 @@
     "itemOn2",
     "itemOn3",
     "itemOn4",
-    "itemOn5"
+    "itemOn5",
+    "camMode",
+    "people",
+    "peopleSrc",
+    "charName",
+    "charLook",
+    "charGender",
+    "charAge"
    ],
    "slots": [
     "image",
@@ -141,7 +131,12 @@
     "room1",
     "room2"
    ],
-   "idPrefix": "pd"
+   "idPrefix": "pd",
+   "addDefaults": {
+    "people": "เห็นแต่มือ ไม่เห็นหน้า",
+    "peopleSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+    "camMode": ""
+   }
   },
   "tasks": {
    "fields": [
@@ -306,7 +301,14 @@
     "secAt",
     "clipsAt",
     "arc",
-    "look"
+    "look",
+    "camMode",
+    "people",
+    "peopleSrc",
+    "charName",
+    "charLook",
+    "charGender",
+    "charAge"
    ],
    "slots": [
     "board",
@@ -701,7 +703,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -721,7 +723,7 @@
             {
              "op": "lookup",
              "table": "camPlan",
-             "key": "{values.svCamMode}",
+             "key": "{item.camMode}",
              "fallback": ""
             }
            ]
@@ -748,57 +750,10 @@
          }
         ]
        },
-       {
-        "op": "lookup",
-        "table": "lenActHead",
-        "key": "{values.svSec}",
-        "fallback": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\n"
-       },
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|1",
-        "fallback": "ฉาก 1"
-       },
-       " — มุมกล้อง: {values.svCam1} · การนำเสนอ: {values.svPres1}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|2",
-        "fallback": "ฉาก 2"
-       },
-       " — มุมกล้อง: {values.svCam2} · การนำเสนอ: {values.svPres2}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|3",
-        "fallback": "ฉาก 3"
-       },
-       " — มุมกล้อง: {values.svCam3} · การนำเสนอ: {values.svPres3}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|4",
-        "fallback": "ฉาก 4"
-       },
-       " — มุมกล้อง: {values.svCam4} · การนำเสนอ: {values.svPres4}\n",
-       {
-        "op": "lookup",
-        "table": "lenAct",
-        "key": "{values.svSec}|5",
-        "fallback": "ฉาก 5"
-       },
-       " — มุมกล้อง: {values.svCam5} · การนำเสนอ: {values.svPres5}\n",
-       {
-        "op": "lookup",
-        "table": "lenActTail",
-        "key": "{values.svSec}",
-        "fallback": ""
-       },
        "\nย้ำ: สไตล์ภาพ โทนสี วิธีถ่าย เป็นเรื่องของภาพ ไม่ใช่เนื้อหา — ห้ามใช้คำเหล่านี้ใน ov1-ov5, vo1-vo5 และ synopsis · บทพูดและข้อความบนภาพต้องพูดถึงสิ่งที่กำลังทำ ความคืบหน้า และผลลัพธ์ที่ผู้ชมเห็นเท่านั้น\nย้ำเรื่องคำลงท้าย: ครับ / ค่ะ / คะ ใช้ได้อย่างมาก 2 ครั้งต่อคลิป (แนะนำครั้งเดียวที่ vo5 ตอนสรุปผลลัพธ์) — vo2-vo4 จบห้วนไม่มีคำลงท้าย\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
       ]
      },
-     "\n\nโหมดคนในคลิป (ผู้ลงมือ ไม่ใช่พรีเซนเตอร์): {values.svChar}\n",
+     "\n\nโหมดคนในคลิป (ผู้ลงมือ ไม่ใช่พรีเซนเตอร์): {item.people}\n",
      {
       "op": "block",
       "sep": "",
@@ -815,7 +770,7 @@
         "value": {
          "op": "lookup",
          "table": "charPlan",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -841,7 +796,7 @@
       "parts": [
        {
         "when": "values.svChar=คนเดียวเต็มตัว",
-        "value": "ข้อมูลคนในคลิปจากผู้ใช้ (ค่าว่าง = AI เลือกให้): ชื่อเล่น {values.charName} · เพศ {values.charGender} · ช่วงวัย {values.charAge} · ลุค/สไตล์ {values.charLook}"
+        "value": "ข้อมูลคนในคลิปจากผู้ใช้ (ค่าว่าง = AI เลือกให้): ชื่อเล่น {item.charName} · เพศ {item.charGender} · ช่วงวัย {item.charAge} · ลุค/สไตล์ {item.charLook}"
        }
       ]
      },
@@ -6241,7 +6196,14 @@
      "secAt": "{values.svSec}",
      "clipsAt": "{values.clipsPerProduct}",
      "arc": "{parent.fields.arc}",
-     "look": "{item.fields.look}"
+     "look": "{item.fields.look}",
+     "camMode": "{parent.fields.camMode}",
+     "people": "{parent.fields.people}",
+     "peopleSrc": "{parent.fields.peopleSrc}",
+     "charName": "{parent.fields.charName}",
+     "charLook": "{parent.fields.charLook}",
+     "charGender": "{parent.fields.charGender}",
+     "charAge": "{parent.fields.charAge}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -6320,7 +6282,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -6350,12 +6312,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -6640,12 +6602,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -6726,7 +6688,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -6756,12 +6718,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -7046,12 +7008,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -7132,7 +7094,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -7162,12 +7124,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -7452,12 +7414,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -7538,7 +7500,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -7568,12 +7530,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -7858,12 +7820,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -7944,7 +7906,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -7974,12 +7936,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -8259,12 +8221,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -8354,7 +8316,7 @@
         "value": {
          "op": "lookup",
          "table": "charBoard",
-         "key": "{values.svChar}|{values.svCharSrc}",
+         "key": "{item.people}|{item.peopleSrc}",
          "fallback": ""
         }
        },
@@ -8384,12 +8346,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -8667,12 +8629,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -8733,7 +8695,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -8749,7 +8711,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -8790,7 +8752,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -8822,12 +8784,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -10108,12 +10070,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -10210,7 +10172,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -10226,7 +10188,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -10267,7 +10229,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -10299,12 +10261,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -11585,12 +11547,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -11687,7 +11649,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -11703,7 +11665,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -11744,7 +11706,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -11776,12 +11738,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -13062,12 +13024,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -13164,7 +13126,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -13180,7 +13142,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -13221,7 +13183,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -13253,12 +13215,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -14540,12 +14502,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -14642,7 +14604,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -14658,7 +14620,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -14699,7 +14661,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -14731,12 +14693,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -16017,12 +15979,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -16118,7 +16080,7 @@
             "op": "not",
             "a": {
              "op": "eq",
-             "a": "{values.svCamMode}",
+             "a": "{item.camMode}",
              "b": ""
             }
            },
@@ -16134,7 +16096,7 @@
           "value": {
            "op": "lookup",
            "table": "camVideoEN",
-           "key": "{values.svCamMode}",
+           "key": "{item.camMode}",
            "fallback": ""
           }
          },
@@ -16175,7 +16137,7 @@
           "value": {
            "op": "lookup",
            "table": "charVideoEN",
-           "key": "{values.svChar}|{values.svCharSrc}",
+           "key": "{item.people}|{item.peopleSrc}",
            "fallback": ""
           }
          },
@@ -16207,12 +16169,12 @@
           "op": "and",
           "a": {
            "op": "eq",
-           "a": "{values.svChar}",
+           "a": "{item.people}",
            "b": "คนเดียวเต็มตัว"
           },
           "b": {
            "op": "eq",
-           "a": "{values.svCharSrc}",
+           "a": "{item.peopleSrc}",
            "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
           }
          },
@@ -17484,12 +17446,12 @@
        "op": "and",
        "a": {
         "op": "eq",
-        "a": "{values.svChar}",
+        "a": "{item.people}",
         "b": "คนเดียวเต็มตัว"
        },
        "b": {
         "op": "eq",
-        "a": "{values.svCharSrc}",
+        "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
@@ -18004,363 +17966,6 @@
              "el": "text",
              "value": "6 ใน 8 คลิปดังไม่เห็นหน้าคน — \"เห็นแต่มือ\" กับ \"ทีมช่างเบลอ\" ปลอดภัยที่สุด · หน้าคนในช็อตยาวคือความเสี่ยงสูงสุดของ AI",
              "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
-            },
-            {
-             "el": "grid-select",
-             "field": "svChar",
-             "cols": 2,
-             "contained": true,
-             "options": [
-              {
-               "value": "เห็นแต่มือ ไม่เห็นหน้า",
-               "label": "เห็นแต่มือ",
-               "desc": "มือกำลังลงมือทำ ไม่เห็นหน้า",
-               "icon": "back_hand"
-              },
-              {
-               "value": "คนเดียวเต็มตัว",
-               "label": "คนเดียวเต็มตัว",
-               "desc": "เห็นคนลงมือทั้งตัว (เลือกหน้าได้ข้างล่าง)",
-               "icon": "emoji_people"
-              },
-              {
-               "value": "ทีมช่างเบลอเคลื่อนไหวเร็ว",
-               "label": "ทีมช่าง (เบลอ)",
-               "desc": "หลายคนทำงานเร็วแบบไทม์แลปส์ ไม่เห็นหน้า",
-               "icon": "groups"
-              },
-              {
-               "value": "ไม่มีคน",
-               "label": "ไม่มีคน",
-               "desc": "ของเปลี่ยนไปเอง ไม่มีมือ ไม่มีคน",
-               "icon": "inventory_2"
-              }
-             ],
-             "className": "!min-h-[48px] @[420px]:!min-h-0"
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-3 p-3 @[420px]:p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
-             "card": [
-              {
-               "el": "grid-select",
-               "field": "svCharSrc",
-               "cols": 2,
-               "contained": true,
-               "options": [
-                {
-                 "value": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-                 "label": "สุ่มตัวละคร",
-                 "desc": "AI สร้างคนลงมือที่เหมาะกับงานให้",
-                 "icon": "shuffle"
-                },
-                {
-                 "value": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
-                 "label": "ใช้รูปตัวละคร",
-                 "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต",
-                 "icon": "face"
-                }
-               ],
-               "className": "!min-h-[48px] @[420px]:!min-h-0"
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-3",
-               "card": [
-                {
-                 "el": "repeat",
-                 "coll": "characters",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "gap-4 items-stretch flex-wrap @[420px]:flex-nowrap",
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-full @[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col @[560px]:justify-center gap-2.5 p-2.5",
-                     "card": [
-                      {
-                       "el": "upload",
-                       "label": "",
-                       "placeholder": "อัพโหลด",
-                       "icon": "upload",
-                       "into": "face",
-                       "resize": {
-                        "maxPx": 512,
-                        "quality": 0.8
-                       },
-                       "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] @[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                      },
-                      {
-                       "el": "pick-button",
-                       "label": "เลือกภาพ",
-                       "icon": "photo_library",
-                       "filter": "image",
-                       "into": "face",
-                       "resize": {
-                        "maxPx": 512,
-                        "quality": 0.8
-                       },
-                       "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] @[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "row",
-                     "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3 @[420px]:p-4 !basis-full @[420px]:!basis-auto",
-                     "style": {
-                      "flexWrap": "nowrap"
-                     },
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
-                       "card": [
-                        {
-                         "el": "icon",
-                         "icon": "warning",
-                         "textSize": "text-[20px]",
-                         "className": "!text-amber-500 leading-none flex items-center justify-center"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                       "card": [
-                        {
-                         "el": "text",
-                         "value": "ยังไม่มีรูปใบหน้า",
-                         "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-amber-600"
-                        },
-                        {
-                         "el": "text",
-                         "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
-                         "className": "!text-[14px] @[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
-                        }
-                       ]
-                      }
-                     ]
-                    }
-                   ],
-                   "when": "item.slots.face="
-                  },
-                  {
-                   "el": "row",
-                   "className": "gap-4 items-stretch flex-wrap @[420px]:flex-nowrap",
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "relative w-[140px] shrink-0",
-                     "card": [
-                      {
-                       "el": "media-slot",
-                       "src": "{item.slots.face}",
-                       "aspect": "1:1",
-                       "style": {
-                        "borderRadius": "16px"
-                       },
-                       "className": "ring-1 ring-[var(--ev-border)]"
-                      },
-                      {
-                       "el": "button",
-                       "action": "hook",
-                       "fn": "clearSlot",
-                       "to": "face",
-                       "label": "",
-                       "icon": "close",
-                       "variant": "ghost",
-                       "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "row",
-                     "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-3 @[420px]:p-4 !basis-full @[420px]:!basis-auto",
-                     "style": {
-                      "flexWrap": "nowrap"
-                     },
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
-                       "card": [
-                        {
-                         "el": "icon",
-                         "icon": "check_circle",
-                         "textSize": "text-[20px]",
-                         "className": "!text-green-600 leading-none flex items-center justify-center"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "flex-1 min-w-0 flex flex-col gap-0.5",
-                       "card": [
-                        {
-                         "el": "text",
-                         "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
-                         "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-green-600"
-                        },
-                        {
-                         "el": "text",
-                         "value": "ระบบแนบรูปนี้ให้ตอนวาดบอร์ดและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
-                         "className": "!text-[14px] @[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
-                        }
-                       ]
-                      }
-                     ]
-                    }
-                   ],
-                   "when": "item.slots.face!="
-                  }
-                 ]
-                }
-               ],
-               "when": {
-                "op": "eq",
-                "a": "{values.svCharSrc}",
-                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-               }
-              },
-              {
-               "el": "text",
-               "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = AI จัดให้)",
-               "className": "!text-[14px] @[640px]:!text-[13px] opacity-60",
-               "when": {
-                "op": "eq",
-                "a": "{values.svCharSrc}",
-                "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
-               }
-              },
-              {
-               "el": "box",
-               "className": "grid grid-cols-1 @[720px]:grid-cols-2 gap-3",
-               "card": [
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ชื่อเล่นคนในคลิป",
-                   "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                   "icon": "badge"
-                  },
-                  {
-                   "el": "input",
-                   "field": "charName",
-                   "placeholder": "ว่าง = ไม่ระบุ",
-                   "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ลุค / สไตล์การแต่งตัว",
-                   "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                   "icon": "styler"
-                  },
-                  {
-                   "el": "input",
-                   "field": "charLook",
-                   "placeholder": "เช่น แต่งตัวสบาย ๆ เสื้อยืดโทนเอิร์ธ",
-                   "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "เพศ",
-                   "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                   "icon": "wc"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "charGender",
-                   "placeholder": "ให้ AI เลือก",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "ให้ AI เลือก",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "หญิง",
-                     "label": "หญิง"
-                    },
-                    {
-                     "value": "ชาย",
-                     "label": "ชาย"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": {
-                  "op": "eq",
-                  "a": "{values.svCharSrc}",
-                  "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
-                 }
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ช่วงวัย",
-                   "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
-                   "icon": "cake"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "charAge",
-                   "placeholder": "ให้ AI เลือก",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "ให้ AI เลือก",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "วัยรุ่น",
-                     "label": "วัยรุ่น"
-                    },
-                    {
-                     "value": "วัยทำงานตอนต้น",
-                     "label": "วัยทำงานตอนต้น"
-                    },
-                    {
-                     "value": "วัยผู้ใหญ่",
-                     "label": "วัยผู้ใหญ่"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": {
-                  "op": "eq",
-                  "a": "{values.svCharSrc}",
-                  "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
-                 }
-                }
-               ]
-              }
-             ],
-             "when": {
-              "op": "eq",
-              "a": "{values.svChar}",
-              "b": "คนเดียวเต็มตัว"
-             }
             }
            ]
           },
@@ -18653,826 +18258,6 @@
                    "el": "text",
                    "value": "มุมกล้องหลักของคลิป",
                    "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-                  },
-                  {
-                   "el": "grid-select",
-                   "field": "svCamMode",
-                   "cols": 3,
-                   "mobile": {
-                    "cols": 1
-                   },
-                   "contained": true,
-                   "className": "!min-h-[48px] @[420px]:!min-h-0",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "desc": "หมีเลือกตามโครงเรื่อง",
-                     "icon": "auto_awesome"
-                    },
-                    {
-                     "value": "ตั้งนิ่งเห็นทั้งพื้นที่",
-                     "label": "ตั้งนิ่งเห็นทั้งพื้นที่",
-                     "desc": "กล้องขาตั้ง มุมเดิมทั้งคลิป — ก่อน/หลังเทียบชัด (คลิปยอดสูงสุดใช้แบบนี้)",
-                     "icon": "videocam"
-                    },
-                    {
-                     "value": "ตามคน ตามมือ แบบ vlog",
-                     "label": "ตามคน ตามมือ (vlog)",
-                     "desc": "กล้องเดินตามคนทำงาน ใกล้ชิด",
-                     "icon": "directions_walk"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 flex flex-col gap-3",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "items-center gap-2.5",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-7 h-7 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                     "card": [
-                      {
-                       "el": "text",
-                       "value": "1",
-                       "className": "!text-[18px] @[640px]:!text-[17px] font-bold opacity-70"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "ฉาก 1",
-                     "className": "font-bold !text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)]"
-                    },
-                    {
-                     "el": "text",
-                     "value": "0-2 วิ",
-                     "className": "inline-flex items-center gap-1 !text-[17px] @[640px]:!text-[16px] opacity-60 ml-auto tabular-nums",
-                     "icon": "schedule"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
-                   "card": [
-                    {
-                     "el": "dropdown",
-                     "field": "svCam1",
-                     "label": "",
-                     "placeholder": "มุมกล้อง — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "โคลสอัพใกล้ (close-up)",
-                       "label": "โคลสอัพใกล้ (close-up)",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "มาโครใกล้มาก (extreme macro)",
-                       "label": "มาโครใกล้มาก (extreme macro)",
-                       "icon": "zoom_in"
-                      },
-                      {
-                       "value": "มุมสูง 45 องศา",
-                       "label": "มุมสูง 45 องศา",
-                       "icon": "south_east"
-                      },
-                      {
-                       "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "icon": "arrow_downward"
-                      },
-                      {
-                       "value": "ระดับสายตา (eye-level)",
-                       "label": "ระดับสายตา (eye-level)",
-                       "icon": "visibility"
-                      },
-                      {
-                       "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "icon": "arrow_upward"
-                      },
-                      {
-                       "value": "แพนกล้องช้าๆ (slow pan)",
-                       "label": "แพนกล้องช้าๆ (slow pan)",
-                       "icon": "swap_horiz"
-                      },
-                      {
-                       "value": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "label": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "icon": "zoom_in_map"
-                      },
-                      {
-                       "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "icon": "zoom_out_map"
-                      },
-                      {
-                       "value": "หมุนรอบสินค้า (orbit)",
-                       "label": "หมุนรอบสินค้า (orbit)",
-                       "icon": "360"
-                      },
-                      {
-                       "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "icon": "double_arrow"
-                      },
-                      {
-                       "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "icon": "pan_tool_alt"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "svPres1",
-                     "label": "",
-                     "placeholder": "การนำเสนอ — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "มือกำลังลงมือทำ",
-                       "label": "มือกำลังลงมือทำ",
-                       "icon": "back_hand"
-                      },
-                      {
-                       "value": "โคลสอัพจุดที่ทำ",
-                       "label": "โคลสอัพจุดที่ทำ",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "label": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "icon": "panorama"
-                      },
-                      {
-                       "value": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "label": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "icon": "touch_app"
-                      },
-                      {
-                       "value": "โชว์ผลลัพธ์",
-                       "label": "โชว์ผลลัพธ์",
-                       "icon": "auto_awesome"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 flex flex-col gap-3",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "items-center gap-2.5",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-7 h-7 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                     "card": [
-                      {
-                       "el": "text",
-                       "value": "2",
-                       "className": "!text-[18px] @[640px]:!text-[17px] font-bold opacity-70"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "ฉาก 2",
-                     "className": "font-bold !text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)]"
-                    },
-                    {
-                     "el": "text",
-                     "value": "2-4 วิ",
-                     "className": "inline-flex items-center gap-1 !text-[17px] @[640px]:!text-[16px] opacity-60 ml-auto tabular-nums",
-                     "icon": "schedule"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
-                   "card": [
-                    {
-                     "el": "dropdown",
-                     "field": "svCam2",
-                     "label": "",
-                     "placeholder": "มุมกล้อง — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "โคลสอัพใกล้ (close-up)",
-                       "label": "โคลสอัพใกล้ (close-up)",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "มาโครใกล้มาก (extreme macro)",
-                       "label": "มาโครใกล้มาก (extreme macro)",
-                       "icon": "zoom_in"
-                      },
-                      {
-                       "value": "มุมสูง 45 องศา",
-                       "label": "มุมสูง 45 องศา",
-                       "icon": "south_east"
-                      },
-                      {
-                       "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "icon": "arrow_downward"
-                      },
-                      {
-                       "value": "ระดับสายตา (eye-level)",
-                       "label": "ระดับสายตา (eye-level)",
-                       "icon": "visibility"
-                      },
-                      {
-                       "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "icon": "arrow_upward"
-                      },
-                      {
-                       "value": "แพนกล้องช้าๆ (slow pan)",
-                       "label": "แพนกล้องช้าๆ (slow pan)",
-                       "icon": "swap_horiz"
-                      },
-                      {
-                       "value": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "label": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "icon": "zoom_in_map"
-                      },
-                      {
-                       "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "icon": "zoom_out_map"
-                      },
-                      {
-                       "value": "หมุนรอบสินค้า (orbit)",
-                       "label": "หมุนรอบสินค้า (orbit)",
-                       "icon": "360"
-                      },
-                      {
-                       "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "icon": "double_arrow"
-                      },
-                      {
-                       "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "icon": "pan_tool_alt"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "svPres2",
-                     "label": "",
-                     "placeholder": "การนำเสนอ — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "มือกำลังลงมือทำ",
-                       "label": "มือกำลังลงมือทำ",
-                       "icon": "back_hand"
-                      },
-                      {
-                       "value": "โคลสอัพจุดที่ทำ",
-                       "label": "โคลสอัพจุดที่ทำ",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "label": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "icon": "panorama"
-                      },
-                      {
-                       "value": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "label": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "icon": "touch_app"
-                      },
-                      {
-                       "value": "โชว์ผลลัพธ์",
-                       "label": "โชว์ผลลัพธ์",
-                       "icon": "auto_awesome"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 flex flex-col gap-3",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "items-center gap-2.5",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-7 h-7 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                     "card": [
-                      {
-                       "el": "text",
-                       "value": "3",
-                       "className": "!text-[18px] @[640px]:!text-[17px] font-bold opacity-70"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "ฉาก 3",
-                     "className": "font-bold !text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)]"
-                    },
-                    {
-                     "el": "text",
-                     "value": "4-6 วิ",
-                     "className": "inline-flex items-center gap-1 !text-[17px] @[640px]:!text-[16px] opacity-60 ml-auto tabular-nums",
-                     "icon": "schedule"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
-                   "card": [
-                    {
-                     "el": "dropdown",
-                     "field": "svCam3",
-                     "label": "",
-                     "placeholder": "มุมกล้อง — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "โคลสอัพใกล้ (close-up)",
-                       "label": "โคลสอัพใกล้ (close-up)",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "มาโครใกล้มาก (extreme macro)",
-                       "label": "มาโครใกล้มาก (extreme macro)",
-                       "icon": "zoom_in"
-                      },
-                      {
-                       "value": "มุมสูง 45 องศา",
-                       "label": "มุมสูง 45 องศา",
-                       "icon": "south_east"
-                      },
-                      {
-                       "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "icon": "arrow_downward"
-                      },
-                      {
-                       "value": "ระดับสายตา (eye-level)",
-                       "label": "ระดับสายตา (eye-level)",
-                       "icon": "visibility"
-                      },
-                      {
-                       "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "icon": "arrow_upward"
-                      },
-                      {
-                       "value": "แพนกล้องช้าๆ (slow pan)",
-                       "label": "แพนกล้องช้าๆ (slow pan)",
-                       "icon": "swap_horiz"
-                      },
-                      {
-                       "value": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "label": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "icon": "zoom_in_map"
-                      },
-                      {
-                       "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "icon": "zoom_out_map"
-                      },
-                      {
-                       "value": "หมุนรอบสินค้า (orbit)",
-                       "label": "หมุนรอบสินค้า (orbit)",
-                       "icon": "360"
-                      },
-                      {
-                       "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "icon": "double_arrow"
-                      },
-                      {
-                       "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "icon": "pan_tool_alt"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "svPres3",
-                     "label": "",
-                     "placeholder": "การนำเสนอ — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "มือกำลังลงมือทำ",
-                       "label": "มือกำลังลงมือทำ",
-                       "icon": "back_hand"
-                      },
-                      {
-                       "value": "โคลสอัพจุดที่ทำ",
-                       "label": "โคลสอัพจุดที่ทำ",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "label": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "icon": "panorama"
-                      },
-                      {
-                       "value": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "label": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "icon": "touch_app"
-                      },
-                      {
-                       "value": "โชว์ผลลัพธ์",
-                       "label": "โชว์ผลลัพธ์",
-                       "icon": "auto_awesome"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 flex flex-col gap-3",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "items-center gap-2.5",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-7 h-7 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                     "card": [
-                      {
-                       "el": "text",
-                       "value": "4",
-                       "className": "!text-[18px] @[640px]:!text-[17px] font-bold opacity-70"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "ฉาก 4",
-                     "className": "font-bold !text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)]"
-                    },
-                    {
-                     "el": "text",
-                     "value": "6-8 วิ",
-                     "className": "inline-flex items-center gap-1 !text-[17px] @[640px]:!text-[16px] opacity-60 ml-auto tabular-nums",
-                     "icon": "schedule"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
-                   "card": [
-                    {
-                     "el": "dropdown",
-                     "field": "svCam4",
-                     "label": "",
-                     "placeholder": "มุมกล้อง — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "โคลสอัพใกล้ (close-up)",
-                       "label": "โคลสอัพใกล้ (close-up)",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "มาโครใกล้มาก (extreme macro)",
-                       "label": "มาโครใกล้มาก (extreme macro)",
-                       "icon": "zoom_in"
-                      },
-                      {
-                       "value": "มุมสูง 45 องศา",
-                       "label": "มุมสูง 45 องศา",
-                       "icon": "south_east"
-                      },
-                      {
-                       "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "icon": "arrow_downward"
-                      },
-                      {
-                       "value": "ระดับสายตา (eye-level)",
-                       "label": "ระดับสายตา (eye-level)",
-                       "icon": "visibility"
-                      },
-                      {
-                       "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "icon": "arrow_upward"
-                      },
-                      {
-                       "value": "แพนกล้องช้าๆ (slow pan)",
-                       "label": "แพนกล้องช้าๆ (slow pan)",
-                       "icon": "swap_horiz"
-                      },
-                      {
-                       "value": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "label": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "icon": "zoom_in_map"
-                      },
-                      {
-                       "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "icon": "zoom_out_map"
-                      },
-                      {
-                       "value": "หมุนรอบสินค้า (orbit)",
-                       "label": "หมุนรอบสินค้า (orbit)",
-                       "icon": "360"
-                      },
-                      {
-                       "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "icon": "double_arrow"
-                      },
-                      {
-                       "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "icon": "pan_tool_alt"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "svPres4",
-                     "label": "",
-                     "placeholder": "การนำเสนอ — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "มือกำลังลงมือทำ",
-                       "label": "มือกำลังลงมือทำ",
-                       "icon": "back_hand"
-                      },
-                      {
-                       "value": "โคลสอัพจุดที่ทำ",
-                       "label": "โคลสอัพจุดที่ทำ",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "label": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "icon": "panorama"
-                      },
-                      {
-                       "value": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "label": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "icon": "touch_app"
-                      },
-                      {
-                       "value": "โชว์ผลลัพธ์",
-                       "label": "โชว์ผลลัพธ์",
-                       "icon": "auto_awesome"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 flex flex-col gap-3",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "items-center gap-2.5",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "w-7 h-7 rounded-[9px] bg-[var(--ev-surface2)] flex items-center justify-center shrink-0",
-                     "card": [
-                      {
-                       "el": "text",
-                       "value": "5",
-                       "className": "!text-[18px] @[640px]:!text-[17px] font-bold opacity-70"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "ฉาก 5",
-                     "className": "font-bold !text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)]"
-                    },
-                    {
-                     "el": "text",
-                     "value": "8-10 วิ",
-                     "className": "inline-flex items-center gap-1 !text-[17px] @[640px]:!text-[16px] opacity-60 ml-auto tabular-nums",
-                     "icon": "schedule"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "grid grid-cols-1 @[500px]:grid-cols-2 gap-2.5",
-                   "card": [
-                    {
-                     "el": "dropdown",
-                     "field": "svCam5",
-                     "label": "",
-                     "placeholder": "มุมกล้อง — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "โคลสอัพใกล้ (close-up)",
-                       "label": "โคลสอัพใกล้ (close-up)",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "มาโครใกล้มาก (extreme macro)",
-                       "label": "มาโครใกล้มาก (extreme macro)",
-                       "icon": "zoom_in"
-                      },
-                      {
-                       "value": "มุมสูง 45 องศา",
-                       "label": "มุมสูง 45 องศา",
-                       "icon": "south_east"
-                      },
-                      {
-                       "value": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "label": "ท็อปดาวน์ แฟลตเลย์ (top-down flat lay)",
-                       "icon": "arrow_downward"
-                      },
-                      {
-                       "value": "ระดับสายตา (eye-level)",
-                       "label": "ระดับสายตา (eye-level)",
-                       "icon": "visibility"
-                      },
-                      {
-                       "value": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "label": "มุมต่ำ ยกให้สินค้าดูยิ่งใหญ่ (low-angle hero)",
-                       "icon": "arrow_upward"
-                      },
-                      {
-                       "value": "แพนกล้องช้าๆ (slow pan)",
-                       "label": "แพนกล้องช้าๆ (slow pan)",
-                       "icon": "swap_horiz"
-                      },
-                      {
-                       "value": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "label": "ซูมเข้าช้าๆ (slow zoom-in)",
-                       "icon": "zoom_in_map"
-                      },
-                      {
-                       "value": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "label": "ซูมออกเปิดฉากกว้าง (slow zoom-out reveal)",
-                       "icon": "zoom_out_map"
-                      },
-                      {
-                       "value": "หมุนรอบสินค้า (orbit)",
-                       "label": "หมุนรอบสินค้า (orbit)",
-                       "icon": "360"
-                      },
-                      {
-                       "value": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "label": "ดอลลี่เลื่อนผ่านสินค้า (dolly glide)",
-                       "icon": "double_arrow"
-                      },
-                      {
-                       "value": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "label": "กล้องติดตามมือที่ใช้สินค้า (tracking)",
-                       "icon": "pan_tool_alt"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "svPres5",
-                     "label": "",
-                     "placeholder": "การนำเสนอ — อัตโนมัติ",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — AI เลือกให้",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "มือกำลังลงมือทำ",
-                       "label": "มือกำลังลงมือทำ",
-                       "icon": "back_hand"
-                      },
-                      {
-                       "value": "โคลสอัพจุดที่ทำ",
-                       "label": "โคลสอัพจุดที่ทำ",
-                       "icon": "center_focus_strong"
-                      },
-                      {
-                       "value": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "label": "ภาพกว้างเห็นทั้งพื้นที่",
-                       "icon": "panorama"
-                      },
-                      {
-                       "value": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "label": "ทดสอบให้ดู (ดึง กด จุด เขย่า)",
-                       "icon": "touch_app"
-                      },
-                      {
-                       "value": "โชว์ผลลัพธ์",
-                       "label": "โชว์ผลลัพธ์",
-                       "icon": "auto_awesome"
-                      }
-                     ],
-                     "icon": "auto_fix_high",
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ]
                   }
                  ]
                 }
@@ -23085,6 +21870,518 @@
                  "icon": "timelapse"
                 }
                ]
+              },
+              {
+               "el": "text",
+               "value": "มุมกล้อง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
+              },
+              {
+               "el": "text",
+               "value": "🔒 กล้องนิ่งมุมเดียวทั้งคลิป — โครงเรื่องนี้กำหนดไว้แล้ว",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] px-0.5 opacity-75",
+               "when": {
+                "op": "eq",
+                "a": "{item.arc}",
+                "b": "ไทม์แลปส์กล้องนิ่ง"
+               }
+              },
+              {
+               "el": "grid-select",
+               "field": "camMode",
+               "cols": 2,
+               "contained": true,
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกให้เข้ากับเรื่อง",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "ตั้งนิ่งเห็นทั้งพื้นที่",
+                 "label": "ตั้งนิ่งเห็นทั้งพื้นที่",
+                 "desc": "มุมเดิมทั้งคลิป",
+                 "icon": "crop_free"
+                },
+                {
+                 "value": "ตามคน ตามมือ แบบ vlog",
+                 "label": "ตามคน ตามมือ",
+                 "desc": "ใกล้ชิด แบบ vlog",
+                 "icon": "directions_walk"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "⚠️ โครงเรื่องนี้ต้องเห็นมือทำใกล้ ๆ ทุกขั้น — ถ่ายไกลจะดูไม่ออกว่าทำอะไร",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#a16207] dark:!text-[#fbbf24]",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทีละขั้นให้ทำตาม"
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "เห็นคนแค่ไหน",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
+              },
+              {
+               "el": "grid-select",
+               "field": "people",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "เห็นแต่มือ ไม่เห็นหน้า",
+                 "label": "เห็นแต่มือ",
+                 "desc": "ไม่เห็นหน้า",
+                 "icon": "back_hand"
+                },
+                {
+                 "value": "คนเดียวเต็มตัว",
+                 "label": "คนเดียวเต็มตัว",
+                 "desc": "ผู้ลงมือทำ",
+                 "icon": "person"
+                },
+                {
+                 "value": "ทีมช่างเบลอเคลื่อนไหวเร็ว",
+                 "label": "ทีมช่าง (เบลอ)",
+                 "desc": "หลายคน เคลื่อนไหวเร็ว",
+                 "icon": "groups"
+                },
+                {
+                 "value": "ไม่มีคน",
+                 "label": "ไม่มีคน",
+                 "desc": "เห็นแต่พื้นที่และของ",
+                 "icon": "no_accounts"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "✅ เข้ากับไทม์แลปส์พอดี",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#15803d] dark:!text-[#4ade80]",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "ทีมช่างเบลอเคลื่อนไหวเร็ว"
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "⚠️ ไทม์แลปส์ห้ามให้มือเป็นประธานของภาพ — อาจได้ผลไม่ตรงที่ตั้งใจ",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#a16207] dark:!text-[#fbbf24]",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "เห็นแต่มือ ไม่เห็นหน้า"
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "⚠️ สอนทำตามต้องเห็นมือชัดทุกขั้น — คนเบลอจะดูไม่ออกว่าทำอะไร",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#a16207] dark:!text-[#fbbf24]",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทีละขั้นให้ทำตาม"
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "ทีมช่างเบลอเคลื่อนไหวเร็ว"
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "⚠️ สอนทำตามต้องมีมือลงมือทุกฉาก — \"ไม่มีคน\" จะขัดกับโครงเรื่อง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#a16207] dark:!text-[#fbbf24]",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทีละขั้นให้ทำตาม"
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "ไม่มีคน"
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "ตัวละคร",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1",
+               "when": {
+                "op": "eq",
+                "a": "{item.people}",
+                "b": "คนเดียวเต็มตัว"
+               }
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-3 p-3 @[420px]:p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
+               "card": [
+                {
+                 "el": "grid-select",
+                 "field": "peopleSrc",
+                 "cols": 2,
+                 "contained": true,
+                 "options": [
+                  {
+                   "value": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+                   "label": "สุ่มตัวละคร",
+                   "desc": "AI สร้างคนลงมือที่เหมาะกับงานให้",
+                   "icon": "shuffle"
+                  },
+                  {
+                   "value": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
+                   "label": "ใช้รูปตัวละคร",
+                   "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต",
+                   "icon": "face"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-3",
+                 "card": [
+                  {
+                   "el": "repeat",
+                   "coll": "characters",
+                   "card": [
+                    {
+                     "el": "row",
+                     "className": "gap-4 items-stretch flex-wrap @[420px]:flex-nowrap",
+                     "card": [
+                      {
+                       "el": "box",
+                       "className": "w-full @[560px]:w-[140px] shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col @[560px]:justify-center gap-2.5 p-2.5",
+                       "card": [
+                        {
+                         "el": "upload",
+                         "label": "",
+                         "placeholder": "อัพโหลด",
+                         "icon": "upload",
+                         "into": "face",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] @[640px]:!text-[15px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                        },
+                        {
+                         "el": "pick-button",
+                         "label": "เลือกภาพ",
+                         "icon": "photo_library",
+                         "filter": "image",
+                         "into": "face",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[48px] !rounded-xl !border-0 font-black !text-[16px] @[640px]:!text-[15px] uppercase !bg-white !text-[#17253a]"
+                        }
+                       ]
+                      },
+                      {
+                       "el": "row",
+                       "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3 @[420px]:p-4 !basis-full @[420px]:!basis-auto",
+                       "style": {
+                        "flexWrap": "nowrap"
+                       },
+                       "card": [
+                        {
+                         "el": "box",
+                         "className": "w-[42px] h-[42px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
+                         "card": [
+                          {
+                           "el": "icon",
+                           "icon": "warning",
+                           "textSize": "text-[20px]",
+                           "className": "!text-amber-500 leading-none flex items-center justify-center"
+                          }
+                         ]
+                        },
+                        {
+                         "el": "box",
+                         "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                         "card": [
+                          {
+                           "el": "text",
+                           "value": "ยังไม่มีรูปใบหน้า",
+                           "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-amber-600"
+                          },
+                          {
+                           "el": "text",
+                           "value": "แนบรูปหน้าตรง เห็นใบหน้าชัด 1 รูป — ระบบล็อกหน้าให้เป็นคนเดิมทุกช็อต",
+                           "className": "!text-[14px] @[640px]:!text-[13px] !text-amber-600 opacity-80 leading-relaxed"
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ],
+                     "when": "item.slots.face="
+                    },
+                    {
+                     "el": "row",
+                     "className": "gap-4 items-stretch flex-wrap @[420px]:flex-nowrap",
+                     "card": [
+                      {
+                       "el": "box",
+                       "className": "relative w-[140px] shrink-0",
+                       "card": [
+                        {
+                         "el": "media-slot",
+                         "src": "{item.slots.face}",
+                         "aspect": "1:1",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]"
+                        },
+                        {
+                         "el": "button",
+                         "action": "hook",
+                         "fn": "clearSlot",
+                         "to": "face",
+                         "label": "",
+                         "icon": "close",
+                         "variant": "ghost",
+                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                        }
+                       ]
+                      },
+                      {
+                       "el": "row",
+                       "className": "flex-1 min-w-[200px] items-center gap-3.5 bg-green-500/[0.07] border border-green-500/25 rounded-2xl p-3 @[420px]:p-4 !basis-full @[420px]:!basis-auto",
+                       "style": {
+                        "flexWrap": "nowrap"
+                       },
+                       "card": [
+                        {
+                         "el": "box",
+                         "className": "w-[42px] h-[42px] rounded-xl bg-green-500/[0.14] flex items-center justify-center shrink-0",
+                         "card": [
+                          {
+                           "el": "icon",
+                           "icon": "check_circle",
+                           "textSize": "text-[20px]",
+                           "className": "!text-green-600 leading-none flex items-center justify-center"
+                          }
+                         ]
+                        },
+                        {
+                         "el": "box",
+                         "className": "flex-1 min-w-0 flex flex-col gap-0.5",
+                         "card": [
+                          {
+                           "el": "text",
+                           "value": "ได้ตัวละครแล้ว — ล็อกหน้าตามรูปนี้",
+                           "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-green-600"
+                          },
+                          {
+                           "el": "text",
+                           "value": "ระบบแนบรูปนี้ให้ตอนวาดบอร์ดและทำวิดีโอ เป็นคนเดิมทุกช็อต ทุกคลิป ทุกรอบผลิต",
+                           "className": "!text-[14px] @[640px]:!text-[13px] !text-green-600 opacity-80 leading-relaxed"
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ],
+                     "when": "item.slots.face!="
+                    }
+                   ]
+                  }
+                 ],
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                },
+                {
+                 "el": "text",
+                 "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = AI จัดให้)",
+                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+                 }
+                },
+                {
+                 "el": "box",
+                 "className": "grid grid-cols-1 @[720px]:grid-cols-2 gap-3",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-1.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ชื่อเล่นคนในคลิป",
+                     "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                     "icon": "badge"
+                    },
+                    {
+                     "el": "input",
+                     "field": "charName",
+                     "placeholder": "ว่าง = ไม่ระบุ",
+                     "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-1.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ลุค / สไตล์การแต่งตัว",
+                     "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                     "icon": "styler"
+                    },
+                    {
+                     "el": "input",
+                     "field": "charLook",
+                     "placeholder": "เช่น แต่งตัวสบาย ๆ เสื้อยืดโทนเอิร์ธ",
+                     "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-1.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "เพศ",
+                     "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                     "icon": "wc"
+                    },
+                    {
+                     "el": "dropdown",
+                     "field": "charGender",
+                     "placeholder": "ให้ AI เลือก",
+                     "options": [
+                      {
+                       "value": "",
+                       "label": "ให้ AI เลือก",
+                       "icon": "auto_fix_high"
+                      },
+                      {
+                       "value": "หญิง",
+                       "label": "หญิง"
+                      },
+                      {
+                       "value": "ชาย",
+                       "label": "ชาย"
+                      }
+                     ],
+                     "className": "!min-h-[48px] @[420px]:!min-h-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.peopleSrc}",
+                    "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+                   }
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-1.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "ช่วงวัย",
+                     "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60",
+                     "icon": "cake"
+                    },
+                    {
+                     "el": "dropdown",
+                     "field": "charAge",
+                     "placeholder": "ให้ AI เลือก",
+                     "options": [
+                      {
+                       "value": "",
+                       "label": "ให้ AI เลือก",
+                       "icon": "auto_fix_high"
+                      },
+                      {
+                       "value": "วัยรุ่น",
+                       "label": "วัยรุ่น"
+                      },
+                      {
+                       "value": "วัยทำงานตอนต้น",
+                       "label": "วัยทำงานตอนต้น"
+                      },
+                      {
+                       "value": "วัยผู้ใหญ่",
+                       "label": "วัยผู้ใหญ่"
+                      }
+                     ],
+                     "className": "!min-h-[48px] @[420px]:!min-h-0"
+                    }
+                   ],
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.peopleSrc}",
+                    "b": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า"
+                   }
+                  }
+                 ]
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.people}",
+                "b": "คนเดียวเต็มตัว"
+               }
               }
              ],
              "when": "item.hasProduct!=ไม่มี"
@@ -45969,54 +45266,6 @@
    "40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
    "50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
    "60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON"
-  },
-  "lenActHead": {
-   "10": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง): — การนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n",
-   "20": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — องก์ N ของคลิปยาว = ฉาก N ของโครงเรื่อง ใช้กับทุกฉากในองก์นั้น:\n",
-   "30": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — องก์ N ของคลิปยาว = ฉาก N ของโครงเรื่อง ใช้กับทุกฉากในองก์นั้น:\n",
-   "40": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — องก์ N ของคลิปยาว = ฉาก N ของโครงเรื่อง ใช้กับทุกฉากในองก์นั้น:\n",
-   "50": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — องก์ N ของคลิปยาว = ฉาก N ของโครงเรื่อง ใช้กับทุกฉากในองก์นั้น:\n",
-   "60": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — องก์ N ของคลิปยาว = ฉาก N ของโครงเรื่อง ใช้กับทุกฉากในองก์นั้น:\n"
-  },
-  "lenActTail": {
-   "10": "",
-   "20": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\nการนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n",
-   "30": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\nการนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n",
-   "40": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\nการนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n",
-   "50": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\nการนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n",
-   "60": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\nการนำเสนอที่ผู้ใช้ล็อกต้องเห็นชัดในองก์นั้น — \"ทดสอบให้ดู\" = ต้องมีการทดสอบจริงให้เห็นผล (ดึง กด จุด เขย่า เท หยดน้ำ ลองใช้แรง) ไม่ใช่แค่ทำงานตามปกติ · \"โชว์ผลลัพธ์\" = เห็นผลสำเร็จเต็มเฟรม · \"ภาพกว้างเห็นทั้งพื้นที่\" = เห็นทั้งพื้นที่จริง\n"
-  },
-  "lenAct": {
-   "10|1": "ฉาก 1",
-   "20|1": "องก์ 1 (ฉาก 1-2)",
-   "30|1": "องก์ 1 (ฉาก 1-3)",
-   "10|2": "ฉาก 2",
-   "20|2": "องก์ 2 (ฉาก 3-4)",
-   "30|2": "องก์ 2 (ฉาก 4-6)",
-   "10|3": "ฉาก 3",
-   "20|3": "องก์ 3 (ฉาก 5-6)",
-   "30|3": "องก์ 3 (ฉาก 7-9)",
-   "10|4": "ฉาก 4",
-   "20|4": "องก์ 4 (ฉาก 7-8)",
-   "30|4": "องก์ 4 (ฉาก 10-12)",
-   "10|5": "ฉาก 5",
-   "20|5": "องก์ 5 (ฉาก 9-10)",
-   "30|5": "องก์ 5 (ฉาก 13-15)",
-   "40|1": "องก์ 1 (ฉาก 1-4)",
-   "40|2": "องก์ 2 (ฉาก 5-8)",
-   "40|3": "องก์ 3 (ฉาก 9-12)",
-   "40|4": "องก์ 4 (ฉาก 13-16)",
-   "40|5": "องก์ 5 (ฉาก 17-20)",
-   "50|1": "องก์ 1 (ฉาก 1-5)",
-   "50|2": "องก์ 2 (ฉาก 6-10)",
-   "50|3": "องก์ 3 (ฉาก 11-15)",
-   "50|4": "องก์ 4 (ฉาก 16-20)",
-   "50|5": "องก์ 5 (ฉาก 21-25)",
-   "60|1": "องก์ 1 (ฉาก 1-6)",
-   "60|2": "องก์ 2 (ฉาก 7-12)",
-   "60|3": "องก์ 3 (ฉาก 13-18)",
-   "60|4": "องก์ 4 (ฉาก 19-24)",
-   "60|5": "องก์ 5 (ฉาก 25-30)"
   },
   "lenLabel": {
    "10": "10 วินาที",
