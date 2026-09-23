@@ -262,3 +262,25 @@ print(f'⑥ ย้ายช่องบอกใบ้ตัวละคร {HIN
 
 json.dump(c, open(P, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(f'เขียนซ้ำ {P} ({len(json.dumps(c, ensure_ascii=False)):,} ตัวอักษร)')
+
+# ── ⑦ ลบการ์ด "มุมกล้อง & การนำเสนอ (ขั้นสูง)" ที่เหลือแต่หัวข้อ ─────────────────
+#    (พี่หมีเห็นของจริงแล้วทัก: ข้างในไม่มีอะไรให้ตั้งค่าแล้ว แต่การ์ดยังอยู่)
+setup = c['phases'][0]['form'][0]
+target = None
+for node, parent, key in list(walk(setup)):
+    if not (isinstance(node, dict) and isinstance(parent, list)):
+        continue
+    t = json.dumps(node, ensure_ascii=False)
+    if 'มุมกล้อง & การนำเสนอ' in t and '"field"' not in t:
+        target = (parent, key); break
+assert target, 'หาการ์ด "มุมกล้อง & การนำเสนอ" ที่ว่างเปล่าไม่เจอ'
+parent, key = target
+gone = parent.pop(key)
+assert '"field"' not in json.dumps(gone, ensure_ascii=False), 'การ์ดที่ลบต้องไม่มีช่องให้กรอกเหลืออยู่'
+print('⑦ ลบการ์ด "มุมกล้อง & การนำเสนอ (ขั้นสูง)" ที่เหลือแต่หัวข้อออกจากหน้าตั้งค่า')
+
+s = json.dumps(c, ensure_ascii=False)
+assert 'มุมกล้อง & การนำเสนอ' not in s, 'ยังเหลือหัวข้อการ์ดเดิม'
+assert 'มุมกล้องหลักของคลิป' not in s, 'ยังเหลือป้ายเดิมในหน้าตั้งค่า'
+json.dump(c, open(P, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+print(f'เขียนซ้ำ {P} ({len(s):,} ตัวอักษร)')
