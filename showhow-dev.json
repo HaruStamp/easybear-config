@@ -121,7 +121,8 @@
     "charLook",
     "charGender",
     "charAge",
-    "castKind"
+    "castKind",
+    "sceneMode"
    ],
    "slots": [
     "image",
@@ -137,9 +138,10 @@
    "idPrefix": "pd",
    "addDefaults": {
     "people": "เห็นแต่มือ ไม่เห็นหน้า",
-    "peopleSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+    "peopleSrc": "",
     "camMode": "",
-    "castKind": ""
+    "castKind": "",
+    "sceneMode": ""
    }
   },
   "tasks": {
@@ -313,7 +315,8 @@
     "charLook",
     "charGender",
     "charAge",
-    "castKind"
+    "castKind",
+    "sceneMode"
    ],
    "slots": [
     "board",
@@ -676,10 +679,6 @@
           }
          },
          {
-          "when": "item.slots.room1!=",
-          "value": "มีรูปพื้นที่จริงแนบมา (รูปท้าย ๆ) — ทุกฉากต้องเป็นพื้นที่นี้ ยึดผนัง พื้น ของที่มีอยู่ ทิศแสงตามรูป · ฉาก 1 = สภาพตามรูปนี้\n"
-         },
-         {
           "when": {
            "op": "and",
            "list": [
@@ -687,31 +686,18 @@
              "op": "not",
              "a": {
               "op": "eq",
-              "a": "{item.slots.openRef}",
+              "a": "{item.slots.room1}",
               "b": ""
              }
             },
             {
-             "op": "not",
-             "a": {
-              "op": "or",
-              "list": [
-               {
-                "op": "eq",
-                "a": "{item.arc}",
-                "b": ""
-               },
-               {
-                "op": "eq",
-                "a": "{item.arc}",
-                "b": "ทัวร์จุดเด่น"
-               }
-              ]
-             }
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
             }
            ]
           },
-          "value": "มีภาพอ้างอิงฉากเปิดแนบมา (อยู่ท้ายรูปทั้งหมด ก่อนภาพจบถ้ามี) — ฉาก 1 จัดมุมกล้อง การจัดวาง และสภาพให้ใกล้ภาพนี้ แล้วบรรยายใน s1th/s1en ให้เห็นภาพชัด · สถานที่ยังเป็นพื้นที่ตามรูปพื้นที่ (ถ้ามี) ไม่ใช่ห้องในภาพนี้\n"
+          "value": "มีรูปพื้นที่จริงแนบมา (รูปท้าย ๆ) — ทุกฉากต้องเป็นพื้นที่นี้ ยึดผนัง พื้น ของที่มีอยู่ ทิศแสงตามรูป · ฉาก 1 = สภาพตามรูปนี้\n"
          },
          {
           "when": {
@@ -979,31 +965,25 @@
     "{item.slots.image3}",
     "{item.slots.image4}",
     "{item.slots.image5}",
-    "{item.slots.room1}",
-    "{item.slots.room2}",
-    "{characters[ch1].slots.face}",
     {
      "op": "cond",
      "when": {
-      "op": "not",
-      "a": {
-       "op": "or",
-       "list": [
-        {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": ""
-        },
-        {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ทัวร์จุดเด่น"
-        }
-       ]
-      }
+      "op": "eq",
+      "a": "{item.sceneMode}",
+      "b": "custom"
      },
-     "then": "{item.slots.openRef}"
+     "then": "{item.slots.room1}"
     },
+    {
+     "op": "cond",
+     "when": {
+      "op": "eq",
+      "a": "{item.sceneMode}",
+      "b": "custom"
+     },
+     "then": "{item.slots.room2}"
+    },
+    "{characters[ch1].slots.face}",
     {
      "op": "cond",
      "when": {
@@ -6333,7 +6313,8 @@
      "charLook": "{parent.fields.charLook}",
      "charGender": "{parent.fields.charGender}",
      "charAge": "{parent.fields.charAge}",
-     "castKind": "{parent.fields.castKind}"
+     "castKind": "{parent.fields.castKind}",
+     "sceneMode": "{parent.fields.sceneMode}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -6514,10 +6495,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -6945,12 +6936,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -7182,10 +7183,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -7613,12 +7624,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -7850,10 +7871,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -8281,12 +8312,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -8518,10 +8559,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -8949,12 +9000,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -9186,10 +9247,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -9617,12 +9688,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -9848,44 +9929,6 @@
       "parts": [
        {
         "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "openRef"
-          },
-          {
-           "op": "not",
-           "a": {
-            "op": "or",
-            "list": [
-             {
-              "op": "eq",
-              "a": "{item.arc}",
-              "b": ""
-             },
-             {
-              "op": "eq",
-              "a": "{item.arc}",
-              "b": "ทัวร์จุดเด่น"
-             }
-            ]
-           }
-          }
-         ]
-        },
-        "value": "\nช่องฉาก 1 = มุม การจัดวาง และสภาพตามภาพอ้างอิงฉากเปิดที่แนบ แต่ห้องยังเป็นห้องเดิม"
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
          "op": "refsFilled",
          "key": "prod",
          "from": "products",
@@ -9901,10 +9944,20 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "room1"
+          },
+          {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          }
+         ]
         },
         "value": "\nสถานที่ = ห้องตามรูปที่แนบ (ผนัง พื้น เฟอร์นิเจอร์ หน้าต่าง ทิศแสง) เปลี่ยนได้เฉพาะผลของงาน · ช่องแรก = สภาพตามรูป"
        }
@@ -10330,12 +10383,22 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -10352,29 +10415,6 @@
         "op": "eq",
         "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-       }
-      }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "openRef",
-      "when": {
-       "op": "not",
-       "a": {
-        "op": "or",
-        "list": [
-         {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": ""
-         },
-         {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ทัวร์จุดเด่น"
-         }
-        ]
        }
       }
      },
@@ -10447,10 +10487,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -11943,7 +11993,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -11971,7 +12026,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -12036,10 +12096,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -13532,7 +13602,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -13560,7 +13635,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -13625,10 +13705,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -15121,7 +15211,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -15149,7 +15244,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -15214,10 +15314,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -16711,7 +16821,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -16739,7 +16854,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -16804,10 +16924,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -18300,7 +18430,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -18328,7 +18463,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -18392,10 +18532,20 @@
          },
          {
           "when": {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "room1"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "room1"
+            },
+            {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "custom"
+            }
+           ]
           },
           "value": "LOCATION LOCK: the attached room photo is the real location — same walls, floor, furniture, window and light in every scene; only the work changes it; scene 1 = as photographed. "
          }
@@ -19879,7 +20029,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room1"
+      "slot": "room1",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "characters",
@@ -19907,7 +20062,12 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "room2"
+      "slot": "room2",
+      "when": {
+       "op": "eq",
+       "a": "{item.sceneMode}",
+       "b": "custom"
+      }
      },
      {
       "from": "products",
@@ -20336,43 +20496,52 @@
              "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
             },
             {
-             "el": "segmented",
+             "el": "grid-select",
              "field": "svTone",
-             "labelClass": "!text-[18px] @[640px]:!text-[17px]",
+             "cols": 3,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
              "options": [
               {
                "value": "",
                "label": "อัตโนมัติ",
-               "icon": "auto_fix_high"
+               "desc": "หมีเลือกให้เข้ากับงาน",
+               "icon": "auto_awesome"
               },
               {
                "value": "แสงธรรมชาติกลางวัน",
                "label": "แสงธรรมชาติกลางวัน",
-               "color": "#cfe3f5"
+               "desc": "แดดกลางวันเข้าหน้าต่าง",
+               "icon": "wb_sunny"
               },
               {
                "value": "แสงเช้านุ่ม",
                "label": "แสงเช้านุ่ม",
-               "color": "#f6e6c3"
+               "desc": "นุ่ม ๆ ตอนเช้า",
+               "icon": "wb_twilight"
               },
               {
                "value": "แสงอุ่นตอนเย็น",
                "label": "แสงอุ่นตอนเย็น",
-               "color": "#f3b98a"
+               "desc": "โกลเด้นอาวร์",
+               "icon": "light_mode"
               },
               {
                "value": "ไฟบ้านโทนอุ่น",
                "label": "ไฟบ้านโทนอุ่น",
-               "color": "#f2c46e"
+               "desc": "โคมไฟ cozy",
+               "icon": "lightbulb"
               },
               {
                "value": "สว่างสะอาด",
                "label": "สว่างสะอาด",
-               "color": "#f4f4f4"
+               "desc": "สว่างเรียบ ๆ",
+               "icon": "brightness_7"
               }
-             ],
-             "selClass": "!bg-[var(--ev-accent)] !text-white !border-transparent",
-             "className": "!min-h-[48px] @[420px]:!min-h-0 [&>div:last-child]:!grid [&>div:last-child]:!grid-cols-2 @[420px]:[&>div:last-child]:!flex"
+             ]
             },
             {
              "el": "text",
@@ -20400,7 +20569,7 @@
               },
               {
                "el": "text",
-               "value": "เห็นคนแค่ไหน",
+               "value": "ผู้แสดงเห็นแค่ไหน",
                "className": "!text-[17px] @[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
               }
              ]
@@ -23944,235 +24113,6 @@
           },
           {
            "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3.5",
-           "card": [
-            {
-             "el": "row",
-             "className": "items-center gap-3.5 mb-2 flex-wrap @[420px]:flex-nowrap",
-             "card": [
-              {
-               "el": "box",
-               "className": "w-[46px] h-[46px] rounded-2xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "home",
-                 "textSize": "text-[22px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex-1 min-w-0 flex flex-col gap-0.5 !basis-full @[420px]:!basis-auto",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "ฉาก",
-                 "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)] leading-tight"
-                },
-                {
-                 "el": "text",
-                 "value": "รูปสถานที่จริงที่จะถ่าย 1-2 รูป — มี = ทุกฉากอยู่ที่นี่ · ไม่มี = หมีแต่งฉากให้",
-                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[color-mix(in_srgb,var(--ev-accent)_10%,transparent)] self-center w-full @[420px]:w-auto",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "thumb_up",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                },
-                {
-                 "el": "text",
-                 "value": "แนะนำมาก",
-                 "className": "!text-[13px] @[640px]:!text-[12px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-row flex-wrap gap-3 items-stretch",
-             "card": [
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.room1}",
-                 "b": ""
-                }
-               },
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.room1}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "room1",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "when": {
-                "op": "eq",
-                "a": "{item.slots.room1}",
-                "b": ""
-               },
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "room1",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "room1",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.slots.room2}",
-                 "b": ""
-                }
-               },
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.room2}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "16px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "room2",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "when": {
-                "op": "and",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.slots.room2}",
-                  "b": ""
-                 },
-                 {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.room1}",
-                   "b": ""
-                  }
-                 }
-                ]
-               },
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "room2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "room2",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1 mt-1",
-             "card": [
-              {
-               "el": "text",
-               "value": "หรือบรรยายฉากด้วยคำ (ไม่บังคับ)",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
-              },
-              {
-               "el": "textarea",
-               "field": "room",
-               "placeholder": "เช่น ห้องน้ำเล็ก กระเบื้องขาว มีคราบเหลืองตรงมุม · ครัวเคาน์เตอร์ไม้ แสงเข้าทางซ้าย",
-               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
            "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
            "card": [
             {
@@ -24383,7 +24323,7 @@
               },
               {
                "el": "text",
-               "value": "เห็นคนแค่ไหน",
+               "value": "ผู้แสดงเห็นแค่ไหน",
                "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
               },
               {
@@ -24401,25 +24341,25 @@
                 },
                 {
                  "value": "เห็นแต่มือ ไม่เห็นหน้า",
-                 "label": "เห็นแต่มือ",
-                 "desc": "ไม่เห็นหน้า",
+                 "label": "เห็นแค่มือ",
+                 "desc": "มือหรืออุ้งเท้า · ไม่เห็นหน้า",
                  "icon": "back_hand"
                 },
                 {
                  "value": "คนเดียวเต็มตัว",
-                 "label": "คนเดียวเต็มตัว",
-                 "desc": "ผู้ลงมือทำ",
+                 "label": "เห็นเต็มตัว",
+                 "desc": "ผู้แสดง 1 คนหรือ 1 ตัว",
                  "icon": "person"
                 },
                 {
                  "value": "ทีมช่างเบลอเคลื่อนไหวเร็ว",
                  "label": "ทีมงาน",
-                 "desc": "หลายคน ตามงาน เช่น เชฟ แม่บ้าน คนสวน",
+                 "desc": "หลายคน/หลายตัว ตามงาน เช่น เชฟ แม่บ้าน",
                  "icon": "groups"
                 },
                 {
                  "value": "ไม่มีคน",
-                 "label": "ไม่มีคน",
+                 "label": "ไม่มีผู้แสดง",
                  "desc": "เห็นแต่พื้นที่และของ",
                  "icon": "no_accounts"
                 }
@@ -24541,7 +24481,7 @@
               },
               {
                "el": "text",
-               "value": "⚠️ สอนทำตามต้องมีมือลงมือทุกฉาก — \"ไม่มีคน\" จะขัดกับโครงเรื่อง",
+               "value": "⚠️ สอนทำตามต้องมีมือลงมือทุกฉาก — \"ไม่มีผู้แสดง\" จะขัดกับโครงเรื่อง",
                "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#a16207] dark:!text-[#fbbf24]",
                "when": {
                 "op": "and",
@@ -24578,15 +24518,15 @@
                  "contained": true,
                  "options": [
                   {
-                   "value": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+                   "value": "",
                    "label": "สุ่มตัวละคร",
-                   "desc": "AI สร้างคนลงมือที่เหมาะกับงานให้",
+                   "desc": "หมีสร้างผู้แสดงให้เหมาะกับงาน",
                    "icon": "shuffle"
                   },
                   {
                    "value": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
                    "label": "ใช้รูปตัวละคร",
-                   "desc": "ล็อกหน้าจากรูปที่แนบ — คนเดิมทุกช็อต",
+                   "desc": "ล็อกหน้าจากรูปที่แนบ — ตัวเดิมทุกช็อต",
                    "icon": "face"
                   }
                  ],
@@ -24899,132 +24839,224 @@
              "card": [
               {
                "el": "text",
-               "value": "ตอนนี้สภาพเป็นยังไง (ไม่บังคับ)",
+               "value": "ฉาก",
                "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
-               "el": "textarea",
-               "field": "before",
-               "placeholder": "เช่น ของวางกองเต็มเคาน์เตอร์ หาอะไรไม่เจอ",
-               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+               "el": "grid-select",
+               "field": "sceneMode",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีคิดสถานที่ให้",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "custom",
+                 "label": "กำหนดเอง ⭐แนะนำ",
+                 "desc": "ใส่รูปสถานที่ของคุณ",
+                 "icon": "add_photo_alternate"
+                }
+               ]
               },
               {
                "el": "box",
                "when": {
                 "op": "not",
                 "a": {
-                 "op": "or",
-                 "list": [
-                  {
-                   "op": "eq",
-                   "a": "{item.arc}",
-                   "b": ""
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.arc}",
-                   "b": "ทัวร์จุดเด่น"
-                  }
-                 ]
+                 "op": "eq",
+                 "a": "{item.sceneMode}",
+                 "b": "custom"
                 }
                },
-               "className": "flex flex-row items-start gap-3 mt-1",
+               "className": "flex flex-col gap-1.5 mt-1",
                "card": [
                 {
-                 "el": "box",
-                 "className": "relative w-[124px] shrink-0",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.openRef}",
-                   "b": ""
-                  }
-                 },
-                 "card": [
-                  {
-                   "el": "media-slot",
-                   "src": "{item.slots.openRef}",
-                   "aspect": "1:1",
-                   "style": {
-                    "borderRadius": "16px"
-                   },
-                   "className": "ring-1 ring-[var(--ev-border)]"
-                  },
-                  {
-                   "el": "button",
-                   "action": "hook",
-                   "fn": "clearSlot",
-                   "to": "openRef",
-                   "label": "",
-                   "icon": "close",
-                   "variant": "ghost",
-                   "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                  }
-                 ]
+                 "el": "textarea",
+                 "field": "room",
+                 "placeholder": "อยากได้ที่แบบไหน (ไม่บังคับ) เช่น ครัวโทนอุ่น เคาน์เตอร์ไม้",
+                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "when": {
+                "op": "eq",
+                "a": "{item.sceneMode}",
+                "b": "custom"
+               },
+               "className": "flex flex-col gap-2 mt-1",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "รูปสถานที่ 1-2 รูป · ใช้เป็นฉากเริ่ม และห้องจะไม่เปลี่ยนระหว่างคลิป",
+                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 px-0.5"
                 },
                 {
                  "el": "box",
-                 "when": {
-                  "op": "eq",
-                  "a": "{item.slots.openRef}",
-                  "b": ""
-                 },
-                 "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                 "className": "flex flex-row flex-wrap gap-3 items-stretch",
                  "card": [
                   {
-                   "el": "upload",
-                   "label": "",
-                   "placeholder": "อัพโหลด",
-                   "icon": "upload",
-                   "into": "openRef",
-                   "resize": {
-                    "maxPx": 768,
-                    "quality": 0.8
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.room1}",
+                     "b": ""
+                    }
                    },
-                   "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                  },
-                  {
-                   "el": "pick-button",
-                   "label": "เลือกภาพ",
-                   "icon": "photo_library",
-                   "filter": "image",
-                   "into": "openRef",
-                   "resize": {
-                    "maxPx": 768,
-                    "quality": 0.8
-                   },
-                   "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1 min-w-0 pt-1",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "!gap-1.5 !flex-nowrap items-center",
                    "card": [
                     {
-                     "el": "icon",
-                     "icon": "add_photo_alternate",
-                     "textSize": "text-[18px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                     "el": "media-slot",
+                     "src": "{item.slots.room1}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
                     },
                     {
-                     "el": "text",
-                     "value": "หรือใส่รูปตอนเริ่ม",
-                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "room1",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
                     }
                    ]
                   },
                   {
-                   "el": "text",
-                   "value": "ไม่บังคับ · หมีจะเปิดคลิปให้ใกล้ภาพนี้",
-                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 leading-snug"
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.room1}",
+                    "b": ""
+                   },
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "room1",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "room1",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[calc((100%-1.5rem)/3)] @[560px]:w-[150px] shrink-0",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.room2}",
+                     "b": ""
+                    }
+                   },
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.room2}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "room2",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "eq",
+                      "a": "{item.slots.room2}",
+                      "b": ""
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.room1}",
+                       "b": ""
+                      }
+                     }
+                    ]
+                   },
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "room2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "room2",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
                   }
                  ]
+                },
+                {
+                 "el": "textarea",
+                 "field": "room",
+                 "placeholder": "เล่าเพิ่ม (ไม่บังคับ) เช่น คราบเหลืองตรงมุม แสงเข้าทางซ้าย",
+                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
                 }
                ]
               }
@@ -25036,13 +25068,13 @@
              "card": [
               {
                "el": "text",
-               "value": "อยากให้จบแบบไหน (ไม่บังคับ)",
+               "value": "ฉากตอนจบ (ไม่บังคับ)",
                "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "textarea",
                "field": "goal",
-               "placeholder": "เช่น เคาน์เตอร์โล่ง ของเข้าที่ หยิบใช้ง่าย",
+               "placeholder": "ทำเสร็จอยากได้แบบไหน เช่น เคาน์เตอร์โล่ง ของเข้าที่ หยิบใช้ง่าย",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               },
               {
@@ -25151,7 +25183,7 @@
                     },
                     {
                      "el": "text",
-                     "value": "หรือใส่รูปตัวอย่างตอนจบ",
+                     "value": "หรือใส่รูปตัวอย่าง",
                      "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
                     }
                    ]
@@ -25165,7 +25197,15 @@
                 }
                ]
               }
-             ]
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ทัวร์จุดเด่น"
+              }
+             }
             },
             {
              "el": "box",
@@ -25173,18 +25213,18 @@
              "card": [
               {
                "el": "text",
-               "value": "ไอเดีย / มุกปิดท้าย (ไม่บังคับ)",
+               "value": "ลูกเล่นตอนท้าย (ไม่บังคับ)",
                "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
               {
                "el": "text",
-               "value": "อยากให้มีอะไรพิเศษ หรือจบด้วย \"การใช้งานแถม\" — เช่น ติดราวเสร็จแล้วเอาผ้ามาตาก",
+               "value": "อยากให้มีอะไรพิเศษหลังงานเสร็จ",
                "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
               },
               {
                "el": "textarea",
                "field": "idea",
-               "placeholder": "เช่น จบด้วยเปิดไฟดูตอนกลางคืน · ให้แมวเดินผ่านตอนท้าย",
+               "placeholder": "เช่น ลองใช้จริง · เปิดไฟดูตอนกลางคืน · แมวเดินมาเล่น",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               }
              ]
@@ -25345,9 +25385,9 @@
                "options": [
                 {
                  "value": "",
-                 "label": "ตามค่ารวม",
-                 "desc": "ใช้แสงจากหน้าตั้งค่า",
-                 "icon": "settings_suggest"
+                 "label": "อัตโนมัติ",
+                 "desc": "ตามหน้าตั้งค่า / หมีเลือกให้",
+                 "icon": "auto_awesome"
                 },
                 {
                  "value": "แสงธรรมชาติกลางวัน",
@@ -25383,7 +25423,7 @@
               },
               {
                "el": "text",
-               "value": "สินค้าที่เป็นไฟ/โคม ปล่อย \"ตามค่ารวม\" — ฉากผลลัพธ์จะใช้แสงจากสินค้าเอง",
+               "value": "สินค้าที่เป็นไฟ/โคม ปล่อย \"อัตโนมัติ\" — ฉากผลลัพธ์จะใช้แสงจากสินค้าเอง",
                "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 pt-1"
               }
              ]
@@ -47798,7 +47838,12 @@
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) 🔴 **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) 🔴 **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
-   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง"
+   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
+   "เห็นแต่มือ ไม่เห็นหน้า|": "กฎคนในคลิป: เห็นแต่มือและแขนของผู้ลงมือ ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือต้องกำลังทำงานจริงทุกฉากที่มีมือ (ฉากก่อน/ผลลัพธ์ไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ",
+   "คนเดียวเต็มตัว|": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
+   "ไม่มีคน|": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) 🔴 **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
+   "|": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง"
   },
   "charBoard": {
    "เห็นแต่มือ ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "เห็นแต่มือ/แขนของคนทำงานที่กำลังลงมือ ห้ามมีใบหน้าหรือตัวคนเต็มตัวในทุกช่อง",
@@ -47810,7 +47855,12 @@
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ห้ามมีคนหรือมือในทุกช่อง — พื้นที่เปลี่ยนไปเองทีละช่องแบบไทม์แลปส์",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ห้ามมีคนหรือมือในทุกช่อง — พื้นที่เปลี่ยนไปเองทีละช่องแบบไทม์แลปส์",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า",
-   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า"
+   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า",
+   "เห็นแต่มือ ไม่เห็นหน้า|": "เห็นแต่มือ/แขนของคนทำงานที่กำลังลงมือ ห้ามมีใบหน้าหรือตัวคนเต็มตัวในทุกช่อง",
+   "คนเดียวเต็มตัว|": "มีคนลงมือทำ 1 คน (ไทย) คนเดิมทุกช่อง กำลังทำงาน ไม่มองกล้อง ไม่โพสท่า งานและพื้นที่เด่นกว่าคน",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|": "ทีมงานหลายคนตามงาน (เชฟ แม่บ้าน คนสวน ช่าง) ชุดเข้ากับงาน ไม่มองกล้อง · ไทม์แลปส์ = เงาเบลอเคลื่อนไหว",
+   "ไม่มีคน|": "ห้ามมีคนหรือมือในทุกช่อง — พื้นที่เปลี่ยนไปเองทีละช่องแบบไทม์แลปส์",
+   "|": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า"
   },
   "charVideoEN": {
    "เห็นแต่มือ ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "only the worker's hands and forearms are visible, actively working; never a face or a full body; natural hands with the correct number of fingers.",
@@ -47822,7 +47872,12 @@
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "no people and no hands at all; the space and objects transform step by step on their own, time-lapse style.",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "no people and no hands at all; the space and objects transform step by step on their own, time-lapse style.",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "people: match the job — keep it identical across every shot; never look at camera, never pose",
-   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "people: match the job — keep it identical across every shot; never look at camera, never pose"
+   "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "people: match the job — keep it identical across every shot; never look at camera, never pose",
+   "เห็นแต่มือ ไม่เห็นหน้า|": "only the worker's hands and forearms are visible, actively working; never a face or a full body; natural hands with the correct number of fingers.",
+   "คนเดียวเต็มตัว|": "one Thai worker, the same person in every scene, absorbed in the task; never looks at, poses for or smiles at the camera; face consistent and natural; the work stays the focus.",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|": "a small team whose roles fit the job (chefs, housekeepers, gardeners, builders) in matching work clothes, never posing; in a time-lapse they blur as fast-moving figures.",
+   "ไม่มีคน|": "no people and no hands at all; the space and objects transform step by step on their own, time-lapse style.",
+   "|": "people: match the job — keep it identical across every shot; never look at camera, never pose"
   },
   "voicePlan": {
    "เสียงผู้หญิง": "เสียงพากย์ของคลิปนี้เป็น \"ผู้หญิง\" — ถ้ามีคำลงท้าย vo1-vo5 ต้องใช้คำลงท้าย ค่ะ/คะ เท่านั้น ห้ามใช้ ครับ/ครับผม เด็ดขาด (แต่ไม่ต้องใส่ทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ) · สรรพนามแทนผู้พูดใช้ \"เรา\" หรือไม่ต้องมีสรรพนาม ห้ามใช้ \"ผม\" · ห้ามผสมคำลงท้ายสองเพศในคลิปเดียวกัน · ถ้าโหมดมีคนในคลิปและผู้ใช้ไม่ได้ระบุเพศ ให้คนในคลิปเป็นผู้หญิงเพื่อให้ตรงกับเสียง · ใส่ค่า \"หญิง\" ในฟิลด์ voice ของทุกคลิป",
