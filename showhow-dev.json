@@ -120,7 +120,8 @@
     "charName",
     "charLook",
     "charGender",
-    "charAge"
+    "charAge",
+    "castKind"
    ],
    "slots": [
     "image",
@@ -135,7 +136,8 @@
    "addDefaults": {
     "people": "เห็นแต่มือ ไม่เห็นหน้า",
     "peopleSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-    "camMode": ""
+    "camMode": "",
+    "castKind": "auto"
    }
   },
   "tasks": {
@@ -308,7 +310,8 @@
     "charName",
     "charLook",
     "charGender",
-    "charAge"
+    "charAge",
+    "castKind"
    ],
    "slots": [
     "board",
@@ -795,7 +798,7 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svChar=คนเดียวเต็มตัว",
+        "when": "item.people=คนเดียวเต็มตัว",
         "value": "ข้อมูลคนในคลิปจากผู้ใช้ (ค่าว่าง = AI เลือกให้): ชื่อเล่น {item.charName} · เพศ {item.charGender} · ช่วงวัย {item.charAge} · ลุค/สไตล์ {item.charLook}"
        }
       ]
@@ -885,6 +888,18 @@
         "fallback": ""
        }
       ]
+     },
+     {
+      "op": "lookup",
+      "table": "castPlan",
+      "key": "{item.castKind}",
+      "fallback": ""
+     },
+     {
+      "op": "lookup",
+      "table": "castOverrideTH",
+      "key": "{item.castKind}",
+      "fallback": ""
      }
     ]
    },
@@ -6203,7 +6218,8 @@
      "charName": "{parent.fields.charName}",
      "charLook": "{parent.fields.charLook}",
      "charGender": "{parent.fields.charGender}",
-     "charAge": "{parent.fields.charAge}"
+     "charAge": "{parent.fields.charAge}",
+     "castKind": "{parent.fields.castKind}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -6274,29 +6290,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -6307,26 +6357,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -6335,10 +6387,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -6680,29 +6801,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -6713,26 +6868,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -6741,10 +6898,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -7086,29 +7312,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -7119,26 +7379,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -7147,10 +7409,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -7492,29 +7823,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -7525,26 +7890,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -7553,10 +7920,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -7898,29 +8334,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -7931,26 +8401,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -7959,10 +8431,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -8308,29 +8849,63 @@
         "when": {
          "op": "not",
          "a": {
-          "op": "eq",
-          "a": "{item.arc}",
-          "b": "ไทม์แลปส์กล้องนิ่ง"
+          "op": "not",
+          "a": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
+          }
          }
         },
         "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "{item.people}|{item.peopleSrc}",
-         "fallback": ""
-        }
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ไทม์แลปส์กล้องนิ่ง"
-        },
-        "value": {
-         "op": "lookup",
-         "table": "charBoard",
-         "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
-         "fallback": ""
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.arc}",
+             "b": "ไทม์แลปส์กล้องนิ่ง"
+            }
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "{item.people}|{item.peopleSrc}",
+            "fallback": ""
+           }
+          },
+          {
+           "when": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           },
+           "value": {
+            "op": "lookup",
+            "table": "charBoard",
+            "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+            "fallback": ""
+           }
+          }
+         ]
         }
        }
       ]
@@ -8341,26 +8916,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -8369,10 +8946,79 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\n{item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\n{item.look}"
+             }
+            ]
+           }
           }
          ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "auto"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": "human"
+           },
+           {
+            "op": "eq",
+            "a": "{item.castKind}",
+            "b": ""
+           }
+          ]
+         }
+        },
+        "value": {
+         "op": "lookup",
+         "table": "castBoard",
+         "key": "{item.castKind}",
+         "fallback": ""
         }
        }
       ]
@@ -8744,28 +9390,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -8779,26 +9496,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -8807,8 +9526,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -10038,7 +10789,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -10221,28 +10978,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -10256,26 +11084,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -10284,8 +11114,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -11515,7 +12377,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -11698,28 +12566,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -11733,26 +12672,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -11761,8 +12702,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -12992,7 +13965,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -13175,28 +14154,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -13210,26 +14260,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -13238,8 +14290,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -14469,7 +15553,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -14653,28 +15743,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -14688,26 +15849,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -14716,8 +15879,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -15947,7 +17142,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -16129,28 +17330,99 @@
           "when": {
            "op": "not",
            "a": {
-            "op": "eq",
-            "a": "{item.arc}",
-            "b": "ไทม์แลปส์กล้องนิ่ง"
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "auto"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": "human"
+              },
+              {
+               "op": "eq",
+               "a": "{item.castKind}",
+               "b": ""
+              }
+             ]
+            }
+           }
+          },
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.arc}",
+               "b": "ไทม์แลปส์กล้องนิ่ง"
+              }
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "{item.people}|{item.peopleSrc}",
+              "fallback": ""
+             }
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             },
+             "value": {
+              "op": "lookup",
+              "table": "charVideoEN",
+              "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+              "fallback": ""
+             }
+            }
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "auto"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": "human"
+             },
+             {
+              "op": "eq",
+              "a": "{item.castKind}",
+              "b": ""
+             }
+            ]
            }
           },
           "value": {
            "op": "lookup",
-           "table": "charVideoEN",
-           "key": "{item.people}|{item.peopleSrc}",
-           "fallback": ""
-          }
-         },
-         {
-          "when": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
-          },
-          "value": {
-           "op": "lookup",
-           "table": "charVideoEN",
-           "key": "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
+           "table": "castVideoEN",
+           "key": "{item.castKind}",
            "fallback": ""
           }
          }
@@ -16164,26 +17436,28 @@
       "parts": [
        {
         "when": {
-         "op": "and",
+         "op": "not",
          "a": {
-          "op": "and",
-          "a": {
-           "op": "eq",
-           "a": "{item.people}",
-           "b": "คนเดียวเต็มตัว"
-          },
-          "b": {
-           "op": "eq",
-           "a": "{item.peopleSrc}",
-           "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
-          }
-         },
-         "b": {
           "op": "not",
           "a": {
-           "op": "eq",
-           "a": "{item.arc}",
-           "b": "ไทม์แลปส์กล้องนิ่ง"
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "auto"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": "human"
+            },
+            {
+             "op": "eq",
+             "a": "{item.castKind}",
+             "b": ""
+            }
+           ]
           }
          }
         },
@@ -16192,8 +17466,40 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.look!=",
-           "value": "\nPERSON: {item.look}"
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "and",
+             "a": {
+              "op": "eq",
+              "a": "{item.people}",
+              "b": "คนเดียวเต็มตัว"
+             },
+             "b": {
+              "op": "eq",
+              "a": "{item.peopleSrc}",
+              "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+             }
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ไทม์แลปส์กล้องนิ่ง"
+             }
+            }
+           },
+           "value": {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "item.look!=",
+              "value": "\nPERSON: {item.look}"
+             }
+            ]
+           }
           }
          ]
         }
@@ -17419,7 +18725,13 @@
        }
       ]
      },
-     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text."
+     "\n\nNegative: no storyboard sheet, no tripod or camera gear in frame, no extra fingers, no non-Thai text.",
+     {
+      "op": "lookup",
+      "table": "castNegEN",
+      "key": "{item.castKind}",
+      "fallback": ""
+     }
     ]
    },
    "refs": {
@@ -21926,6 +23238,66 @@
                  "label": "ไม่มีคน",
                  "desc": "เห็นแต่พื้นที่และของ",
                  "icon": "no_accounts"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ผู้แสดงเป็นอะไร",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "ไม่มีคน"
+                }
+               },
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
+              },
+              {
+               "el": "grid-select",
+               "field": "castKind",
+               "cols": 2,
+               "contained": true,
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "ไม่มีคน"
+                }
+               },
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "auto",
+                 "label": "ดูจากงานเอง",
+                 "desc": "งานบอกว่าเป็นสัตว์ก็เป็นสัตว์",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "human",
+                 "label": "คนล้วน",
+                 "desc": "เป็นมนุษย์เสมอ",
+                 "icon": "person"
+                },
+                {
+                 "value": "animalReal",
+                 "label": "สัตว์จริง",
+                 "desc": "เดิน 4 ขา ไม่ใส่เสื้อผ้า",
+                 "icon": "pets"
+                },
+                {
+                 "value": "animalAnthro",
+                 "label": "สัตว์ทำตัวเหมือนคน",
+                 "desc": "ยืน 2 ขา ใส่เสื้อผ้า",
+                 "icon": "emoji_nature"
+                },
+                {
+                 "value": "animalToon",
+                 "label": "สัตว์การ์ตูน",
+                 "desc": "แอนิเมชัน ตาโต สีสด",
+                 "icon": "animation"
                 }
                ]
               },
@@ -45393,6 +46765,41 @@
   "camVideoEN": {
    "ตั้งนิ่งเห็นทั้งพื้นที่": "CAMERA MODE: locked-off timelapse, one fixed wide framing all clip; work accumulates smoothly in frame, each stage grows out of the last, never cut. ",
    "ตามคน ตามมือ แบบ vlog": "CAMERA MODE: handheld vlog-style camera following the worker closely, moving with the action. "
+  },
+  "castPlan": {
+   "auto": "",
+   "human": "",
+   "animalReal": "★ ผู้ลงมือในคลิปนี้เป็น **สัตว์จริง** ไม่ใช่คน — เดิน 4 ขา ท่าทางและสัดส่วนแบบสัตว์จริง ไม่ใส่เสื้อผ้า ไม่ถือของด้วยอุ้งเท้า ทำตัวเหมือนสัตว์จริง ๆ · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนหรือมือคนในเฟรม",
+   "animalAnthro": "★ ผู้ลงมือในคลิปนี้เป็น **สัตว์ที่ทำตัวเหมือนคน** ไม่ใช่คน — ยืน/นั่งตัวตรง ใช้อุ้งเท้าหน้าแทนมือ ใส่เสื้อผ้า เล่นเป็นตัวละคร · ขนฟูน่ารัก ตากลมโต · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนในเฟรม",
+   "animalToon": "★ ผู้ลงมือในคลิปนี้เป็น **ตัวการ์ตูนสัตว์แบบแอนิเมชัน** ไม่ใช่คน — รูปทรงสัตว์จริง (ปาก หู หาง อุ้งเท้า) ตาโตแสดงอารมณ์ เส้นสะอาด สีสด · ยังคงเป็นสัตว์ ไม่ใช่คน · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนในเฟรม"
+  },
+  "castBoard": {
+   "auto": "",
+   "human": "",
+   "animalReal": "ผู้ลงมือเป็นสัตว์จริง เดิน 4 ขา ไม่ใส่เสื้อผ้า สัดส่วนแบบสัตว์จริง ห้ามวาดคนหรือมือคน",
+   "animalAnthro": "ผู้ลงมือเป็นสัตว์ที่ทำตัวเหมือนคน ยืนตัวตรง ใส่เสื้อผ้า ใช้อุ้งเท้าหน้าแทนมือ ขนฟู ตากลมโต ห้ามวาดคน",
+   "animalToon": "ผู้ลงมือเป็นตัวการ์ตูนสัตว์ รูปทรงสัตว์จริง ตาโต สีสด เส้นสะอาด ห้ามวาดคน"
+  },
+  "castVideoEN": {
+   "auto": "",
+   "human": "",
+   "animalReal": "the worker is a REAL ANIMAL with true animal anatomy — four legs on the ground, natural animal posture and proportions, no clothing, no accessories, behaving exactly like a real animal",
+   "animalAnthro": "the worker is an adorable anthropomorphic animal acting like a person — standing upright, front paws used as hands, wearing clothes, fluffy fur, big round expressive eyes",
+   "animalToon": "the worker is an ANIMATED cartoon animal character — true animal anatomy (muzzle, ears, tail, paws), big expressive eyes, clean bold shapes, bright colours, still an ANIMAL not a person"
+  },
+  "castOverrideTH": {
+   "auto": "",
+   "human": "",
+   "animalReal": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด",
+   "animalAnthro": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด",
+   "animalToon": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด"
+  },
+  "castNegEN": {
+   "auto": "",
+   "human": "",
+   "animalReal": " no human face, no human hands, no animal head on a human body, no mascot suit, no clothes on the animal",
+   "animalAnthro": " no human face, no human hands, no animal head on a human body, no mascot suit",
+   "animalToon": " no human face, no human hands, no animal head on a human body, no mascot suit"
   }
  },
  "seed": {
