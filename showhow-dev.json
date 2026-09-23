@@ -130,7 +130,9 @@
     "image4",
     "image5",
     "room1",
-    "room2"
+    "room2",
+    "openRef",
+    "endRef"
    ],
    "idPrefix": "pd",
    "addDefaults": {
@@ -678,6 +680,14 @@
           "value": "มีรูปพื้นที่จริงแนบมา (รูปท้าย ๆ) — ทุกฉากต้องเป็นพื้นที่นี้ ยึดผนัง พื้น ของที่มีอยู่ ทิศแสงตามรูป · ฉาก 1 = สภาพตามรูปนี้\n"
          },
          {
+          "when": "item.slots.openRef!=",
+          "value": "มีภาพอ้างอิงฉากเปิดแนบมา (อยู่ท้ายรูปทั้งหมด ก่อนภาพจบถ้ามี) — ฉาก 1 จัดมุมกล้อง การจัดวาง และสภาพให้ใกล้ภาพนี้ แล้วบรรยายใน s1th/s1en ให้เห็นภาพชัด · สถานที่ยังเป็นพื้นที่ตามรูปพื้นที่ (ถ้ามี) ไม่ใช่ห้องในภาพนี้\n"
+         },
+         {
+          "when": "item.slots.endRef!=",
+          "value": "มีภาพอ้างอิงฉากจบแนบมา (รูปสุดท้ายที่แนบ) — ฉากสุดท้ายของคลิปจัดการวางและสภาพให้ใกล้ภาพนี้ (ใช้แทนกฎ \"ฉากสุดท้ายมุมเดียวกับฉากแรก\") แล้วบรรยายให้เห็นภาพชัด · สถานที่ยังเป็นพื้นที่เดิม ห้ามย้ายไปห้องในภาพ · โหมดไทม์แลปส์กล้องนิ่ง: เอาแค่สภาพจากภาพจบ มุมกล้องยังเดิมทั้งคลิป\n"
+         },
+         {
           "when": "item.slots.room1=",
           "value": "ไม่มีรูปพื้นที่จริง — แต่งพื้นที่ให้สมจริงเหมาะกับงาน แล้วคงพื้นที่นั้นทุกฉาก\n"
          }
@@ -911,7 +921,9 @@
     "{item.slots.image5}",
     "{item.slots.room1}",
     "{item.slots.room2}",
-    "{characters[ch1].slots.face}"
+    "{characters[ch1].slots.face}",
+    "{item.slots.openRef}",
+    "{item.slots.endRef}"
    ],
    "imagesNote": "{brain.mn.imgNote}",
    "logRun": {
@@ -6246,8 +6258,77 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=60",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "60"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 30 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (**รูปแรกที่แนบ = บอร์ดช่วงที่ 1** · ช่องแรกของบอร์ดนั้นคือต้นแบบมุมกล้อง ลอกกรอบภาพนั้นมาเลย) ห้ามเปลี่ยนสถานที่หรือมุม เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "60"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 30 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "60"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 30 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
        }
       ]
      },
@@ -6732,6 +6813,16 @@
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "60"
+      }
      }
     ]
    },
@@ -6758,8 +6849,77 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=50",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "50"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 25 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (**รูปแรกที่แนบ = บอร์ดช่วงที่ 1** · ช่องแรกของบอร์ดนั้นคือต้นแบบมุมกล้อง ลอกกรอบภาพนั้นมาเลย) ห้ามเปลี่ยนสถานที่หรือมุม เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "50"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 25 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "50"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 25 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
        }
       ]
      },
@@ -7244,6 +7404,16 @@
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "50"
+      }
      }
     ]
    },
@@ -7270,8 +7440,77 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=40",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "40"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 20 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (**รูปแรกที่แนบ = บอร์ดช่วงที่ 1** · ช่องแรกของบอร์ดนั้นคือต้นแบบมุมกล้อง ลอกกรอบภาพนั้นมาเลย) ห้ามเปลี่ยนสถานที่หรือมุม เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "40"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 20 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "40"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 20 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
        }
       ]
      },
@@ -7756,6 +7995,16 @@
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "40"
+      }
      }
     ]
    },
@@ -7782,8 +8031,77 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=30",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "30"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 15 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (**รูปแรกที่แนบ = บอร์ดช่วงที่ 1** · ช่องแรกของบอร์ดนั้นคือต้นแบบมุมกล้อง ลอกกรอบภาพนั้นมาเลย) ห้ามเปลี่ยนสถานที่หรือมุม เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "30"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 15 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "30"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 15 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
        }
       ]
      },
@@ -8268,6 +8586,16 @@
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "30"
+      }
      }
     ]
    },
@@ -8294,8 +8622,77 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=20",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "20"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 10 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (**รูปแรกที่แนบ = บอร์ดช่วงที่ 1** · ช่องแรกของบอร์ดนั้นคือต้นแบบมุมกล้อง ลอกกรอบภาพนั้นมาเลย) ห้ามเปลี่ยนสถานที่หรือมุม เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "20"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 10 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "20"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 10 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
        }
       ]
      },
@@ -8775,6 +9172,16 @@
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "20"
+      }
      }
     ]
    },
@@ -8810,8 +9217,92 @@
       "sep": "",
       "parts": [
        {
-        "when": "values.svSec=10",
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "10"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "refsFilled",
+            "key": "prod",
+            "from": "products",
+            "slot": "endRef"
+           }
+          }
+         ]
+        },
         "value": "\nช่องฉาก 5 = ฉากปิดของคลิป ต้องเป็นภาพกว้างเห็นทั้งพื้นที่ จุดยืนกล้อง ความสูง ทิศทาง และกรอบภาพเดียวกับฉากเปิดของคลิป (ดูช่องแรกของแผ่นนี้) เปลี่ยนได้เฉพาะสภาพพื้นที่ที่ทำเสร็จแล้ว · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "10"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ไทม์แลปส์กล้องนิ่ง"
+           }
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 5 = ฉากปิดของคลิป: มุมกล้อง การจัดวาง และสภาพตามภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) แต่ห้องยังเป็นห้องเดิม ห้ามย้ายไปห้องในภาพนั้น · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.svSec}",
+           "b": "10"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "endRef"
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ไทม์แลปส์กล้องนิ่ง"
+          }
+         ]
+        },
+        "value": "\nช่องฉาก 5 = ฉากปิดของคลิป: กรอบภาพเดิมทุกช่อง เปลี่ยนแค่สภาพให้ตรงภาพอ้างอิงฉากจบ (รูปสุดท้ายที่แนบ) · ถ้าวางสินค้าไว้ในเฟรมด้วย ต้องเป็นสินค้าตามรูปที่แนบเท่านั้น"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "openRef"
+        },
+        "value": "\nช่องฉาก 1 = มุม การจัดวาง และสภาพตามภาพอ้างอิงฉากเปิดที่แนบ แต่ห้องยังเป็นห้องเดิม"
        }
       ]
      },
@@ -9288,6 +9779,21 @@
         "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
+      }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "openRef"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "endRef",
+      "when": {
+       "op": "eq",
+       "a": "{values.svSec}",
+       "b": "10"
       }
      }
     ]
@@ -23045,6 +23551,226 @@
                "field": "room",
                "placeholder": "เช่น ห้องน้ำเล็ก กระเบื้องขาว มีคราบเหลืองตรงมุม · ครัวเคาน์เตอร์ไม้ แสงเข้าทางซ้าย",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+              }
+             ]
+            },
+            {
+             "el": "group",
+             "collapsible": true,
+             "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+             "bodyClass": "pt-2 gap-3",
+             "chevClass": "opacity-50 !text-[22px]",
+             "head": [
+              {
+               "el": "icon",
+               "icon": "compare",
+               "textSize": "text-[19px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+              },
+              {
+               "el": "text",
+               "value": "อยากให้เปิด–จบฉากประมาณไหน",
+               "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
+              },
+              {
+               "el": "text",
+               "value": "ภาพตัวอย่าง (ไม่บังคับ)",
+               "className": "!text-[13px] opacity-40 truncate min-w-0"
+              }
+             ],
+             "card": [
+              {
+               "el": "text",
+               "value": "ให้หมีดูเป็นแนว — มุมกล้อง การจัดวาง สภาพ บรรยากาศ ไม่ต้องเป๊ะ · ใส่รูปเดียวก็ได้\nห้องยังเป็นห้องจากรูปพื้นที่เสมอ ใช้รูปจากที่อื่นเป็นตัวอย่างได้",
+               "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 px-0.5 whitespace-pre-line"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-row gap-3 items-start",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5 w-[calc((100%-0.75rem)/2)] @[560px]:w-[170px] shrink-0",
+                 "card": [
+                  {
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center px-0.5",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "first_page",
+                     "textSize": "text-[17px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "เปิดฉากประมาณนี้",
+                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-full",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.openRef}",
+                     "b": ""
+                    }
+                   },
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.openRef}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "openRef",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.openRef}",
+                    "b": ""
+                   },
+                   "className": "w-full aspect-square rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "openRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "openRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5 w-[calc((100%-0.75rem)/2)] @[560px]:w-[170px] shrink-0",
+                 "card": [
+                  {
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center px-0.5",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "last_page",
+                     "textSize": "text-[17px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "จบฉากประมาณนี้",
+                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-full",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.endRef}",
+                     "b": ""
+                    }
+                   },
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.endRef}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "endRef",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.endRef}",
+                    "b": ""
+                   },
+                   "className": "w-full aspect-square rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "endRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "endRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
               }
              ]
             }
