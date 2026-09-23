@@ -139,7 +139,7 @@
     "people": "เห็นแต่มือ ไม่เห็นหน้า",
     "peopleSrc": "AI เลือกนาย/นางแบบให้เหมาะกับสินค้า",
     "camMode": "",
-    "castKind": "auto"
+    "castKind": ""
    }
   },
   "tasks": {
@@ -680,11 +680,71 @@
           "value": "มีรูปพื้นที่จริงแนบมา (รูปท้าย ๆ) — ทุกฉากต้องเป็นพื้นที่นี้ ยึดผนัง พื้น ของที่มีอยู่ ทิศแสงตามรูป · ฉาก 1 = สภาพตามรูปนี้\n"
          },
          {
-          "when": "item.slots.openRef!=",
+          "when": {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.slots.openRef}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "or",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.arc}",
+                "b": ""
+               },
+               {
+                "op": "eq",
+                "a": "{item.arc}",
+                "b": "ทัวร์จุดเด่น"
+               }
+              ]
+             }
+            }
+           ]
+          },
           "value": "มีภาพอ้างอิงฉากเปิดแนบมา (อยู่ท้ายรูปทั้งหมด ก่อนภาพจบถ้ามี) — ฉาก 1 จัดมุมกล้อง การจัดวาง และสภาพให้ใกล้ภาพนี้ แล้วบรรยายใน s1th/s1en ให้เห็นภาพชัด · สถานที่ยังเป็นพื้นที่ตามรูปพื้นที่ (ถ้ามี) ไม่ใช่ห้องในภาพนี้\n"
          },
          {
-          "when": "item.slots.endRef!=",
+          "when": {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.slots.endRef}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "or",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.arc}",
+                "b": ""
+               },
+               {
+                "op": "eq",
+                "a": "{item.arc}",
+                "b": "ทัวร์จุดเด่น"
+               }
+              ]
+             }
+            }
+           ]
+          },
           "value": "มีภาพอ้างอิงฉากจบแนบมา (รูปสุดท้ายที่แนบ) — ฉากสุดท้ายของคลิปจัดการวางและสภาพให้ใกล้ภาพนี้ (ใช้แทนกฎ \"ฉากสุดท้ายมุมเดียวกับฉากแรก\") แล้วบรรยายให้เห็นภาพชัด · สถานที่ยังเป็นพื้นที่เดิม ห้ามย้ายไปห้องในภาพ · โหมดไทม์แลปส์กล้องนิ่ง: เอาแค่สภาพจากภาพจบ มุมกล้องยังเดิมทั้งคลิป\n"
          },
          {
@@ -922,8 +982,50 @@
     "{item.slots.room1}",
     "{item.slots.room2}",
     "{characters[ch1].slots.face}",
-    "{item.slots.openRef}",
-    "{item.slots.endRef}"
+    {
+     "op": "cond",
+     "when": {
+      "op": "not",
+      "a": {
+       "op": "or",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.arc}",
+         "b": ""
+        },
+        {
+         "op": "eq",
+         "a": "{item.arc}",
+         "b": "ทัวร์จุดเด่น"
+        }
+       ]
+      }
+     },
+     "then": "{item.slots.openRef}"
+    },
+    {
+     "op": "cond",
+     "when": {
+      "op": "not",
+      "a": {
+       "op": "or",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.arc}",
+         "b": ""
+        },
+        {
+         "op": "eq",
+         "a": "{item.arc}",
+         "b": "ทัวร์จุดเด่น"
+        }
+       ]
+      }
+     },
+     "then": "{item.slots.endRef}"
+    }
    ],
    "imagesNote": "{brain.mn.imgNote}",
    "logRun": {
@@ -6269,10 +6371,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -6301,6 +6426,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -6325,6 +6468,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -6819,9 +6980,32 @@
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "60"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "60"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -6860,10 +7044,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -6892,6 +7099,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -6916,6 +7141,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -7410,9 +7653,32 @@
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "50"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "50"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -7451,10 +7717,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -7483,6 +7772,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -7507,6 +7814,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -8001,9 +8326,32 @@
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "40"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "40"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -8042,10 +8390,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -8074,6 +8445,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -8098,6 +8487,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -8592,9 +8999,32 @@
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "30"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "30"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -8633,10 +9063,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -8665,6 +9118,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -8689,6 +9160,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -9178,9 +9667,32 @@
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "20"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "20"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -9228,10 +9740,33 @@
           {
            "op": "not",
            "a": {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "endRef"
+            "op": "and",
+            "list": [
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "endRef"
+             },
+             {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ทัวร์จุดเด่น"
+                }
+               ]
+              }
+             }
+            ]
            }
           }
          ]
@@ -9260,6 +9795,24 @@
             "a": "{item.arc}",
             "b": "ไทม์แลปส์กล้องนิ่ง"
            }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -9284,6 +9837,24 @@
            "op": "eq",
            "a": "{item.arc}",
            "b": "ไทม์แลปส์กล้องนิ่ง"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
           }
          ]
         },
@@ -9297,10 +9868,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "openRef"
+         "op": "and",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "openRef"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": ""
+             },
+             {
+              "op": "eq",
+              "a": "{item.arc}",
+              "b": "ทัวร์จุดเด่น"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": "\nช่องฉาก 1 = มุม การจัดวาง และสภาพตามภาพอ้างอิงฉากเปิดที่แนบ แต่ห้องยังเป็นห้องเดิม"
        }
@@ -9784,16 +10378,57 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "openRef"
+      "slot": "openRef",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.arc}",
+          "b": ""
+         },
+         {
+          "op": "eq",
+          "a": "{item.arc}",
+          "b": "ทัวร์จุดเด่น"
+         }
+        ]
+       }
+      }
      },
      {
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "endRef",
       "when": {
-       "op": "eq",
-       "a": "{values.svSec}",
-       "b": "10"
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{values.svSec}",
+         "b": "10"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": ""
+           },
+           {
+            "op": "eq",
+            "a": "{item.arc}",
+            "b": "ทัวร์จุดเด่น"
+           }
+          ]
+         }
+        }
+       ]
       }
      }
     ]
@@ -19792,7 +20427,7 @@
             },
             {
              "el": "text",
-             "value": "6 ใน 8 คลิปดังไม่เห็นหน้าคน — \"เห็นแต่มือ\" กับ \"ทีมช่างเบลอ\" ปลอดภัยที่สุด · หน้าคนในช็อตยาวคือความเสี่ยงสูงสุดของ AI",
+             "value": "6 ใน 8 คลิปดังไม่เห็นหน้าคน — \"เห็นแต่มือ\" กับ \"ทีมงานเบลอ\" ปลอดภัยที่สุด · หน้าคนในช็อตยาวคือความเสี่ยงสูงสุดของ AI",
              "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
             }
            ]
@@ -23553,226 +24188,6 @@
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               }
              ]
-            },
-            {
-             "el": "group",
-             "collapsible": true,
-             "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-             "bodyClass": "pt-2 gap-3",
-             "chevClass": "opacity-50 !text-[22px]",
-             "head": [
-              {
-               "el": "icon",
-               "icon": "compare",
-               "textSize": "text-[19px]",
-               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-              },
-              {
-               "el": "text",
-               "value": "อยากให้เปิด–จบฉากประมาณไหน",
-               "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
-              },
-              {
-               "el": "text",
-               "value": "ภาพตัวอย่าง (ไม่บังคับ)",
-               "className": "!text-[13px] opacity-40 truncate min-w-0"
-              }
-             ],
-             "card": [
-              {
-               "el": "text",
-               "value": "ให้หมีดูเป็นแนว — มุมกล้อง การจัดวาง สภาพ บรรยากาศ ไม่ต้องเป๊ะ · ใส่รูปเดียวก็ได้\nห้องยังเป็นห้องจากรูปพื้นที่เสมอ ใช้รูปจากที่อื่นเป็นตัวอย่างได้",
-               "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 px-0.5 whitespace-pre-line"
-              },
-              {
-               "el": "box",
-               "className": "flex flex-row gap-3 items-start",
-               "card": [
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5 w-[calc((100%-0.75rem)/2)] @[560px]:w-[170px] shrink-0",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "!gap-1.5 !flex-nowrap items-center px-0.5",
-                   "card": [
-                    {
-                     "el": "icon",
-                     "icon": "first_page",
-                     "textSize": "text-[17px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                    },
-                    {
-                     "el": "text",
-                     "value": "เปิดฉากประมาณนี้",
-                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "relative w-full",
-                   "when": {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.slots.openRef}",
-                     "b": ""
-                    }
-                   },
-                   "card": [
-                    {
-                     "el": "media-slot",
-                     "src": "{item.slots.openRef}",
-                     "aspect": "1:1",
-                     "style": {
-                      "borderRadius": "16px"
-                     },
-                     "className": "ring-1 ring-[var(--ev-border)]"
-                    },
-                    {
-                     "el": "button",
-                     "action": "hook",
-                     "fn": "clearSlot",
-                     "to": "openRef",
-                     "label": "",
-                     "icon": "close",
-                     "variant": "ghost",
-                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "when": {
-                    "op": "eq",
-                    "a": "{item.slots.openRef}",
-                    "b": ""
-                   },
-                   "className": "w-full aspect-square rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
-                   "card": [
-                    {
-                     "el": "upload",
-                     "label": "",
-                     "placeholder": "อัพโหลด",
-                     "icon": "upload",
-                     "into": "openRef",
-                     "resize": {
-                      "maxPx": 768,
-                      "quality": 0.8
-                     },
-                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                    },
-                    {
-                     "el": "pick-button",
-                     "label": "เลือกภาพ",
-                     "icon": "photo_library",
-                     "filter": "image",
-                     "into": "openRef",
-                     "resize": {
-                      "maxPx": 768,
-                      "quality": 0.8
-                     },
-                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                    }
-                   ]
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5 w-[calc((100%-0.75rem)/2)] @[560px]:w-[170px] shrink-0",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "!gap-1.5 !flex-nowrap items-center px-0.5",
-                   "card": [
-                    {
-                     "el": "icon",
-                     "icon": "last_page",
-                     "textSize": "text-[17px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                    },
-                    {
-                     "el": "text",
-                     "value": "จบฉากประมาณนี้",
-                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "className": "relative w-full",
-                   "when": {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.slots.endRef}",
-                     "b": ""
-                    }
-                   },
-                   "card": [
-                    {
-                     "el": "media-slot",
-                     "src": "{item.slots.endRef}",
-                     "aspect": "1:1",
-                     "style": {
-                      "borderRadius": "16px"
-                     },
-                     "className": "ring-1 ring-[var(--ev-border)]"
-                    },
-                    {
-                     "el": "button",
-                     "action": "hook",
-                     "fn": "clearSlot",
-                     "to": "endRef",
-                     "label": "",
-                     "icon": "close",
-                     "variant": "ghost",
-                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "box",
-                   "when": {
-                    "op": "eq",
-                    "a": "{item.slots.endRef}",
-                    "b": ""
-                   },
-                   "className": "w-full aspect-square rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-2 p-2 justify-center",
-                   "card": [
-                    {
-                     "el": "upload",
-                     "label": "",
-                     "placeholder": "อัพโหลด",
-                     "icon": "upload",
-                     "into": "endRef",
-                     "resize": {
-                      "maxPx": 768,
-                      "quality": 0.8
-                     },
-                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                    },
-                    {
-                     "el": "pick-button",
-                     "label": "เลือกภาพ",
-                     "icon": "photo_library",
-                     "filter": "image",
-                     "into": "endRef",
-                     "resize": {
-                      "maxPx": 768,
-                      "quality": 0.8
-                     },
-                     "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
-                    }
-                   ]
-                  }
-                 ]
-                }
-               ]
-              }
-             ]
             }
            ]
           },
@@ -23830,6 +24245,58 @@
                 {
                  "value": "",
                  "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกให้จากชื่องานและสภาพก่อน/หลัง",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "ก่อน → ลงมือ → หลัง",
+                 "label": "ก่อน → ลงมือ → หลัง",
+                 "desc": "จัดบ้าน จัดสวน ทำของ รีโนเวท",
+                 "icon": "compare"
+                },
+                {
+                 "value": "ปัญหา → แก้แล้ว",
+                 "label": "ปัญหา → แก้แล้ว",
+                 "desc": "คราบ รก ของเสีย — เปิดด้วยจุดที่เจ็บตา",
+                 "icon": "build"
+                },
+                {
+                 "value": "ทีละขั้นให้ทำตาม",
+                 "label": "ทีละขั้นให้ทำตาม",
+                 "desc": "สูตร/วิธีทำ — ทำอาหาร พับผ้า ซ่อมของ",
+                 "icon": "format_list_numbered"
+                },
+                {
+                 "value": "ไทม์แลปส์กล้องนิ่ง",
+                 "label": "ไทม์แลปส์",
+                 "desc": "กล้องนิ่งมุมเดียว เห็นงานค่อย ๆ คืบหน้า",
+                 "icon": "timelapse"
+                }
+               ]
+              }
+             ],
+             "when": "item.hasProduct=ไม่มี"
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "เล่าเรื่องแบบไหน",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2",
+               "when": "item.hasProduct!=ไม่มี"
+              },
+              {
+               "el": "grid-select",
+               "field": "arc",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
                  "desc": "หมีเลือกจากชื่องานและของ",
                  "icon": "auto_awesome"
                 },
@@ -23863,7 +24330,8 @@
                  "desc": "กล้องนิ่งมุมเดียว เห็นงานค่อย ๆ คืบหน้า",
                  "icon": "timelapse"
                 }
-               ]
+               ],
+               "when": "item.hasProduct!=ไม่มี"
               },
               {
                "el": "text",
@@ -23965,8 +24433,8 @@
                 },
                 {
                  "value": "ทีมช่างเบลอเคลื่อนไหวเร็ว",
-                 "label": "ทีมช่าง (เบลอ)",
-                 "desc": "หลายคน เคลื่อนไหวเร็ว",
+                 "label": "ทีมงาน",
+                 "desc": "หลายคน ตามงาน เช่น เชฟ แม่บ้าน คนสวน",
                  "icon": "groups"
                 },
                 {
@@ -24006,21 +24474,21 @@
                "className": "!min-h-[44px] @[420px]:!min-h-0",
                "options": [
                 {
-                 "value": "auto",
-                 "label": "ดูจากงานเอง",
-                 "desc": "งานบอกว่าเป็นสัตว์ก็เป็นสัตว์",
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกให้ตามงาน",
                  "icon": "auto_awesome"
                 },
                 {
                  "value": "human",
-                 "label": "คนล้วน",
-                 "desc": "เป็นมนุษย์เสมอ",
+                 "label": "คน",
+                 "desc": "คนจริงลงมือทำ",
                  "icon": "person"
                 },
                 {
                  "value": "animalReal",
                  "label": "สัตว์จริง",
-                 "desc": "เดิน 4 ขา ไม่ใส่เสื้อผ้า",
+                 "desc": "เดิน 4 ขา แบบสัตว์จริง",
                  "icon": "pets"
                 },
                 {
@@ -24032,7 +24500,7 @@
                 {
                  "value": "animalToon",
                  "label": "สัตว์การ์ตูน",
-                 "desc": "แอนิเมชัน ตาโต สีสด",
+                 "desc": "แบบการ์ตูนแอนิเมชัน",
                  "icon": "animation"
                 }
                ]
@@ -24451,57 +24919,6 @@
              "card": [
               {
                "el": "text",
-               "value": "เล่าเรื่องแบบไหน",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
-              },
-              {
-               "el": "grid-select",
-               "field": "arc",
-               "cols": 2,
-               "contained": true,
-               "className": "!min-h-[48px] @[420px]:!min-h-0",
-               "options": [
-                {
-                 "value": "",
-                 "label": "อัตโนมัติ",
-                 "desc": "หมีเลือกให้จากชื่องานและสภาพก่อน/หลัง",
-                 "icon": "auto_awesome"
-                },
-                {
-                 "value": "ก่อน → ลงมือ → หลัง",
-                 "label": "ก่อน → ลงมือ → หลัง",
-                 "desc": "จัดบ้าน จัดสวน ทำของ รีโนเวท",
-                 "icon": "compare"
-                },
-                {
-                 "value": "ปัญหา → แก้แล้ว",
-                 "label": "ปัญหา → แก้แล้ว",
-                 "desc": "คราบ รก ของเสีย — เปิดด้วยจุดที่เจ็บตา",
-                 "icon": "build"
-                },
-                {
-                 "value": "ทีละขั้นให้ทำตาม",
-                 "label": "ทีละขั้นให้ทำตาม",
-                 "desc": "สูตร/วิธีทำ — ทำอาหาร พับผ้า ซ่อมของ",
-                 "icon": "format_list_numbered"
-                },
-                {
-                 "value": "ไทม์แลปส์กล้องนิ่ง",
-                 "label": "ไทม์แลปส์",
-                 "desc": "กล้องนิ่งมุมเดียว เห็นงานค่อย ๆ คืบหน้า",
-                 "icon": "timelapse"
-                }
-               ]
-              }
-             ],
-             "when": "item.hasProduct=ไม่มี"
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "card": [
-              {
-               "el": "text",
                "value": "ตอนนี้สภาพเป็นยังไง (ไม่บังคับ)",
                "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
               },
@@ -24510,6 +24927,126 @@
                "field": "before",
                "placeholder": "เช่น ของวางกองเต็มเคาน์เตอร์ หาอะไรไม่เจอ",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+              },
+              {
+               "el": "box",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "or",
+                 "list": [
+                  {
+                   "op": "eq",
+                   "a": "{item.arc}",
+                   "b": ""
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.arc}",
+                   "b": "ทัวร์จุดเด่น"
+                  }
+                 ]
+                }
+               },
+               "className": "flex flex-row items-start gap-3 mt-1",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "relative w-[112px] shrink-0",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.slots.openRef}",
+                   "b": ""
+                  }
+                 },
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.openRef}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "16px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "openRef",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.slots.openRef}",
+                  "b": ""
+                 },
+                 "className": "w-[112px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "openRef",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "openRef",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1 min-w-0 pt-1",
+                 "card": [
+                  {
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "add_photo_alternate",
+                     "textSize": "text-[18px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "หรือใส่รูปตอนเริ่ม",
+                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ไม่บังคับ · หมีจะเปิดคลิปให้ใกล้ภาพนี้",
+                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 leading-snug"
+                  }
+                 ]
+                }
+               ]
               }
              ]
             },
@@ -24527,6 +25064,126 @@
                "field": "goal",
                "placeholder": "เช่น เคาน์เตอร์โล่ง ของเข้าที่ หยิบใช้ง่าย",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+              },
+              {
+               "el": "box",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "or",
+                 "list": [
+                  {
+                   "op": "eq",
+                   "a": "{item.arc}",
+                   "b": ""
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.arc}",
+                   "b": "ทัวร์จุดเด่น"
+                  }
+                 ]
+                }
+               },
+               "className": "flex flex-row items-start gap-3 mt-1",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "relative w-[112px] shrink-0",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.slots.endRef}",
+                   "b": ""
+                  }
+                 },
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.endRef}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "16px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "endRef",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.slots.endRef}",
+                  "b": ""
+                 },
+                 "className": "w-[112px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "endRef",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "endRef",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[18px] @[640px]:!text-[17px] uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1 min-w-0 pt-1",
+                 "card": [
+                  {
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "add_photo_alternate",
+                     "textSize": "text-[18px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "หรือใส่รูปตัวอย่างตอนจบ",
+                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "text",
+                   "value": "ไม่บังคับ · ใช้รูปจากที่อื่นได้ ห้องยังเป็นห้องของงานนี้",
+                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 leading-snug"
+                  }
+                 ]
+                }
+               ]
               }
              ]
             },
@@ -47156,8 +47813,8 @@
    "เห็นแต่มือ ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: เห็นแต่มือและแขนของผู้ลงมือ ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือต้องกำลังทำงานจริงทุกฉากที่มีมือ (ฉากก่อน/ผลลัพธ์ไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ",
    "คนเดียวเต็มตัว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน",
    "คนเดียวเต็มตัว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน · ใช้บุคคลจากรูปใบหน้าที่แนบเป็นคนเดิมทุกฉากทุกคลิป ห้ามเปลี่ยนคน",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีทีมช่าง/คนช่วยหลายคนทำงานพร้อมกัน แต่เห็นเป็นเงาเคลื่อนไหวเร็วแบบไทม์แลปส์ ไม่เห็นหน้าชัด — งานคืบหน้าเร็ว พื้นที่และงานที่ทำแล้วต้องคมชัด · เขียน s*en ให้ระบุ motion-blurred crew ทุกฉากที่มีคน",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: มีทีมช่าง/คนช่วยหลายคนทำงานพร้อมกัน แต่เห็นเป็นเงาเคลื่อนไหวเร็วแบบไทม์แลปส์ ไม่เห็นหน้าชัด — งานคืบหน้าเร็ว พื้นที่และงานที่ทำแล้วต้องคมชัด · เขียน s*en ให้ระบุ motion-blurred crew ทุกฉากที่มีคน",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) 🔴 **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) 🔴 **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
@@ -47168,8 +47825,8 @@
    "เห็นแต่มือ ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "เห็นแต่มือ/แขนของคนทำงานที่กำลังลงมือ ห้ามมีใบหน้าหรือตัวคนเต็มตัวในทุกช่อง",
    "คนเดียวเต็มตัว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "มีคนลงมือทำ 1 คน (ไทย) คนเดิมทุกช่อง กำลังทำงาน ไม่มองกล้อง ไม่โพสท่า งานและพื้นที่เด่นกว่าคน",
    "คนเดียวเต็มตัว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "คนเดียวกันทุกช่อง เปลี่ยนได้แค่เสื้อผ้า",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "มีคนงานหลายคนเป็นเงาเบลอเคลื่อนไหว (motion blur แบบไทม์แลปส์) ไม่เห็นหน้าชัด พื้นที่และงานที่ทำแล้วคมชัด",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "มีคนงานหลายคนเป็นเงาเบลอเคลื่อนไหว (motion blur แบบไทม์แลปส์) ไม่เห็นหน้าชัด พื้นที่และงานที่ทำแล้วคมชัด",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ทีมงานหลายคนตามงาน (เชฟ แม่บ้าน คนสวน ช่าง) ชุดเข้ากับงาน ไม่มองกล้อง · ไทม์แลปส์ = เงาเบลอเคลื่อนไหว",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ทีมงานหลายคนตามงาน (เชฟ แม่บ้าน คนสวน ช่าง) ชุดเข้ากับงาน ไม่มองกล้อง · ไทม์แลปส์ = เงาเบลอเคลื่อนไหว",
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ห้ามมีคนหรือมือในทุกช่อง — พื้นที่เปลี่ยนไปเองทีละช่องแบบไทม์แลปส์",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ห้ามมีคนหรือมือในทุกช่อง — พื้นที่เปลี่ยนไปเองทีละช่องแบบไทม์แลปส์",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า",
@@ -47180,8 +47837,8 @@
    "เห็นแต่มือ ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "only the worker's hands and forearms are visible, actively working; never a face or a full body; natural hands with the correct number of fingers.",
    "คนเดียวเต็มตัว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "one Thai worker, the same person in every scene, absorbed in the task; never looks at, poses for or smiles at the camera; face consistent and natural; the work stays the focus.",
    "คนเดียวเต็มตัว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "CHARACTER LOCK: the same person in every shot; vary only clothing and angle; a worker, never a presenter — no eye contact, no posing.",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "a small crew appears only as fast-moving, motion-blurred figures, time-lapse style — never a clear face or a static pose; the space and the finished work stay sharp.",
-   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "a small crew appears only as fast-moving, motion-blurred figures, time-lapse style — never a clear face or a static pose; the space and the finished work stay sharp.",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "a small team whose roles fit the job (chefs, housekeepers, gardeners, builders) in matching work clothes, never posing; in a time-lapse they blur as fast-moving figures.",
+   "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "a small team whose roles fit the job (chefs, housekeepers, gardeners, builders) in matching work clothes, never posing; in a time-lapse they blur as fast-moving figures.",
    "ไม่มีคน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "no people and no hands at all; the space and objects transform step by step on their own, time-lapse style.",
    "ไม่มีคน|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "no people and no hands at all; the space and objects transform step by step on their own, time-lapse style.",
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "people: match the job — keep it identical across every shot; never look at camera, never pose",
@@ -47507,35 +48164,40 @@
    "human": "",
    "animalReal": "★ ผู้ลงมือในคลิปนี้ ตัวเดียว ตัวเดิมทุกฉากทุกช่วง ห้ามมีตัวที่สองโผล่ · เป็น **สัตว์จริง** ไม่ใช่คน — เดิน 4 ขา ท่าทางและสัดส่วนแบบสัตว์จริง ไม่ใส่เสื้อผ้า ไม่ถือของด้วยอุ้งเท้า ทำตัวเหมือนสัตว์จริง ๆ · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนหรือมือคนในเฟรม",
    "animalAnthro": "★ ผู้ลงมือในคลิปนี้ ตัวเดียว ตัวเดิมทุกฉากทุกช่วง ห้ามมีตัวที่สองโผล่ · เป็น **สัตว์ที่ทำตัวเหมือนคน** ไม่ใช่คน — ยืน/นั่งตัวตรง ใช้อุ้งเท้าหน้าแทนมือ ใส่เสื้อผ้า เล่นเป็นตัวละคร · ขนฟูน่ารัก ตากลมโต · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนในเฟรม",
-   "animalToon": "★ ผู้ลงมือในคลิปนี้ ตัวเดียว ตัวเดิมทุกฉากทุกช่วง ห้ามมีตัวที่สองโผล่ · เป็น **ตัวการ์ตูนสัตว์แบบแอนิเมชัน** ไม่ใช่คน — รูปทรงสัตว์จริง (ปาก หู หาง อุ้งเท้า) ตาโตแสดงอารมณ์ เส้นสะอาด สีสด · ยังคงเป็นสัตว์ ไม่ใช่คน · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนในเฟรม"
+   "animalToon": "★ ผู้ลงมือในคลิปนี้ ตัวเดียว ตัวเดิมทุกฉากทุกช่วง ห้ามมีตัวที่สองโผล่ · เป็น **ตัวการ์ตูนสัตว์แบบแอนิเมชัน** ไม่ใช่คน — รูปทรงสัตว์จริง (ปาก หู หาง อุ้งเท้า) ตาโตแสดงอารมณ์ เส้นสะอาด สีสด · ยังคงเป็นสัตว์ ไม่ใช่คน · เขียน s*th/s*en ให้ประธานเป็นตัวสัตว์ ห้ามเขียนว่ามีคนในเฟรม",
+   "": ""
   },
   "castBoard": {
    "auto": "",
    "human": "",
    "animalReal": "ผู้ลงมือเป็นสัตว์จริง ตัวเดียว ตัวเดิมทุกช่อง เดิน 4 ขา ไม่ใส่เสื้อผ้า ห้ามวาดคนหรือมือคน",
    "animalAnthro": "ผู้ลงมือเป็นสัตว์ทำตัวเหมือนคน ตัวเดียว ตัวเดิมทุกช่อง ยืนตัวตรง ใส่เสื้อผ้า ใช้อุ้งเท้าแทนมือ ห้ามวาดคน",
-   "animalToon": "ผู้ลงมือเป็นตัวการ์ตูนสัตว์ ตัวเดียว ตัวเดิมทุกช่อง รูปทรงสัตว์จริง ตาโต สีสด ห้ามวาดคน"
+   "animalToon": "ผู้ลงมือเป็นตัวการ์ตูนสัตว์ ตัวเดียว ตัวเดิมทุกช่อง รูปทรงสัตว์จริง ตาโต สีสด ห้ามวาดคน",
+   "": ""
   },
   "castVideoEN": {
    "auto": "",
    "human": "",
    "animalReal": "ONE real animal, the same one in every scene — four legs down, natural animal anatomy, no clothing; absorbed in the task, never poses for the camera; the work stays the focus.",
    "animalAnthro": "ONE animal acting like a person, the same one in every scene — upright, front paws as hands, clothes, fluffy fur, big round eyes; never poses for the camera; the work stays the focus.",
-   "animalToon": "ONE cartoon animal, the same one in every scene — animal anatomy (muzzle, ears, tail, paws), big eyes, bold shapes, bright colours, an ANIMAL not a person; never poses for the camera."
+   "animalToon": "ONE cartoon animal, the same one in every scene — animal anatomy (muzzle, ears, tail, paws), big eyes, bold shapes, bright colours, an ANIMAL not a person; never poses for the camera.",
+   "": ""
   },
   "castOverrideTH": {
    "auto": "",
    "human": "",
    "animalReal": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด",
    "animalAnthro": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด",
-   "animalToon": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด"
+   "animalToon": "★ ทับกฎคนด้านบน: ผู้ลงมือเป็นสัตว์ ไม่ใช่คน — คำที่พูดถึงคนไทย/ใบหน้าคน/มือคน ให้ข้ามทั้งหมด",
+   "": ""
   },
   "castNegEN": {
    "auto": "",
    "human": "",
    "animalReal": " no human face, no human hands, no animal head on a human body, no mascot suit, no clothes on the animal",
    "animalAnthro": " no human face, no human hands, no animal head on a human body, no mascot suit",
-   "animalToon": " no human face, no human hands, no animal head on a human body, no mascot suit"
+   "animalToon": " no human face, no human hands, no animal head on a human body, no mascot suit",
+   "": ""
   }
  },
  "seed": {
