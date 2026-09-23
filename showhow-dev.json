@@ -122,7 +122,8 @@
     "charGender",
     "charAge",
     "castKind",
-    "sceneMode"
+    "sceneMode",
+    "endMode"
    ],
    "slots": [
     "image",
@@ -141,7 +142,8 @@
     "peopleSrc": "",
     "camMode": "",
     "castKind": "",
-    "sceneMode": ""
+    "sceneMode": "",
+    "endMode": ""
    }
   },
   "tasks": {
@@ -316,7 +318,8 @@
     "charGender",
     "charAge",
     "castKind",
-    "sceneMode"
+    "sceneMode",
+    "endMode"
    ],
    "slots": [
     "board",
@@ -728,6 +731,11 @@
                }
               ]
              }
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
             }
            ]
           },
@@ -739,7 +747,37 @@
          }
         ]
        },
-       "พื้นที่ที่จะถ่าย (คำบรรยายจากผู้ใช้ · ทุกฉากต้องเป็นที่เดียวกัน): {item.room}\nสภาพก่อนเริ่ม: {item.before}\nผลลัพธ์ที่อยากได้ตอนจบ: {item.goal}\n(สามบรรทัดบน — ค่าว่าง = ให้คุณคิดเองจากชื่องานและรูปที่แนบ ห้ามถามกลับ และห้ามปล่อยให้บทคลุมเครือ)\nไอเดีย / มุกปิดท้าย (การใช้งานแถม — มีค่า = ให้เป็นฉากสุดท้าย): {item.idea}\n",
+       "พื้นที่ที่จะถ่าย (คำบรรยายจากผู้ใช้ · ทุกฉากต้องเป็นที่เดียวกัน): ",
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": "custom"
+          },
+          "value": "{item.room}"
+         }
+        ]
+       },
+       "\nสภาพก่อนเริ่ม: {item.before}\nผลลัพธ์ที่อยากได้ตอนจบ: ",
+       {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "eq",
+           "a": "{item.endMode}",
+           "b": "custom"
+          },
+          "value": "{item.goal}"
+         }
+        ]
+       },
+       "\n(สามบรรทัดบน — ค่าว่าง = ให้คุณคิดเองจากชื่องานและรูปที่แนบ ห้ามถามกลับ และห้ามปล่อยให้บทคลุมเครือ)\nไอเดีย / มุกปิดท้าย (การใช้งานแถม — มีค่า = ให้เป็นฉากสุดท้าย): {item.idea}\n",
        {
         "op": "block",
         "sep": "",
@@ -987,22 +1025,32 @@
     {
      "op": "cond",
      "when": {
-      "op": "not",
-      "a": {
-       "op": "or",
-       "list": [
-        {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": ""
-        },
-        {
-         "op": "eq",
-         "a": "{item.arc}",
-         "b": "ทัวร์จุดเด่น"
+      "op": "and",
+      "list": [
+       {
+        "op": "not",
+        "a": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.arc}",
+           "b": "ทัวร์จุดเด่น"
+          }
+         ]
         }
-       ]
-      }
+       },
+       {
+        "op": "eq",
+        "a": "{item.endMode}",
+        "b": "custom"
+       }
+      ]
      },
      "then": "{item.slots.endRef}"
     }
@@ -6314,7 +6362,8 @@
      "charGender": "{parent.fields.charGender}",
      "charAge": "{parent.fields.charAge}",
      "castKind": "{parent.fields.castKind}",
-     "sceneMode": "{parent.fields.sceneMode}"
+     "sceneMode": "{parent.fields.sceneMode}",
+     "endMode": "{parent.fields.endMode}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -6377,6 +6426,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -6395,10 +6449,20 @@
            "b": "60"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -6440,10 +6504,20 @@
            "b": "60"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -7000,6 +7074,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -7065,6 +7144,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -7083,10 +7167,20 @@
            "b": "50"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -7128,10 +7222,20 @@
            "b": "50"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -7688,6 +7792,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -7753,6 +7862,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -7771,10 +7885,20 @@
            "b": "40"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -7816,10 +7940,20 @@
            "b": "40"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -8376,6 +8510,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -8441,6 +8580,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -8459,10 +8603,20 @@
            "b": "30"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -8504,10 +8658,20 @@
            "b": "30"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -9064,6 +9228,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -9129,6 +9298,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -9147,10 +9321,20 @@
            "b": "20"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -9192,10 +9376,20 @@
            "b": "20"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -9752,6 +9946,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -9826,6 +10025,11 @@
                 }
                ]
               }
+             },
+             {
+              "op": "eq",
+              "a": "{item.endMode}",
+              "b": "custom"
              }
             ]
            }
@@ -9844,10 +10048,20 @@
            "b": "10"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "not",
@@ -9889,10 +10103,20 @@
            "b": "10"
           },
           {
-           "op": "refsFilled",
-           "key": "prod",
-           "from": "products",
-           "slot": "endRef"
+           "op": "and",
+           "list": [
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "endRef"
+            },
+            {
+             "op": "eq",
+             "a": "{item.endMode}",
+             "b": "custom"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -10447,6 +10671,11 @@
            }
           ]
          }
+        },
+        {
+         "op": "eq",
+         "a": "{item.endMode}",
+         "b": "custom"
         }
        ]
       }
@@ -24158,7 +24387,7 @@
               {
                "el": "text",
                "value": "เล่าเรื่องแบบไหน",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
               },
               {
                "el": "grid-select",
@@ -24209,7 +24438,7 @@
               {
                "el": "text",
                "value": "เล่าเรื่องแบบไหน",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1",
                "when": "item.hasProduct!=ไม่มี"
               },
               {
@@ -24845,7 +25074,7 @@
               {
                "el": "text",
                "value": "ฉาก",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
               },
               {
                "el": "grid-select",
@@ -24863,28 +25092,8 @@
                 {
                  "value": "custom",
                  "label": "กำหนดเอง",
-                 "desc": "ใส่รูปสถานที่ของคุณ",
+                 "desc": "ใส่รูปหรือเล่าสถานที่เอง",
                  "icon": "add_photo_alternate"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.sceneMode}",
-                 "b": "custom"
-                }
-               },
-               "className": "flex flex-col gap-1.5 mt-1",
-               "card": [
-                {
-                 "el": "textarea",
-                 "field": "room",
-                 "placeholder": "อยากได้ที่แบบไหน (ไม่บังคับ) เช่น ครัวโทนอุ่น เคาน์เตอร์ไม้",
-                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
                 }
                ]
               },
@@ -24895,12 +25104,17 @@
                 "a": "{item.sceneMode}",
                 "b": "custom"
                },
-               "className": "flex flex-col gap-2 mt-1",
+               "className": "flex flex-col gap-2 rounded-2xl border border-[var(--ev-border)] p-3 mt-1",
                "card": [
                 {
                  "el": "text",
-                 "value": "รูปสถานที่ 1-2 รูป · ใช้เป็นฉากเริ่ม และห้องจะไม่เปลี่ยนระหว่างคลิป",
-                 "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 px-0.5"
+                 "value": "รูปสถานที่ (1-2 รูป)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "ใช้เป็นฉากเริ่ม และห้องจะไม่เปลี่ยนระหว่างคลิป",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 -mt-1"
                 },
                 {
                  "el": "box",
@@ -25058,9 +25272,14 @@
                  ]
                 },
                 {
+                 "el": "text",
+                 "value": "เล่าสถานที่ (ไม่บังคับ)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5 mt-1"
+                },
+                {
                  "el": "textarea",
                  "field": "room",
-                 "placeholder": "เล่าเพิ่ม (ไม่บังคับ) เช่น คราบเหลืองตรงมุม แสงเข้าทางซ้าย",
+                 "placeholder": "เช่น ห้องน้ำเล็ก กระเบื้องขาว คราบเหลืองตรงมุม แสงเข้าทางซ้าย",
                  "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
                 }
                ]
@@ -25073,130 +25292,167 @@
              "card": [
               {
                "el": "text",
-               "value": "ฉากตอนจบ (ไม่บังคับ)",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+               "value": "ฉากตอนจบ",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
               },
               {
-               "el": "textarea",
-               "field": "goal",
-               "placeholder": "ทำเสร็จอยากได้แบบไหน เช่น เคาน์เตอร์โล่ง ของเข้าที่ หยิบใช้ง่าย",
-               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+               "el": "grid-select",
+               "field": "endMode",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีคิดตอนจบให้",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "custom",
+                 "label": "กำหนดเอง",
+                 "desc": "บอกเองว่าอยากได้แบบไหน",
+                 "icon": "flag"
+                }
+               ]
               },
               {
                "el": "box",
                "when": {
-                "op": "not",
-                "a": {
-                 "op": "or",
-                 "list": [
-                  {
-                   "op": "eq",
-                   "a": "{item.arc}",
-                   "b": ""
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.arc}",
-                   "b": "ทัวร์จุดเด่น"
-                  }
-                 ]
-                }
+                "op": "eq",
+                "a": "{item.endMode}",
+                "b": "custom"
                },
-               "className": "flex flex-row items-start gap-3 mt-1",
+               "className": "flex flex-col gap-2 rounded-2xl border border-[var(--ev-border)] p-3 mt-1",
                "card": [
                 {
+                 "el": "text",
+                 "value": "อยากให้ออกมาเป็นแบบไหน",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "textarea",
+                 "field": "goal",
+                 "placeholder": "เช่น เคาน์เตอร์โล่ง ของเข้าที่ หยิบใช้ง่าย",
+                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+                },
+                {
                  "el": "box",
-                 "className": "relative w-[124px] shrink-0",
                  "when": {
                   "op": "not",
                   "a": {
-                   "op": "eq",
-                   "a": "{item.slots.endRef}",
-                   "b": ""
-                  }
-                 },
-                 "card": [
-                  {
-                   "el": "media-slot",
-                   "src": "{item.slots.endRef}",
-                   "aspect": "1:1",
-                   "style": {
-                    "borderRadius": "16px"
-                   },
-                   "className": "ring-1 ring-[var(--ev-border)]"
-                  },
-                  {
-                   "el": "button",
-                   "action": "hook",
-                   "fn": "clearSlot",
-                   "to": "endRef",
-                   "label": "",
-                   "icon": "close",
-                   "variant": "ghost",
-                   "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "when": {
-                  "op": "eq",
-                  "a": "{item.slots.endRef}",
-                  "b": ""
-                 },
-                 "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                 "card": [
-                  {
-                   "el": "upload",
-                   "label": "",
-                   "placeholder": "อัพโหลด",
-                   "icon": "upload",
-                   "into": "endRef",
-                   "resize": {
-                    "maxPx": 768,
-                    "quality": 0.8
-                   },
-                   "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                  },
-                  {
-                   "el": "pick-button",
-                   "label": "เลือกภาพ",
-                   "icon": "photo_library",
-                   "filter": "image",
-                   "into": "endRef",
-                   "resize": {
-                    "maxPx": 768,
-                    "quality": 0.8
-                   },
-                   "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1 min-w-0 pt-1",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "!gap-1.5 !flex-nowrap items-center",
-                   "card": [
+                   "op": "or",
+                   "list": [
                     {
-                     "el": "icon",
-                     "icon": "add_photo_alternate",
-                     "textSize": "text-[18px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                     "op": "eq",
+                     "a": "{item.arc}",
+                     "b": ""
                     },
                     {
-                     "el": "text",
-                     "value": "หรือใส่รูปตัวอย่าง",
-                     "className": "!text-[15px] @[640px]:!text-[14px] font-black !text-[var(--ev-text)]"
+                     "op": "eq",
+                     "a": "{item.arc}",
+                     "b": "ทัวร์จุดเด่น"
+                    }
+                   ]
+                  }
+                 },
+                 "className": "flex flex-row items-start gap-3 mt-1",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[124px] shrink-0",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.endRef}",
+                     "b": ""
+                    }
+                   },
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.endRef}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "16px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "endRef",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
                     }
                    ]
                   },
                   {
-                   "el": "text",
-                   "value": "ไม่บังคับ · ใช้รูปจากที่อื่นได้ ห้องยังเป็นห้องของงานนี้",
-                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 leading-snug"
+                   "el": "box",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.endRef}",
+                    "b": ""
+                   },
+                   "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "endRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "endRef",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-1 min-w-0 pt-1",
+                   "card": [
+                    {
+                     "el": "row",
+                     "className": "!gap-1.5 !flex-nowrap items-center",
+                     "card": [
+                      {
+                       "el": "icon",
+                       "icon": "add_photo_alternate",
+                       "textSize": "text-[18px]",
+                       "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                      },
+                      {
+                       "el": "text",
+                       "value": "หรือใส่รูปตัวอย่าง",
+                       "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                      }
+                     ]
+                    },
+                    {
+                     "el": "text",
+                     "value": "ไม่บังคับ · ใช้รูปจากที่อื่นได้ ห้องยังเป็นห้องของงานนี้",
+                     "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 leading-snug"
+                    }
+                   ]
                   }
                  ]
                 }
@@ -25219,12 +25475,12 @@
               {
                "el": "text",
                "value": "ลูกเล่นตอนท้าย (ไม่บังคับ)",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
               },
               {
                "el": "text",
                "value": "อยากให้มีอะไรพิเศษหลังงานเสร็จ",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 -mt-1"
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 -mt-1"
               },
               {
                "el": "textarea",
