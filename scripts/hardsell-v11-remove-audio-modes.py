@@ -63,7 +63,13 @@ def fix(n):
         if set(rest) == {'value'}:                       # {when, value} ⇒ เหลือแค่ value
             return fix(rest['value'])[0], True
         n = rest                                         # การ์ด/ปุ่มที่มี when ⇒ ถอดแค่ when
-    return {k: fix(v)[0] for k, v in n.items()}, True
+    out = {k: fix(v)[0] for k, v in n.items()}
+    # 🧹 block/concat ที่ลูกถูกลบหมด ⇒ ลบทั้งก้อน (ไม่ทิ้ง `{"op":"block","parts":[]}` เปล่าไว้)
+    #    รอบแรกผมไม่ได้ใส่ข้อนี้ ⇒ mnPlan เหลือบล็อกว่าง 1 ก้อน (ผลลัพธ์เหมือนเดิม แต่ไม่เรียบร้อย · เจอตอนตรวจละเอียด)
+    if out.get('op') in ('block', 'concat') and out.get('parts') == [] and n.get('parts'):
+        stat['empty'] = stat.get('empty', 0) + 1
+        return None, False
+    return out, True
 
 
 def main():
@@ -125,7 +131,7 @@ def main():
     print('   ① ลบการ์ดตัวเลือกเสียง 1 ใบ (มีเสียงพากย์ / ไม่มีเสียงพากย์ / ASMR)')
     print('   ② เงื่อนไขที่อ้างโหมดเสียง: แกะออก (เป็นจริงเสมอ) %d · ลบทิ้ง (เป็นไปไม่ได้แล้ว) %d' % (stat['unwrap'], stat['drop']))
     print('   ②b ลบตาราง audioPlan (มีแต่ 2 โหมดที่ถอด) · ตัดประโยค "ถ้าปิดเสียงพากย์ (เงียบ/ASMR)" ใน textPlan')
-    print('   ③ ลบ values.svAudio (ไม่มีใครอ้างแล้ว)')
+    print('   ③ ลบ values.svAudio (ไม่มีใครอ้างแล้ว) · 🧹 บล็อกที่ว่างเพราะลูกถูกลบหมด %d ก้อน' % stat.get('empty', 0))
 
 
 main()
