@@ -80,7 +80,6 @@
     "batchDelay": "10",
     "retryDelay": "20",
     "viewMode": "",
-    "svAudio": "มีเสียงพากย์",
     "svVoice": "สุ่มตามสินค้า",
     "svSec": "8",
     "templateId": "ugc-review",
@@ -379,74 +378,23 @@
             "sep": "",
             "parts": [
               {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "\n\nเสียงพากย์ของคลิป: {values.svVoice}\n",
-                    {
-                      "op": "lookup",
-                      "table": "voicePlan",
-                      "key": "{values.svVoice}",
-                      "fallback": "เสียงพากย์ของคลิปนี้เป็น \"ผู้หญิง\" — ถ้ามีคำลงท้าย voN ทุกฉาก ต้องใช้คำลงท้าย ค่ะ/คะ เท่านั้น ห้ามใช้ ครับ/ครับผม เด็ดขาด (แต่ไม่ต้องใส่ทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ) · สรรพนามแทนผู้พูดใช้ \"เรา\" หรือไม่ต้องมีสรรพนาม ห้ามใช้ \"ผม\" · ห้ามผสมคำลงท้ายสองเพศในคลิปเดียวกัน · ถ้าโหมดมีพรีเซนเตอร์และผู้ใช้ไม่ได้ระบุเพศพรีเซนเตอร์ ให้พรีเซนเตอร์เป็นผู้หญิงเพื่อให้ตรงกับเสียง"
-                    }
-                  ]
-                }
+                "op": "concat",
+                "parts": [
+                  "\n\nเสียงพากย์ของคลิป: {values.svVoice}\n",
+                  {
+                    "op": "lookup",
+                    "table": "voicePlan",
+                    "key": "{values.svVoice}",
+                    "fallback": "เสียงพากย์ของคลิปนี้เป็น \"ผู้หญิง\" — ถ้ามีคำลงท้าย voN ทุกฉาก ต้องใช้คำลงท้าย ค่ะ/คะ เท่านั้น ห้ามใช้ ครับ/ครับผม เด็ดขาด (แต่ไม่ต้องใส่ทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ) · สรรพนามแทนผู้พูดใช้ \"เรา\" หรือไม่ต้องมีสรรพนาม ห้ามใช้ \"ผม\" · ห้ามผสมคำลงท้ายสองเพศในคลิปเดียวกัน · ถ้าโหมดมีพรีเซนเตอร์และผู้ใช้ไม่ได้ระบุเพศพรีเซนเตอร์ ให้พรีเซนเตอร์เป็นผู้หญิงเพื่อให้ตรงกับเสียง"
+                  }
+                ]
               }
             ]
           },
           {
             "op": "block",
             "sep": "",
-            "parts": [
-              {
-                "when": {
-                  "op": "or",
-                  "a": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ไม่มีเสียงพากย์"
-                  },
-                  "b": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ASMR"
-                  }
-                },
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "\n\nโหมดเสียงของคลิป: {values.svAudio}\n",
-                    {
-                      "op": "lookup",
-                      "table": "audioPlan",
-                      "key": "{values.svAudio}",
-                      "fallback": ""
-                    }
-                  ]
-                }
-              }
-            ]
+            "parts": []
           },
           {
             "op": "block",
@@ -866,46 +814,7 @@
             "op": "block",
             "sep": "",
             "parts": [
-              {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": "(4) บทพูด VO ภาษาไทย"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": "(4) โน้ตเสียง (คลิปนี้ไม่มีบทพูด)"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": "(4) โน้ตเสียง ASMR (คลิปนี้ไม่มีบทพูด)"
-              }
+              "(4) บทพูด VO ภาษาไทย"
             ]
           },
           "\nห้ามเป็นกริด 2 คอลัมน์ คอลลาจ โปสเตอร์ หรือภาพเดี่ยว · คอลัมน์ (3)(4) เป็นภาษาไทยตามบท\n\n",
@@ -1010,46 +919,7 @@
             "op": "block",
             "sep": "",
             "parts": [
-              {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": " · VO: \"{item.vo1}\""
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": " · เสียง: บรรยากาศธรรมชาติ ไม่มีบทพูด"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": " · เสียง: ASMR จากแอ็กชันในฉาก ไม่มีบทพูด"
-              }
+              " · VO: \"{item.vo1}\""
             ]
           },
           {
@@ -1083,46 +953,7 @@
             "op": "block",
             "sep": "",
             "parts": [
-              {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": " · VO: \"{item.vo2}\""
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": " · เสียง: บรรยากาศธรรมชาติ ไม่มีบทพูด"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": " · เสียง: ASMR จากแอ็กชันในฉาก ไม่มีบทพูด"
-              }
+              " · VO: \"{item.vo2}\""
             ]
           },
           {
@@ -1156,46 +987,7 @@
             "op": "block",
             "sep": "",
             "parts": [
-              {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": " · VO: \"{item.vo3}\""
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": " · เสียง: บรรยากาศธรรมชาติ ไม่มีบทพูด"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": " · เสียง: ASMR จากแอ็กชันในฉาก ไม่มีบทพูด"
-              }
+              " · VO: \"{item.vo3}\""
             ]
           },
           {
@@ -1229,46 +1021,7 @@
             "op": "block",
             "sep": "",
             "parts": [
-              {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": " · VO: \"{item.vo4}\""
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": " · เสียง: บรรยากาศธรรมชาติ ไม่มีบทพูด"
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": " · เสียง: ASMR จากแอ็กชันในฉาก ไม่มีบทพูด"
-              }
+              " · VO: \"{item.vo4}\""
             ]
           },
           "\n\nปิดท้ายทุกภาพด้วย: \"",
@@ -1385,57 +1138,18 @@
             "sep": "",
             "parts": [
               {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "\n\nAudio: continuous Thai narration from 0.0s to the end, no silent gaps. Tone: ",
-                    {
-                      "op": "lookup",
-                      "table": "toneVoice",
-                      "key": "{values.toneId}",
-                      "fallback": ""
-                    },
-                    ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo5} {item.vo6} {item.vo7} {item.vo8}\"",
-                    "\n\nVoice continuity: same take as part 1 — keep the exact same voice (gender, pitch, timbre, accent, pace); no other speaker."
-                  ]
-                }
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": "\n\nAudio: no voice-over or narration — natural ambient sound only (room tone, real product sounds). No music."
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": "\n\nAudio: ASMR — no narration or speech. Close-mic crisp real product sounds matched to the action plus subtle room tone. No music, never a human voice."
+                "op": "concat",
+                "parts": [
+                  "\n\nAudio: continuous Thai narration from 0.0s to the end, no silent gaps. Tone: ",
+                  {
+                    "op": "lookup",
+                    "table": "toneVoice",
+                    "key": "{values.toneId}",
+                    "fallback": ""
+                  },
+                  ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo5} {item.vo6} {item.vo7} {item.vo8}\"",
+                  "\n\nVoice continuity: same take as part 1 — keep the exact same voice (gender, pitch, timbre, accent, pace); no other speaker."
+                ]
               }
             ]
           },
@@ -1444,85 +1158,46 @@
             "sep": "",
             "parts": [
               {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
+                "op": "block",
+                "sep": "",
+                "parts": [
+                  {
+                    "when": "values.svVoice!=สุ่มตามสินค้า",
+                    "value": {
+                      "op": "lookup",
+                      "table": "voiceLockEN",
+                      "key": "{values.svVoice}",
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
                     }
-                  ]
-                },
-                "value": {
-                  "op": "block",
-                  "sep": "",
-                  "parts": [
-                    {
-                      "when": "values.svVoice!=สุ่มตามสินค้า",
-                      "value": {
-                        "op": "lookup",
-                        "table": "voiceLockEN",
-                        "key": "{values.svVoice}",
-                        "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
-                      }
-                    },
-                    {
-                      "when": "values.svVoice=สุ่มตามสินค้า",
-                      "value": {
-                        "op": "lookup",
-                        "table": "voiceLockEN",
-                        "key": {
-                          "op": "matchTable",
-                          "value": "{item.voice}",
-                          "table": [
-                            {
-                              "any": [
-                                "ชาย"
-                              ],
-                              "value": "เสียงผู้ชาย"
-                            },
-                            {
-                              "any": [
-                                "หญิง"
-                              ],
-                              "value": "เสียงผู้หญิง"
-                            }
-                          ],
-                          "fallback": "เสียงผู้หญิง"
-                        },
-                        "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "when": {
-                  "op": "or",
-                  "a": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ไม่มีเสียงพากย์"
                   },
-                  "b": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ASMR"
+                  {
+                    "when": "values.svVoice=สุ่มตามสินค้า",
+                    "value": {
+                      "op": "lookup",
+                      "table": "voiceLockEN",
+                      "key": {
+                        "op": "matchTable",
+                        "value": "{item.voice}",
+                        "table": [
+                          {
+                            "any": [
+                              "ชาย"
+                            ],
+                            "value": "เสียงผู้ชาย"
+                          },
+                          {
+                            "any": [
+                              "หญิง"
+                            ],
+                            "value": "เสียงผู้หญิง"
+                          }
+                        ],
+                        "fallback": "เสียงผู้หญิง"
+                      },
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                    }
                   }
-                },
-                "value": "\n\nAUDIO LOCK: This video has NO spoken narration. Do not add any human voice, dialogue, singing or lip-sync. Any speech is a wrong result."
+                ]
               }
             ]
           },
@@ -2164,56 +1839,17 @@
             "sep": "",
             "parts": [
               {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
-                    }
-                  ]
-                },
-                "value": {
-                  "op": "concat",
-                  "parts": [
-                    "\n\nAudio: continuous Thai narration from 0.0s to the end, no silent gaps. Tone: ",
-                    {
-                      "op": "lookup",
-                      "table": "toneVoice",
-                      "key": "{values.toneId}",
-                      "fallback": ""
-                    },
-                    ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo1} {item.vo2} {item.vo3} {item.vo4}\""
-                  ]
-                }
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ไม่มีเสียงพากย์"
-                },
-                "value": "\n\nAudio: no voice-over or narration — natural ambient sound only (room tone, real product sounds). No music."
-              },
-              {
-                "when": {
-                  "op": "eq",
-                  "a": "{values.svAudio}",
-                  "b": "ASMR"
-                },
-                "value": "\n\nAudio: ASMR — no narration or speech. Close-mic crisp real product sounds matched to the action plus subtle room tone. No music, never a human voice."
+                "op": "concat",
+                "parts": [
+                  "\n\nAudio: continuous Thai narration from 0.0s to the end, no silent gaps. Tone: ",
+                  {
+                    "op": "lookup",
+                    "table": "toneVoice",
+                    "key": "{values.toneId}",
+                    "fallback": ""
+                  },
+                  ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo1} {item.vo2} {item.vo3} {item.vo4}\""
+                ]
               }
             ]
           },
@@ -2222,85 +1858,46 @@
             "sep": "",
             "parts": [
               {
-                "when": {
-                  "op": "and",
-                  "list": [
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ไม่มีเสียงพากย์"
-                      }
-                    },
-                    {
-                      "op": "not",
-                      "a": {
-                        "op": "eq",
-                        "a": "{values.svAudio}",
-                        "b": "ASMR"
-                      }
+                "op": "block",
+                "sep": "",
+                "parts": [
+                  {
+                    "when": "values.svVoice!=สุ่มตามสินค้า",
+                    "value": {
+                      "op": "lookup",
+                      "table": "voiceLockEN",
+                      "key": "{values.svVoice}",
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
                     }
-                  ]
-                },
-                "value": {
-                  "op": "block",
-                  "sep": "",
-                  "parts": [
-                    {
-                      "when": "values.svVoice!=สุ่มตามสินค้า",
-                      "value": {
-                        "op": "lookup",
-                        "table": "voiceLockEN",
-                        "key": "{values.svVoice}",
-                        "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
-                      }
-                    },
-                    {
-                      "when": "values.svVoice=สุ่มตามสินค้า",
-                      "value": {
-                        "op": "lookup",
-                        "table": "voiceLockEN",
-                        "key": {
-                          "op": "matchTable",
-                          "value": "{item.voice}",
-                          "table": [
-                            {
-                              "any": [
-                                "ชาย"
-                              ],
-                              "value": "เสียงผู้ชาย"
-                            },
-                            {
-                              "any": [
-                                "หญิง"
-                              ],
-                              "value": "เสียงผู้หญิง"
-                            }
-                          ],
-                          "fallback": "เสียงผู้หญิง"
-                        },
-                        "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "when": {
-                  "op": "or",
-                  "a": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ไม่มีเสียงพากย์"
                   },
-                  "b": {
-                    "op": "eq",
-                    "a": "{values.svAudio}",
-                    "b": "ASMR"
+                  {
+                    "when": "values.svVoice=สุ่มตามสินค้า",
+                    "value": {
+                      "op": "lookup",
+                      "table": "voiceLockEN",
+                      "key": {
+                        "op": "matchTable",
+                        "value": "{item.voice}",
+                        "table": [
+                          {
+                            "any": [
+                              "ชาย"
+                            ],
+                            "value": "เสียงผู้ชาย"
+                          },
+                          {
+                            "any": [
+                              "หญิง"
+                            ],
+                            "value": "เสียงผู้หญิง"
+                          }
+                        ],
+                        "fallback": "เสียงผู้หญิง"
+                      },
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                    }
                   }
-                },
-                "value": "\n\nAUDIO LOCK: This video has NO spoken narration. Do not add any human voice, dialogue, singing or lip-sync. Any speech is a wrong result."
+                ]
               }
             ]
           },
@@ -4113,58 +3710,7 @@
                           "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
                         },
                         {
-                          "el": "grid-select",
-                          "field": "svAudio",
-                          "cols": 3,
-                          "mobile": {
-                            "cols": 1
-                          },
-                          "contained": true,
-                          "options": [
-                            {
-                              "value": "มีเสียงพากย์",
-                              "label": "มีเสียงพากย์",
-                              "desc": "มีคนพูดบรรยายตลอดคลิป",
-                              "icon": "record_voice_over"
-                            },
-                            {
-                              "value": "ไม่มีเสียงพากย์",
-                              "label": "ไม่มีเสียงพากย์",
-                              "desc": "เงียบ มีแต่เสียงบรรยากาศ",
-                              "icon": "volume_off"
-                            },
-                            {
-                              "value": "ASMR",
-                              "label": "ASMR",
-                              "desc": "เสียงสัมผัสชัดๆ ไม่มีคนพูด",
-                              "icon": "graphic_eq"
-                            }
-                          ],
-                          "className": "!min-h-[48px] @[420px]:!min-h-0"
-                        },
-                        {
                           "el": "box",
-                          "when": {
-                            "op": "and",
-                            "list": [
-                              {
-                                "op": "not",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{values.svAudio}",
-                                  "b": "ไม่มีเสียงพากย์"
-                                }
-                              },
-                              {
-                                "op": "not",
-                                "a": {
-                                  "op": "eq",
-                                  "a": "{values.svAudio}",
-                                  "b": "ASMR"
-                                }
-                              }
-                            ]
-                          },
                           "className": "flex flex-col gap-3 p-3 @[420px]:p-4 rounded-2xl bg-[var(--ev-bg)] border border-[var(--ev-border)]",
                           "card": [
                             {
@@ -12420,106 +11966,67 @@
                                             "sep": "",
                                             "parts": [
                                               {
-                                                "when": {
-                                                  "op": "eq",
-                                                  "a": "{values.svAudio}",
-                                                  "b": "ไม่มีเสียงพากย์"
-                                                },
-                                                "value": "ไม่มีเสียงพากย์ (เสียงบรรยากาศ)"
-                                              },
-                                              {
-                                                "when": {
-                                                  "op": "eq",
-                                                  "a": "{values.svAudio}",
-                                                  "b": "ASMR"
-                                                },
-                                                "value": "ASMR — ไม่มีบทพูด"
-                                              },
-                                              {
-                                                "when": {
-                                                  "op": "and",
-                                                  "list": [
-                                                    {
-                                                      "op": "not",
+                                                "op": "block",
+                                                "sep": "",
+                                                "parts": [
+                                                  {
+                                                    "when": {
+                                                      "op": "and",
                                                       "a": {
                                                         "op": "eq",
-                                                        "a": "{values.svAudio}",
-                                                        "b": "ไม่มีเสียงพากย์"
-                                                      }
-                                                    },
-                                                    {
-                                                      "op": "not",
-                                                      "a": {
-                                                        "op": "eq",
-                                                        "a": "{values.svAudio}",
-                                                        "b": "ASMR"
-                                                      }
-                                                    }
-                                                  ]
-                                                },
-                                                "value": {
-                                                  "op": "block",
-                                                  "sep": "",
-                                                  "parts": [
-                                                    {
-                                                      "when": {
-                                                        "op": "and",
-                                                        "a": {
-                                                          "op": "eq",
-                                                          "a": "{values.svVoice}",
-                                                          "b": "สุ่มตามสินค้า"
-                                                        },
-                                                        "b": {
-                                                          "op": "not",
-                                                          "a": {
-                                                            "op": "eq",
-                                                            "a": "{item.voice}",
-                                                            "b": ""
-                                                          }
-                                                        }
+                                                        "a": "{values.svVoice}",
+                                                        "b": "สุ่มตามสินค้า"
                                                       },
-                                                      "value": "{item.voice} (AI เลือกให้)"
-                                                    },
-                                                    {
-                                                      "when": {
-                                                        "op": "and",
+                                                      "b": {
+                                                        "op": "not",
                                                         "a": {
-                                                          "op": "eq",
-                                                          "a": "{values.svVoice}",
-                                                          "b": "สุ่มตามสินค้า"
-                                                        },
-                                                        "b": {
                                                           "op": "eq",
                                                           "a": "{item.voice}",
                                                           "b": ""
                                                         }
-                                                      },
-                                                      "value": "AI จะเลือกให้ตอนเขียนบท"
-                                                    },
-                                                    {
-                                                      "when": "values.svVoice!=สุ่มตามสินค้า",
-                                                      "value": {
-                                                        "op": "matchTable",
-                                                        "value": "{values.svVoice}",
-                                                        "table": [
-                                                          {
-                                                            "any": [
-                                                              "ชาย"
-                                                            ],
-                                                            "value": "ชาย (คุณเลือกไว้)"
-                                                          },
-                                                          {
-                                                            "any": [
-                                                              "หญิง"
-                                                            ],
-                                                            "value": "หญิง (คุณเลือกไว้)"
-                                                          }
-                                                        ],
-                                                        "fallback": "หญิง (ค่าเริ่มต้น)"
                                                       }
+                                                    },
+                                                    "value": "{item.voice} (AI เลือกให้)"
+                                                  },
+                                                  {
+                                                    "when": {
+                                                      "op": "and",
+                                                      "a": {
+                                                        "op": "eq",
+                                                        "a": "{values.svVoice}",
+                                                        "b": "สุ่มตามสินค้า"
+                                                      },
+                                                      "b": {
+                                                        "op": "eq",
+                                                        "a": "{item.voice}",
+                                                        "b": ""
+                                                      }
+                                                    },
+                                                    "value": "AI จะเลือกให้ตอนเขียนบท"
+                                                  },
+                                                  {
+                                                    "when": "values.svVoice!=สุ่มตามสินค้า",
+                                                    "value": {
+                                                      "op": "matchTable",
+                                                      "value": "{values.svVoice}",
+                                                      "table": [
+                                                        {
+                                                          "any": [
+                                                            "ชาย"
+                                                          ],
+                                                          "value": "ชาย (คุณเลือกไว้)"
+                                                        },
+                                                        {
+                                                          "any": [
+                                                            "หญิง"
+                                                          ],
+                                                          "value": "หญิง (คุณเลือกไว้)"
+                                                        }
+                                                      ],
+                                                      "fallback": "หญิง (ค่าเริ่มต้น)"
                                                     }
-                                                  ]
-                                                }
+                                                  }
+                                                ]
                                               }
                                             ]
                                           }
@@ -18478,11 +17985,7 @@
       "เสียงผู้ชาย": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a MALE (adult man) voice. A female narrator is a wrong result."
     },
     "textPlan": {
-      "ไม่มีข้อความ": "โหมดคลิปนี้คือ \"ไม่มีข้อความบนภาพ\" — ห้ามพึ่งตัวหนังสือในการสื่อสาร: ออกแบบ sNth ทุกฉาก และ sNen ทุกฉาก ให้เล่าเรื่องด้วยภาพล้วน (องค์ประกอบ มุมกล้อง การกระทำ) และให้เสียงพากย์ voN ทุกฉาก ช่วยแบกสารเฉพาะเมื่อโหมดเสียงพากย์เปิดอยู่ — ถ้าปิดเสียงพากย์ด้วย (เงียบ/ASMR) ต้องเล่าให้เข้าใจครบด้วยภาพล้วน ไม่มีทั้งตัวหนังสือและคำพูด · ห้ามบรรยายว่ามีข้อความ ป้าย ซับไตเติล หรือตัวอักษรใดๆ ปรากฏในภาพ (ยกเว้นฉลากจริงบนตัวสินค้า) · ฟิลด์ ovN ทุกฉาก ยังเขียนไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดข้อความภายหลัง"
-    },
-    "audioPlan": {
-      "ไม่มีเสียงพากย์": "คลิปนี้ \"ไม่มีเสียงพากย์\" (ไม่มีคนพูดเลย) — สารทั้งหมดต้องสื่อผ่านภาพเป็นหลัก (ใช้ข้อความบนภาพช่วยได้เฉพาะเมื่อโหมดข้อความเปิดอยู่ — ถ้าปิดอยู่ต้องเล่าด้วยภาพล้วน) · ออกแบบ sNth ทุกฉาก และ sNen ทุกฉาก ให้เข้าใจได้ครบโดยไม่ต้องมีคำพูด ห้ามวางฉากที่ต้องพึ่งการพูดอธิบาย · ถ้ามีพรีเซนเตอร์ ห้ามให้พูดใส่กล้อง ใช้การกระทำและสีหน้าแทน · ยังเขียน voN ทุกฉาก ไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดเสียงพากย์ภายหลัง",
-      "ASMR": "คลิปนี้เป็นแนว \"ASMR\" ไม่มีคนพูด — ทุกฉากต้องมีแอ็กชันที่เกิดเสียงน่าฟังชัดเจน (เท บีบ แกะฝา เคาะเบาๆ ลูบพื้นผิว เสียงผ้า) และต้องระบุแอ็กชันนั้นใน sNth ทุกฉาก กับ sNen ทุกฉาก ทุกฉาก · เน้นช็อตใกล้ระดับมาโครให้เห็นรายละเอียดที่ทำให้เกิดเสียง · สารสื่อผ่านภาพและเสียงสัมผัสเป็นหลัก (ใช้ข้อความบนภาพช่วยได้เฉพาะเมื่อโหมดข้อความเปิดอยู่) ห้ามพึ่งคำพูด · ถ้ามีพรีเซนเตอร์ ห้ามให้พูดใส่กล้อง · ยังเขียน voN ทุกฉาก ไว้ตามปกติ เก็บเป็นข้อมูลสำรอง"
+      "ไม่มีข้อความ": "โหมดคลิปนี้คือ \"ไม่มีข้อความบนภาพ\" — ห้ามพึ่งตัวหนังสือในการสื่อสาร: ออกแบบ sNth ทุกฉาก และ sNen ทุกฉาก ให้เล่าเรื่องด้วยภาพล้วน (องค์ประกอบ มุมกล้อง การกระทำ) และให้เสียงพากย์ voN ทุกฉาก ช่วยแบกสาร · ห้ามบรรยายว่ามีข้อความ ป้าย ซับไตเติล หรือตัวอักษรใดๆ ปรากฏในภาพ (ยกเว้นฉลากจริงบนตัวสินค้า) · ฟิลด์ ovN ทุกฉาก ยังเขียนไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดข้อความภายหลัง"
     },
     "sceneLab": {
       "8|1": "1. ฮุคแรง [0-2s]",
