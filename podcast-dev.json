@@ -750,6 +750,12 @@
      },
      "\n",
      {
+      "op": "lookup",
+      "table": "genreProd",
+      "key": "{item.hasProduct}{item.format}",
+      "fallback": ""
+     },
+     {
       "op": "block",
       "sep": "",
       "parts": [
@@ -10050,8 +10056,12 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.hasProduct!=ไม่มี",
+        "when": "item.hasProduct=1 ชิ้น",
         "value": "มีสินค้า: {item.prodName} {item.description}\n"
+       },
+       {
+        "when": "item.hasProduct=หลายชิ้น",
+        "value": "มีสินค้าหลายชิ้น: {item.itemName1} {item.itemName2} {item.itemName3} {item.itemName4} {item.itemName5}\n"
        }
       ]
      },
@@ -10322,6 +10332,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "",
      "truth": "",
      "preset": "custom"
@@ -10338,6 +10354,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "tale",
      "truth": "",
      "preset": "tale"
@@ -10357,6 +10379,7 @@
      "hasProduct": "1 ชิ้น",
      "format": "review",
      "truth": "",
+     "angle": "",
      "preset": "sell"
     }
    }
@@ -10371,6 +10394,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "service",
      "truth": "real",
      "preset": "service"
@@ -10387,6 +10416,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "money",
      "truth": "real",
      "preset": "money"
@@ -10403,6 +10438,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "news",
      "truth": "real",
      "preset": "news"
@@ -10419,6 +10460,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "explain",
      "truth": "real",
      "preset": "know"
@@ -10435,6 +10482,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "health",
      "truth": "real",
      "preset": "health"
@@ -10451,6 +10504,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "ghost",
      "truth": "",
      "preset": "mystery"
@@ -10467,6 +10526,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "love",
      "truth": "",
      "preset": "life"
@@ -10483,6 +10548,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "pop",
      "truth": "",
      "preset": "pop"
@@ -10499,6 +10570,12 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
+     "hasProduct": {
+      "op": "lookup",
+      "table": "presetProd",
+      "key": "{item.preset}{item.hasProduct}",
+      "fallback": "ไม่มี"
+     },
      "format": "belief",
      "truth": "",
      "preset": "belief"
@@ -12862,1499 +12939,6 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "movie",
-                 "textSize": "text-[19px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                }
-               ]
-              },
-              {
-               "el": "text",
-               "value": "อยากทำคลิปแบบไหน",
-               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
-              }
-             ]
-            },
-            {
-             "el": "text",
-             "value": "① ประเภทเนื้อหา",
-             "className": "!text-[14.5px] font-black !text-[var(--ev-text)] px-0.5"
-            },
-            {
-             "el": "box",
-             "className": "grid grid-cols-2 @[640px]:grid-cols-3 gap-x-2 gap-y-2.5 mb-2",
-             "card": [
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_custom",
-                 "force": true,
-                 "label": "อัตโนมัติ",
-                 "icon": "auto_awesome",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=custom"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_custom",
-                 "force": true,
-                 "label": "อัตโนมัติ",
-                 "icon": "auto_awesome",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=custom"
-                },
-                {
-                 "el": "text",
-                 "value": "หมีเลือกแนวให้เอง",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_tale",
-                 "force": true,
-                 "label": "เล่าเรื่อง",
-                 "icon": "auto_stories",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=tale"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_tale",
-                 "force": true,
-                 "label": "เล่าเรื่อง",
-                 "icon": "auto_stories",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=tale"
-                },
-                {
-                 "el": "text",
-                 "value": "มีต้น-กลาง-จบ จริงหรือแต่ง",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_sell",
-                 "force": true,
-                 "label": "ขาย / รีวิว",
-                 "icon": "storefront",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=sell"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_sell",
-                 "force": true,
-                 "label": "ขาย / รีวิว",
-                 "icon": "storefront",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=sell"
-                },
-                {
-                 "el": "text",
-                 "value": "ป้ายยา รีวิว ใส่รูปสินค้า",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_service",
-                 "force": true,
-                 "label": "ขายบริการ",
-                 "icon": "support_agent",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=service"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_service",
-                 "force": true,
-                 "label": "ขายบริการ",
-                 "icon": "support_agent",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=service"
-                },
-                {
-                 "el": "text",
-                 "value": "คอร์ส ร้าน ประกัน รับจ้าง",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_money",
-                 "force": true,
-                 "label": "ธุรกิจ / หาเงิน",
-                 "icon": "savings",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=money"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_money",
-                 "force": true,
-                 "label": "ธุรกิจ / หาเงิน",
-                 "icon": "savings",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=money"
-                },
-                {
-                 "el": "text",
-                 "value": "อาชีพเสริม ทริคออม เปิดร้าน",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_news",
-                 "force": true,
-                 "label": "ข่าว / เทรนด์",
-                 "icon": "newspaper",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=news"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_news",
-                 "force": true,
-                 "label": "ข่าว / เทรนด์",
-                 "icon": "newspaper",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=news"
-                },
-                {
-                 "el": "text",
-                 "value": "ข่าวสังคม กระแสตอนนี้",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_know",
-                 "force": true,
-                 "label": "ความรู้ / สอน",
-                 "icon": "lightbulb",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=know"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_know",
-                 "force": true,
-                 "label": "ความรู้ / สอน",
-                 "icon": "lightbulb",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=know"
-                },
-                {
-                 "el": "text",
-                 "value": "เกร็ดความรู้ วิทย์ ใกล้ตัว",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_health",
-                 "force": true,
-                 "label": "สุขภาพ / ผิว",
-                 "icon": "spa",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=health"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_health",
-                 "force": true,
-                 "label": "สุขภาพ / ผิว",
-                 "icon": "spa",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=health"
-                },
-                {
-                 "el": "text",
-                 "value": "ดูแลตัวเอง ออกกำลัง ผิว",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_mystery",
-                 "force": true,
-                 "label": "ผี / ลึกลับ",
-                 "icon": "nights_stay",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=mystery"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_mystery",
-                 "force": true,
-                 "label": "ผี / ลึกลับ",
-                 "icon": "nights_stay",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=mystery"
-                },
-                {
-                 "el": "text",
-                 "value": "ผี เรื่องหลอน ตำนาน",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_life",
-                 "force": true,
-                 "label": "ชีวิต / ความรัก",
-                 "icon": "favorite",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=life"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_life",
-                 "force": true,
-                 "label": "ชีวิต / ความรัก",
-                 "icon": "favorite",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=life"
-                },
-                {
-                 "el": "text",
-                 "value": "รัก ครอบครัว ข้อคิดชีวิต",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_pop",
-                 "force": true,
-                 "label": "บันเทิง / ไลฟ์",
-                 "icon": "live_tv",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=pop"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_pop",
-                 "force": true,
-                 "label": "บันเทิง / ไลฟ์",
-                 "icon": "live_tv",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=pop"
-                },
-                {
-                 "el": "text",
-                 "value": "หนัง เพลง เกม กีฬา กิน",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_belief",
-                 "force": true,
-                 "label": "ดูดวง / สายมู",
-                 "icon": "flare",
-                 "variant": "solid",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset=belief"
-                },
-                {
-                 "el": "gen-button",
-                 "op": "pdPreset_belief",
-                 "force": true,
-                 "label": "ดูดวง / สายมู",
-                 "icon": "flare",
-                 "variant": "outline",
-                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
-                 "when": "item.preset!=belief"
-                },
-                {
-                 "el": "text",
-                 "value": "ดวง ฮวงจุ้ย ความเชื่อ",
-                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-2.5",
-             "when": "item.preset=sell",
-             "card": [
-              {
-               "el": "text",
-               "value": "จำนวนสินค้า",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "hasProduct",
-               "cols": 3,
-               "mobile": {
-                "cols": 1
-               },
-               "contained": true,
-               "className": "!min-h-[48px] @[420px]:!min-h-0",
-               "options": [
-                {
-                 "value": "1 ชิ้น",
-                 "label": "มี 1 ชิ้น",
-                 "desc": "รีวิว/ขาย · รูปได้ 1-5 มุม",
-                 "icon": "inventory_2"
-                },
-                {
-                 "value": "หลายชิ้น",
-                 "label": "มีหลายชิ้น",
-                 "desc": "ชิ้นละ 1 รูป สูงสุด 5 ชิ้น",
-                 "icon": "inventory"
-                }
-               ]
-              },
-              {
-               "el": "text",
-               "value": "รูปแบบรีวิว",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "cols": 2,
-               "contained": true,
-               "className": "!min-h-[44px] @[420px]:!min-h-0",
-               "options": [
-                {
-                 "value": "review",
-                 "label": "รีวิว",
-                 "desc": "จุดเด่น · ข้อสงสัย · เหมาะกับใคร",
-                 "icon": "rate_review"
-                },
-                {
-                 "value": "compare",
-                 "label": "เปรียบเทียบ",
-                 "desc": "เทียบกับทางเลือกทั่วไป",
-                 "icon": "compare_arrows"
-                },
-                {
-                 "value": "qa",
-                 "label": "ถาม-ตอบลูกค้า",
-                 "desc": "ตอบคำถามจริง 3 ข้อ",
-                 "icon": "quiz"
-                },
-                {
-                 "value": "story",
-                 "label": "เล่าเรื่องแบรนด์",
-                 "desc": "ที่มาของของชิ้นนี้",
-                 "icon": "auto_stories"
-                },
-                {
-                 "value": "trend",
-                 "label": "เทรนด์",
-                 "desc": "เปิดด้วยเทรนด์ โยงเข้าสินค้า",
-                 "icon": "trending_up"
-                },
-                {
-                 "value": "unbox",
-                 "label": "แกะกล่อง",
-                 "desc": "เปิดกล่องหน้ากล้อง",
-                 "icon": "package_2"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "card": [
-              {
-               "el": "text",
-               "value": "เลือกแนวเอง (ไม่บังคับ · ว่าง = หมีเลือกตามหัวข้อ)",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "dropdown",
-               "field": "format",
-               "placeholder": "อัตโนมัติ — หมีเลือกให้",
-               "options": [
-                {
-                 "value": "",
-                 "label": "อัตโนมัติ — หมีเลือกให้",
-                 "icon": "auto_fix_high"
-                },
-                {
-                 "value": "review",
-                 "label": "สินค้า · รีวิว",
-                 "icon": "rate_review"
-                },
-                {
-                 "value": "compare",
-                 "label": "สินค้า · เปรียบเทียบ",
-                 "icon": "compare_arrows"
-                },
-                {
-                 "value": "qa",
-                 "label": "สินค้า · ถาม-ตอบลูกค้า",
-                 "icon": "quiz"
-                },
-                {
-                 "value": "story",
-                 "label": "สินค้า · เล่าเรื่องแบรนด์",
-                 "icon": "auto_stories"
-                },
-                {
-                 "value": "trend",
-                 "label": "สินค้า · เทรนด์",
-                 "icon": "trending_up"
-                },
-                {
-                 "value": "unbox",
-                 "label": "สินค้า · แกะกล่อง",
-                 "icon": "package_2"
-                },
-                {
-                 "value": "tale",
-                 "label": "เล่าเรื่อง / ประสบการณ์",
-                 "icon": "auto_stories"
-                },
-                {
-                 "value": "joke",
-                 "label": "เรื่องตลก / มุข",
-                 "icon": "sentiment_very_satisfied"
-                },
-                {
-                 "value": "ghost",
-                 "label": "เรื่องผี / ลี้ลับ",
-                 "icon": "nights_stay"
-                },
-                {
-                 "value": "crime",
-                 "label": "คดีดัง / ปริศนา",
-                 "icon": "search"
-                },
-                {
-                 "value": "history",
-                 "label": "ประวัติศาสตร์",
-                 "icon": "history_edu"
-                },
-                {
-                 "value": "news",
-                 "label": "สรุปข่าว",
-                 "icon": "newspaper"
-                },
-                {
-                 "value": "explain",
-                 "label": "ความรู้รอบตัว",
-                 "icon": "lightbulb"
-                },
-                {
-                 "value": "money",
-                 "label": "ธุรกิจ / การเงิน",
-                 "icon": "savings"
-                },
-                {
-                 "value": "self",
-                 "label": "พัฒนาตัวเอง",
-                 "icon": "self_improvement"
-                },
-                {
-                 "value": "love",
-                 "label": "ความรัก / ความสัมพันธ์",
-                 "icon": "favorite"
-                },
-                {
-                 "value": "pop",
-                 "label": "บันเทิง / ไลฟ์",
-                 "icon": "live_tv"
-                },
-                {
-                 "value": "debate",
-                 "label": "ดีเบต 2 ฝั่ง",
-                 "icon": "balance"
-                },
-                {
-                 "value": "interview",
-                 "label": "สัมภาษณ์",
-                 "icon": "record_voice_over"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "icon": "school"
-                },
-                {
-                 "value": "service",
-                 "label": "แนะนำบริการ",
-                 "icon": "support_agent"
-                },
-                {
-                 "value": "health",
-                 "label": "สุขภาพ / ความงาม",
-                 "icon": "spa"
-                },
-                {
-                 "value": "belief",
-                 "label": "ดูดวง / สายมู",
-                 "icon": "flare"
-                },
-                {
-                 "value": "finance",
-                 "label": "การเงิน / ประกัน / ลงทุน",
-                 "icon": "account_balance"
-                }
-               ],
-               "className": "!min-h-[48px] @[420px]:!min-h-0"
-              }
-             ],
-             "when": "item.preset=custom"
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=tale",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "tale",
-                 "label": "เล่าเรื่อง / ประสบการณ์",
-                 "desc": "มีต้น กลาง จบ มีจุดพีค",
-                 "icon": "auto_stories"
-                },
-                {
-                 "value": "joke",
-                 "label": "เรื่องตลก / มุข",
-                 "desc": "ปูเรื่องแล้วหักมุม",
-                 "icon": "sentiment_very_satisfied"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "tale",
-                 "label": "เล่าเรื่อง / ประสบการณ์",
-                 "desc": "มีต้น กลาง จบ มีจุดพีค",
-                 "icon": "auto_stories"
-                },
-                {
-                 "value": "joke",
-                 "label": "เรื่องตลก / มุข",
-                 "desc": "ปูเรื่องแล้วหักมุม",
-                 "icon": "sentiment_very_satisfied"
-                }
-               ],
-               "cols": 2,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=service",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "service",
-                 "label": "แนะนำบริการ",
-                 "desc": "คอร์ส ร้าน ประกัน รับจ้าง",
-                 "icon": "support_agent"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                },
-                {
-                 "value": "finance",
-                 "label": "การเงิน / ประกัน / ลงทุน",
-                 "desc": "ความรู้เงิน + แนะนำบริการได้",
-                 "icon": "account_balance"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "service",
-                 "label": "แนะนำบริการ",
-                 "desc": "คอร์ส ร้าน ประกัน รับจ้าง",
-                 "icon": "support_agent"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                },
-                {
-                 "value": "finance",
-                 "label": "การเงิน / ประกัน / ลงทุน",
-                 "desc": "ความรู้เงิน + แนะนำบริการได้",
-                 "icon": "account_balance"
-                }
-               ],
-               "cols": 3,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=money",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "money",
-                 "label": "ธุรกิจ / การเงิน",
-                 "desc": "ทริคที่ทำได้จริง",
-                 "icon": "savings"
-                },
-                {
-                 "value": "finance",
-                 "label": "การเงิน / ประกัน / ลงทุน",
-                 "desc": "ความรู้เงิน + แนะนำบริการได้",
-                 "icon": "account_balance"
-                },
-                {
-                 "value": "self",
-                 "label": "พัฒนาตัวเอง",
-                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
-                 "icon": "self_improvement"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "money",
-                 "label": "ธุรกิจ / การเงิน",
-                 "desc": "ทริคที่ทำได้จริง",
-                 "icon": "savings"
-                },
-                {
-                 "value": "finance",
-                 "label": "การเงิน / ประกัน / ลงทุน",
-                 "desc": "ความรู้เงิน + แนะนำบริการได้",
-                 "icon": "account_balance"
-                },
-                {
-                 "value": "self",
-                 "label": "พัฒนาตัวเอง",
-                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
-                 "icon": "self_improvement"
-                }
-               ],
-               "cols": 3,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=news",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "news",
-                 "label": "สรุปข่าว",
-                 "desc": "เกิดอะไร ทำไมสำคัญ",
-                 "icon": "newspaper"
-                },
-                {
-                 "value": "debate",
-                 "label": "ดีเบต 2 ฝั่ง",
-                 "desc": "เถียงกันแบบขำ ๆ ให้คนดูโหวต",
-                 "icon": "balance"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "news",
-                 "label": "สรุปข่าว",
-                 "desc": "เกิดอะไร ทำไมสำคัญ",
-                 "icon": "newspaper"
-                },
-                {
-                 "value": "debate",
-                 "label": "ดีเบต 2 ฝั่ง",
-                 "desc": "เถียงกันแบบขำ ๆ ให้คนดูโหวต",
-                 "icon": "balance"
-                }
-               ],
-               "cols": 2,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=know",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "explain",
-                 "label": "ความรู้รอบตัว",
-                 "desc": "อธิบายง่าย มีตัวอย่าง",
-                 "icon": "lightbulb"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                },
-                {
-                 "value": "history",
-                 "label": "ประวัติศาสตร์",
-                 "desc": "เกร็ดที่คนไม่รู้",
-                 "icon": "history_edu"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "explain",
-                 "label": "ความรู้รอบตัว",
-                 "desc": "อธิบายง่าย มีตัวอย่าง",
-                 "icon": "lightbulb"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                },
-                {
-                 "value": "history",
-                 "label": "ประวัติศาสตร์",
-                 "desc": "เกร็ดที่คนไม่รู้",
-                 "icon": "history_edu"
-                }
-               ],
-               "cols": 3,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=health",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "health",
-                 "label": "สุขภาพ / ความงาม",
-                 "desc": "เคล็ดลับที่ปลอดภัย",
-                 "icon": "spa"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "health",
-                 "label": "สุขภาพ / ความงาม",
-                 "desc": "เคล็ดลับที่ปลอดภัย",
-                 "icon": "spa"
-                },
-                {
-                 "value": "teach",
-                 "label": "สอน / How-to",
-                 "desc": "วิธีที่ทำตามได้ทันที",
-                 "icon": "school"
-                }
-               ],
-               "cols": 2,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=mystery",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "ghost",
-                 "label": "เรื่องผี / ลี้ลับ",
-                 "desc": "ปูบรรยากาศ ค่อย ๆ หลอน",
-                 "icon": "nights_stay"
-                },
-                {
-                 "value": "crime",
-                 "label": "คดีดัง / ปริศนา",
-                 "desc": "ไล่หาคำตอบทีละปม",
-                 "icon": "search"
-                },
-                {
-                 "value": "history",
-                 "label": "ประวัติศาสตร์",
-                 "desc": "เกร็ดที่คนไม่รู้",
-                 "icon": "history_edu"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "ghost",
-                 "label": "เรื่องผี / ลี้ลับ",
-                 "desc": "ปูบรรยากาศ ค่อย ๆ หลอน",
-                 "icon": "nights_stay"
-                },
-                {
-                 "value": "crime",
-                 "label": "คดีดัง / ปริศนา",
-                 "desc": "ไล่หาคำตอบทีละปม",
-                 "icon": "search"
-                },
-                {
-                 "value": "history",
-                 "label": "ประวัติศาสตร์",
-                 "desc": "เกร็ดที่คนไม่รู้",
-                 "icon": "history_edu"
-                }
-               ],
-               "cols": 3,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=life",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "love",
-                 "label": "ความรัก / ความสัมพันธ์",
-                 "desc": "เรื่องที่คนดูอิน",
-                 "icon": "favorite"
-                },
-                {
-                 "value": "self",
-                 "label": "พัฒนาตัวเอง",
-                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
-                 "icon": "self_improvement"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "love",
-                 "label": "ความรัก / ความสัมพันธ์",
-                 "desc": "เรื่องที่คนดูอิน",
-                 "icon": "favorite"
-                },
-                {
-                 "value": "self",
-                 "label": "พัฒนาตัวเอง",
-                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
-                 "icon": "self_improvement"
-                }
-               ],
-               "cols": 2,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "when": "item.preset=pop",
-             "card": [
-              {
-               "el": "text",
-               "value": "แนวย่อย",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "pop",
-                 "label": "บันเทิง / ไลฟ์",
-                 "desc": "หนัง เพลง เกม กีฬา กิน เที่ยว",
-                 "icon": "live_tv"
-                },
-                {
-                 "value": "interview",
-                 "label": "สัมภาษณ์",
-                 "desc": "ถามสิ่งที่คนดูอยากรู้",
-                 "icon": "record_voice_over"
-                }
-               ],
-               "cols": 1,
-               "contained": true,
-               "horizontal": true,
-               "className": "@[640px]:hidden"
-              },
-              {
-               "el": "grid-select",
-               "field": "format",
-               "options": [
-                {
-                 "value": "pop",
-                 "label": "บันเทิง / ไลฟ์",
-                 "desc": "หนัง เพลง เกม กีฬา กิน เที่ยว",
-                 "icon": "live_tv"
-                },
-                {
-                 "value": "interview",
-                 "label": "สัมภาษณ์",
-                 "desc": "ถามสิ่งที่คนดูอยากรู้",
-                 "icon": "record_voice_over"
-                }
-               ],
-               "cols": 2,
-               "contained": true,
-               "className": "hidden @[640px]:block"
-              }
-             ]
-            },
-            {
-             "el": "text",
-             "value": "② เล่าแบบไหน",
-             "className": "!text-[14.5px] font-black !text-[var(--ev-text)] px-0.5 mt-2"
-            },
-            {
-             "el": "grid-select",
-             "field": "vibe",
-             "cols": 2,
-             "contained": true,
-             "className": "@[640px]:hidden",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "ตามเนื้อหา",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "funny",
-               "label": "ตลก กวน",
-               "desc": "เล่นมุข แซวกัน",
-               "icon": "mood"
-              },
-              {
-               "value": "chill",
-               "label": "สบาย ๆ",
-               "desc": "เหมือนคุยกับเพื่อน",
-               "icon": "coffee"
-              },
-              {
-               "value": "serious",
-               "label": "จริงจัง",
-               "desc": "น่าเชื่อถือ ไม่เล่นมุข",
-               "icon": "verified"
-              },
-              {
-               "value": "thrill",
-               "label": "ลุ้นระทึก",
-               "desc": "ลึกลับ ทิ้งปมค้าง",
-               "icon": "visibility"
-              },
-              {
-               "value": "warm",
-               "label": "อบอุ่น ซึ้ง",
-               "desc": "นุ่ม ๆ อบอุ่นใจ",
-               "icon": "volunteer_activism"
-              },
-              {
-               "value": "hype",
-               "label": "ตื่นเต้น",
-               "desc": "พลังสูง เร็ว",
-               "icon": "bolt"
-              }
-             ]
-            },
-            {
-             "el": "grid-select",
-             "field": "vibe",
-             "cols": 4,
-             "contained": true,
-             "className": "hidden @[640px]:block",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "ตามเนื้อหา",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "funny",
-               "label": "ตลก กวน",
-               "desc": "เล่นมุข แซวกัน",
-               "icon": "mood"
-              },
-              {
-               "value": "chill",
-               "label": "สบาย ๆ",
-               "desc": "เหมือนคุยกับเพื่อน",
-               "icon": "coffee"
-              },
-              {
-               "value": "serious",
-               "label": "จริงจัง",
-               "desc": "น่าเชื่อถือ ไม่เล่นมุข",
-               "icon": "verified"
-              },
-              {
-               "value": "thrill",
-               "label": "ลุ้นระทึก",
-               "desc": "ลึกลับ ทิ้งปมค้าง",
-               "icon": "visibility"
-              },
-              {
-               "value": "warm",
-               "label": "อบอุ่น ซึ้ง",
-               "desc": "นุ่ม ๆ อบอุ่นใจ",
-               "icon": "volunteer_activism"
-              },
-              {
-               "value": "hype",
-               "label": "ตื่นเต้น",
-               "desc": "พลังสูง เร็ว",
-               "icon": "bolt"
-              }
-             ]
-            },
-            {
-             "el": "text",
-             "value": "ผสมได้ทุกแบบ เช่น ขายของแบบตลก · ข่าวแบบแซว · เล่าเรื่องแบบซึ้ง",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-            },
-            {
-             "el": "group",
-             "collapsible": true,
-             "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
-             "head": [
-              {
-               "el": "icon",
-               "icon": "more_horiz",
-               "textSize": "text-[19px]",
-               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-              },
-              {
-               "el": "text",
-               "value": "ปรับเพิ่ม",
-               "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
-              },
-              {
-               "el": "text",
-               "value": "รูปแบบการคุย · จริง/แต่ง · ใส่สินค้า",
-               "className": "!text-[13px] opacity-40 truncate min-w-0"
-              }
-             ],
-             "card": [
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "รูปแบบการคุย",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "dropdown",
-                 "field": "angle",
-                 "placeholder": "อัตโนมัติ — หมีเลือกให้",
-                 "options": [
-                  {
-                   "value": "",
-                   "label": "อัตโนมัติ — หมีเลือกให้",
-                   "icon": "auto_fix_high"
-                  },
-                  {
-                   "value": "question",
-                   "label": "เปิดด้วยคำถามชวนคิด",
-                   "icon": "help"
-                  },
-                  {
-                   "value": "story",
-                   "label": "เล่าเป็นเรื่องมีตัวละคร",
-                   "icon": "person_book"
-                  },
-                  {
-                   "value": "top3",
-                   "label": "จัดอันดับ Top 3",
-                   "icon": "format_list_numbered"
-                  },
-                  {
-                   "value": "myth",
-                   "label": "ความเชื่อ vs ความจริง",
-                   "icon": "compare"
-                  },
-                  {
-                   "value": "twist",
-                   "label": "หักมุมตอนจบ",
-                   "icon": "u_turn_left"
-                  },
-                  {
-                   "value": "inside",
-                   "label": "เล่าจากมุมคนใน",
-                   "icon": "visibility"
-                  },
-                  {
-                   "value": "debate",
-                   "label": "ดีเบต 2 ฝั่ง",
-                   "icon": "balance"
-                  },
-                  {
-                   "value": "interview",
-                   "label": "สัมภาษณ์",
-                   "icon": "record_voice_over"
-                  },
-                  {
-                   "value": "audience",
-                   "label": "ตอบคำถามคนดู",
-                   "icon": "forum"
-                  }
-                 ],
-                 "className": "!min-h-[48px] @[420px]:!min-h-0"
-                }
-               ],
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.preset}",
-                 "b": "sell"
-                }
-               }
-              },
-              {
-               "el": "box",
-               "className": "grid grid-cols-1 @[560px]:grid-cols-2 gap-2.5",
-               "card": [
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "เรื่องจริงหรือแต่ง",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "truth",
-                   "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ — ตามแนวเนื้อหา",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "real",
-                     "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
-                     "icon": "fact_check"
-                    },
-                    {
-                     "value": "fiction",
-                     "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
-                     "icon": "auto_stories"
-                    },
-                    {
-                     "value": "drama",
-                     "label": "อิงจริง เล่าแบบละคร",
-                     "icon": "theater_comedy"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": "item.hasProduct=ไม่มี"
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "ใส่สินค้าในคลิปด้วยไหม",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "hasProduct",
-                   "placeholder": "ไม่ใส่สินค้า",
-                   "options": [
-                    {
-                     "value": "ไม่มี",
-                     "label": "ไม่ใส่สินค้า",
-                     "icon": "block"
-                    },
-                    {
-                     "value": "1 ชิ้น",
-                     "label": "ใส่สินค้า 1 ชิ้น",
-                     "icon": "inventory_2"
-                    },
-                    {
-                     "value": "หลายชิ้น",
-                     "label": "ใส่สินค้าหลายชิ้น",
-                     "icon": "inventory"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.preset}",
-                   "b": "sell"
-                  }
-                 }
-                }
-               ]
-              }
-             ],
-             "bodyClass": "pt-2 gap-3",
-             "chevClass": "opacity-50 !text-[22px]"
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
-           "card": [
-            {
-             "el": "row",
-             "className": "items-center gap-2 px-0.5",
-             "style": {
-              "flexWrap": "nowrap"
-             },
-             "card": [
-              {
-               "el": "box",
-               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
-               "card": [
-                {
-                 "el": "icon",
                  "icon": "edit_note",
                  "textSize": "text-[19px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
@@ -14382,12 +12966,12 @@
             {
              "el": "textarea",
              "field": "name",
-             "placeholder": "พิมพ์หัวข้อสั้น ๆ หรือเล่าเนื้อเรื่องเลยก็ได้ เช่น บ้านร้างหลังตลาด · ครีมกันแดดตัวนี้คุ้มไหม — คิดไม่ออก กด สุ่มไอเดีย",
+             "placeholder": "เช่น บ้านร้างหลังตลาด · ครีมกันแดดคุ้มไหม\nคิดไม่ออก กด สุ่มไอเดีย",
              "className": "!p-4 !rounded-xl !text-[20px] @[640px]:!text-[19px] !leading-relaxed !min-h-[136px] @[560px]:!min-h-[104px] !min-h-[132px]"
             },
             {
              "el": "text",
-             "value": "ช่องเดียวที่ต้องกรอก · หมีตั้งชื่อตอนสั้นให้เอง · ข่าว/ประวัติศาสตร์/คดีดัง ตรวจข้อเท็จจริงก่อนโพสต์",
+             "value": "ช่องเดียวที่ต้องกรอก · ที่เหลือหมีเลือกให้ (ขายของ = ใส่รูปสินค้าด้วย)",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
             },
             {
@@ -14459,17 +13043,17 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=custom",
+               "when": "item.format=",
                "card": [
                 {
                  "el": "icon",
-                 "icon": "auto_awesome",
+                 "icon": "auto_fix_high",
                  "textSize": "text-[16px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
                 },
                 {
                  "el": "text",
-                 "value": "อัตโนมัติ",
+                 "value": "อัตโนมัติ — หมีเลือกแนวให้",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -14477,7 +13061,7 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=tale",
+               "when": "item.format=tale",
                "card": [
                 {
                  "el": "icon",
@@ -14487,7 +13071,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "เล่าเรื่อง",
+                 "value": "เล่าเรื่อง / ประสบการณ์",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -14495,17 +13079,17 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=sell",
+               "when": "item.format=joke",
                "card": [
                 {
                  "el": "icon",
-                 "icon": "storefront",
+                 "icon": "sentiment_very_satisfied",
                  "textSize": "text-[16px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
                 },
                 {
                  "el": "text",
-                 "value": "ขาย / รีวิว",
+                 "value": "เรื่องตลก / มุข",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -14513,97 +13097,7 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=service",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "support_agent",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ขายบริการ",
-                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              },
-              {
-               "el": "row",
-               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=money",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "savings",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ธุรกิจ / หาเงิน",
-                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              },
-              {
-               "el": "row",
-               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=news",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "newspaper",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ข่าว / เทรนด์",
-                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              },
-              {
-               "el": "row",
-               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=know",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "lightbulb",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ความรู้ / สอน",
-                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              },
-              {
-               "el": "row",
-               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=health",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "spa",
-                 "textSize": "text-[16px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "สุขภาพ / ผิว",
-                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
-                }
-               ]
-              },
-              {
-               "el": "row",
-               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=mystery",
+               "when": "item.format=ghost",
                "card": [
                 {
                  "el": "icon",
@@ -14613,7 +13107,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "ผี / ลึกลับ",
+                 "value": "เรื่องผี / ลี้ลับ",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -14621,7 +13115,115 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=life",
+               "when": "item.format=crime",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "search",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "คดีดัง / ปริศนา",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=history",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "history_edu",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "ประวัติศาสตร์",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=news",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "newspaper",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "สรุปข่าว",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=explain",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "lightbulb",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "ความรู้รอบตัว",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=money",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "savings",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "ธุรกิจ / การเงิน",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=self",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "self_improvement",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "พัฒนาตัวเอง",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=love",
                "card": [
                 {
                  "el": "icon",
@@ -14631,7 +13233,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "ชีวิต / ความรัก",
+                 "value": "ความรัก / ความสัมพันธ์",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -14639,7 +13241,7 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=pop",
+               "when": "item.format=pop",
                "card": [
                 {
                  "el": "icon",
@@ -14657,7 +13259,97 @@
               {
                "el": "row",
                "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
-               "when": "item.preset=belief",
+               "when": "item.format=debate",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "balance",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "ดีเบต 2 ฝั่ง",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=interview",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "record_voice_over",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "สัมภาษณ์",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=teach",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "school",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "สอน / How-to",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=service",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "support_agent",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "แนะนำบริการ",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=health",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "spa",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "สุขภาพ / ความงาม",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=belief",
                "card": [
                 {
                  "el": "icon",
@@ -14668,6 +13360,132 @@
                 {
                  "el": "text",
                  "value": "ดูดวง / สายมู",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=finance",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "account_balance",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "การเงิน / ประกัน / ลงทุน",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=review",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "rate_review",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "รีวิว",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=compare",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "compare_arrows",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "เปรียบเทียบ",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=qa",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "quiz",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "ถาม-ตอบลูกค้า",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=story",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "auto_stories",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "เล่าเรื่องแบรนด์",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=trend",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "trending_up",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "เทรนด์",
+                 "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
+                }
+               ]
+              },
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center self-start rounded-full px-3 py-1.5 bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)]",
+               "when": "item.format=unbox",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "package_2",
+                 "textSize": "text-[16px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "แกะกล่อง",
                  "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] whitespace-nowrap"
                 }
                ]
@@ -15097,6 +13915,1637 @@
                }
               }
              ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "movie",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "อยากทำคลิปแบบไหน",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "① ประเภทเนื้อหา",
+             "className": "!text-[14.5px] font-black !text-[var(--ev-text)] px-0.5"
+            },
+            {
+             "el": "box",
+             "className": "grid grid-cols-2 @[640px]:grid-cols-3 gap-x-2 gap-y-2.5 mb-2",
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_custom",
+                 "force": true,
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_awesome",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=custom"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_custom",
+                 "force": true,
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_awesome",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=custom"
+                },
+                {
+                 "el": "text",
+                 "value": "หมีเลือกแนวให้เอง",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_tale",
+                 "force": true,
+                 "label": "เล่าเรื่อง",
+                 "icon": "auto_stories",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=tale"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_tale",
+                 "force": true,
+                 "label": "เล่าเรื่อง",
+                 "icon": "auto_stories",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=tale"
+                },
+                {
+                 "el": "text",
+                 "value": "เรื่องทั่วไป มีต้น-กลาง-จบ",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_sell",
+                 "force": true,
+                 "label": "ขาย / รีวิว",
+                 "icon": "storefront",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=sell"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_sell",
+                 "force": true,
+                 "label": "ขาย / รีวิว",
+                 "icon": "storefront",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=sell"
+                },
+                {
+                 "el": "text",
+                 "value": "ป้ายยา รีวิว ใส่รูปสินค้า",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_service",
+                 "force": true,
+                 "label": "ขายบริการ",
+                 "icon": "support_agent",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=service"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_service",
+                 "force": true,
+                 "label": "ขายบริการ",
+                 "icon": "support_agent",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=service"
+                },
+                {
+                 "el": "text",
+                 "value": "คอร์ส ร้าน ประกัน รับจ้าง",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_money",
+                 "force": true,
+                 "label": "ธุรกิจ / หาเงิน",
+                 "icon": "savings",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=money"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_money",
+                 "force": true,
+                 "label": "ธุรกิจ / หาเงิน",
+                 "icon": "savings",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=money"
+                },
+                {
+                 "el": "text",
+                 "value": "อาชีพเสริม ทริคออม เปิดร้าน",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_news",
+                 "force": true,
+                 "label": "ข่าว / เทรนด์",
+                 "icon": "newspaper",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=news"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_news",
+                 "force": true,
+                 "label": "ข่าว / เทรนด์",
+                 "icon": "newspaper",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=news"
+                },
+                {
+                 "el": "text",
+                 "value": "สรุปข่าวที่คุณพิมพ์มา",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_know",
+                 "force": true,
+                 "label": "ความรู้ / สอน",
+                 "icon": "lightbulb",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=know"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_know",
+                 "force": true,
+                 "label": "ความรู้ / สอน",
+                 "icon": "lightbulb",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=know"
+                },
+                {
+                 "el": "text",
+                 "value": "เกร็ดความรู้ วิทย์ ใกล้ตัว",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_health",
+                 "force": true,
+                 "label": "สุขภาพ / ผิว",
+                 "icon": "spa",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=health"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_health",
+                 "force": true,
+                 "label": "สุขภาพ / ผิว",
+                 "icon": "spa",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=health"
+                },
+                {
+                 "el": "text",
+                 "value": "ดูแลตัวเอง ไม่ขายของ",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_mystery",
+                 "force": true,
+                 "label": "ผี / ลึกลับ",
+                 "icon": "nights_stay",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=mystery"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_mystery",
+                 "force": true,
+                 "label": "ผี / ลึกลับ",
+                 "icon": "nights_stay",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=mystery"
+                },
+                {
+                 "el": "text",
+                 "value": "ผี เรื่องหลอน ตำนาน",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_life",
+                 "force": true,
+                 "label": "ชีวิต / ความรัก",
+                 "icon": "favorite",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=life"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_life",
+                 "force": true,
+                 "label": "ชีวิต / ความรัก",
+                 "icon": "favorite",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=life"
+                },
+                {
+                 "el": "text",
+                 "value": "รัก ครอบครัว ข้อคิดชีวิต",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_pop",
+                 "force": true,
+                 "label": "บันเทิง / ไลฟ์",
+                 "icon": "live_tv",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=pop"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_pop",
+                 "force": true,
+                 "label": "บันเทิง / ไลฟ์",
+                 "icon": "live_tv",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=pop"
+                },
+                {
+                 "el": "text",
+                 "value": "หนัง เพลง เกม กีฬา กิน",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_belief",
+                 "force": true,
+                 "label": "ดูดวง / สายมู",
+                 "icon": "flare",
+                 "variant": "solid",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset=belief"
+                },
+                {
+                 "el": "gen-button",
+                 "op": "pdPreset_belief",
+                 "force": true,
+                 "label": "ดูดวง / สายมู",
+                 "icon": "flare",
+                 "variant": "outline",
+                 "className": "w-full justify-start !h-12 !px-3.5 !rounded-xl !text-[15px] font-bold",
+                 "when": "item.preset!=belief"
+                },
+                {
+                 "el": "text",
+                 "value": "ดวง ฮวงจุ้ย ความเชื่อ",
+                 "className": "text-[11.5px] leading-snug px-1 opacity-70"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2.5",
+             "when": "item.preset=sell",
+             "card": [
+              {
+               "el": "text",
+               "value": "จำนวนสินค้า",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "hasProduct",
+               "cols": 3,
+               "mobile": {
+                "cols": 1
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "1 ชิ้น",
+                 "label": "มี 1 ชิ้น",
+                 "desc": "รีวิว/ขาย · รูปได้ 1-5 มุม",
+                 "icon": "inventory_2"
+                },
+                {
+                 "value": "หลายชิ้น",
+                 "label": "มีหลายชิ้น",
+                 "desc": "ชิ้นละ 1 รูป สูงสุด 5 ชิ้น",
+                 "icon": "inventory"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col",
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "tale"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "sell"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "service"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "money"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "news"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "know"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "health"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "mystery"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "life"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "pop"
+                },
+                {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "belief"
+                }
+               ]
+              }
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "เลือกแนวเอง (ไม่บังคับ · ว่าง = หมีเลือกตามหัวข้อ)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ — หมีเลือกให้",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — หมีเลือกให้",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "tale",
+                   "label": "เล่าเรื่อง / ประสบการณ์",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "joke",
+                   "label": "เรื่องตลก / มุข",
+                   "icon": "sentiment_very_satisfied"
+                  },
+                  {
+                   "value": "ghost",
+                   "label": "เรื่องผี / ลี้ลับ",
+                   "icon": "nights_stay"
+                  },
+                  {
+                   "value": "crime",
+                   "label": "คดีดัง / ปริศนา",
+                   "icon": "search"
+                  },
+                  {
+                   "value": "history",
+                   "label": "ประวัติศาสตร์",
+                   "icon": "history_edu"
+                  },
+                  {
+                   "value": "news",
+                   "label": "สรุปข่าว",
+                   "icon": "newspaper"
+                  },
+                  {
+                   "value": "explain",
+                   "label": "ความรู้รอบตัว",
+                   "icon": "lightbulb"
+                  },
+                  {
+                   "value": "money",
+                   "label": "ธุรกิจ / การเงิน",
+                   "icon": "savings"
+                  },
+                  {
+                   "value": "self",
+                   "label": "พัฒนาตัวเอง",
+                   "icon": "self_improvement"
+                  },
+                  {
+                   "value": "love",
+                   "label": "ความรัก / ความสัมพันธ์",
+                   "icon": "favorite"
+                  },
+                  {
+                   "value": "pop",
+                   "label": "บันเทิง / ไลฟ์",
+                   "icon": "live_tv"
+                  },
+                  {
+                   "value": "debate",
+                   "label": "ดีเบต 2 ฝั่ง",
+                   "icon": "balance"
+                  },
+                  {
+                   "value": "interview",
+                   "label": "สัมภาษณ์",
+                   "icon": "record_voice_over"
+                  },
+                  {
+                   "value": "teach",
+                   "label": "สอน / How-to",
+                   "icon": "school"
+                  },
+                  {
+                   "value": "service",
+                   "label": "แนะนำบริการ",
+                   "icon": "support_agent"
+                  },
+                  {
+                   "value": "health",
+                   "label": "สุขภาพ / ความงาม",
+                   "icon": "spa"
+                  },
+                  {
+                   "value": "belief",
+                   "label": "ดูดวง / สายมู",
+                   "icon": "flare"
+                  },
+                  {
+                   "value": "finance",
+                   "label": "การเงิน / ประกัน / ลงทุน",
+                   "icon": "account_balance"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "เลือกแนวเอง (ไม่บังคับ · ว่าง = หมีเลือกตามหัวข้อ)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ — หมีเลือกให้",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — หมีเลือกให้",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "review",
+                   "label": "สินค้า · รีวิว",
+                   "icon": "rate_review"
+                  },
+                  {
+                   "value": "compare",
+                   "label": "สินค้า · เปรียบเทียบ",
+                   "icon": "compare_arrows"
+                  },
+                  {
+                   "value": "qa",
+                   "label": "สินค้า · ถาม-ตอบลูกค้า",
+                   "icon": "quiz"
+                  },
+                  {
+                   "value": "story",
+                   "label": "สินค้า · เล่าเรื่องแบรนด์",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "trend",
+                   "label": "สินค้า · เทรนด์",
+                   "icon": "trending_up"
+                  },
+                  {
+                   "value": "unbox",
+                   "label": "สินค้า · แกะกล่อง",
+                   "icon": "package_2"
+                  },
+                  {
+                   "value": "tale",
+                   "label": "เล่าเรื่อง / ประสบการณ์",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "joke",
+                   "label": "เรื่องตลก / มุข",
+                   "icon": "sentiment_very_satisfied"
+                  },
+                  {
+                   "value": "ghost",
+                   "label": "เรื่องผี / ลี้ลับ",
+                   "icon": "nights_stay"
+                  },
+                  {
+                   "value": "crime",
+                   "label": "คดีดัง / ปริศนา",
+                   "icon": "search"
+                  },
+                  {
+                   "value": "history",
+                   "label": "ประวัติศาสตร์",
+                   "icon": "history_edu"
+                  },
+                  {
+                   "value": "news",
+                   "label": "สรุปข่าว",
+                   "icon": "newspaper"
+                  },
+                  {
+                   "value": "explain",
+                   "label": "ความรู้รอบตัว",
+                   "icon": "lightbulb"
+                  },
+                  {
+                   "value": "money",
+                   "label": "ธุรกิจ / การเงิน",
+                   "icon": "savings"
+                  },
+                  {
+                   "value": "self",
+                   "label": "พัฒนาตัวเอง",
+                   "icon": "self_improvement"
+                  },
+                  {
+                   "value": "love",
+                   "label": "ความรัก / ความสัมพันธ์",
+                   "icon": "favorite"
+                  },
+                  {
+                   "value": "pop",
+                   "label": "บันเทิง / ไลฟ์",
+                   "icon": "live_tv"
+                  },
+                  {
+                   "value": "debate",
+                   "label": "ดีเบต 2 ฝั่ง",
+                   "icon": "balance"
+                  },
+                  {
+                   "value": "interview",
+                   "label": "สัมภาษณ์",
+                   "icon": "record_voice_over"
+                  },
+                  {
+                   "value": "teach",
+                   "label": "สอน / How-to",
+                   "icon": "school"
+                  },
+                  {
+                   "value": "service",
+                   "label": "แนะนำบริการ",
+                   "icon": "support_agent"
+                  },
+                  {
+                   "value": "health",
+                   "label": "สุขภาพ / ความงาม",
+                   "icon": "spa"
+                  },
+                  {
+                   "value": "belief",
+                   "label": "ดูดวง / สายมู",
+                   "icon": "flare"
+                  },
+                  {
+                   "value": "finance",
+                   "label": "การเงิน / ประกัน / ลงทุน",
+                   "icon": "account_balance"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct!=ไม่มี"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=tale",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "tale",
+                 "label": "เล่าเรื่อง / ประสบการณ์"
+                },
+                {
+                 "value": "joke",
+                 "label": "เรื่องตลก / มุข"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "tale",
+                 "label": "เล่าเรื่อง / ประสบการณ์",
+                 "desc": "มีต้น กลาง จบ มีจุดพีค",
+                 "icon": "auto_stories"
+                },
+                {
+                 "value": "joke",
+                 "label": "เรื่องตลก / มุข",
+                 "desc": "ปูเรื่องแล้วหักมุม",
+                 "icon": "sentiment_very_satisfied"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=service",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "service",
+                 "label": "แนะนำบริการ"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to"
+                },
+                {
+                 "value": "finance",
+                 "label": "การเงิน / ประกัน / ลงทุน"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "service",
+                 "label": "แนะนำบริการ",
+                 "desc": "คอร์ส ร้าน ประกัน รับจ้าง",
+                 "icon": "support_agent"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to",
+                 "desc": "วิธีที่ทำตามได้ทันที",
+                 "icon": "school"
+                },
+                {
+                 "value": "finance",
+                 "label": "การเงิน / ประกัน / ลงทุน",
+                 "desc": "ความรู้เงิน + แนะนำบริการได้",
+                 "icon": "account_balance"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=money",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "money",
+                 "label": "ธุรกิจ / การเงิน"
+                },
+                {
+                 "value": "finance",
+                 "label": "การเงิน / ประกัน / ลงทุน"
+                },
+                {
+                 "value": "self",
+                 "label": "พัฒนาตัวเอง"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "money",
+                 "label": "ธุรกิจ / การเงิน",
+                 "desc": "ทริคที่ทำได้จริง",
+                 "icon": "savings"
+                },
+                {
+                 "value": "finance",
+                 "label": "การเงิน / ประกัน / ลงทุน",
+                 "desc": "ความรู้เงิน + แนะนำบริการได้",
+                 "icon": "account_balance"
+                },
+                {
+                 "value": "self",
+                 "label": "พัฒนาตัวเอง",
+                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
+                 "icon": "self_improvement"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=news",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "news",
+                 "label": "สรุปข่าว"
+                },
+                {
+                 "value": "debate",
+                 "label": "ดีเบต 2 ฝั่ง"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "news",
+                 "label": "สรุปข่าว",
+                 "desc": "เกิดอะไร ทำไมสำคัญ",
+                 "icon": "newspaper"
+                },
+                {
+                 "value": "debate",
+                 "label": "ดีเบต 2 ฝั่ง",
+                 "desc": "เถียงกันแบบขำ ๆ ให้คนดูโหวต",
+                 "icon": "balance"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=know",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "explain",
+                 "label": "ความรู้รอบตัว"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to"
+                },
+                {
+                 "value": "history",
+                 "label": "ประวัติศาสตร์"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "explain",
+                 "label": "ความรู้รอบตัว",
+                 "desc": "อธิบายง่าย มีตัวอย่าง",
+                 "icon": "lightbulb"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to",
+                 "desc": "วิธีที่ทำตามได้ทันที",
+                 "icon": "school"
+                },
+                {
+                 "value": "history",
+                 "label": "ประวัติศาสตร์",
+                 "desc": "เกร็ดที่คนไม่รู้",
+                 "icon": "history_edu"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=health",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "health",
+                 "label": "สุขภาพ / ความงาม"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "health",
+                 "label": "สุขภาพ / ความงาม",
+                 "desc": "เคล็ดลับที่ปลอดภัย",
+                 "icon": "spa"
+                },
+                {
+                 "value": "teach",
+                 "label": "สอน / How-to",
+                 "desc": "วิธีที่ทำตามได้ทันที",
+                 "icon": "school"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=mystery",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "ghost",
+                 "label": "เรื่องผี / ลี้ลับ"
+                },
+                {
+                 "value": "crime",
+                 "label": "คดีดัง / ปริศนา"
+                },
+                {
+                 "value": "history",
+                 "label": "ประวัติศาสตร์"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "ghost",
+                 "label": "เรื่องผี / ลี้ลับ",
+                 "desc": "ปูบรรยากาศ ค่อย ๆ หลอน",
+                 "icon": "nights_stay"
+                },
+                {
+                 "value": "crime",
+                 "label": "คดีดัง / ปริศนา",
+                 "desc": "ไล่หาคำตอบทีละปม",
+                 "icon": "search"
+                },
+                {
+                 "value": "history",
+                 "label": "ประวัติศาสตร์",
+                 "desc": "เกร็ดที่คนไม่รู้",
+                 "icon": "history_edu"
+                }
+               ],
+               "cols": 3,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=life",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "love",
+                 "label": "ความรัก / ความสัมพันธ์"
+                },
+                {
+                 "value": "self",
+                 "label": "พัฒนาตัวเอง"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "love",
+                 "label": "ความรัก / ความสัมพันธ์",
+                 "desc": "เรื่องที่คนดูอิน",
+                 "icon": "favorite"
+                },
+                {
+                 "value": "self",
+                 "label": "พัฒนาตัวเอง",
+                 "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
+                 "icon": "self_improvement"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "when": "item.preset=pop",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวย่อย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "pop",
+                 "label": "บันเทิง / ไลฟ์"
+                },
+                {
+                 "value": "interview",
+                 "label": "สัมภาษณ์"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "@[640px]:hidden"
+              },
+              {
+               "el": "grid-select",
+               "field": "format",
+               "options": [
+                {
+                 "value": "pop",
+                 "label": "บันเทิง / ไลฟ์",
+                 "desc": "หนัง เพลง เกม กีฬา กิน เที่ยว",
+                 "icon": "live_tv"
+                },
+                {
+                 "value": "interview",
+                 "label": "สัมภาษณ์",
+                 "desc": "ถามสิ่งที่คนดูอยากรู้",
+                 "icon": "record_voice_over"
+                }
+               ],
+               "cols": 2,
+               "contained": true,
+               "className": "hidden @[640px]:block"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "② เล่าแบบไหน",
+             "className": "!text-[14.5px] font-black !text-[var(--ev-text)] px-0.5 mt-2"
+            },
+            {
+             "el": "grid-select",
+             "field": "vibe",
+             "cols": 2,
+             "contained": true,
+             "className": "@[640px]:hidden",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามเนื้อหา",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "funny",
+               "label": "ตลก กวน",
+               "desc": "เล่นมุข แซวกัน",
+               "icon": "mood"
+              },
+              {
+               "value": "chill",
+               "label": "สบาย ๆ",
+               "desc": "เหมือนคุยกับเพื่อน",
+               "icon": "coffee"
+              },
+              {
+               "value": "serious",
+               "label": "จริงจัง",
+               "desc": "น่าเชื่อถือ ไม่เล่นมุข",
+               "icon": "verified"
+              },
+              {
+               "value": "thrill",
+               "label": "ลุ้นระทึก",
+               "desc": "ลึกลับ ทิ้งปมค้าง",
+               "icon": "visibility"
+              },
+              {
+               "value": "warm",
+               "label": "อบอุ่น ซึ้ง",
+               "desc": "นุ่ม ๆ อบอุ่นใจ",
+               "icon": "volunteer_activism"
+              },
+              {
+               "value": "hype",
+               "label": "ตื่นเต้น",
+               "desc": "พลังสูง เร็ว",
+               "icon": "bolt"
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "vibe",
+             "cols": 4,
+             "contained": true,
+             "className": "hidden @[640px]:block",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามเนื้อหา",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "funny",
+               "label": "ตลก กวน",
+               "desc": "เล่นมุข แซวกัน",
+               "icon": "mood"
+              },
+              {
+               "value": "chill",
+               "label": "สบาย ๆ",
+               "desc": "เหมือนคุยกับเพื่อน",
+               "icon": "coffee"
+              },
+              {
+               "value": "serious",
+               "label": "จริงจัง",
+               "desc": "น่าเชื่อถือ ไม่เล่นมุข",
+               "icon": "verified"
+              },
+              {
+               "value": "thrill",
+               "label": "ลุ้นระทึก",
+               "desc": "ลึกลับ ทิ้งปมค้าง",
+               "icon": "visibility"
+              },
+              {
+               "value": "warm",
+               "label": "อบอุ่น ซึ้ง",
+               "desc": "นุ่ม ๆ อบอุ่นใจ",
+               "icon": "volunteer_activism"
+              },
+              {
+               "value": "hype",
+               "label": "ตื่นเต้น",
+               "desc": "พลังสูง เร็ว",
+               "icon": "bolt"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "ผสมได้ทุกแบบ เช่น ขายของแบบตลก · ข่าวแบบแซว · เล่าเรื่องแบบซึ้ง",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+            },
+            {
+             "el": "group",
+             "collapsible": true,
+             "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
+             "head": [
+              {
+               "el": "icon",
+               "icon": "more_horiz",
+               "textSize": "text-[19px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+              },
+              {
+               "el": "text",
+               "value": "ปรับเพิ่ม",
+               "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
+              },
+              {
+               "el": "text",
+               "value": "รูปแบบการคุย/รีวิว · จริง/แต่ง · ใส่สินค้า",
+               "className": "!text-[13px] opacity-40 truncate min-w-0"
+              }
+             ],
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "รูปแบบการคุย",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "angle",
+                 "placeholder": "อัตโนมัติ — หมีเลือกให้",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — หมีเลือกให้",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "question",
+                   "label": "เปิดด้วยคำถามชวนคิด",
+                   "icon": "help"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเป็นเรื่องมีตัวละคร",
+                   "icon": "person_book"
+                  },
+                  {
+                   "value": "top3",
+                   "label": "จัดอันดับ Top 3",
+                   "icon": "format_list_numbered"
+                  },
+                  {
+                   "value": "myth",
+                   "label": "ความเชื่อ vs ความจริง",
+                   "icon": "compare"
+                  },
+                  {
+                   "value": "twist",
+                   "label": "หักมุมตอนจบ",
+                   "icon": "u_turn_left"
+                  },
+                  {
+                   "value": "inside",
+                   "label": "เล่าจากมุมคนใน",
+                   "icon": "visibility"
+                  },
+                  {
+                   "value": "debate",
+                   "label": "ดีเบต 2 ฝั่ง",
+                   "icon": "balance"
+                  },
+                  {
+                   "value": "interview",
+                   "label": "สัมภาษณ์",
+                   "icon": "record_voice_over"
+                  },
+                  {
+                   "value": "audience",
+                   "label": "ตอบคำถามคนดู",
+                   "icon": "forum"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.preset}",
+                 "b": "sell"
+                }
+               }
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "รูปแบบรีวิว",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "format",
+                 "cols": 2,
+                 "contained": true,
+                 "className": "!min-h-[44px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "review",
+                   "label": "รีวิว",
+                   "desc": "จุดเด่น · ข้อสงสัย · เหมาะกับใคร",
+                   "icon": "rate_review"
+                  },
+                  {
+                   "value": "compare",
+                   "label": "เปรียบเทียบ",
+                   "desc": "เทียบกับทางเลือกทั่วไป",
+                   "icon": "compare_arrows"
+                  },
+                  {
+                   "value": "qa",
+                   "label": "ถาม-ตอบลูกค้า",
+                   "desc": "ตอบคำถามจริง 3 ข้อ",
+                   "icon": "quiz"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเรื่องแบรนด์",
+                   "desc": "ที่มาของของชิ้นนี้",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "trend",
+                   "label": "เทรนด์",
+                   "desc": "เปิดด้วยเทรนด์ โยงเข้าสินค้า",
+                   "icon": "trending_up"
+                  },
+                  {
+                   "value": "unbox",
+                   "label": "แกะกล่อง",
+                   "desc": "เปิดกล่องหน้ากล้อง",
+                   "icon": "package_2"
+                  }
+                 ]
+                }
+               ],
+               "when": "item.preset=sell"
+              },
+              {
+               "el": "box",
+               "className": "grid grid-cols-1 @[560px]:grid-cols-2 gap-2.5",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "เรื่องจริงหรือแต่ง",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                  },
+                  {
+                   "el": "dropdown",
+                   "field": "truth",
+                   "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
+                   "options": [
+                    {
+                     "value": "",
+                     "label": "อัตโนมัติ — ตามแนวเนื้อหา",
+                     "icon": "auto_fix_high"
+                    },
+                    {
+                     "value": "real",
+                     "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
+                     "icon": "fact_check"
+                    },
+                    {
+                     "value": "fiction",
+                     "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
+                     "icon": "auto_stories"
+                    },
+                    {
+                     "value": "drama",
+                     "label": "อิงจริง เล่าแบบละคร",
+                     "icon": "theater_comedy"
+                    }
+                   ],
+                   "className": "!min-h-[48px] @[420px]:!min-h-0"
+                  }
+                 ],
+                 "when": "item.hasProduct=ไม่มี"
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ใส่สินค้าในคลิปด้วยไหม",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                  },
+                  {
+                   "el": "dropdown",
+                   "field": "hasProduct",
+                   "placeholder": "ไม่ใส่สินค้า",
+                   "options": [
+                    {
+                     "value": "ไม่มี",
+                     "label": "ไม่ใส่สินค้า",
+                     "icon": "block"
+                    },
+                    {
+                     "value": "1 ชิ้น",
+                     "label": "ใส่สินค้า 1 ชิ้น",
+                     "icon": "inventory_2"
+                    },
+                    {
+                     "value": "หลายชิ้น",
+                     "label": "ใส่สินค้าหลายชิ้น",
+                     "icon": "inventory"
+                    }
+                   ],
+                   "className": "!min-h-[48px] @[420px]:!min-h-0"
+                  }
+                 ],
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.preset}",
+                   "b": "sell"
+                  }
+                 }
+                }
+               ]
+              }
+             ],
+             "bodyClass": "pt-2 gap-3",
+             "chevClass": "opacity-50 !text-[22px]"
             }
            ]
           },
@@ -15688,7 +16137,7 @@
                       },
                       {
                        "el": "text",
-                       "value": "หมีล็อกรูปทรง สี ฉลาก ให้ตรงของจริง · ไม่มีสินค้า = ปรับเพิ่ม › ใส่สินค้าในคลิปด้วยไหม › ไม่มี",
+                       "value": "หมีล็อกรูปทรง สี ฉลาก ให้ตรงของจริง · ไม่มีรูป = เลือกประเภทอื่นด้านบน (เช่น ขายบริการ · อัตโนมัติ)",
                        "className": "!text-[14px] @[640px]:!text-[13px] !text-[var(--ev-accent)] opacity-80 leading-relaxed"
                       }
                      ]
@@ -16922,7 +17371,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "ปรับเพิ่ม",
+                 "value": "รายละเอียด",
                  "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
                 },
                 {
@@ -17302,7 +17751,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "ปรับเพิ่ม",
+                 "value": "รายละเอียด",
                  "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
                 },
                 {
@@ -18187,20 +18636,31 @@
              },
              "reason": "บอกว่าคุยเรื่องอะไรก่อนบันทึก",
              "when": {
-              "op": "not",
+              "op": "and",
               "a": {
-               "op": "and",
+               "op": "not",
                "a": {
-                "op": "not",
+                "op": "and",
                 "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.hasProduct}",
+                  "b": "ไม่มี"
+                 }
+                },
+                "b": {
                  "op": "eq",
-                 "a": "{item.hasProduct}",
-                 "b": "ไม่มี"
+                 "a": "{item.slots.image}",
+                 "b": ""
                 }
-               },
-               "b": {
+               }
+              },
+              "b": {
+               "op": "not",
+               "a": {
                 "op": "eq",
-                "a": "{item.slots.image}",
+                "a": "{item.name}",
                 "b": ""
                }
               }
@@ -18232,6 +18692,47 @@
               "b": {
                "op": "eq",
                "a": "{item.slots.image}",
+               "b": ""
+              }
+             }
+            },
+            {
+             "el": "button",
+             "action": "edit-close",
+             "to": "products",
+             "label": "พิมพ์หัวข้อก่อนบันทึก",
+             "variant": "solid",
+             "className": "flex-[2] justify-center !h-14 !rounded-2xl !text-[20px] @[640px]:!text-[19px] font-bold",
+             "disabledWhen": {
+              "op": "eq",
+              "a": "1",
+              "b": "1"
+             },
+             "reason": "บอกว่าคุยเรื่องอะไรก่อนบันทึก",
+             "when": {
+              "op": "and",
+              "a": {
+               "op": "not",
+               "a": {
+                "op": "and",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.hasProduct}",
+                  "b": "ไม่มี"
+                 }
+                },
+                "b": {
+                 "op": "eq",
+                 "a": "{item.slots.image}",
+                 "b": ""
+                }
+               }
+              },
+              "b": {
+               "op": "eq",
+               "a": "{item.name}",
                "b": ""
               }
              }
@@ -41470,6 +41971,44 @@
    "มาสคอต": "มาสคอตตัวนุ่มขนาดคน",
    "การ์ตูน": "ตัวการ์ตูนออกแบบใหม่"
   },
+  "genreProd": {
+   "1 ชิ้นjoke": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นghost": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นcrime": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นhistory": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นnews": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นexplain": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นmoney": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นself": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นlove": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นpop": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นdebate": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นinterview": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นservice": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นhealth": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นbelief": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นtale": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นteach": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "1 ชิ้นfinance": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นjoke": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นghost": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นcrime": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นhistory": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นnews": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นexplain": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นmoney": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นself": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นlove": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นpop": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นdebate": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นinterview": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นservice": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นhealth": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นbelief": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นtale": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นteach": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n",
+   "หลายชิ้นfinance": "สินค้าในคลิป: เนื้อหาหลักยังเป็นแนวข้างบน — แทรกสินค้าอย่างเป็นธรรมชาติ 1 ช่วง (ตัวละครใช้/พูดถึงเพราะเข้ากับเรื่อง) แล้วชวนสั้น ๆ ตอนจบ ห้ามเปลี่ยนเป็นคลิปรีวิวทั้งคลิป\n"
+  },
   "vibePlan": {
    "": "",
    "funny": "โทนรายการ: ตลก กวน เล่นมุข — มุขต้องมาจากเรื่องที่เล่า แซวกันได้ ห้ามหยาบคาย ห้ามล้อเลียนเพศ ศาสนา รูปร่าง ชาติพันธุ์ ห้ามเล่นมุขกับผู้เสียหาย ความสูญเสีย หรือโรค",
@@ -41486,7 +42025,7 @@
   "truthPlan": {
    "": "",
    "real": "เรื่องจริงหรือแต่ง: อิงเรื่องจริง — ใช้เฉพาะข้อเท็จจริงที่แน่ใจหรือที่ผู้ใช้ให้ ห้ามแต่งตัวเลข วันที่ ชื่อคน เหตุการณ์ · ตำนาน/ความเชื่อให้บอกว่าเป็นตำนาน",
-   "fiction": "เรื่องจริงหรือแต่ง: แต่งขึ้นทั้งหมด — ห้ามอ้างว่าเป็นเรื่องจริง ห้ามใช้ชื่อคนจริง บริษัทจริง หรือเหตุการณ์จริงที่ระบุตัวได้ · แต่งให้สนุกได้เต็มที่",
+   "fiction": "เรื่องจริงหรือแต่ง: แต่งขึ้นทั้งหมด — ห้ามอ้างว่าเป็นเรื่องจริง ห้ามใช้ชื่อคนจริง บริษัทจริง หรือเหตุการณ์จริงที่ระบุตัวได้ · แต่งให้สนุกได้เต็มที่ · ถ้าแนวเนื้อหาอิงข้อเท็จจริง (ข่าว คดี ประวัติศาสตร์ สุขภาพ การเงิน) ให้ถือเป็น \"อิงจริง เล่าแบบละคร\" แทน",
    "drama": "เรื่องจริงหรือแต่ง: อิงเรื่องจริงเล่าแบบละคร — แกนข้อเท็จจริงต้องถูก แต่เล่าเป็นฉากสมมติ/บทสนทนาสมมติได้ · ห้ามเปลี่ยนผลลัพธ์หรือตัวเลขจริง ห้ามแต่งคำพูดใส่ปากบุคคลจริง"
   },
   "anglePlan": {
@@ -41510,6 +42049,76 @@
    "outdoor": "ระเบียง/สวนกลางแจ้ง ต้นไม้ แสงแดดอ่อน",
    "news": "โต๊ะข่าวสตูดิโอข่าว จอข้อมูลด้านหลัง (จอว่าง ไม่มีตัวหนังสือ)",
    "dark": "ห้องมืด ไฟสลัว เทียน/โคมเล็ก บรรยากาศลี้ลับ"
+  },
+  "presetProd": {
+   "customไม่มี": "ไม่มี",
+   "custom1 ชิ้น": "1 ชิ้น",
+   "customหลายชิ้น": "หลายชิ้น",
+   "custom": "",
+   "taleไม่มี": "ไม่มี",
+   "tale1 ชิ้น": "1 ชิ้น",
+   "taleหลายชิ้น": "หลายชิ้น",
+   "tale": "",
+   "sellไม่มี": "ไม่มี",
+   "sell1 ชิ้น": "ไม่มี",
+   "sellหลายชิ้น": "ไม่มี",
+   "sell": "ไม่มี",
+   "serviceไม่มี": "ไม่มี",
+   "service1 ชิ้น": "1 ชิ้น",
+   "serviceหลายชิ้น": "หลายชิ้น",
+   "service": "",
+   "moneyไม่มี": "ไม่มี",
+   "money1 ชิ้น": "1 ชิ้น",
+   "moneyหลายชิ้น": "หลายชิ้น",
+   "money": "",
+   "newsไม่มี": "ไม่มี",
+   "news1 ชิ้น": "1 ชิ้น",
+   "newsหลายชิ้น": "หลายชิ้น",
+   "news": "",
+   "knowไม่มี": "ไม่มี",
+   "know1 ชิ้น": "1 ชิ้น",
+   "knowหลายชิ้น": "หลายชิ้น",
+   "know": "",
+   "healthไม่มี": "ไม่มี",
+   "health1 ชิ้น": "1 ชิ้น",
+   "healthหลายชิ้น": "หลายชิ้น",
+   "health": "",
+   "mysteryไม่มี": "ไม่มี",
+   "mystery1 ชิ้น": "1 ชิ้น",
+   "mysteryหลายชิ้น": "หลายชิ้น",
+   "mystery": "",
+   "lifeไม่มี": "ไม่มี",
+   "life1 ชิ้น": "1 ชิ้น",
+   "lifeหลายชิ้น": "หลายชิ้น",
+   "life": "",
+   "popไม่มี": "ไม่มี",
+   "pop1 ชิ้น": "1 ชิ้น",
+   "popหลายชิ้น": "หลายชิ้น",
+   "pop": "",
+   "beliefไม่มี": "ไม่มี",
+   "belief1 ชิ้น": "1 ชิ้น",
+   "beliefหลายชิ้น": "หลายชิ้น",
+   "belief": "",
+   "ไม่มี": "ไม่มี",
+   "1 ชิ้น": "1 ชิ้น",
+   "หลายชิ้น": "หลายชิ้น",
+   "": "",
+   "jokeไม่มี": "ไม่มี",
+   "joke1 ชิ้น": "1 ชิ้น",
+   "jokeหลายชิ้น": "หลายชิ้น",
+   "joke": "",
+   "funnyไม่มี": "ไม่มี",
+   "funny1 ชิ้น": "1 ชิ้น",
+   "funnyหลายชิ้น": "หลายชิ้น",
+   "funny": "",
+   "ghostไม่มี": "ไม่มี",
+   "ghost1 ชิ้น": "1 ชิ้น",
+   "ghostหลายชิ้น": "หลายชิ้น",
+   "ghost": "",
+   "teachไม่มี": "ไม่มี",
+   "teach1 ชิ้น": "1 ชิ้น",
+   "teachหลายชิ้น": "หลายชิ้น",
+   "teach": ""
   }
  },
  "seed": {
