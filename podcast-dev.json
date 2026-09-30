@@ -129,6 +129,9 @@
     "ideaMode",
     "cast",
     "format",
+    "vibe",
+    "hostSpecies",
+    "guestSpecies",
     "placement",
     "style",
     "pace",
@@ -160,6 +163,7 @@
    "addDefaults": {
     "cast": "",
     "format": "",
+    "vibe": "",
     "placement": "",
     "style": "",
     "pace": "",
@@ -660,6 +664,25 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.hasProduct=ไม่มี",
+        "value": {
+         "op": "block",
+         "sep": "",
+         "parts": [
+          {
+           "when": "item.info!=",
+           "value": "ข้อมูลที่อยากให้เล่า (ใช้เป็นข้อเท็จจริงหลัก): {item.info}\n"
+          }
+         ]
+        }
+       }
+      ]
+     },
      "\n",
      {
       "op": "lookup",
@@ -668,6 +691,27 @@
       "fallback": ""
      },
      "\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.vibe!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "vibePlan",
+           "key": "{item.vibe}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "stylePlan",
@@ -744,6 +788,16 @@
       "key": "{item.hostKind}",
       "fallback": "ให้เลือกเอง"
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.hostSpecies!=",
+        "value": " (ชนิด: {item.hostSpecies})"
+       }
+      ]
+     },
      " · ชื่อเล่น: {item.hostName} · เพศ: {item.hostGender} · ช่วงวัย: {item.hostAge} · ลุค/การแต่งตัว: {item.hostLook} · โทนเสียง/บุคลิกการพูด: {item.hostVoice}",
      {
       "op": "block",
@@ -771,6 +825,16 @@
            "table": "kindPlan",
            "key": "{item.guestKind}",
            "fallback": "ให้เลือกเอง"
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": "item.guestSpecies!=",
+             "value": " (ชนิด: {item.guestSpecies})"
+            }
+           ]
           },
           " · ชื่อเล่น: {item.guestName} · เพศ: {item.guestGender} · ช่วงวัย: {item.guestAge} · ลุค/การแต่งตัว: {item.guestLook} · โทนเสียง/บุคลิกการพูด: {item.guestVoice}",
           {
@@ -806,13 +870,46 @@
        {
         "when": {
          "op": "and",
-         "a": {
-          "op": "not",
-          "a": {
-           "op": "eq",
-           "a": "{item.sceneMode}",
-           "b": "custom"
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.sceneMode}",
+            "b": "custom"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.sceneMode}",
+            "b": ""
+           }
           }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ผู้ใช้เลือกฉาก: ",
+          {
+           "op": "lookup",
+           "table": "scenePlan",
+           "key": "{item.sceneMode}",
+           "fallback": ""
+          },
+          " — ออกแบบรายละเอียดตามนี้ มีไมค์บนแขนจับตามจำนวนคน"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "eq",
+          "a": "{item.sceneMode}",
+          "b": ""
          },
          "b": {
           "op": "not",
@@ -829,12 +926,9 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "not",
-          "a": {
-           "op": "eq",
-           "a": "{item.sceneMode}",
-           "b": "custom"
-          }
+          "op": "eq",
+          "a": "{item.sceneMode}",
+          "b": ""
          },
          "b": {
           "op": "eq",
@@ -12085,7 +12179,7 @@
               },
               {
                "el": "text",
-               "value": "ชื่อตอน / หัวข้อที่จะคุย",
+               "value": "เรื่องที่จะเล่า",
                "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
@@ -12125,7 +12219,7 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "record_voice_over",
+                 "icon": "mic",
                  "textSize": "text-[19px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
                 }
@@ -12133,7 +12227,7 @@
               },
               {
                "el": "text",
-               "value": "ใครเล่า",
+               "value": "รูปแบบรายการ",
                "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               }
              ]
@@ -12147,14 +12241,14 @@
              "options": [
               {
                "value": "",
-               "label": "2 คนคุยกัน",
+               "label": "คุยกัน 2 คน",
                "desc": "พิธีกร + แขกรับเชิญ สลับกันพูด",
                "icon": "groups"
               },
               {
                "value": "solo",
-               "label": "เล่าคนเดียว",
-               "desc": "ผู้เล่า 1 คน พูดกับกล้อง",
+               "label": "พิธีกรคนเดียว",
+               "desc": "เล่า/รีวิวคนเดียว พูดกับกล้อง",
                "icon": "person"
               }
              ]
@@ -12167,7 +12261,7 @@
             },
             {
              "el": "text",
-             "value": "ผู้เล่าคนเดียวพูดกับคนดูตลอดคลิป — เหมาะกับรีวิวเร็ว ๆ แบบไลฟ์สไตล์",
+             "value": "พิธีกรพูดกับคนดูคนเดียวตลอดคลิป",
              "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug",
              "when": "item.cast=solo"
             }
@@ -12198,7 +12292,7 @@
               },
               {
                "el": "text",
-               "value": "สินค้าในตอนนี้",
+               "value": "ขายสินค้าด้วยไหม",
                "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               }
              ]
@@ -13761,6 +13855,29 @@
                "when": "item.itemOn5=true"
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "ข้อมูลที่อยากให้เล่า (ไม่บังคับ)",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "textarea",
+               "field": "info",
+               "placeholder": "เช่น ข้อเท็จจริง ตัวเลข ลิงก์ข่าวที่สรุปเอง เรื่องเล่าที่อยากให้เล่า — ยิ่งให้ละเอียด หมียิ่งไม่ต้องเดา",
+               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+              },
+              {
+               "el": "text",
+               "value": "สรุปข่าว · ประวัติศาสตร์ · คดีดัง — หมีใช้เฉพาะข้อมูลที่ให้หรือที่รู้แน่ชัด ตรวจก่อนโพสต์ทุกครั้ง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              }
+             ],
+             "when": "item.hasProduct=ไม่มี"
             }
            ]
           },
@@ -13781,7 +13898,7 @@
                "card": [
                 {
                  "el": "icon",
-                 "icon": "mic",
+                 "icon": "category",
                  "textSize": "text-[19px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
                 }
@@ -13789,7 +13906,7 @@
               },
               {
                "el": "text",
-               "value": "รูปแบบรายการ",
+               "value": "แนวและโทน",
                "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
@@ -13798,6 +13915,11 @@
                "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
               }
              ]
+            },
+            {
+             "el": "text",
+             "value": "แนวเนื้อหา",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
             },
             {
              "el": "grid-select",
@@ -13821,7 +13943,7 @@
               {
                "value": "compare",
                "label": "เปรียบเทียบ",
-               "desc": "เทียบกับทางเลือกทั่วไป 3 แกน",
+               "desc": "เทียบกับทางเลือกทั่วไป",
                "icon": "compare_arrows"
               },
               {
@@ -13833,53 +13955,209 @@
               {
                "value": "story",
                "label": "เล่าเรื่องแบรนด์",
-               "desc": "ที่มาของของชิ้นนี้ เล่าเหมือนเกร็ด",
+               "desc": "ที่มาของของชิ้นนี้",
                "icon": "auto_stories"
               },
               {
                "value": "trend",
                "label": "เทรนด์",
-               "desc": "เปิดด้วยเทรนด์ แล้วโยงเข้าสินค้า",
+               "desc": "เปิดด้วยเทรนด์ โยงเข้าสินค้า",
                "icon": "trending_up"
               },
               {
                "value": "unbox",
                "label": "แกะกล่อง",
-               "desc": "เปิดกล่องหน้ากล้อง ทีละชิ้น",
+               "desc": "เปิดกล่องหน้ากล้อง",
                "icon": "package_2"
+              }
+             ],
+             "when": "item.hasProduct!=ไม่มี"
+            },
+            {
+             "el": "grid-select",
+             "field": "format",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "หมีเลือกให้เข้ากับหัวข้อ",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "joke",
+               "label": "เรื่องตลก / มุข",
+               "desc": "ปูเรื่องแล้วหักมุม",
+               "icon": "sentiment_very_satisfied"
+              },
+              {
+               "value": "ghost",
+               "label": "เรื่องผี / ลี้ลับ",
+               "desc": "ปูบรรยากาศ ค่อย ๆ หลอน",
+               "icon": "nights_stay"
+              },
+              {
+               "value": "crime",
+               "label": "คดีดัง / ปริศนา",
+               "desc": "ไล่หาคำตอบทีละปม",
+               "icon": "search"
+              },
+              {
+               "value": "history",
+               "label": "ประวัติศาสตร์",
+               "desc": "เกร็ดที่คนไม่รู้",
+               "icon": "history_edu"
+              },
+              {
+               "value": "news",
+               "label": "สรุปข่าว",
+               "desc": "เกิดอะไร ทำไมสำคัญ",
+               "icon": "newspaper"
+              },
+              {
+               "value": "explain",
+               "label": "ความรู้รอบตัว",
+               "desc": "อธิบายง่าย มีตัวอย่าง",
+               "icon": "lightbulb"
+              },
+              {
+               "value": "money",
+               "label": "ธุรกิจ / การเงิน",
+               "desc": "ทริคที่ทำได้จริง",
+               "icon": "savings"
+              },
+              {
+               "value": "self",
+               "label": "พัฒนาตัวเอง",
+               "desc": "มุมคิดใหม่ ลองพรุ่งนี้ได้",
+               "icon": "self_improvement"
+              },
+              {
+               "value": "love",
+               "label": "ความรัก / ความสัมพันธ์",
+               "desc": "เรื่องที่คนดูอิน",
+               "icon": "favorite"
+              },
+              {
+               "value": "pop",
+               "label": "บันเทิง / ป๊อป",
+               "desc": "หนัง ซีรีส์ เพลง เกม",
+               "icon": "movie"
+              },
+              {
+               "value": "debate",
+               "label": "ดีเบต 2 ฝั่ง",
+               "desc": "เถียงกันแบบขำ ๆ ให้คนดูโหวต",
+               "icon": "balance"
+              },
+              {
+               "value": "interview",
+               "label": "สัมภาษณ์",
+               "desc": "ถามสิ่งที่คนดูอยากรู้",
+               "icon": "record_voice_over"
+              }
+             ],
+             "when": "item.hasProduct=ไม่มี"
+            },
+            {
+             "el": "text",
+             "value": "โทนรายการ",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "vibe",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามแนวเนื้อหา",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "funny",
+               "label": "ตลก กวน",
+               "desc": "เล่นมุข แซวกัน",
+               "icon": "mood"
+              },
+              {
+               "value": "chill",
+               "label": "สบาย ๆ",
+               "desc": "เหมือนคุยกับเพื่อน",
+               "icon": "coffee"
+              },
+              {
+               "value": "serious",
+               "label": "จริงจัง",
+               "desc": "น่าเชื่อถือ ไม่เล่นมุข",
+               "icon": "verified"
+              },
+              {
+               "value": "thrill",
+               "label": "ลุ้นระทึก",
+               "desc": "ลึกลับ ทิ้งปมค้าง",
+               "icon": "visibility"
+              },
+              {
+               "value": "warm",
+               "label": "อบอุ่น ซึ้ง",
+               "desc": "นุ่ม ๆ อบอุ่นใจ",
+               "icon": "volunteer_activism"
+              },
+              {
+               "value": "hype",
+               "label": "ตื่นเต้น",
+               "desc": "พลังสูง เร็ว",
+               "icon": "bolt"
               }
              ]
             }
            ]
           },
           {
-           "el": "group",
-           "collapsible": true,
-           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-           "head": [
-            {
-             "el": "icon",
-             "icon": "face",
-             "textSize": "text-[19px]",
-             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-            },
-            {
-             "el": "text",
-             "value": "ตัวละคร",
-             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
-            },
-            {
-             "el": "text",
-             "value": "หน้าตา · เพศ · เสียง (ว่าง = หมีออกแบบให้)",
-             "className": "!text-[13px] opacity-40 truncate min-w-0"
-            }
-           ],
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
            "card": [
             {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "face",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ตัวละคร",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+              }
+             ]
+            },
+            {
              "el": "text",
-             "value": "ทุกช่องว่างได้ — หมีออกแบบให้ 2 คนต่างกันชัดในเฟรม",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug",
-             "when": "item.cast!=solo"
+             "value": "ว่างได้ทุกช่อง — หมีออกแบบให้เข้ากับเรื่อง",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
             },
             {
              "el": "box",
@@ -13898,65 +14176,83 @@
                 {
                  "el": "text",
                  "value": "พิธีกร · นั่งซ้าย",
-                 "className": "!text-[14px] font-black px-0.5",
+                 "className": "!text-[15px] font-black px-0.5",
                  "when": "item.cast!=solo"
                 },
                 {
                  "el": "text",
-                 "value": "ผู้เล่า",
-                 "className": "!text-[14px] font-black px-0.5",
+                 "value": "พิธีกร",
+                 "className": "!text-[15px] font-black px-0.5",
                  "when": "item.cast=solo"
                 }
                ]
               },
               {
+               "el": "text",
+               "value": "เป็นอะไร",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "hostKind",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกให้เข้ากับเรื่อง",
+                 "icon": "auto_fix_high"
+                },
+                {
+                 "value": "คน",
+                 "label": "คน",
+                 "desc": "คนจริง",
+                 "icon": "person"
+                },
+                {
+                 "value": "สัตว์",
+                 "label": "สัตว์พูดได้",
+                 "desc": "หมี แมว หมา ใส่เสื้อผ้า นั่งคุยเหมือนคน",
+                 "icon": "pets"
+                },
+                {
+                 "value": "มาสคอต",
+                 "label": "ตุ๊กตามาสคอต",
+                 "desc": "ชุดตุ๊กตาตัวใหญ่ แบบมาสคอตแบรนด์",
+                 "icon": "smart_toy"
+                },
+                {
+                 "value": "การ์ตูน",
+                 "label": "ตัวการ์ตูน",
+                 "desc": "ตัวละครวาดขึ้นใหม่",
+                 "icon": "face_retouching_natural"
+                }
+               ]
+              },
+              {
                "el": "box",
-               "className": "grid grid-cols-2 @[720px]:grid-cols-4 gap-2.5",
+               "className": "flex flex-col gap-1.5",
                "card": [
                 {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "เป็นอะไร",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "hostKind",
-                   "placeholder": "อัตโนมัติ",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "คน",
-                     "label": "คน",
-                     "icon": "person"
-                    },
-                    {
-                     "value": "สัตว์",
-                     "label": "สัตว์ (ทำตัวเหมือนคน)",
-                     "icon": "pets"
-                    },
-                    {
-                     "value": "มาสคอต",
-                     "label": "มาสคอต",
-                     "icon": "smart_toy"
-                    },
-                    {
-                     "value": "การ์ตูน",
-                     "label": "ตัวการ์ตูน",
-                     "icon": "face_retouching_natural"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
+                 "el": "text",
+                 "value": "สัตว์อะไร",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
+                {
+                 "el": "input",
+                 "field": "hostSpecies",
+                 "placeholder": "เช่น หมีใส่แว่น · แมวส้ม · ชิบะ",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hostKind=สัตว์"
+              },
+              {
+               "el": "box",
+               "className": "grid grid-cols-2 gap-2.5",
+               "card": [
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
@@ -14032,14 +14328,39 @@
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
+                }
+               ]
+              },
+              {
+               "el": "group",
+               "collapsible": true,
+               "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
+               "head": [
+                {
+                 "el": "icon",
+                 "icon": "more_horiz",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
                 },
+                {
+                 "el": "text",
+                 "value": "ปรับเพิ่ม",
+                 "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
+                },
+                {
+                 "el": "text",
+                 "value": "เสียง · ชื่อ · ลุค · รูปหน้า",
+                 "className": "!text-[13px] opacity-40 truncate min-w-0"
+                }
+               ],
+               "card": [
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
                  "card": [
                   {
                    "el": "text",
-                   "value": "โทนเสียง",
+                   "value": "โทนเสียง / บุคลิก",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                   },
                   {
@@ -14080,13 +14401,7 @@
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "grid grid-cols-1 @[560px]:grid-cols-2 gap-2.5",
-               "card": [
+                },
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
@@ -14120,112 +14435,114 @@
                    "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5 mb-1",
-               "card": [
+                },
                 {
-                 "el": "row",
-                 "className": "!gap-1.5 !flex-nowrap items-center",
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5 mb-1",
                  "card": [
                   {
-                   "el": "icon",
-                   "icon": "add_photo_alternate",
-                   "textSize": "text-[17px]",
-                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "add_photo_alternate",
+                     "textSize": "text-[17px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "รูปใบหน้า (ไม่บังคับ)",
+                     "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                    }
+                   ]
                   },
                   {
                    "el": "text",
-                   "value": "รูปใบหน้า (ไม่บังคับ)",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  }
-                 ]
-                },
-                {
-                 "el": "text",
-                 "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                },
-                {
-                 "el": "repeat",
-                 "coll": "characters",
-                 "card": [
+                   "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                  },
                   {
-                   "el": "box",
-                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                   "el": "repeat",
+                   "coll": "characters",
                    "card": [
                     {
                      "el": "box",
-                     "className": "shrink-0",
+                     "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
                      "card": [
                       {
                        "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": "item.slots.face!=",
+                       "className": "shrink-0",
                        "card": [
                         {
-                         "el": "media-slot",
-                         "src": "{item.slots.face}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
+                         "el": "box",
+                         "className": "relative w-[124px] shrink-0",
+                         "when": "item.slots.face!=",
+                         "card": [
+                          {
+                           "el": "media-slot",
+                           "src": "{item.slots.face}",
+                           "aspect": "1:1",
+                           "style": {
+                            "borderRadius": "16px"
+                           },
+                           "className": "ring-1 ring-[var(--ev-border)]"
+                          },
+                          {
+                           "el": "button",
+                           "action": "hook",
+                           "fn": "clearSlot",
+                           "to": "face",
+                           "label": "",
+                           "icon": "close",
+                           "variant": "ghost",
+                           "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                          }
+                         ]
                         },
                         {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "face",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": "item.slots.face=",
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                         "el": "box",
+                         "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                         "when": "item.slots.face=",
+                         "card": [
+                          {
+                           "el": "upload",
+                           "label": "",
+                           "placeholder": "อัพโหลด",
+                           "icon": "upload",
+                           "into": "face",
+                           "resize": {
+                            "maxPx": 512,
+                            "quality": 0.8
+                           },
+                           "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                          },
+                          {
+                           "el": "pick-button",
+                           "label": "เลือกภาพ",
+                           "icon": "photo_library",
+                           "filter": "image",
+                           "into": "face",
+                           "resize": {
+                            "maxPx": 512,
+                            "quality": 0.8
+                           },
+                           "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                          }
+                         ]
                         }
                        ]
                       }
                      ]
                     }
-                   ]
+                   ],
+                   "where": "id=ch1"
                   }
-                 ],
-                 "where": "id=ch1"
+                 ]
                 }
-               ]
+               ],
+               "bodyClass": "pt-2 gap-3",
+               "chevClass": "opacity-50 !text-[22px]"
               }
              ]
             },
@@ -14246,58 +14563,76 @@
                 {
                  "el": "text",
                  "value": "แขกรับเชิญ · นั่งขวา",
-                 "className": "!text-[14px] font-black px-0.5"
+                 "className": "!text-[15px] font-black px-0.5"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "เป็นอะไร",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "guestKind",
+               "cols": 2,
+               "contained": true,
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "หมีเลือกให้เข้ากับเรื่อง",
+                 "icon": "auto_fix_high"
+                },
+                {
+                 "value": "คน",
+                 "label": "คน",
+                 "desc": "คนจริง",
+                 "icon": "person"
+                },
+                {
+                 "value": "สัตว์",
+                 "label": "สัตว์พูดได้",
+                 "desc": "หมี แมว หมา ใส่เสื้อผ้า นั่งคุยเหมือนคน",
+                 "icon": "pets"
+                },
+                {
+                 "value": "มาสคอต",
+                 "label": "ตุ๊กตามาสคอต",
+                 "desc": "ชุดตุ๊กตาตัวใหญ่ แบบมาสคอตแบรนด์",
+                 "icon": "smart_toy"
+                },
+                {
+                 "value": "การ์ตูน",
+                 "label": "ตัวการ์ตูน",
+                 "desc": "ตัวละครวาดขึ้นใหม่",
+                 "icon": "face_retouching_natural"
                 }
                ]
               },
               {
                "el": "box",
-               "className": "grid grid-cols-2 @[720px]:grid-cols-4 gap-2.5",
+               "className": "flex flex-col gap-1.5",
                "card": [
                 {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "เป็นอะไร",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "guestKind",
-                   "placeholder": "อัตโนมัติ",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "คน",
-                     "label": "คน",
-                     "icon": "person"
-                    },
-                    {
-                     "value": "สัตว์",
-                     "label": "สัตว์ (ทำตัวเหมือนคน)",
-                     "icon": "pets"
-                    },
-                    {
-                     "value": "มาสคอต",
-                     "label": "มาสคอต",
-                     "icon": "smart_toy"
-                    },
-                    {
-                     "value": "การ์ตูน",
-                     "label": "ตัวการ์ตูน",
-                     "icon": "face_retouching_natural"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
+                 "el": "text",
+                 "value": "สัตว์อะไร",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
+                {
+                 "el": "input",
+                 "field": "guestSpecies",
+                 "placeholder": "เช่น หมีใส่แว่น · แมวส้ม · ชิบะ",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.guestKind=สัตว์"
+              },
+              {
+               "el": "box",
+               "className": "grid grid-cols-2 gap-2.5",
+               "card": [
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
@@ -14373,14 +14708,39 @@
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
+                }
+               ]
+              },
+              {
+               "el": "group",
+               "collapsible": true,
+               "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
+               "head": [
+                {
+                 "el": "icon",
+                 "icon": "more_horiz",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
                 },
+                {
+                 "el": "text",
+                 "value": "ปรับเพิ่ม",
+                 "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
+                },
+                {
+                 "el": "text",
+                 "value": "เสียง · ชื่อ · ลุค · รูปหน้า",
+                 "className": "!text-[13px] opacity-40 truncate min-w-0"
+                }
+               ],
+               "card": [
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
                  "card": [
                   {
                    "el": "text",
-                   "value": "โทนเสียง",
+                   "value": "โทนเสียง / บุคลิก",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                   },
                   {
@@ -14421,13 +14781,7 @@
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "grid grid-cols-1 @[560px]:grid-cols-2 gap-2.5",
-               "card": [
+                },
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
@@ -14461,384 +14815,152 @@
                    "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                   }
                  ]
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5 mb-1",
-               "card": [
+                },
                 {
-                 "el": "row",
-                 "className": "!gap-1.5 !flex-nowrap items-center",
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5 mb-1",
                  "card": [
                   {
-                   "el": "icon",
-                   "icon": "add_photo_alternate",
-                   "textSize": "text-[17px]",
-                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                   "el": "row",
+                   "className": "!gap-1.5 !flex-nowrap items-center",
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "add_photo_alternate",
+                     "textSize": "text-[17px]",
+                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                    },
+                    {
+                     "el": "text",
+                     "value": "รูปใบหน้าแขก (ไม่บังคับ)",
+                     "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                    }
+                   ]
                   },
                   {
                    "el": "text",
-                   "value": "รูปใบหน้าแขก (ไม่บังคับ)",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  }
-                 ]
-                },
-                {
-                 "el": "text",
-                 "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                },
-                {
-                 "el": "repeat",
-                 "coll": "characters",
-                 "card": [
+                   "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                  },
                   {
-                   "el": "box",
-                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                   "el": "repeat",
+                   "coll": "characters",
                    "card": [
                     {
                      "el": "box",
-                     "className": "shrink-0",
+                     "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
                      "card": [
                       {
                        "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": "item.slots.face!=",
+                       "className": "shrink-0",
                        "card": [
                         {
-                         "el": "media-slot",
-                         "src": "{item.slots.face}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
+                         "el": "box",
+                         "className": "relative w-[124px] shrink-0",
+                         "when": "item.slots.face!=",
+                         "card": [
+                          {
+                           "el": "media-slot",
+                           "src": "{item.slots.face}",
+                           "aspect": "1:1",
+                           "style": {
+                            "borderRadius": "16px"
+                           },
+                           "className": "ring-1 ring-[var(--ev-border)]"
+                          },
+                          {
+                           "el": "button",
+                           "action": "hook",
+                           "fn": "clearSlot",
+                           "to": "face",
+                           "label": "",
+                           "icon": "close",
+                           "variant": "ghost",
+                           "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                          }
+                         ]
                         },
                         {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "face",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": "item.slots.face=",
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                         "el": "box",
+                         "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                         "when": "item.slots.face=",
+                         "card": [
+                          {
+                           "el": "upload",
+                           "label": "",
+                           "placeholder": "อัพโหลด",
+                           "icon": "upload",
+                           "into": "face",
+                           "resize": {
+                            "maxPx": 512,
+                            "quality": 0.8
+                           },
+                           "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                          },
+                          {
+                           "el": "pick-button",
+                           "label": "เลือกภาพ",
+                           "icon": "photo_library",
+                           "filter": "image",
+                           "into": "face",
+                           "resize": {
+                            "maxPx": 512,
+                            "quality": 0.8
+                           },
+                           "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                          }
+                         ]
                         }
                        ]
                       }
                      ]
                     }
-                   ]
+                   ],
+                   "where": "id=ch2"
                   }
-                 ],
-                 "where": "id=ch2"
+                 ]
                 }
-               ]
+               ],
+               "bodyClass": "pt-2 gap-3",
+               "chevClass": "opacity-50 !text-[22px]"
               }
              ],
              "when": "item.cast!=solo"
             }
-           ],
-           "bodyClass": "pt-2 gap-3",
-           "chevClass": "opacity-50 !text-[22px]"
+           ]
           },
           {
-           "el": "group",
-           "collapsible": true,
-           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-           "head": [
-            {
-             "el": "icon",
-             "icon": "palette",
-             "textSize": "text-[19px]",
-             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-            },
-            {
-             "el": "text",
-             "value": "ภาพ ห้อง และจังหวะ",
-             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
-            },
-            {
-             "el": "text",
-             "value": "สไตล์ · แสง · ที่นั่ง · ห้อง · จังหวะพูด",
-             "className": "!text-[13px] opacity-40 truncate min-w-0"
-            }
-           ],
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
            "card": [
             {
-             "el": "text",
-             "value": "สไตล์ภาพ",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "style",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "ปกติ = สมจริง",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "real",
-               "label": "สมจริง",
-               "desc": "เหมือนถ่ายจริงในสตูดิโอ",
-               "icon": "photo_camera"
-              },
-              {
-               "value": "anime",
-               "label": "อนิเมะ 2D",
-               "desc": "เส้นสะอาด สีสด",
-               "icon": "brush"
-              },
-              {
-               "value": "pixar",
-               "label": "การ์ตูน 3D",
-               "desc": "แบบแอนิเมชันฉายโรง",
-               "icon": "view_in_ar"
-              },
-              {
-               "value": "clay",
-               "label": "ดินน้ำมัน",
-               "desc": "สต็อปโมชัน มีรอยนิ้ว",
-               "icon": "gesture"
-              },
-              {
-               "value": "thai",
-               "label": "ไทยท้องถิ่น",
-               "desc": "สมจริง ของประดับแบบไทย",
-               "icon": "temple_buddhist"
-              },
-              {
-               "value": "cyber",
-               "label": "ไซเบอร์พังก์",
-               "desc": "นีออนม่วง-ฟ้า",
-               "icon": "bolt"
-              },
-              {
-               "value": "clean",
-               "label": "มินิมอล",
-               "desc": "พื้นเรียบ สีน้อย",
-               "icon": "crop_square"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
              "card": [
               {
-               "el": "text",
-               "value": "แสงและบรรยากาศ",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "grid-select",
-               "field": "tone",
-               "cols": 3,
-               "mobile": {
-                "cols": 2
-               },
-               "contained": true,
-               "className": "!min-h-[48px] @[420px]:!min-h-0",
-               "options": [
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
                 {
-                 "value": "",
-                 "label": "อัตโนมัติ",
-                 "desc": "ตามหน้าตั้งค่า / หมีเลือกให้",
-                 "icon": "auto_awesome"
-                },
-                {
-                 "value": "แสงธรรมชาติกลางวัน",
-                 "label": "แสงธรรมชาติกลางวัน",
-                 "desc": "แดดกลางวันเข้าหน้าต่าง",
-                 "icon": "wb_sunny"
-                },
-                {
-                 "value": "แสงเช้านุ่ม",
-                 "label": "แสงเช้านุ่ม",
-                 "desc": "นุ่ม ๆ ตอนเช้า",
-                 "icon": "wb_twilight"
-                },
-                {
-                 "value": "แสงอุ่นตอนเย็น",
-                 "label": "แสงอุ่นตอนเย็น",
-                 "desc": "โกลเด้นอาวร์",
-                 "icon": "light_mode"
-                },
-                {
-                 "value": "ไฟบ้านโทนอุ่น",
-                 "label": "ไฟบ้านโทนอุ่น",
-                 "desc": "โคมไฟ cozy",
-                 "icon": "lightbulb"
-                },
-                {
-                 "value": "สว่างสะอาด",
-                 "label": "สว่างสะอาด",
-                 "desc": "สว่างเรียบ ๆ",
-                 "icon": "brightness_7"
+                 "el": "icon",
+                 "icon": "chair",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
                 }
                ]
               },
               {
                "el": "text",
-               "value": "ว่าง = ใช้ค่าจากหน้าตั้งค่า · แสงมีผลกับทั้งห้องสตูดิโอ",
-               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 pt-1"
-              }
-             ]
-            },
-            {
-             "el": "text",
-             "value": "จัดที่นั่ง / มุมกล้อง",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5",
-             "when": "item.cast!=solo"
-            },
-            {
-             "el": "grid-select",
-             "field": "camMode",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "หมีเลือกให้เข้ากับรูปแบบ",
-               "icon": "auto_awesome"
+               "value": "ฉาก",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
-               "value": "front",
-               "label": "หันเข้ากล้อง",
-               "desc": "นั่งโต๊ะเดียวกัน มองกล้อง",
-               "icon": "videocam"
-              },
-              {
-               "value": "face",
-               "label": "หันหากัน",
-               "desc": "มุมเฉียงข้ามโต๊ะ แบบสัมภาษณ์",
-               "icon": "forum"
-              }
-             ],
-             "when": "item.cast!=solo"
-            },
-            {
-             "el": "text",
-             "value": "สินค้าอยู่ตรงไหนในฉาก",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5",
-             "when": "item.hasProduct!=ไม่มี"
-            },
-            {
-             "el": "grid-select",
-             "field": "placement",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "หมีเลือกท่าที่เหมาะกับสินค้า",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "hold",
-               "label": "ถือในมือ",
-               "desc": "ยกให้เห็นเมื่อพูดถึง",
-               "icon": "back_hand"
-              },
-              {
-               "value": "wear",
-               "label": "สวมใส่",
-               "desc": "เสื้อผ้า เครื่องประดับ หูฟัง",
-               "icon": "checkroom"
-              },
-              {
-               "value": "table",
-               "label": "วางบนโต๊ะ",
-               "desc": "เห็นในทุกภาพกว้าง",
-               "icon": "table_restaurant"
-              },
-              {
-               "value": "nearcam",
-               "label": "ยกใกล้กล้อง",
-               "desc": "อินเสิร์ตเห็นฉลากชัด",
-               "icon": "center_focus_strong"
-              },
-              {
-               "value": "mic",
-               "label": "วางข้างไมค์",
-               "desc": "อยู่ในเฟรมเสมอ",
-               "icon": "mic"
-              }
-             ],
-             "when": "item.hasProduct!=ไม่มี"
-            },
-            {
-             "el": "text",
-             "value": "จังหวะพูด",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "pace",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "ปกติ",
-               "desc": "ฉากละ 5-7 คำ",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "slow",
-               "label": "ช้า ชัด",
-               "desc": "ฉากละ 4-5 คำ",
-               "icon": "slow_motion_video"
-              },
-              {
-               "value": "fast",
-               "label": "ไว กระชับ",
-               "desc": "ฉากละ 7-9 คำ",
-               "icon": "speed"
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
               }
              ]
             },
@@ -14846,11 +14968,6 @@
              "el": "box",
              "className": "flex flex-col gap-1.5",
              "card": [
-              {
-               "el": "text",
-               "value": "ห้องสตูดิโอ",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1"
-              },
               {
                "el": "grid-select",
                "field": "sceneMode",
@@ -14861,14 +14978,62 @@
                 {
                  "value": "",
                  "label": "อัตโนมัติ",
-                 "desc": "หมีออกแบบห้องพอดแคสต์ให้",
+                 "desc": "หมีเลือกให้เข้ากับเรื่อง",
                  "icon": "auto_awesome"
                 },
                 {
+                 "value": "studio",
+                 "label": "สตูดิโอพอดแคสต์",
+                 "desc": "ผนังซับเสียง ไฟอุ่น",
+                 "icon": "podcasts"
+                },
+                {
+                 "value": "living",
+                 "label": "ห้องนั่งเล่น",
+                 "desc": "โซฟา ชั้นหนังสือ",
+                 "icon": "weekend"
+                },
+                {
+                 "value": "cafe",
+                 "label": "คาเฟ่",
+                 "desc": "ไม้ แสงหน้าต่าง",
+                 "icon": "local_cafe"
+                },
+                {
+                 "value": "bedroom",
+                 "label": "ห้องนอนน่ารัก",
+                 "desc": "โทนพาสเทล",
+                 "icon": "bed"
+                },
+                {
+                 "value": "gaming",
+                 "label": "ห้องเกมมิ่ง",
+                 "desc": "ไฟ RGB",
+                 "icon": "sports_esports"
+                },
+                {
+                 "value": "outdoor",
+                 "label": "กลางแจ้ง",
+                 "desc": "ระเบียง สวน แดดอ่อน",
+                 "icon": "park"
+                },
+                {
+                 "value": "news",
+                 "label": "โต๊ะข่าว",
+                 "desc": "แบบรายการข่าว",
+                 "icon": "live_tv"
+                },
+                {
+                 "value": "dark",
+                 "label": "ห้องมืดลี้ลับ",
+                 "desc": "ไฟสลัว เหมาะเรื่องผี",
+                 "icon": "dark_mode"
+                },
+                {
                  "value": "custom",
-                 "label": "กำหนดเอง",
-                 "desc": "ใส่รูปห้องจริง หรือเล่าห้องเอง",
-                 "icon": "edit_note"
+                 "label": "ห้องจริงของฉัน",
+                 "desc": "ใส่รูปห้อง หรือเล่าเอง",
+                 "icon": "add_photo_alternate"
                 }
                ]
               },
@@ -14883,7 +15048,7 @@
                "card": [
                 {
                  "el": "text",
-                 "value": "อยากให้ห้องเป็นแบบไหน (ไม่บังคับ)",
+                 "value": "เล่าห้องที่อยากได้ (ไม่บังคับ)",
                  "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
                 {
@@ -15083,6 +15248,275 @@
                  ]
                 }
                ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "group",
+           "collapsible": true,
+           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+           "head": [
+            {
+             "el": "icon",
+             "icon": "tune",
+             "textSize": "text-[19px]",
+             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+            },
+            {
+             "el": "text",
+             "value": "ปรับละเอียด",
+             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
+            },
+            {
+             "el": "text",
+             "value": "สไตล์ภาพ · แสง · ที่นั่ง · จังหวะพูด · ลูกเล่น",
+             "className": "!text-[13px] opacity-40 truncate min-w-0"
+            }
+           ],
+           "card": [
+            {
+             "el": "text",
+             "value": "สไตล์ภาพ",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "style",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ปกติ = สมจริง",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "real",
+               "label": "สมจริง",
+               "desc": "เหมือนถ่ายจริง",
+               "icon": "photo_camera"
+              },
+              {
+               "value": "anime",
+               "label": "อนิเมะ 2D",
+               "desc": "เส้นสะอาด สีสด",
+               "icon": "brush"
+              },
+              {
+               "value": "pixar",
+               "label": "การ์ตูน 3D",
+               "desc": "แบบแอนิเมชันฉายโรง",
+               "icon": "view_in_ar"
+              },
+              {
+               "value": "clay",
+               "label": "ดินน้ำมัน",
+               "desc": "สต็อปโมชัน",
+               "icon": "gesture"
+              },
+              {
+               "value": "thai",
+               "label": "ไทยท้องถิ่น",
+               "desc": "ของประดับแบบไทย",
+               "icon": "temple_buddhist"
+              },
+              {
+               "value": "cyber",
+               "label": "ไซเบอร์พังก์",
+               "desc": "นีออนม่วง-ฟ้า",
+               "icon": "bolt"
+              },
+              {
+               "value": "clean",
+               "label": "มินิมอล",
+               "desc": "พื้นเรียบ สีน้อย",
+               "icon": "crop_square"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "แสงและบรรยากาศ",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "tone",
+               "cols": 3,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "ตามหน้าตั้งค่า / หมีเลือกให้",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "แสงธรรมชาติกลางวัน",
+                 "label": "แสงธรรมชาติกลางวัน",
+                 "desc": "แดดกลางวันเข้าหน้าต่าง",
+                 "icon": "wb_sunny"
+                },
+                {
+                 "value": "แสงเช้านุ่ม",
+                 "label": "แสงเช้านุ่ม",
+                 "desc": "นุ่ม ๆ ตอนเช้า",
+                 "icon": "wb_twilight"
+                },
+                {
+                 "value": "แสงอุ่นตอนเย็น",
+                 "label": "แสงอุ่นตอนเย็น",
+                 "desc": "โกลเด้นอาวร์",
+                 "icon": "light_mode"
+                },
+                {
+                 "value": "ไฟบ้านโทนอุ่น",
+                 "label": "ไฟบ้านโทนอุ่น",
+                 "desc": "โคมไฟ cozy",
+                 "icon": "lightbulb"
+                },
+                {
+                 "value": "สว่างสะอาด",
+                 "label": "สว่างสะอาด",
+                 "desc": "สว่างเรียบ ๆ",
+                 "icon": "brightness_7"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ว่าง = ใช้ค่าจากหน้าตั้งค่า",
+               "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5 pt-1"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "จัดที่นั่ง / มุมกล้อง",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5",
+             "when": "item.cast!=solo"
+            },
+            {
+             "el": "grid-select",
+             "field": "camMode",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "หมีเลือกให้เข้ากับรูปแบบ",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "front",
+               "label": "หันเข้ากล้อง",
+               "desc": "นั่งโต๊ะเดียวกัน มองกล้อง",
+               "icon": "videocam"
+              },
+              {
+               "value": "face",
+               "label": "หันหากัน",
+               "desc": "มุมเฉียง แบบสัมภาษณ์",
+               "icon": "forum"
+              }
+             ],
+             "when": "item.cast!=solo"
+            },
+            {
+             "el": "text",
+             "value": "สินค้าอยู่ตรงไหนในฉาก",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5",
+             "when": "item.hasProduct!=ไม่มี"
+            },
+            {
+             "el": "grid-select",
+             "field": "placement",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "หมีเลือกท่าที่เหมาะ",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "hold",
+               "label": "ถือในมือ",
+               "desc": "ยกให้เห็นเมื่อพูดถึง",
+               "icon": "back_hand"
+              },
+              {
+               "value": "wear",
+               "label": "สวมใส่",
+               "desc": "เสื้อผ้า เครื่องประดับ",
+               "icon": "checkroom"
+              },
+              {
+               "value": "table",
+               "label": "วางบนโต๊ะ",
+               "desc": "เห็นในทุกภาพกว้าง",
+               "icon": "table_restaurant"
+              },
+              {
+               "value": "nearcam",
+               "label": "ยกใกล้กล้อง",
+               "desc": "เห็นฉลากชัด",
+               "icon": "center_focus_strong"
+              },
+              {
+               "value": "mic",
+               "label": "วางข้างไมค์",
+               "desc": "อยู่ในเฟรมเสมอ",
+               "icon": "mic"
+              }
+             ],
+             "when": "item.hasProduct!=ไม่มี"
+            },
+            {
+             "el": "text",
+             "value": "จังหวะพูด",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "pace",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "ปกติ",
+               "desc": "ฉากละ 5-7 คำ",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "slow",
+               "label": "ช้า ชัด",
+               "desc": "ฉากละ 4-5 คำ",
+               "icon": "slow_motion_video"
+              },
+              {
+               "value": "fast",
+               "label": "ไว กระชับ",
+               "desc": "ฉากละ 7-9 คำ",
+               "icon": "speed"
               }
              ]
             },
@@ -38409,7 +38843,31 @@
    "soloqa": "รูปแบบรายการ: ถาม-ตอบลูกค้า — HOST อ่านคำถามจริงของลูกค้า 3 ข้อ แล้วตอบเองทีละข้อด้วยรายละเอียดที่จับต้องได้ 1 อย่าง",
    "solostory": "รูปแบบรายการ: เล่าเรื่องแบรนด์ — เล่าที่มาของสินค้า/แบรนด์เหมือนเล่าเกร็ด เปิดตัวสินค้ากลางเรื่อง ปิดด้วยว่าทำไมถึงควรลอง",
    "solotrend": "รูปแบบรายการ: เทรนด์ — เปิดด้วยเทรนด์/ข่าวที่คนพูดถึง โยงเข้าสินค้าในช่วงที่ 2 ปิดด้วยวิธีเข้าร่วมเทรนด์",
-   "solounbox": "รูปแบบรายการ: แกะกล่อง — เปิดกล่องหน้ากล้อง: กล่องนอก → ของข้างในทีละชิ้น → ความรู้สึกแรก → CTA (ฉากต้องเห็นมือกับของจริง)"
+   "solounbox": "รูปแบบรายการ: แกะกล่อง — เปิดกล่องหน้ากล้อง: กล่องนอก → ของข้างในทีละชิ้น → ความรู้สึกแรก → CTA (ฉากต้องเห็นมือกับของจริง)",
+   "joke": "แนวเนื้อหา: เล่าเรื่องตลก/เล่นมุข — เปิดด้วยสถานการณ์ที่คนดูเจอบ่อย ปูเรื่องให้ตั้งตัว แล้วหักมุมเป็นพันช์ไลน์ · ทุกช่วงต้องมีมุขอย่างน้อย 1 มุข · ปิดด้วยมุขเด็ดที่สุด",
+   "ghost": "แนวเนื้อหา: เรื่องผี/ลี้ลับ — เล่าแบบประสบการณ์ ค่อย ๆ ปูบรรยากาศ (ที่ไหน เวลาไหน เสียงอะไร) เร่งความตึงทีละช่วง ปิดด้วยจุดขนลุกหรือคำถามค้างให้คนดูคอมเมนต์ · ไม่มีภาพน่ากลัวรุนแรงในฉาก สีหน้าผู้เล่าเป็นตัวสื่อ",
+   "crime": "แนวเนื้อหา: คดีดัง/ปริศนา — เล่าเหมือนไล่หาคำตอบ: เหตุการณ์ → ปมที่ยังไม่มีใครตอบได้ → สิ่งที่พบ → ข้อสรุปหรือคำถามค้าง · ไม่เอ่ยชื่อผู้เสียหายจริง ไม่ลงรายละเอียดความรุนแรง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "history": "แนวเนื้อหา: ประวัติศาสตร์ — เปิดด้วยเกร็ดที่คนไม่รู้ บอกยุค/ปีคร่าว ๆ เล่าเป็นเรื่องมีตัวละคร แล้วโยงว่าเกี่ยวกับชีวิตเราวันนี้ยังไง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "news": "แนวเนื้อหา: สรุปข่าว — ข่าวเดียวต่อคลิป: เกิดอะไร → ทำไมสำคัญ → กระทบใคร → ต้องจับตาอะไรต่อ · เป็นกลาง ไม่ใส่ความเห็นแรง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "explain": "แนวเนื้อหา: ความรู้รอบตัว อธิบายง่าย — ตั้งคำถามที่คนสงสัย ตอบด้วยภาษาชาวบ้าน + ตัวอย่างเปรียบเทียบ 1 อย่าง ปิดด้วยสรุปประโยคเดียวที่จำได้ · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "money": "แนวเนื้อหา: ธุรกิจ/การเงิน — 1 ไอเดียต่อคลิป: ปัญหาเงินที่คนเจอ → วิธีคิด/ทริคที่ทำได้จริง → ตัวอย่างตัวเลขง่าย ๆ → ข้อควรระวัง · ไม่ชี้นำให้ลงทุนตัวใดตัวหนึ่ง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "self": "แนวเนื้อหา: พัฒนาตัวเอง/แรงบันดาลใจ — เรื่องเล็กที่ทุกคนเจอ → มุมคิดใหม่ → สิ่งที่ลองทำได้พรุ่งนี้ 1 อย่าง · จริงใจ ไม่เทศนา",
+   "love": "แนวเนื้อหา: ความรัก/ความสัมพันธ์ — สถานการณ์ที่คนดูอิน (แชท แฟน เพื่อน ครอบครัว) → มุมมองของแต่ละฝั่ง → คำแนะนำที่ใช้ได้จริง · ชวนคอมเมนต์เล่าเรื่องตัวเอง",
+   "pop": "แนวเนื้อหา: บันเทิง/ป๊อปคัลเจอร์ — หนัง ซีรีส์ เพลง เกม หรือกระแสที่คนพูดถึง: เล่าสั้น ๆ ว่าคืออะไร → จุดที่น่าสนใจ → ความเห็นส่วนตัว · ไม่สปอยล์ตอนจบโดยไม่เตือน",
+   "debate": "แนวเนื้อหา: ดีเบต 2 ฝั่ง — HOST ยืนฝั่งหนึ่ง GUEST ยืนอีกฝั่ง แต่ละช่วงยกเหตุผล 1 ข้อที่จับต้องได้ แย้งกันแบบสุภาพและขำได้ ปิดด้วยให้คนดูโหวตในคอมเมนต์",
+   "interview": "แนวเนื้อหา: สัมภาษณ์ — HOST ถามคำถามที่คนดูอยากรู้ GUEST เป็นผู้รู้/ผู้มีประสบการณ์ ตอบด้วยเรื่องจริงหรือตัวอย่างเฉพาะตัว · คำถามสั้น คำตอบมีสาระ",
+   "solojoke": "แนวเนื้อหา: เล่าเรื่องตลก/เล่นมุข — เปิดด้วยสถานการณ์ที่คนดูเจอบ่อย ปูเรื่องให้ตั้งตัว แล้วหักมุมเป็นพันช์ไลน์ · ทุกช่วงต้องมีมุขอย่างน้อย 1 มุข · ปิดด้วยมุขเด็ดที่สุด",
+   "sologhost": "แนวเนื้อหา: เรื่องผี/ลี้ลับ — เล่าแบบประสบการณ์ ค่อย ๆ ปูบรรยากาศ (ที่ไหน เวลาไหน เสียงอะไร) เร่งความตึงทีละช่วง ปิดด้วยจุดขนลุกหรือคำถามค้างให้คนดูคอมเมนต์ · ไม่มีภาพน่ากลัวรุนแรงในฉาก สีหน้าผู้เล่าเป็นตัวสื่อ",
+   "solocrime": "แนวเนื้อหา: คดีดัง/ปริศนา — เล่าเหมือนไล่หาคำตอบ: เหตุการณ์ → ปมที่ยังไม่มีใครตอบได้ → สิ่งที่พบ → ข้อสรุปหรือคำถามค้าง · ไม่เอ่ยชื่อผู้เสียหายจริง ไม่ลงรายละเอียดความรุนแรง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "solohistory": "แนวเนื้อหา: ประวัติศาสตร์ — เปิดด้วยเกร็ดที่คนไม่รู้ บอกยุค/ปีคร่าว ๆ เล่าเป็นเรื่องมีตัวละคร แล้วโยงว่าเกี่ยวกับชีวิตเราวันนี้ยังไง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "solonews": "แนวเนื้อหา: สรุปข่าว — ข่าวเดียวต่อคลิป: เกิดอะไร → ทำไมสำคัญ → กระทบใคร → ต้องจับตาอะไรต่อ · เป็นกลาง ไม่ใส่ความเห็นแรง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "soloexplain": "แนวเนื้อหา: ความรู้รอบตัว อธิบายง่าย — ตั้งคำถามที่คนสงสัย ตอบด้วยภาษาชาวบ้าน + ตัวอย่างเปรียบเทียบ 1 อย่าง ปิดด้วยสรุปประโยคเดียวที่จำได้ · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "solomoney": "แนวเนื้อหา: ธุรกิจ/การเงิน — 1 ไอเดียต่อคลิป: ปัญหาเงินที่คนเจอ → วิธีคิด/ทริคที่ทำได้จริง → ตัวอย่างตัวเลขง่าย ๆ → ข้อควรระวัง · ไม่ชี้นำให้ลงทุนตัวใดตัวหนึ่ง · ข้อเท็จจริง: ใช้เฉพาะที่ผู้ใช้ให้ในข้อมูลที่อยากให้เล่า หรือที่รู้แน่ชัดเท่านั้น ห้ามแต่งตัวเลข วันที่ ชื่อคน คำพูดอ้างอิง — ไม่แน่ใจให้พูดกว้าง ๆ",
+   "soloself": "แนวเนื้อหา: พัฒนาตัวเอง/แรงบันดาลใจ — เรื่องเล็กที่ทุกคนเจอ → มุมคิดใหม่ → สิ่งที่ลองทำได้พรุ่งนี้ 1 อย่าง · จริงใจ ไม่เทศนา",
+   "sololove": "แนวเนื้อหา: ความรัก/ความสัมพันธ์ — สถานการณ์ที่คนดูอิน (แชท แฟน เพื่อน ครอบครัว) → มุมมองของแต่ละฝั่ง → คำแนะนำที่ใช้ได้จริง · ชวนคอมเมนต์เล่าเรื่องตัวเอง",
+   "solopop": "แนวเนื้อหา: บันเทิง/ป๊อปคัลเจอร์ — หนัง ซีรีส์ เพลง เกม หรือกระแสที่คนพูดถึง: เล่าสั้น ๆ ว่าคืออะไร → จุดที่น่าสนใจ → ความเห็นส่วนตัว · ไม่สปอยล์ตอนจบโดยไม่เตือน",
+   "solodebate": "แนวเนื้อหา: ดีเบต 2 ฝั่ง — HOST เล่าเอง: ฝั่งแรกคิดยังไง → ฝั่งตรงข้ามคิดยังไง (สลับน้ำเสียง/ท่าทาง) → HOST ฟันธงความเห็นตัวเอง ปิดด้วยให้คนดูโหวตในคอมเมนต์",
+   "solointerview": "แนวเนื้อหา: ตอบคำถามแบบสัมภาษณ์ — HOST อ่านคำถามที่คนดูถามบ่อย แล้วตอบเองจากประสบการณ์ ทีละข้อ"
   },
   "placementPlan": {
    "": "การวางสินค้าในฉาก: ให้เลือกท่าที่เหมาะกับสินค้าเอง (ถือ/สวม/วางบนโต๊ะ/ยกใกล้กล้อง) และเขียนลงใน s*th/s*en",
@@ -38456,6 +38914,25 @@
    "สัตว์": "สัตว์ที่นั่งคุยได้เหมือนคน (ใส่เสื้อผ้า ท่าทางเหมือนคน หน้าเป็นสัตว์จริง)",
    "มาสคอต": "มาสคอตตัวนุ่มขนาดคน",
    "การ์ตูน": "ตัวการ์ตูนออกแบบใหม่"
+  },
+  "vibePlan": {
+   "": "",
+   "funny": "โทนรายการ: ตลก กวน เล่นมุข — มุขต้องมาจากเรื่องที่เล่า แซวกันได้ ห้ามหยาบคาย ห้ามล้อเลียนเพศ ศาสนา รูปร่าง ชาติพันธุ์",
+   "chill": "โทนรายการ: สบาย ๆ เป็นกันเอง — เหมือนนั่งคุยกับเพื่อน ภาษาพูดง่าย ไม่เร่ง",
+   "serious": "โทนรายการ: จริงจัง น่าเชื่อถือ — ภาษาสุภาพ ชัดเจน มีเหตุผล ไม่เล่นมุข",
+   "thrill": "โทนรายการ: ลุ้นระทึก ลึกลับ — เสียงเบา เว้นจังหวะ ทิ้งคำถามค้างทุกช่วง",
+   "warm": "โทนรายการ: อบอุ่น ซึ้ง — น้ำเสียงนุ่ม มีช่วงให้คนดูรู้สึก ปิดด้วยประโยคที่อบอุ่นใจ",
+   "hype": "โทนรายการ: ตื่นเต้น พลังสูง — ประโยคสั้น เร็ว เน้นคำ มีพลังตลอด"
+  },
+  "scenePlan": {
+   "studio": "สตูดิโอพอดแคสต์มืออาชีพ ผนังซับเสียง ไฟโทนอุ่น",
+   "living": "ห้องนั่งเล่นอบอุ่น โซฟา ชั้นหนังสือ ต้นไม้",
+   "cafe": "มุมคาเฟ่ไม้ แสงธรรมชาติจากหน้าต่าง",
+   "bedroom": "ห้องนอนแต่งน่ารัก โทนพาสเทล ไฟเส้นระยิบ",
+   "gaming": "ห้องเกมมิ่ง ไฟ RGB จอหลายจอด้านหลัง",
+   "outdoor": "ระเบียง/สวนกลางแจ้ง ต้นไม้ แสงแดดอ่อน",
+   "news": "โต๊ะข่าวสตูดิโอข่าว จอข้อมูลด้านหลัง (จอว่าง ไม่มีตัวหนังสือ)",
+   "dark": "ห้องมืด ไฟสลัว เทียน/โคมเล็ก บรรยากาศลี้ลับ"
   }
  },
  "seed": {
