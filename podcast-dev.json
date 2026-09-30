@@ -12602,7 +12602,7 @@
                  "card": [
                   {
                    "el": "text",
-                   "value": "รูปสินค้า · 1-5 มุม",
+                   "value": "รูปสินค้า · 1-5 มุม (บังคับ)",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                   },
                   {
@@ -13100,12 +13100,12 @@
                      "card": [
                       {
                        "el": "text",
-                       "value": "ยังไม่มีรูปสินค้า — ไม่มีก็ผลิตได้",
+                       "value": "ใส่รูปสินค้าอย่างน้อย 1 รูป",
                        "className": "!text-[16px] @[640px]:!text-[15px] font-bold !text-[var(--ev-accent)]"
                       },
                       {
                        "el": "text",
-                       "value": "มีรูป = หมีล็อกรูปทรง สี ฉลาก ตามของจริง · ไม่มี = หมีคิดหน้าตาให้เอง",
+                       "value": "หมีล็อกรูปทรง สี ฉลาก ให้ตรงของจริง · ไม่มีรูป = เลือก \"ไม่มี — แค่เล่าเรื่อง\" ด้านบน",
                        "className": "!text-[14px] @[640px]:!text-[13px] !text-[var(--ev-accent)] opacity-80 leading-relaxed"
                       }
                      ]
@@ -14505,12 +14505,12 @@
                      "icon": "auto_fix_high"
                     },
                     {
-                     "value": "หญิง",
-                     "label": "หญิง"
-                    },
-                    {
                      "value": "ชาย",
                      "label": "ชาย"
+                    },
+                    {
+                     "value": "หญิง",
+                     "label": "หญิง"
                     }
                    ],
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
@@ -14885,12 +14885,12 @@
                      "icon": "auto_fix_high"
                     },
                     {
-                     "value": "หญิง",
-                     "label": "หญิง"
-                    },
-                    {
                      "value": "ชาย",
                      "label": "ชาย"
+                    },
+                    {
+                     "value": "หญิง",
+                     "label": "หญิง"
                     }
                    ],
                    "className": "!min-h-[48px] @[420px]:!min-h-0"
@@ -15824,7 +15824,56 @@
               "a": "{item.name}",
               "b": ""
              },
-             "reason": "กรอกชื่อก่อนบันทึก"
+             "reason": "กรอกหัวข้อก่อนบันทึก",
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "and",
+               "a": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.hasProduct}",
+                 "b": "ไม่มี"
+                }
+               },
+               "b": {
+                "op": "eq",
+                "a": "{item.slots.image}",
+                "b": ""
+               }
+              }
+             }
+            },
+            {
+             "el": "button",
+             "action": "edit-close",
+             "to": "products",
+             "label": "ใส่รูปสินค้าก่อนบันทึก",
+             "variant": "solid",
+             "className": "flex-[2] justify-center !h-14 !rounded-2xl !text-[20px] @[640px]:!text-[19px] font-bold",
+             "disabledWhen": {
+              "op": "eq",
+              "a": "1",
+              "b": "1"
+             },
+             "reason": "มีสินค้า = ต้องใส่รูปสินค้าอย่างน้อย 1 รูป",
+             "when": {
+              "op": "and",
+              "a": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.hasProduct}",
+                "b": "ไม่มี"
+               }
+              },
+              "b": {
+               "op": "eq",
+               "a": "{item.slots.image}",
+               "b": ""
+              }
+             }
             }
            ]
           }
