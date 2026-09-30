@@ -10110,18 +10110,97 @@
        }
       ]
      },
-     "\nคิด 3 ไอเดียเลย — สุ่มใหม่ให้ต่างจากครั้งก่อน ๆ"
+     "\nคิด 3 ไอเดียเลย — สุ่มใหม่ให้ต่างจากครั้งก่อน ๆ\n",
+     "🔴 ตอบเป็น JSON array 3 object และใช้คีย์ 4 ตัวนี้เท่านั้น (ห้ามเปลี่ยนชื่อคีย์ ห้ามเพิ่มคีย์): [{\"title\":\"...\",\"angle\":\"...\",\"hook\":\"...\",\"body\":\"• ...\\n• ...\\n• ...\\n• ...\"}, {...}, {...}]"
     ]
    },
    "validate": {
-    "op": "gte",
-    "a": {
-     "op": "listLen",
-     "value": "{item.data.ideaGen}",
-     "arrayOnly": true
-    },
-    "b": "1"
+    "op": "and",
+    "list": [
+     {
+      "op": "gte",
+      "a": {
+       "op": "listLen",
+       "value": "{item.data.ideaGen}",
+       "arrayOnly": true
+      },
+      "b": "3"
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.0.title}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.0.hook}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.0.body}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.1.title}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.1.hook}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.1.body}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.2.title}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.2.hook}",
+       "b": ""
+      }
+     },
+     {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.data.ideaGen.2.body}",
+       "b": ""
+      }
+     }
+    ]
    },
+   "retryHint": "\n\n⚠️ รอบที่แล้วใช้ชื่อคีย์ผิดหรือไม่ครบ 3 ไอเดีย — รอบนี้ต้องใช้คีย์ title angle hook body เท่านั้น ครบ 3 object",
    "validateMsg": "หมีคิดไอเดียไม่สำเร็จ — กดสุ่มใหม่",
    "logRun": "[{item.name}] หมีกำลังสุ่มไอเดีย",
    "logDone": "[{item.name}] หมีสุ่มไอเดียให้แล้ว"
