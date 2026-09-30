@@ -131,6 +131,8 @@
     "turn",
     "format",
     "vibe",
+    "truth",
+    "angle",
     "hostSpecies",
     "guestSpecies",
     "placement",
@@ -166,6 +168,8 @@
     "turn": "",
     "format": "",
     "vibe": "",
+    "truth": "",
+    "angle": "",
     "placement": "",
     "style": "",
     "pace": "",
@@ -712,6 +716,48 @@
            "op": "lookup",
            "table": "vibePlan",
            "key": "{item.vibe}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.truth!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "truthPlan",
+           "key": "{item.truth}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.angle!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "anglePlan",
+           "key": "{item.angle}",
            "fallback": ""
           },
           "\n"
@@ -9911,11 +9957,27 @@
    "over": "products",
    "out": "ideaGen",
    "aux": true,
-   "systemInstruction": "คุณคือนักเขียนคอนเทนต์พอดแคสต์สั้นของพี่หมีแว่น — หน้าที่คือคิด \"เนื้อหาที่จะเล่า\" ให้คลิปสั้น 20-60 วินาที จากหัวข้อที่ผู้ใช้ให้\nตอบเป็นข้อความไทยล้วน 5-8 บรรทัด ขึ้นต้นแต่ละบรรทัดด้วย • — บรรทัดแรก = ฮุค/ประเด็นเปิด · ถัดมา = เนื้อเรื่องหรือข้อเท็จจริง/เกร็ดที่น่าสนใจ 3-4 ข้อ · มุกหรือจุดหักมุม 1 ข้อ (ถ้าเข้ากับอารมณ์) · บรรทัดท้าย = ปิดเรื่อง/ชวนคอมเมนต์\nกติกา: ห้ามมีหัวข้อ ห้าม markdown ห้ามคำนำหรือคำอธิบายนอกเนื้อหา · ข้อเท็จจริงใช้เฉพาะที่แน่ใจ ห้ามแต่งตัวเลข วันที่ ชื่อคน — ตำนาน/ความเชื่อให้บอกว่าเป็นตำนาน · ไม่เขียนบทพูดทีละฉาก (ขั้นเขียนบทจะทำต่อเอง)",
+   "parse": "json",
+   "thinkingLevel": "high",
+   "systemInstruction": "คุณคือหัวหน้าทีมเขียนคอนเทนต์คลิปสั้นที่ทำยอดวิวสูงของพี่หมีแว่น — คิดไอเดีย \"เนื้อหาที่จะเล่า\" ให้คลิปพอดแคสต์แนวตั้ง 3 แบบที่ต่างกันจริง (มุมเล่าไม่ซ้ำกัน ไม่ใช่แค่เปลี่ยนคำ)\nสูตรความสนุก (ใช้ทุกไอเดีย): ① ฮุคใน 3 วิแรกต้องทำให้คนหยุดนิ้ว — คำถามที่อยากรู้คำตอบ / ข้อเท็จจริงช็อก / ประโยคขัดความเชื่อ ② มีปมหรือความขัดแย้งให้ลุ้น ③ รายละเอียดเจาะจง (ชื่อ สถานที่ ภาพที่เห็น เสียงที่ได้ยิน) ไม่พูดกว้าง ๆ ④ มีจุดพีคหรือหักมุมก่อนจบ ⑤ ปิดด้วยคำถามชวนคอมเมนต์\nความยาวเนื้อหาต้องพอดีคลิป (ยาวตามวินาทีที่บอก) — ไม่อัดข้อมูลเกิน · ภาษาพูดไทยเป็นกันเอง\nตอบเป็น JSON array ล้วน 3 object ห้ามมีข้อความอื่น: [{\"title\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร\",\"angle\":\"มุมเล่า 3-6 คำ\",\"hook\":\"ประโยคเปิด 1 ประโยค\",\"body\":\"เนื้อเรื่อง 4-6 บรรทัด แต่ละบรรทัดขึ้นต้นด้วย • คั่นด้วย \\n\"}]\nถ้าผู้ใช้ยังไม่ให้หัวข้อ ให้คิดหัวข้อเองตามแนวเนื้อหา — 3 ไอเดียใช้ 3 หัวข้อต่างกันได้ · ไม่เขียนบทพูดทีละฉาก (ขั้นเขียนบทจะทำต่อเอง)",
    "prompt": {
     "op": "concat",
     "parts": [
-     "หัวข้อ: {item.name}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.name!=",
+        "value": "หัวข้อ: {item.name}\n"
+       },
+       {
+        "when": "item.name=",
+        "value": "หัวข้อ: (ยังไม่มี — คิดหัวข้อให้ด้วย)\n"
+       }
+      ]
+     },
+     "ความยาวคลิป: {values.svSec} วินาที\n",
      {
       "op": "block",
       "sep": "",
@@ -9983,12 +10045,58 @@
       "sep": "",
       "parts": [
        {
+        "when": "item.truth!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "truthPlan",
+           "key": "{item.truth}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.angle!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "anglePlan",
+           "key": "{item.angle}",
+           "fallback": ""
+          },
+          " (ใช้มุมนี้ทั้ง 3 ไอเดีย แต่เนื้อต่างกัน)\n"
+         ]
+        }
+       },
+       {
+        "when": "item.angle=",
+        "value": "มุมเล่า: ให้ 3 ไอเดียใช้ 3 มุมต่างกัน\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
         "when": "item.cast=solo",
         "value": "พิธีกรคนเดียวเล่า\n"
        },
        {
         "when": "item.cast!=solo",
-        "value": "พิธีกรกับแขกรับเชิญคุยกัน 2 คน\n"
+        "value": "พิธีกรกับแขกรับเชิญคุยกัน 2 คน — เนื้อหาต้องมีจังหวะถาม-ตอบ/แย้งกันได้\n"
        }
       ]
      },
@@ -10002,11 +10110,21 @@
        }
       ]
      },
-     "\nเขียนเนื้อหาที่จะเล่าเลย — ให้ต่างจากครั้งก่อน ๆ ได้ (สุ่มมุมเล่าใหม่)"
+     "\nคิด 3 ไอเดียเลย — สุ่มใหม่ให้ต่างจากครั้งก่อน ๆ"
     ]
    },
-   "logRun": "[{item.name}] หมีกำลังคิดเนื้อหา",
-   "logDone": "[{item.name}] หมีคิดเนื้อหาให้แล้ว"
+   "validate": {
+    "op": "gte",
+    "a": {
+     "op": "listLen",
+     "value": "{item.data.ideaGen}",
+     "arrayOnly": true
+    },
+    "b": "1"
+   },
+   "validateMsg": "หมีคิดไอเดียไม่สำเร็จ — กดสุ่มใหม่",
+   "logRun": "[{item.name}] หมีกำลังสุ่มไอเดีย",
+   "logDone": "[{item.name}] หมีสุ่มไอเดียให้แล้ว"
   }
  ],
  "stages": [
@@ -12402,76 +12520,393 @@
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               },
               {
-               "el": "row",
-               "className": "gap-2 items-center flex-wrap",
+               "el": "text",
+               "value": "ไม่ใส่ก็ได้ — ตอนเริ่มผลิต หมีคิดให้เอง · ข่าว/ประวัติศาสตร์/คดีดัง ตรวจข้อเท็จจริงก่อนโพสต์",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              }
+             ]
+            },
+            {
+             "el": "group",
+             "collapsible": true,
+             "className": "!rounded-xl !p-3 !border-[var(--ev-accent)] bg-[color-mix(in_srgb,var(--ev-accent)_5%,transparent)]",
+             "head": [
+              {
+               "el": "icon",
+               "icon": "auto_awesome",
+               "textSize": "text-[19px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+              },
+              {
+               "el": "text",
+               "value": "ไม่รู้จะเล่าอะไร? ให้หมีช่วยคิด",
+               "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
+              },
+              {
+               "el": "text",
+               "value": "สุ่มไอเดีย 3 แบบ",
+               "className": "!text-[13px] opacity-40 truncate min-w-0"
+              }
+             ],
+             "card": [
+              {
+               "el": "text",
+               "value": "ตั้งตรงนี้ = ตั้งให้ทั้งคลิป · ว่างได้ทุกช่อง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
                "card": [
                 {
-                 "el": "gen-button",
-                 "op": "pdIdea",
-                 "force": true,
-                 "label": "ให้หมีช่วยคิด",
-                 "icon": "auto_awesome",
-                 "variant": "outline"
+                 "el": "text",
+                 "value": "แนวเนื้อหา",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
                 {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "joke",
+                   "label": "เรื่องตลก / มุข — ปูเรื่องแล้วหักมุม",
+                   "icon": "sentiment_very_satisfied"
+                  },
+                  {
+                   "value": "ghost",
+                   "label": "เรื่องผี / ลี้ลับ — ปูบรรยากาศ ค่อย ๆ หลอน",
+                   "icon": "nights_stay"
+                  },
+                  {
+                   "value": "crime",
+                   "label": "คดีดัง / ปริศนา — ไล่หาคำตอบทีละปม",
+                   "icon": "search"
+                  },
+                  {
+                   "value": "history",
+                   "label": "ประวัติศาสตร์ — เกร็ดที่คนไม่รู้",
+                   "icon": "history_edu"
+                  },
+                  {
+                   "value": "news",
+                   "label": "สรุปข่าว — เกิดอะไร ทำไมสำคัญ",
+                   "icon": "newspaper"
+                  },
+                  {
+                   "value": "explain",
+                   "label": "ความรู้รอบตัว — อธิบายง่าย มีตัวอย่าง",
+                   "icon": "lightbulb"
+                  },
+                  {
+                   "value": "money",
+                   "label": "ธุรกิจ / การเงิน — ทริคที่ทำได้จริง",
+                   "icon": "savings"
+                  },
+                  {
+                   "value": "self",
+                   "label": "พัฒนาตัวเอง — มุมคิดใหม่ ลองพรุ่งนี้ได้",
+                   "icon": "self_improvement"
+                  },
+                  {
+                   "value": "love",
+                   "label": "ความรัก / ความสัมพันธ์ — เรื่องที่คนดูอิน",
+                   "icon": "favorite"
+                  },
+                  {
+                   "value": "pop",
+                   "label": "บันเทิง / ป๊อป — หนัง ซีรีส์ เพลง เกม",
+                   "icon": "movie"
+                  },
+                  {
+                   "value": "debate",
+                   "label": "ดีเบต 2 ฝั่ง — เถียงกันแบบขำ ๆ ให้คนดูโหวต",
+                   "icon": "balance"
+                  },
+                  {
+                   "value": "interview",
+                   "label": "สัมภาษณ์ — ถามสิ่งที่คนดูอยากรู้",
+                   "icon": "record_voice_over"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
                  "el": "text",
-                 "value": "ไม่ใส่ก็ได้ — ตอนเริ่มผลิต หมีคิดให้เอง",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                 "value": "แนวเนื้อหา",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "review",
+                   "label": "รีวิว — จุดเด่น · ข้อสงสัย · เหมาะกับใคร",
+                   "icon": "rate_review"
+                  },
+                  {
+                   "value": "compare",
+                   "label": "เปรียบเทียบ — เทียบกับทางเลือกทั่วไป",
+                   "icon": "compare_arrows"
+                  },
+                  {
+                   "value": "qa",
+                   "label": "ถาม-ตอบลูกค้า — ตอบคำถามจริง 3 ข้อ",
+                   "icon": "quiz"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเรื่องแบรนด์ — ที่มาของของชิ้นนี้",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "trend",
+                   "label": "เทรนด์ — เปิดด้วยเทรนด์ โยงเข้าสินค้า",
+                   "icon": "trending_up"
+                  },
+                  {
+                   "value": "unbox",
+                   "label": "แกะกล่อง — เปิดกล่องหน้ากล้อง",
+                   "icon": "package_2"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct!=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "อารมณ์ของคลิป",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "vibe",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "funny",
+                   "label": "ตลก กวน — เล่นมุข แซวกัน",
+                   "icon": "mood"
+                  },
+                  {
+                   "value": "chill",
+                   "label": "สบาย ๆ — เหมือนคุยกับเพื่อน",
+                   "icon": "coffee"
+                  },
+                  {
+                   "value": "serious",
+                   "label": "จริงจัง — น่าเชื่อถือ ไม่เล่นมุข",
+                   "icon": "verified"
+                  },
+                  {
+                   "value": "thrill",
+                   "label": "ลุ้นระทึก — ลึกลับ ทิ้งปมค้าง",
+                   "icon": "visibility"
+                  },
+                  {
+                   "value": "warm",
+                   "label": "อบอุ่น ซึ้ง — นุ่ม ๆ อบอุ่นใจ",
+                   "icon": "volunteer_activism"
+                  },
+                  {
+                   "value": "hype",
+                   "label": "ตื่นเต้น — พลังสูง เร็ว",
+                   "icon": "bolt"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
                 }
                ]
               },
               {
                "el": "box",
-               "className": "flex flex-col gap-2 rounded-xl border border-[var(--ev-border)] bg-[color-mix(in_srgb,var(--ev-accent)_6%,transparent)] p-3",
-               "when": {
-                "op": "and",
-                "a": {
-                 "op": "not",
-                 "a": {
-                  "op": "eq",
-                  "a": "{item.data.ideaGen}",
-                  "b": ""
-                 }
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "เรื่องจริงหรือแต่ง",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
-                "b": {
-                 "op": "not",
-                 "a": {
-                  "op": "eq",
-                  "a": "{item.info}",
-                  "b": "{item.data.ideaGen}"
-                 }
+                {
+                 "el": "dropdown",
+                 "field": "truth",
+                 "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — ตามแนวเนื้อหา",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "real",
+                   "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
+                   "icon": "fact_check"
+                  },
+                  {
+                   "value": "fiction",
+                   "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "drama",
+                   "label": "อิงจริง เล่าแบบละคร",
+                   "icon": "theater_comedy"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "มุมเล่า",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "angle",
+                 "placeholder": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "question",
+                   "label": "เปิดด้วยคำถามชวนคิด",
+                   "icon": "help"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเป็นเรื่องมีตัวละคร",
+                   "icon": "person_book"
+                  },
+                  {
+                   "value": "top3",
+                   "label": "จัดอันดับ Top 3",
+                   "icon": "format_list_numbered"
+                  },
+                  {
+                   "value": "myth",
+                   "label": "ความเชื่อ vs ความจริง",
+                   "icon": "compare"
+                  },
+                  {
+                   "value": "twist",
+                   "label": "หักมุมตอนจบ",
+                   "icon": "u_turn_left"
+                  },
+                  {
+                   "value": "inside",
+                   "label": "เล่าจากมุมคนใน",
+                   "icon": "visibility"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "gen-button",
+               "op": "pdIdea",
+               "force": true,
+               "label": "สุ่มไอเดีย 3 แบบ",
+               "icon": "casino",
+               "variant": "solid"
+              },
+              {
+               "el": "text",
+               "value": "ไม่ใส่หัวข้อก็ได้ — หมีสุ่มหัวข้อให้ด้วย · กดอีกครั้ง = ได้ชุดใหม่",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 rounded-xl border border-[var(--ev-border)] bg-[var(--ev-surface)] p-3",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.data.ideaGen.0.body}",
+                 "b": ""
                 }
                },
                "card": [
                 {
                  "el": "text",
-                 "value": "หมีคิดให้แล้ว — ชอบก็ใส่ลงช่อง แก้ต่อได้",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                 "value": "{item.data.ideaGen.0.title}",
+                 "className": "!text-[15px] font-black !text-[var(--ev-text)] px-0.5"
                 },
                 {
                  "el": "text",
-                 "value": "{item.data.ideaGen}",
-                 "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line px-0.5"
+                 "value": "{item.data.ideaGen.0.angle}",
+                 "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "“{item.data.ideaGen.0.hook}”",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] italic leading-relaxed px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.0.body}",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line px-0.5 opacity-80"
                 },
                 {
                  "el": "row",
-                 "className": "gap-2 flex-wrap",
+                 "className": "gap-2 flex-wrap pt-1",
                  "card": [
                   {
                    "el": "button",
                    "action": "setField",
                    "to": "info",
-                   "value": "{item.data.ideaGen}",
-                   "label": "ใส่ลงช่อง",
+                   "value": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}",
+                   "label": "ใช้แบบนี้",
                    "icon": "check",
                    "variant": "solid"
                   },
                   {
-                   "el": "gen-button",
-                   "op": "pdIdea",
-                   "force": true,
-                   "label": "คิดใหม่",
-                   "icon": "refresh",
+                   "el": "button",
+                   "action": "setField",
+                   "to": "name",
+                   "value": "{item.data.ideaGen.0.title}",
+                   "label": "ใช้ชื่อนี้",
+                   "icon": "title",
                    "variant": "outline"
                   }
                  ]
@@ -12479,11 +12914,124 @@
                ]
               },
               {
-               "el": "text",
-               "value": "ข่าว · ประวัติศาสตร์ · คดีดัง: หมีใช้เฉพาะข้อมูลที่ให้หรือที่รู้แน่ชัด — ตรวจก่อนโพสต์",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+               "el": "box",
+               "className": "flex flex-col gap-1.5 rounded-xl border border-[var(--ev-border)] bg-[var(--ev-surface)] p-3",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.data.ideaGen.1.body}",
+                 "b": ""
+                }
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.1.title}",
+                 "className": "!text-[15px] font-black !text-[var(--ev-text)] px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.1.angle}",
+                 "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "“{item.data.ideaGen.1.hook}”",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] italic leading-relaxed px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.1.body}",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line px-0.5 opacity-80"
+                },
+                {
+                 "el": "row",
+                 "className": "gap-2 flex-wrap pt-1",
+                 "card": [
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "info",
+                   "value": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}",
+                   "label": "ใช้แบบนี้",
+                   "icon": "check",
+                   "variant": "solid"
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "name",
+                   "value": "{item.data.ideaGen.1.title}",
+                   "label": "ใช้ชื่อนี้",
+                   "icon": "title",
+                   "variant": "outline"
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 rounded-xl border border-[var(--ev-border)] bg-[var(--ev-surface)] p-3",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.data.ideaGen.2.body}",
+                 "b": ""
+                }
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.2.title}",
+                 "className": "!text-[15px] font-black !text-[var(--ev-text)] px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.2.angle}",
+                 "className": "!text-[12.5px] font-bold !text-[var(--ev-accent)] px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "“{item.data.ideaGen.2.hook}”",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] italic leading-relaxed px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen.2.body}",
+                 "className": "!text-[14.5px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line px-0.5 opacity-80"
+                },
+                {
+                 "el": "row",
+                 "className": "gap-2 flex-wrap pt-1",
+                 "card": [
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "info",
+                   "value": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}",
+                   "label": "ใช้แบบนี้",
+                   "icon": "check",
+                   "variant": "solid"
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "name",
+                   "value": "{item.data.ideaGen.2.title}",
+                   "label": "ใช้ชื่อนี้",
+                   "icon": "title",
+                   "variant": "outline"
+                  }
+                 ]
+                }
+               ]
               }
-             ]
+             ],
+             "bodyClass": "pt-2 gap-3",
+             "chevClass": "opacity-50 !text-[22px]"
             }
            ]
           },
@@ -14290,6 +14838,46 @@
                "icon": "bolt"
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "เรื่องจริงหรือแต่ง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "truth",
+               "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ — ตามแนวเนื้อหา",
+                 "icon": "auto_fix_high"
+                },
+                {
+                 "value": "real",
+                 "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
+                 "icon": "fact_check"
+                },
+                {
+                 "value": "fiction",
+                 "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
+                 "icon": "auto_stories"
+                },
+                {
+                 "value": "drama",
+                 "label": "อิงจริง เล่าแบบละคร",
+                 "icon": "theater_comedy"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ],
+             "when": "item.hasProduct=ไม่มี"
             }
            ]
           },
@@ -39105,6 +39693,21 @@
    "thrill": "โทนรายการ: ลุ้นระทึก ลึกลับ — เสียงเบา เว้นจังหวะ ทิ้งคำถามค้างทุกช่วง",
    "warm": "โทนรายการ: อบอุ่น ซึ้ง — น้ำเสียงนุ่ม มีช่วงให้คนดูรู้สึก ปิดด้วยประโยคที่อบอุ่นใจ",
    "hype": "โทนรายการ: ตื่นเต้น พลังสูง — ประโยคสั้น เร็ว เน้นคำ มีพลังตลอด"
+  },
+  "truthPlan": {
+   "": "",
+   "real": "เรื่องจริงหรือแต่ง: อิงเรื่องจริง — ใช้เฉพาะข้อเท็จจริงที่แน่ใจหรือที่ผู้ใช้ให้ ห้ามแต่งตัวเลข วันที่ ชื่อคน เหตุการณ์ · ตำนาน/ความเชื่อให้บอกว่าเป็นตำนาน",
+   "fiction": "เรื่องจริงหรือแต่ง: แต่งขึ้นทั้งหมด — ห้ามอ้างว่าเป็นเรื่องจริง ห้ามใช้ชื่อคนจริง บริษัทจริง หรือเหตุการณ์จริงที่ระบุตัวได้ · แต่งให้สนุกได้เต็มที่",
+   "drama": "เรื่องจริงหรือแต่ง: อิงเรื่องจริงเล่าแบบละคร — แกนข้อเท็จจริงต้องถูก แต่เล่าเป็นฉากสมมติ/บทสนทนาสมมติได้ · ห้ามเปลี่ยนผลลัพธ์หรือตัวเลขจริง"
+  },
+  "anglePlan": {
+   "": "",
+   "question": "มุมเล่า: เปิดด้วยคำถามชวนคิดที่คนดูอยากรู้คำตอบ แล้วค่อย ๆ เฉลย",
+   "story": "มุมเล่า: เล่าเป็นเรื่องมีตัวละคร มีเหตุการณ์ต่อเนื่อง ให้คนดูอินตาม",
+   "top3": "มุมเล่า: จัดอันดับ Top 3 — เรียงจากน่าสนใจน้อยไปมาก อันดับ 1 เก็บไว้ท้ายสุด",
+   "myth": "มุมเล่า: ความเชื่อ vs ความจริง — ยกสิ่งที่คนเข้าใจผิดก่อน แล้วหักด้วยความจริง",
+   "twist": "มุมเล่า: หักมุมตอนจบ — ปูเรื่องให้คนดูคิดไปทางหนึ่ง แล้วเฉลยอีกทางก่อนจบ",
+   "inside": "มุมเล่า: เล่าจากมุมคนใน — เหมือนคนที่อยู่ในเหตุการณ์/วงการเล่าเรื่องที่คนนอกไม่รู้"
   },
   "scenePlan": {
    "studio": "สตูดิโอพอดแคสต์มืออาชีพ ผนังซับเสียง ไฟโทนอุ่น",
