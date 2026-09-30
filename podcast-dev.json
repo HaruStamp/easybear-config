@@ -129,6 +129,7 @@
     "ideaMode",
     "cast",
     "turn",
+    "plotOpen",
     "format",
     "vibe",
     "truth",
@@ -511,7 +512,7 @@
    "prompt": {
     "op": "concat",
     "parts": [
-     "ออกแบบตอนพอดแคสต์จำนวน {values.clipsPerProduct} คลิป สำหรับตอนนี้ — แต่ละคลิปเป็นตอนที่จบในตัว มุมเรื่อง/ฮุคต่างกัน\n\nชื่อตอน / หัวข้อที่จะคุย: {item.name}\nสินค้าในตอนนี้: {item.hasProduct}\n",
+     "ออกแบบตอนพอดแคสต์จำนวน {values.clipsPerProduct} คลิป สำหรับตอนนี้ — แต่ละคลิปเป็นตอนที่จบในตัว มุมเรื่อง/ฮุคต่างกัน\n\nคุยเรื่อง (หัวข้อหรือเนื้อเรื่องจากผู้ใช้ — ยึดตามนี้): {item.name}\nสินค้าในตอนนี้: {item.hasProduct}\n",
      {
       "op": "block",
       "sep": "",
@@ -9968,11 +9969,11 @@
       "parts": [
        {
         "when": "item.name!=",
-        "value": "หัวข้อ: {item.name}\n"
+        "value": "หัวข้อตั้งต้นจากผู้ใช้ (ต่อยอดจากนี้ ห้ามเปลี่ยนเรื่อง): {item.name}\n"
        },
        {
         "when": "item.name=",
-        "value": "หัวข้อ: (ยังไม่มี — คิดหัวข้อให้ด้วย)\n"
+        "value": "หัวข้อ: (ยังไม่มี — คิดหัวข้อให้ด้วย 3 หัวข้อต่างกัน)\n"
        }
       ]
      },
@@ -10214,8 +10215,8 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
-     "name": "{item.data.ideaGen.0.title}",
-     "info": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
+     "name": "{item.data.ideaGen.0.title}\n{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}",
+     "plotOpen": ""
     }
    }
   },
@@ -10229,8 +10230,8 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
-     "name": "{item.data.ideaGen.1.title}",
-     "info": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
+     "name": "{item.data.ideaGen.1.title}\n{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}",
+     "plotOpen": ""
     }
    }
   },
@@ -10244,8 +10245,8 @@
    "setFields": {
     "where": "id={values.__editId}",
     "fields": {
-     "name": "{item.data.ideaGen.2.title}",
-     "info": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
+     "name": "{item.data.ideaGen.2.title}\n{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}",
+     "plotOpen": ""
     }
    }
   }
@@ -12606,30 +12607,37 @@
               },
               {
                "el": "text",
-               "value": "คลิปนี้พูดเรื่องอะไร",
+               "value": "คุยเรื่องอะไร",
                "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
               },
               {
-               "el": "text",
-               "value": "บังคับ",
-               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+               "el": "button",
+               "action": "setField",
+               "to": "plotOpen",
+               "value": "1",
+               "quiet": true,
+               "label": "สุ่มไอเดีย",
+               "icon": "casino",
+               "variant": "outline",
+               "className": "ml-auto shrink-0 !h-9 !px-3 !rounded-xl !text-[14px] font-bold"
               }
              ]
             },
             {
              "el": "textarea",
              "field": "name",
-             "placeholder": "หัวข้อสั้น ๆ 1 บรรทัด เช่น ครีมกันแดดตัวนี้คุ้มไหม · บ้านร้างหลังตลาด · 3 เรื่องเงินที่คนวัย 30 พลาด",
-             "className": "!p-4 !rounded-xl !text-[20px] @[640px]:!text-[19px] !leading-relaxed !min-h-[136px] @[560px]:!min-h-[104px]"
+             "placeholder": "พิมพ์หัวข้อสั้น ๆ หรือเล่าเนื้อเรื่องเลยก็ได้ เช่น บ้านร้างหลังตลาด · ครีมกันแดดตัวนี้คุ้มไหม — คิดไม่ออก กด สุ่มไอเดีย",
+             "className": "!p-4 !rounded-xl !text-[20px] @[640px]:!text-[19px] !leading-relaxed !min-h-[136px] @[560px]:!min-h-[104px] !min-h-[132px]"
             },
             {
              "el": "text",
-             "value": "ช่องเดียวที่ต้องกรอก — ใช้เป็นชื่อคลิปด้วย",
+             "value": "ช่องเดียวที่ต้องกรอก · หมีตั้งชื่อตอนสั้นให้เอง · ข่าว/ประวัติศาสตร์/คดีดัง ตรวจข้อเท็จจริงก่อนโพสต์",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
             },
             {
-             "el": "box",
-             "className": "flex flex-col gap-2.5 rounded-2xl border border-[var(--ev-accent)] bg-[color-mix(in_srgb,var(--ev-accent)_6%,transparent)] p-3",
+             "el": "modal",
+             "field": "plotOpen",
+             "when": "item.plotOpen=1",
              "card": [
               {
                "el": "row",
@@ -12638,349 +12646,345 @@
                 {
                  "el": "icon",
                  "icon": "casino",
-                 "textSize": "text-[20px]",
+                 "textSize": "text-[22px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
                 },
                 {
                  "el": "text",
-                 "value": "ไม่รู้จะเล่าอะไร?",
-                 "className": "!text-[15px] font-black !text-[var(--ev-text)]"
+                 "value": "สุ่มไอเดีย",
+                 "className": "!text-[18px] font-black !text-[var(--ev-text)]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "หัวข้อตั้งต้น",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                 },
                 {
                  "el": "text",
-                 "value": "ไม่มีหัวข้อก็กดได้",
-                 "className": "!text-[12.5px] opacity-50 ml-auto whitespace-nowrap"
+                 "value": "{item.name}",
+                 "className": "!text-[14.5px] leading-relaxed whitespace-pre-line px-0.5 line-clamp-4",
+                 "when": "item.name!="
+                },
+                {
+                 "el": "text",
+                 "value": "ยังไม่มี — หมีสุ่มหัวข้อให้ด้วย",
+                 "className": "!text-[14.5px] opacity-60 px-0.5",
+                 "when": "item.name="
                 }
                ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "แนวเนื้อหา",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "joke",
+                   "label": "เรื่องตลก / มุข — ปูเรื่องแล้วหักมุม",
+                   "icon": "sentiment_very_satisfied"
+                  },
+                  {
+                   "value": "ghost",
+                   "label": "เรื่องผี / ลี้ลับ — ปูบรรยากาศ ค่อย ๆ หลอน",
+                   "icon": "nights_stay"
+                  },
+                  {
+                   "value": "crime",
+                   "label": "คดีดัง / ปริศนา — ไล่หาคำตอบทีละปม",
+                   "icon": "search"
+                  },
+                  {
+                   "value": "history",
+                   "label": "ประวัติศาสตร์ — เกร็ดที่คนไม่รู้",
+                   "icon": "history_edu"
+                  },
+                  {
+                   "value": "news",
+                   "label": "สรุปข่าว — เกิดอะไร ทำไมสำคัญ",
+                   "icon": "newspaper"
+                  },
+                  {
+                   "value": "explain",
+                   "label": "ความรู้รอบตัว — อธิบายง่าย มีตัวอย่าง",
+                   "icon": "lightbulb"
+                  },
+                  {
+                   "value": "money",
+                   "label": "ธุรกิจ / การเงิน — ทริคที่ทำได้จริง",
+                   "icon": "savings"
+                  },
+                  {
+                   "value": "self",
+                   "label": "พัฒนาตัวเอง — มุมคิดใหม่ ลองพรุ่งนี้ได้",
+                   "icon": "self_improvement"
+                  },
+                  {
+                   "value": "love",
+                   "label": "ความรัก / ความสัมพันธ์ — เรื่องที่คนดูอิน",
+                   "icon": "favorite"
+                  },
+                  {
+                   "value": "pop",
+                   "label": "บันเทิง / ป๊อป — หนัง ซีรีส์ เพลง เกม",
+                   "icon": "movie"
+                  },
+                  {
+                   "value": "debate",
+                   "label": "ดีเบต 2 ฝั่ง — เถียงกันแบบขำ ๆ ให้คนดูโหวต",
+                   "icon": "balance"
+                  },
+                  {
+                   "value": "interview",
+                   "label": "สัมภาษณ์ — ถามสิ่งที่คนดูอยากรู้",
+                   "icon": "record_voice_over"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "แนวเนื้อหา",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "format",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "review",
+                   "label": "รีวิว — จุดเด่น · ข้อสงสัย · เหมาะกับใคร",
+                   "icon": "rate_review"
+                  },
+                  {
+                   "value": "compare",
+                   "label": "เปรียบเทียบ — เทียบกับทางเลือกทั่วไป",
+                   "icon": "compare_arrows"
+                  },
+                  {
+                   "value": "qa",
+                   "label": "ถาม-ตอบลูกค้า — ตอบคำถามจริง 3 ข้อ",
+                   "icon": "quiz"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเรื่องแบรนด์ — ที่มาของของชิ้นนี้",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "trend",
+                   "label": "เทรนด์ — เปิดด้วยเทรนด์ โยงเข้าสินค้า",
+                   "icon": "trending_up"
+                  },
+                  {
+                   "value": "unbox",
+                   "label": "แกะกล่อง — เปิดกล่องหน้ากล้อง",
+                   "icon": "package_2"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct!=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "อารมณ์ของคลิป",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "vibe",
+                 "placeholder": "อัตโนมัติ",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "funny",
+                   "label": "ตลก กวน — เล่นมุข แซวกัน",
+                   "icon": "mood"
+                  },
+                  {
+                   "value": "chill",
+                   "label": "สบาย ๆ — เหมือนคุยกับเพื่อน",
+                   "icon": "coffee"
+                  },
+                  {
+                   "value": "serious",
+                   "label": "จริงจัง — น่าเชื่อถือ ไม่เล่นมุข",
+                   "icon": "verified"
+                  },
+                  {
+                   "value": "thrill",
+                   "label": "ลุ้นระทึก — ลึกลับ ทิ้งปมค้าง",
+                   "icon": "visibility"
+                  },
+                  {
+                   "value": "warm",
+                   "label": "อบอุ่น ซึ้ง — นุ่ม ๆ อบอุ่นใจ",
+                   "icon": "volunteer_activism"
+                  },
+                  {
+                   "value": "hype",
+                   "label": "ตื่นเต้น — พลังสูง เร็ว",
+                   "icon": "bolt"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "เรื่องจริงหรือแต่ง",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "truth",
+                 "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — ตามแนวเนื้อหา",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "real",
+                   "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
+                   "icon": "fact_check"
+                  },
+                  {
+                   "value": "fiction",
+                   "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
+                   "icon": "auto_stories"
+                  },
+                  {
+                   "value": "drama",
+                   "label": "อิงจริง เล่าแบบละคร",
+                   "icon": "theater_comedy"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ],
+               "when": "item.hasProduct=ไม่มี"
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "มุมเล่า",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "dropdown",
+                 "field": "angle",
+                 "placeholder": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
+                   "icon": "auto_fix_high"
+                  },
+                  {
+                   "value": "question",
+                   "label": "เปิดด้วยคำถามชวนคิด",
+                   "icon": "help"
+                  },
+                  {
+                   "value": "story",
+                   "label": "เล่าเป็นเรื่องมีตัวละคร",
+                   "icon": "person_book"
+                  },
+                  {
+                   "value": "top3",
+                   "label": "จัดอันดับ Top 3",
+                   "icon": "format_list_numbered"
+                  },
+                  {
+                   "value": "myth",
+                   "label": "ความเชื่อ vs ความจริง",
+                   "icon": "compare"
+                  },
+                  {
+                   "value": "twist",
+                   "label": "หักมุมตอนจบ",
+                   "icon": "u_turn_left"
+                  },
+                  {
+                   "value": "inside",
+                   "label": "เล่าจากมุมคนใน",
+                   "icon": "visibility"
+                  }
+                 ],
+                 "className": "!min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ว่างได้ทุกช่อง · ตั้งตรงนี้ = ตั้งให้ทั้งคลิป",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
               },
               {
                "el": "gen-button",
                "op": "pdIdea",
                "force": true,
-               "label": "สุ่มไอเดีย 3 แบบ",
+               "label": "สุ่ม 3 ไอเดีย",
                "icon": "casino",
                "variant": "solid",
                "className": "w-full justify-center !h-12 !rounded-xl !text-[16px] font-bold"
               },
               {
-               "el": "group",
-               "collapsible": true,
-               "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
-               "head": [
-                {
-                 "el": "icon",
-                 "icon": "more_horiz",
-                 "textSize": "text-[19px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ตั้งแนวก่อนสุ่ม",
-                 "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
-                },
-                {
-                 "el": "text",
-                 "value": "ไม่บังคับ",
-                 "className": "!text-[13px] opacity-40 truncate min-w-0"
-                }
-               ],
-               "card": [
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "แนวเนื้อหา",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "format",
-                   "placeholder": "อัตโนมัติ",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "icon": "auto_awesome"
-                    },
-                    {
-                     "value": "joke",
-                     "label": "เรื่องตลก / มุข — ปูเรื่องแล้วหักมุม",
-                     "icon": "sentiment_very_satisfied"
-                    },
-                    {
-                     "value": "ghost",
-                     "label": "เรื่องผี / ลี้ลับ — ปูบรรยากาศ ค่อย ๆ หลอน",
-                     "icon": "nights_stay"
-                    },
-                    {
-                     "value": "crime",
-                     "label": "คดีดัง / ปริศนา — ไล่หาคำตอบทีละปม",
-                     "icon": "search"
-                    },
-                    {
-                     "value": "history",
-                     "label": "ประวัติศาสตร์ — เกร็ดที่คนไม่รู้",
-                     "icon": "history_edu"
-                    },
-                    {
-                     "value": "news",
-                     "label": "สรุปข่าว — เกิดอะไร ทำไมสำคัญ",
-                     "icon": "newspaper"
-                    },
-                    {
-                     "value": "explain",
-                     "label": "ความรู้รอบตัว — อธิบายง่าย มีตัวอย่าง",
-                     "icon": "lightbulb"
-                    },
-                    {
-                     "value": "money",
-                     "label": "ธุรกิจ / การเงิน — ทริคที่ทำได้จริง",
-                     "icon": "savings"
-                    },
-                    {
-                     "value": "self",
-                     "label": "พัฒนาตัวเอง — มุมคิดใหม่ ลองพรุ่งนี้ได้",
-                     "icon": "self_improvement"
-                    },
-                    {
-                     "value": "love",
-                     "label": "ความรัก / ความสัมพันธ์ — เรื่องที่คนดูอิน",
-                     "icon": "favorite"
-                    },
-                    {
-                     "value": "pop",
-                     "label": "บันเทิง / ป๊อป — หนัง ซีรีส์ เพลง เกม",
-                     "icon": "movie"
-                    },
-                    {
-                     "value": "debate",
-                     "label": "ดีเบต 2 ฝั่ง — เถียงกันแบบขำ ๆ ให้คนดูโหวต",
-                     "icon": "balance"
-                    },
-                    {
-                     "value": "interview",
-                     "label": "สัมภาษณ์ — ถามสิ่งที่คนดูอยากรู้",
-                     "icon": "record_voice_over"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": "item.hasProduct=ไม่มี"
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "แนวเนื้อหา",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "format",
-                   "placeholder": "อัตโนมัติ",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "icon": "auto_awesome"
-                    },
-                    {
-                     "value": "review",
-                     "label": "รีวิว — จุดเด่น · ข้อสงสัย · เหมาะกับใคร",
-                     "icon": "rate_review"
-                    },
-                    {
-                     "value": "compare",
-                     "label": "เปรียบเทียบ — เทียบกับทางเลือกทั่วไป",
-                     "icon": "compare_arrows"
-                    },
-                    {
-                     "value": "qa",
-                     "label": "ถาม-ตอบลูกค้า — ตอบคำถามจริง 3 ข้อ",
-                     "icon": "quiz"
-                    },
-                    {
-                     "value": "story",
-                     "label": "เล่าเรื่องแบรนด์ — ที่มาของของชิ้นนี้",
-                     "icon": "auto_stories"
-                    },
-                    {
-                     "value": "trend",
-                     "label": "เทรนด์ — เปิดด้วยเทรนด์ โยงเข้าสินค้า",
-                     "icon": "trending_up"
-                    },
-                    {
-                     "value": "unbox",
-                     "label": "แกะกล่อง — เปิดกล่องหน้ากล้อง",
-                     "icon": "package_2"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": "item.hasProduct!=ไม่มี"
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "อารมณ์ของคลิป",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "vibe",
-                   "placeholder": "อัตโนมัติ",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ",
-                     "icon": "auto_awesome"
-                    },
-                    {
-                     "value": "funny",
-                     "label": "ตลก กวน — เล่นมุข แซวกัน",
-                     "icon": "mood"
-                    },
-                    {
-                     "value": "chill",
-                     "label": "สบาย ๆ — เหมือนคุยกับเพื่อน",
-                     "icon": "coffee"
-                    },
-                    {
-                     "value": "serious",
-                     "label": "จริงจัง — น่าเชื่อถือ ไม่เล่นมุข",
-                     "icon": "verified"
-                    },
-                    {
-                     "value": "thrill",
-                     "label": "ลุ้นระทึก — ลึกลับ ทิ้งปมค้าง",
-                     "icon": "visibility"
-                    },
-                    {
-                     "value": "warm",
-                     "label": "อบอุ่น ซึ้ง — นุ่ม ๆ อบอุ่นใจ",
-                     "icon": "volunteer_activism"
-                    },
-                    {
-                     "value": "hype",
-                     "label": "ตื่นเต้น — พลังสูง เร็ว",
-                     "icon": "bolt"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "เรื่องจริงหรือแต่ง",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "truth",
-                   "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ — ตามแนวเนื้อหา",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "real",
-                     "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
-                     "icon": "fact_check"
-                    },
-                    {
-                     "value": "fiction",
-                     "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
-                     "icon": "auto_stories"
-                    },
-                    {
-                     "value": "drama",
-                     "label": "อิงจริง เล่าแบบละคร",
-                     "icon": "theater_comedy"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ],
-                 "when": "item.hasProduct=ไม่มี"
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "มุมเล่า",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  },
-                  {
-                   "el": "dropdown",
-                   "field": "angle",
-                   "placeholder": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
-                   "options": [
-                    {
-                     "value": "",
-                     "label": "อัตโนมัติ — 3 ไอเดีย 3 มุม",
-                     "icon": "auto_fix_high"
-                    },
-                    {
-                     "value": "question",
-                     "label": "เปิดด้วยคำถามชวนคิด",
-                     "icon": "help"
-                    },
-                    {
-                     "value": "story",
-                     "label": "เล่าเป็นเรื่องมีตัวละคร",
-                     "icon": "person_book"
-                    },
-                    {
-                     "value": "top3",
-                     "label": "จัดอันดับ Top 3",
-                     "icon": "format_list_numbered"
-                    },
-                    {
-                     "value": "myth",
-                     "label": "ความเชื่อ vs ความจริง",
-                     "icon": "compare"
-                    },
-                    {
-                     "value": "twist",
-                     "label": "หักมุมตอนจบ",
-                     "icon": "u_turn_left"
-                    },
-                    {
-                     "value": "inside",
-                     "label": "เล่าจากมุมคนใน",
-                     "icon": "visibility"
-                    }
-                   ],
-                   "className": "!min-h-[48px] @[420px]:!min-h-0"
-                  }
-                 ]
-                },
-                {
-                 "el": "text",
-                 "value": "ตั้งตรงนี้ = ตั้งให้ทั้งคลิป",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                }
-               ],
-               "bodyClass": "pt-2 gap-3",
-               "chevClass": "opacity-50 !text-[22px]"
+               "el": "text",
+               "value": "ได้แล้วแตะ \"ใช้ไอเดียนี้\" — ใส่ลงช่องให้ แก้ต่อได้ · กดอีกครั้ง = ชุดใหม่",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
               },
               {
                "el": "box",
@@ -13002,18 +13006,18 @@
                   "list": [
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.0.title}\n{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.1.title}\n{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.2.title}\n{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
                    }
                   ]
                  }
@@ -13055,7 +13059,7 @@
                  "el": "gen-button",
                  "op": "pdPick0",
                  "force": true,
-                 "label": "เลือกไอเดียนี้",
+                 "label": "ใช้ไอเดียนี้",
                  "icon": "check_circle",
                  "variant": "solid"
                 }
@@ -13081,18 +13085,18 @@
                   "list": [
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.0.title}\n{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.1.title}\n{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.2.title}\n{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
                    }
                   ]
                  }
@@ -13134,7 +13138,7 @@
                  "el": "gen-button",
                  "op": "pdPick1",
                  "force": true,
-                 "label": "เลือกไอเดียนี้",
+                 "label": "ใช้ไอเดียนี้",
                  "icon": "check_circle",
                  "variant": "solid"
                 }
@@ -13160,18 +13164,18 @@
                   "list": [
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.0.title}\n{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.1.title}\n{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
                    },
                    {
                     "op": "eq",
-                    "a": "{item.info}",
-                    "b": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
+                    "a": "{item.name}",
+                    "b": "{item.data.ideaGen.2.title}\n{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
                    }
                   ]
                  }
@@ -13213,58 +13217,11 @@
                  "el": "gen-button",
                  "op": "pdPick2",
                  "force": true,
-                 "label": "เลือกไอเดียนี้",
+                 "label": "ใช้ไอเดียนี้",
                  "icon": "check_circle",
                  "variant": "solid"
                 }
                ]
-              },
-              {
-               "el": "text",
-               "value": "✓ ใส่ไอเดียแล้ว — แก้ชื่อตอนหรือเนื้อเรื่องต่อได้เลย · อยากได้แบบอื่นกดสุ่มใหม่",
-               "className": "!text-[13.5px] font-bold !text-[var(--ev-accent)] px-0.5",
-               "when": {
-                "op": "or",
-                "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.info}",
-                  "b": "{item.data.ideaGen.0.hook}\n{item.data.ideaGen.0.body}"
-                 },
-                 {
-                  "op": "eq",
-                  "a": "{item.info}",
-                  "b": "{item.data.ideaGen.1.hook}\n{item.data.ideaGen.1.body}"
-                 },
-                 {
-                  "op": "eq",
-                  "a": "{item.info}",
-                  "b": "{item.data.ideaGen.2.hook}\n{item.data.ideaGen.2.body}"
-                 }
-                ]
-               }
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "card": [
-              {
-               "el": "text",
-               "value": "อยากให้เล่าอะไรบ้าง (ไม่บังคับ)",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "textarea",
-               "field": "info",
-               "placeholder": "เช่น ประเด็นที่อยากให้พูด เรื่องเล่า ข้อเท็จจริง ตัวเลข มุก — ยิ่งละเอียด หมียิ่งไม่ต้องเดา",
-               "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
-              },
-              {
-               "el": "text",
-               "value": "ไม่ใส่ก็ได้ — ตอนเริ่มผลิต หมีคิดให้เอง · ข่าว/ประวัติศาสตร์/คดีดัง ตรวจข้อเท็จจริงก่อนโพสต์",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
               }
              ]
             }
@@ -16647,7 +16604,7 @@
               "a": "{item.name}",
               "b": ""
              },
-             "reason": "กรอกหัวข้อก่อนบันทึก",
+             "reason": "บอกว่าคุยเรื่องอะไรก่อนบันทึก",
              "when": {
               "op": "not",
               "a": {
@@ -39558,18 +39515,18 @@
    "soloblock60": "คุณคือโชว์รันเนอร์ของ \"คลิปพอดแคสต์เล่าคนเดียว\" ของพี่หมีแว่น — ผู้เล่า 1 คน (HOST) นั่งพูดกับกล้องในห้องสตูดิโอ ไม่มีคนอื่นในเฟรม ออกแบบคลิปแนวตั้ง 9:16 ยาว 60 วินาที เป็นการเล่าต่อเนื่องเรื่องเดียวจบในตัว แบ่งเป็น 6 ช่วง ช่วงละ 10 วินาที ช่วงละ 5 ฉาก ฉากละ 2 วินาที รวม 30 ฉาก\n★ ผู้พูด: HOST พูดคนเดียวทุกฉาก (sp ทุกฉาก = host) พูดกับคนดูผ่านกล้องเหมือนเล่าให้เพื่อนฟัง · ห้ามมีคนที่ 2 ในเฟรม\n★ ช่วงแรก = ฮุคใน 3 วินาทีแรก (คำถาม ตัวเลข หรือความเห็นแรง) แล้วเปิดตัวสินค้า/หัวข้อ · ช่วงสุดท้าย = สรุป + ชวนทำอะไรต่อ (CTA จากคำปิดท้าย/โปรโมชั่นที่ให้ ถ้าไม่มี = ชวนคอมเมนต์/กดดูลิงก์)\n★ เรื่องต้องจบสมบูรณ์ภายใน 60 วินาที — ฉาก 30 คือฉากปิด ห้ามค้างคา\n★ ตอนถ่ายจริงคลิปนี้จะถูกสร้างเป็น 6 ก้อน ก้อนละ 5 ฉาก แล้วนำมาต่อกัน — ทุกก้อนต้องเป็นห้องเดียวกัน แสงเดียวกัน ที่นั่งเดิม เสื้อผ้าเดิม ผู้เล่าคนเดิม"
   },
   "lenOut": {
-   "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 5 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host|guest\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host|guest\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host|guest\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host|guest\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host|guest\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host|guest\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host|guest\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host|guest\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host|guest\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"sp26\":\"host|guest\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"sp27\":\"host|guest\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"sp28\":\"host|guest\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"sp29\":\"host|guest\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\",\"sp30\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 5 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "solo60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"sp26\":\"host\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"sp27\":\"host\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"sp28\":\"host\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"sp29\":\"host\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\",\"sp30\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON"
+   "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 5 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host|guest\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host|guest\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host|guest\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host|guest\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"GUEST visual sheet in English ≤ 20 words, must CONTRAST with HOST in colours and silhouette — if a GUEST face photo is attached write 'match attached GUEST photo' + outfit only\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, two mics on arms, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"GUEST voice in English 4-8 words, clearly different from HOST\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host|guest\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host|guest\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host|guest\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host|guest\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host|guest\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host|guest\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host|guest\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host|guest\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host|guest\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host|guest\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host|guest\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host|guest\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host|guest\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host|guest\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host|guest\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host|guest\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host|guest\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host|guest\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host|guest\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host|guest\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host|guest\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host|guest\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host|guest\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host|guest\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host|guest\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"sp26\":\"host|guest\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"sp27\":\"host|guest\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"sp28\":\"host|guest\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"sp29\":\"host|guest\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\",\"sp30\":\"host|guest\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างเห็นทั้งคู่\" · \"ระยะกลางพิธีกร\" · \"ระยะกลางแขก\" · \"โคลสอัพพิธีกร\" · \"โคลสอัพแขก\" · \"ปฏิกิริยาผู้ฟัง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างเห็นทั้งคู่\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · โคลสอัพแต่ละคนใช้ได้ไม่เกิน 1 ครั้งต่อช่วง · \"ปฏิกิริยาผู้ฟัง\" = ผู้ฟังอยู่ในเฟรมชัด ผู้พูดอยู่นอกเฟรมหรือขอบเฟรม (เสียงยังเป็นผู้พูด) · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 5 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "solo60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อตอนสั้น ≤ 40 ตัวอักษร สรุปจากเรื่องที่คุย (ถ้าผู้ใช้ให้มาสั้นอยู่แล้ว ใช้ตามนั้น)\",\"category\":\"ประเภทสินค้า/หัวข้อ สั้น ๆ\",\"palette\":\"lighting and mood of the studio in English 3-6 words\",\"hostSheet\":\"HOST visual sheet in English ≤ 20 words: kind (human/animal/mascot/cartoon) · gender · age · face/hair or fur · outfit with named colours · one signature prop · energy — if a HOST face photo is attached write 'match attached HOST photo' + outfit only\",\"guestSheet\":\"\",\"studioEN\":\"podcast room in English ≤ 30 words: desk shape, one mic on an arm, chairs, back wall, 2 light sources with colour, one recognisable set-dressing item — if a room photo is attached write 'match attached room photo' + only what to add\",\"hostVoiceEN\":\"HOST voice in English 4-8 words e.g. warm confident Thai male, early 30s\",\"guestVoiceEN\":\"\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงของ HOST\",\"synopsis\":\"เรื่องย่อตอน 1-2 ประโยค ภาษาไทย\",\"hook\":\"ประโยคแรกที่พูดในคลิป (ไทย)\",\"caption\":\"แคปชัน TikTok ภาษาไทย ≤ 120 ตัวอักษร ไม่เกิน 1 emoji\",\"hashtags\":\"แฮชแท็ก 5-8 ตัว คั่นด้วยช่องว่าง ไทย+อังกฤษ\",\"coverTitle\":\"ชื่อตอนสั้น ≤ 14 ตัวอักษรไทย สำหรับพิมพ์บนปก\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"sp1\":\"host\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"sp2\":\"host\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"sp3\":\"host\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"sp4\":\"host\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"sp5\":\"host\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"sp6\":\"host\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"sp7\":\"host\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"sp8\":\"host\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"sp9\":\"host\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"sp10\":\"host\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"sp11\":\"host\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"sp12\":\"host\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"sp13\":\"host\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"sp14\":\"host\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"sp15\":\"host\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"sp16\":\"host\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"sp17\":\"host\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"sp18\":\"host\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"sp19\":\"host\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"sp20\":\"host\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"sp21\":\"host\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"sp22\":\"host\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"sp23\":\"host\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"sp24\":\"host\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"sp25\":\"host\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"sp26\":\"host\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"sp27\":\"host\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"sp28\":\"host\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"sp29\":\"host\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\",\"sp30\":\"host\"}\n\nกฎ overlay: ovN = ซับไตเติ้ลไทยของบทพูด voN ในฉากนั้น (ย่อได้ ≤ 6 คำ บรรทัดเดียว) ห้ามใส่เลขฉาก · ห้ามใช้ชื่อขั้นตอน (ฮุค/เนื้อ/CTA) เป็นข้อความบนภาพ · ใช้คำไทยสามัญ เลี่ยงคำทับศัพท์และคำที่มีไม้ไต่คู้/การันต์ (เช่น ล็อค→เก็บ, เนื้อครีม→ครีม) เพราะโมเดลวิดีโอวาดตัวไทยเหล่านี้เพี้ยน\nกฎ cam: camN เป็นวลีไทยสั้นจากชุดนี้เท่านั้น — \"ภาพกว้างผู้เล่า\" · \"ระยะกลางผู้เล่า\" · \"โคลสอัพผู้เล่า\" · \"ยกสินค้าโชว์กล้อง\" · \"อินเสิร์ตสินค้าบนโต๊ะ\" — ฉากแรกและฉากสุดท้ายของคลิปต้องเป็น \"ภาพกว้างผู้เล่า\" · ห้ามใช้มุมเดียวกัน 2 ฉากติดกัน · ไม่มีสินค้า = ห้ามใช้ 2 มุมหลัง · ห้ามมีชื่ออุปกรณ์ถ่ายทำ (ขาตั้ง ดอลลี่ กิมบอล) ในวลีกล้อง\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON"
   },
   "lenLabel": {
    "10": "10 วินาที",
