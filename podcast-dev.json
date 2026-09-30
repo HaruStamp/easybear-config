@@ -9808,6 +9808,109 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 1 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 1 เสร็จแล้ว"
+  },
+  {
+   "id": "pdIdea",
+   "type": "llm",
+   "over": "products",
+   "out": "ideaGen",
+   "aux": true,
+   "systemInstruction": "คุณคือนักเขียนคอนเทนต์พอดแคสต์สั้นของพี่หมีแว่น — หน้าที่คือคิด \"เนื้อหาที่จะเล่า\" ให้คลิปสั้น 20-60 วินาที จากหัวข้อที่ผู้ใช้ให้\nตอบเป็นข้อความไทยล้วน 5-8 บรรทัด ขึ้นต้นแต่ละบรรทัดด้วย • — บรรทัดแรก = ฮุค/ประเด็นเปิด · ถัดมา = เนื้อเรื่องหรือข้อเท็จจริง/เกร็ดที่น่าสนใจ 3-4 ข้อ · มุกหรือจุดหักมุม 1 ข้อ (ถ้าเข้ากับอารมณ์) · บรรทัดท้าย = ปิดเรื่อง/ชวนคอมเมนต์\nกติกา: ห้ามมีหัวข้อ ห้าม markdown ห้ามคำนำหรือคำอธิบายนอกเนื้อหา · ข้อเท็จจริงใช้เฉพาะที่แน่ใจ ห้ามแต่งตัวเลข วันที่ ชื่อคน — ตำนาน/ความเชื่อให้บอกว่าเป็นตำนาน · ไม่เขียนบทพูดทีละฉาก (ขั้นเขียนบทจะทำต่อเอง)",
+   "prompt": {
+    "op": "concat",
+    "parts": [
+     "หัวข้อ: {item.name}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.hasProduct=ไม่มี",
+        "value": "ไม่มีสินค้า — เล่าเรื่อง/คุยหัวข้อล้วน\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.hasProduct!=ไม่มี",
+        "value": "มีสินค้า: {item.prodName} {item.description}\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.format!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "formatPlan",
+           "key": "{item.cast}{item.format}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.vibe!=",
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "vibePlan",
+           "key": "{item.vibe}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.cast=solo",
+        "value": "พิธีกรคนเดียวเล่า\n"
+       },
+       {
+        "when": "item.cast!=solo",
+        "value": "พิธีกรกับแขกรับเชิญคุยกัน 2 คน\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.info!=",
+        "value": "ผู้ใช้เขียนไว้แล้ว (ต่อยอดจากนี้ อย่าทิ้ง): {item.info}\n"
+       }
+      ]
+     },
+     "\nเขียนเนื้อหาที่จะเล่าเลย — ให้ต่างจากครั้งก่อน ๆ ได้ (สุ่มมุมเล่าใหม่)"
+    ]
+   },
+   "logRun": "[{item.name}] หมีกำลังคิดเนื้อหา",
+   "logDone": "[{item.name}] หมีคิดเนื้อหาให้แล้ว"
   }
  ],
  "stages": [
@@ -12201,6 +12304,83 @@
                "field": "info",
                "placeholder": "เช่น ประเด็นที่อยากให้พูด เรื่องเล่า ข้อเท็จจริง ตัวเลข มุก — ยิ่งละเอียด หมียิ่งไม่ต้องเดา",
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
+              },
+              {
+               "el": "row",
+               "className": "gap-2 items-center flex-wrap",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "pdIdea",
+                 "force": true,
+                 "label": "ให้หมีช่วยคิด",
+                 "icon": "auto_awesome",
+                 "variant": "outline"
+                },
+                {
+                 "el": "text",
+                 "value": "ไม่ใส่ก็ได้ — ตอนเริ่มผลิต หมีคิดให้เอง",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-2 rounded-xl border border-[var(--ev-border)] bg-[color-mix(in_srgb,var(--ev-accent)_6%,transparent)] p-3",
+               "when": {
+                "op": "and",
+                "a": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.data.ideaGen}",
+                  "b": ""
+                 }
+                },
+                "b": {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.info}",
+                  "b": "{item.data.ideaGen}"
+                 }
+                }
+               },
+               "card": [
+                {
+                 "el": "text",
+                 "value": "หมีคิดให้แล้ว — ชอบก็ใส่ลงช่อง แก้ต่อได้",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "text",
+                 "value": "{item.data.ideaGen}",
+                 "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line px-0.5"
+                },
+                {
+                 "el": "row",
+                 "className": "gap-2 flex-wrap",
+                 "card": [
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "info",
+                   "value": "{item.data.ideaGen}",
+                   "label": "ใส่ลงช่อง",
+                   "icon": "check",
+                   "variant": "solid"
+                  },
+                  {
+                   "el": "gen-button",
+                   "op": "pdIdea",
+                   "force": true,
+                   "label": "คิดใหม่",
+                   "icon": "refresh",
+                   "variant": "outline"
+                  }
+                 ]
+                }
+               ]
               },
               {
                "el": "text",
