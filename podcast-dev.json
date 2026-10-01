@@ -88,7 +88,13 @@
   "pdGuestGender": "",
   "pdGuestAge": "",
   "pdGuestVoice": "",
-  "pdGuestLook": ""
+  "pdGuestLook": "",
+  "pdCast": "",
+  "pdTurn": "",
+  "pdScene": "",
+  "pdCam": "",
+  "pdPace": "",
+  "pdRoom": ""
  },
  "collections": {
   "control": {
@@ -453,7 +459,9 @@
   "characters": {
    "fields": [],
    "slots": [
-    "face"
+    "face",
+    "room1",
+    "room2"
    ],
    "idPrefix": "ch"
   }
@@ -481,7 +489,50 @@
      {
       "op": "lookup",
       "table": "lenSys",
-      "key": "{item.cast}{item.turn}{values.svSec}",
+      "key": {
+       "op": "concat",
+       "parts": [
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.cast}",
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.turn}",
+          "b": ""
+         },
+         "then": "{values.pdTurn}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.turn}",
+           "b": "block"
+          },
+          "then": "block",
+          "else": ""
+         }
+        },
+        "{values.svSec}"
+       ]
+      },
       "fallback": "คุณคือโชว์รันเนอร์คลิปพอดแคสต์ 20 วินาที 10 ฉาก"
      },
      "\n",
@@ -490,24 +541,118 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.cast!=solo",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
          "parts": [
           {
-           "when": "item.turn=block",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.turn}",
+              "b": ""
+             },
+             "then": "{values.pdTurn}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.turn}",
+               "b": "block"
+              },
+              "then": "block",
+              "else": ""
+             }
+            },
+            "b": "block"
+           },
            "value": "{brain.mn.sys}"
           },
           {
-           "when": "item.turn!=block",
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.turn}",
+               "b": ""
+              },
+              "then": "{values.pdTurn}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.turn}",
+                "b": "block"
+               },
+               "then": "block",
+               "else": ""
+              }
+             },
+             "b": "block"
+            }
+           },
            "value": "{brain.mn.sysQuick}"
           }
          ]
         }
        },
        {
-        "when": "item.cast=solo",
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": ""
+          },
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        },
         "value": "{brain.mn.sysSolo}"
        }
       ]
@@ -516,14 +661,81 @@
      {
       "op": "lookup",
       "table": "lenVo",
-      "key": "{item.cast}{item.turn}{values.svSec}",
+      "key": {
+       "op": "concat",
+       "parts": [
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.cast}",
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.turn}",
+          "b": ""
+         },
+         "then": "{values.pdTurn}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.turn}",
+           "b": "block"
+          },
+          "then": "block",
+          "else": ""
+         }
+        },
+        "{values.svSec}"
+       ]
+      },
       "fallback": "กฎบทพูด: ทุกฉากมี vo และ sp"
      },
      "\n\n",
      {
       "op": "lookup",
       "table": "lenOut",
-      "key": "{item.cast}{values.svSec}",
+      "key": {
+       "op": "concat",
+       "parts": [
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.cast}",
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
+        "{values.svSec}"
+       ]
+      },
       "fallback": "Output: JSON array ล้วน"
      }
     ]
@@ -549,7 +761,29 @@
            "sep": "",
            "parts": [
             {
-             "when": "item.cast=solo",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
              "value": " · โหมดคนเดียว = ทุกบรรทัดเป็นของ HOST"
             }
            ]
@@ -806,7 +1040,31 @@
      {
       "op": "lookup",
       "table": "formatPlan",
-      "key": "{item.cast}{item.format}",
+      "key": {
+       "op": "concat",
+       "parts": [
+        {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.cast}",
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
+        "{item.format}"
+       ]
+      },
       "fallback": ""
      },
      "\n",
@@ -905,14 +1163,57 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.cast!=solo",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         }
+        },
         "value": {
          "op": "concat",
          "parts": [
           {
            "op": "lookup",
            "table": "camPlan",
-           "key": "{item.camMode}",
+           "key": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.camMode}",
+             "b": ""
+            },
+            "then": "{values.pdCam}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.camMode}",
+              "b": "auto"
+             },
+             "then": "",
+             "else": "{item.camMode}"
+            }
+           },
            "fallback": ""
           },
           "\n"
@@ -945,7 +1246,25 @@
      {
       "op": "lookup",
       "table": "pacePlan",
-      "key": "{item.pace}",
+      "key": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{item.pace}",
+        "b": ""
+       },
+       "then": "{values.pdPace}",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.pace}",
+         "b": "normal"
+        },
+        "then": "",
+        "else": "{item.pace}"
+       }
+      },
       "fallback": ""
      },
      "\n\n",
@@ -954,11 +1273,58 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.cast!=solo",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         }
+        },
         "value": "HOST (พิธีกร นั่งซ้าย): เป็น "
        },
        {
-        "when": "item.cast=solo",
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": ""
+          },
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        },
         "value": "HOST (ผู้เล่าคนเดียว): เป็น "
        }
       ]
@@ -1082,7 +1448,32 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.cast!=solo",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         }
+        },
         "value": {
          "op": "concat",
          "parts": [
@@ -1215,10 +1606,41 @@
        {
         "when": {
          "op": "eq",
-         "a": "{item.sceneMode}",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sceneMode}",
+           "b": ""
+          },
+          "then": "{values.pdScene}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.sceneMode}",
+            "b": "auto"
+           },
+           "then": "",
+           "else": "{item.sceneMode}"
+          }
+         },
          "b": "custom"
         },
-        "value": "ผู้ใช้กำหนดเอง — {item.room}"
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ผู้ใช้กำหนดเอง — ",
+          {
+           "op": "coalesce",
+           "parts": [
+            "{item.room}",
+            "{values.pdRoom}"
+           ],
+           "default": ""
+          }
+         ]
+        }
        },
        {
         "when": {
@@ -1228,7 +1650,25 @@
            "op": "not",
            "a": {
             "op": "eq",
-            "a": "{item.sceneMode}",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.sceneMode}",
+              "b": ""
+             },
+             "then": "{values.pdScene}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.sceneMode}",
+               "b": "auto"
+              },
+              "then": "",
+              "else": "{item.sceneMode}"
+             }
+            },
             "b": "custom"
            }
           },
@@ -1236,7 +1676,25 @@
            "op": "not",
            "a": {
             "op": "eq",
-            "a": "{item.sceneMode}",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.sceneMode}",
+              "b": ""
+             },
+             "then": "{values.pdScene}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.sceneMode}",
+               "b": "auto"
+              },
+              "then": "",
+              "else": "{item.sceneMode}"
+             }
+            },
             "b": ""
            }
           }
@@ -1249,7 +1707,25 @@
           {
            "op": "lookup",
            "table": "scenePlan",
-           "key": "{item.sceneMode}",
+           "key": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": ""
+            },
+            "then": "{values.pdScene}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.sceneMode}",
+              "b": "auto"
+             },
+             "then": "",
+             "else": "{item.sceneMode}"
+            }
+           },
            "fallback": ""
           },
           " — ออกแบบรายละเอียดตามนี้ มีไมค์บนแขนจับตามจำนวนคน"
@@ -1261,14 +1737,158 @@
          "op": "and",
          "a": {
           "op": "eq",
-          "a": "{item.sceneMode}",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.sceneMode}",
+            "b": ""
+           },
+           "then": "{values.pdScene}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "auto"
+            },
+            "then": "",
+            "else": "{item.sceneMode}"
+           }
+          },
           "b": ""
          },
          "b": {
           "op": "not",
           "a": {
            "op": "eq",
-           "a": "{item.cast}",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.cast}",
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.cast}",
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.cast}",
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.cast}",
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
            "b": "solo"
           }
          }
@@ -1280,12 +1900,156 @@
          "op": "and",
          "a": {
           "op": "eq",
-          "a": "{item.sceneMode}",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.sceneMode}",
+            "b": ""
+           },
+           "then": "{values.pdScene}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.sceneMode}",
+             "b": "auto"
+            },
+            "then": "",
+            "else": "{item.sceneMode}"
+           }
+          },
           "b": ""
          },
          "b": {
           "op": "eq",
-          "a": "{item.cast}",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.cast}",
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
           "b": "solo"
          }
         },
@@ -1299,10 +2063,12 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "room1"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{characters[studio].slots.room1}",
+          "b": ""
+         }
         },
         "value": " · มีรูปห้องจริงแนบมา — ห้องต้องตรงรูป"
        }
@@ -1383,19 +2149,55 @@
      "op": "cond",
      "when": {
       "op": "eq",
-      "a": "{item.sceneMode}",
+      "a": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{item.sceneMode}",
+        "b": ""
+       },
+       "then": "{values.pdScene}",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.sceneMode}",
+         "b": "auto"
+        },
+        "then": "",
+        "else": "{item.sceneMode}"
+       }
+      },
       "b": "custom"
      },
-     "then": "{item.slots.room1}"
+     "then": "{characters[studio].slots.room1}"
     },
     {
      "op": "cond",
      "when": {
       "op": "eq",
-      "a": "{item.sceneMode}",
+      "a": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{item.sceneMode}",
+        "b": ""
+       },
+       "then": "{values.pdScene}",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.sceneMode}",
+         "b": "auto"
+        },
+        "then": "",
+        "else": "{item.sceneMode}"
+       }
+      },
       "b": "custom"
      },
-     "then": "{item.slots.room2}"
+     "then": "{characters[studio].slots.room2}"
     },
     "{characters[ch1].slots.face}",
     {
@@ -1404,7 +2206,133 @@
       "op": "not",
       "a": {
        "op": "eq",
-       "a": "{item.cast}",
+       "a": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": ""
+          },
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": ""
+        },
+        "then": "{values.pdCast}",
+        "else": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         },
+         "then": "solo",
+         "else": ""
+        }
+       },
        "b": "solo"
       }
      },
@@ -4061,7 +4989,25 @@
      "clipsAt": "{values.clipsPerProduct}",
      "arc": "{parent.fields.arc}",
      "look": "{item.fields.look}",
-     "camMode": "{parent.fields.camMode}",
+     "camMode": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.camMode}",
+       "b": ""
+      },
+      "then": "{values.pdCam}",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.camMode}",
+        "b": "auto"
+       },
+       "then": "",
+       "else": "{parent.fields.camMode}"
+      }
+     },
      "people": "{parent.fields.people}",
      "peopleSrc": "{parent.fields.peopleSrc}",
      "charName": "{parent.fields.charName}",
@@ -4069,7 +5015,25 @@
      "charGender": "{parent.fields.charGender}",
      "charAge": "{parent.fields.charAge}",
      "castKind": "{parent.fields.castKind}",
-     "sceneMode": "{parent.fields.sceneMode}",
+     "sceneMode": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.sceneMode}",
+       "b": ""
+      },
+      "then": "{values.pdScene}",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.sceneMode}",
+        "b": "auto"
+       },
+       "then": "",
+       "else": "{parent.fields.sceneMode}"
+      }
+     },
      "endMode": "{parent.fields.endMode}",
      "hostSheet": "{item.fields.hostSheet}",
      "guestSheet": "{item.fields.guestSheet}",
@@ -4110,8 +5074,44 @@
      "sp28": "{item.fields.sp28}",
      "sp29": "{item.fields.sp29}",
      "sp30": "{item.fields.sp30}",
-     "cast": "{parent.fields.cast}",
-     "turn": "{parent.fields.turn}",
+     "cast": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.cast}",
+       "b": ""
+      },
+      "then": "{values.pdCast}",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.cast}",
+        "b": "solo"
+       },
+       "then": "solo",
+       "else": ""
+      }
+     },
+     "turn": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.turn}",
+       "b": ""
+      },
+      "then": "{values.pdTurn}",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.turn}",
+        "b": "block"
+       },
+       "then": "block",
+       "else": ""
+      }
+     },
      "format": "{parent.fields.format}",
      "placement": "{parent.fields.placement}",
      "style": {
@@ -4124,7 +5124,25 @@
       "then": "{values.svStyle}",
       "else": "{parent.fields.style}"
      },
-     "pace": "{parent.fields.pace}",
+     "pace": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.pace}",
+       "b": ""
+      },
+      "then": "{values.pdPace}",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.pace}",
+        "b": "normal"
+       },
+       "then": "",
+       "else": "{parent.fields.pace}"
+      }
+     },
      "hostName": {
       "op": "coalesce",
       "parts": [
@@ -4345,10 +5363,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -4676,8 +5696,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -4686,8 +5706,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -4708,7 +5728,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -4876,10 +6022,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -5207,8 +6355,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -5217,8 +6365,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -5239,7 +6387,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -5407,10 +6681,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -5738,8 +7014,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -5748,8 +7024,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -5770,7 +7046,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -5938,10 +7340,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -6269,8 +7673,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -6279,8 +7683,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -6301,7 +7705,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -6469,10 +7999,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -6795,8 +8327,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -6805,8 +8337,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -6827,7 +8359,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -7006,10 +8664,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -7330,8 +8990,8 @@
       "slot": "image3"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -7340,8 +9000,8 @@
       }
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -7362,7 +9022,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -7576,10 +9362,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -7816,8 +9604,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -7838,7 +9626,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -7849,8 +9763,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -8062,10 +9976,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -8302,8 +10218,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -8324,7 +10240,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -8335,8 +10377,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -8548,10 +10590,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -8788,8 +10832,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -8810,7 +10854,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -8821,8 +10991,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -9034,10 +11204,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -9274,8 +11446,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -9296,7 +11468,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -9307,8 +11605,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -9520,10 +11818,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -9760,8 +12060,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -9782,7 +12082,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -9793,8 +12219,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -10003,10 +12429,12 @@
         "when": {
          "op": "and",
          "a": {
-          "op": "refsFilled",
-          "key": "prod",
-          "from": "products",
-          "slot": "room1"
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[studio].slots.room1}",
+           "b": ""
+          }
          },
          "b": {
           "op": "eq",
@@ -10258,8 +12686,8 @@
       "slot": "image"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -10280,7 +12708,133 @@
        "op": "not",
        "a": {
         "op": "eq",
-        "a": "{item.cast}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
         "b": "solo"
        }
       }
@@ -10291,8 +12845,8 @@
       "slot": "image2"
      },
      {
-      "from": "products",
-      "by": "{item.refs.prod}",
+      "from": "characters",
+      "by": "studio",
       "slot": "room2",
       "when": {
        "op": "eq",
@@ -10389,7 +12943,31 @@
           {
            "op": "lookup",
            "table": "formatPlan",
-           "key": "{item.cast}{item.format}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "{item.format}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -10492,11 +13070,58 @@
       "sep": "",
       "parts": [
        {
-        "when": "item.cast=solo",
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.cast}",
+           "b": ""
+          },
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        },
         "value": "พิธีกรคนเดียวเล่า\n"
        },
        {
-        "when": "item.cast!=solo",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": ""
+           }
+          },
+          "b": "solo"
+         }
+        },
         "value": "พิธีกรกับแขกรับเชิญคุยกัน 2 คน — เนื้อหาต้องมีจังหวะถาม-ตอบ/แย้งกันได้\n"
        }
       ]
@@ -11113,7 +13738,7 @@
            "card": [
             {
              "el": "text",
-             "value": "งาน",
+             "value": "เรื่อง",
              "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]"
             }
            ]
@@ -11153,7 +13778,7 @@
              "action": "set",
              "to": "__page",
              "value": "products",
-             "label": "จัดการงาน",
+             "label": "จัดการเรื่อง",
              "icon": "tune",
              "variant": "solid",
              "className": "ml-auto shrink-0 !h-12 !px-5 !rounded-xl !text-[19px] @[640px]:!text-[18px] font-bold transition-all hover:-translate-y-0.5 active:translate-y-0"
@@ -11166,7 +13791,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่มีงาน — กด \"จัดการงาน\" เพื่อเพิ่ม",
+             "value": "ยังไม่มีเรื่อง — กด \"จัดการเรื่อง\" เพื่อเพิ่ม",
              "className": "!text-[16px] @[640px]:!text-[15px] opacity-60 text-center w-full py-8",
              "when": {
               "op": "eq",
@@ -11285,7 +13910,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ตัวละครประจำช่อง",
+             "value": "รายการของฉัน",
              "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]"
             }
            ]
@@ -11294,8 +13919,144 @@
          "card": [
           {
            "el": "text",
-           "value": "ตั้งครั้งเดียว ใช้ทุกงาน — เหมาะกับช่องที่มีพิธีกร/คู่ประจำ · ว่างทุกช่อง = หมีออกแบบให้ทีละงาน · เปลี่ยนเฉพาะงานได้ในหน้าเพิ่มงาน",
+           "value": "ตั้งครั้งเดียว ใช้ทุกเรื่อง — คนพูด · ตัวละคร · ฉาก ของรายการ · ว่าง = หมีออกแบบให้ทีละเรื่อง · เปลี่ยนเฉพาะเรื่องได้ที่ ▸ ปรับเฉพาะเรื่องนี้",
            "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-2.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "รูปแบบรายการ",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "pdCast",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "2 คนคุยกัน",
+               "desc": "พิธีกร + แขกรับเชิญ",
+               "icon": "groups"
+              },
+              {
+               "value": "solo",
+               "label": "คนเดียว",
+               "desc": "พิธีกรพูดกับกล้อง",
+               "icon": "person"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "จังหวะคุย",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "pdTurn",
+               "placeholder": "ยืดหยุ่น — โต้ตอบได้กลางช่วง เช่น 4 วิ + 6 วิ",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ยืดหยุ่น — โต้ตอบได้กลางช่วง เช่น 4 วิ + 6 วิ",
+                 "icon": "forum"
+                },
+                {
+                 "value": "block",
+                 "label": "สลับทีละ 10 วิ — ชัวร์ ปากตรงคน",
+                 "icon": "sync_alt"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ],
+             "when": "values.pdCast!=solo"
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "จัดที่นั่ง / มุมกล้อง",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "pdCam",
+               "placeholder": "อัตโนมัติ",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "front",
+                 "label": "หันเข้ากล้อง — นั่งโต๊ะเดียวกัน มองกล้อง",
+                 "icon": "videocam"
+                },
+                {
+                 "value": "face",
+                 "label": "หันหากัน — มุมเฉียง แบบสัมภาษณ์",
+                 "icon": "forum"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ],
+             "when": "values.pdCast!=solo"
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "จังหวะพูด",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "pdPace",
+               "placeholder": "ปกติ",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ปกติ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "slow",
+                 "label": "ช้า ชัด — ฉากละ 4-5 คำ",
+                 "icon": "slow_motion_video"
+                },
+                {
+                 "value": "fast",
+                 "label": "ไว กระชับ — ฉากละ 7-9 คำ",
+                 "icon": "speed"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "text",
+           "value": "ตัวละครประจำ",
+           "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
           },
           {
            "el": "box",
@@ -12055,6 +14816,271 @@
              "bodyClass": "pt-2 gap-3",
              "chevClass": "opacity-50 !text-[22px]"
             }
+           ],
+           "when": "values.pdCast!=solo"
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-2.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "ฉากประจำ",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "pdScene",
+             "cols": 2,
+             "contained": true,
+             "className": "!min-h-[44px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "หมีออกแบบฉากให้เข้ากับเรื่อง",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "custom",
+               "label": "ห้องของฉัน",
+               "desc": "เล่าเอง หรือใส่รูปห้องจริง",
+               "icon": "add_photo_alternate"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2.5",
+             "when": "values.pdScene=custom",
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "เล่าห้องของคุณ",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "pdRoom",
+                 "placeholder": "เช่น สตูดิโอไม้ ไฟนีออนรูปไมค์ ชั้นหนังสือด้านหลัง",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 mb-1",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "!gap-1.5 !flex-nowrap items-center",
+                 "card": [
+                  {
+                   "el": "icon",
+                   "icon": "add_photo_alternate",
+                   "textSize": "text-[17px]",
+                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                  },
+                  {
+                   "el": "text",
+                   "value": "รูปห้องจริง 1 (ไม่บังคับ)",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "ถ่ายมุมกว้างเห็นโต๊ะ/ผนัง — หมีล็อกห้องให้ตรงรูปทุกคลิป",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                },
+                {
+                 "el": "repeat",
+                 "coll": "characters",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                   "card": [
+                    {
+                     "el": "box",
+                     "className": "shrink-0",
+                     "card": [
+                      {
+                       "el": "box",
+                       "className": "relative w-[124px] shrink-0",
+                       "when": "item.slots.room1!=",
+                       "card": [
+                        {
+                         "el": "media-slot",
+                         "src": "{item.slots.room1}",
+                         "aspect": "1:1",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]"
+                        },
+                        {
+                         "el": "button",
+                         "action": "hook",
+                         "fn": "clearSlot",
+                         "to": "room1",
+                         "label": "",
+                         "icon": "close",
+                         "variant": "ghost",
+                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                        }
+                       ]
+                      },
+                      {
+                       "el": "box",
+                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                       "when": "item.slots.room1=",
+                       "card": [
+                        {
+                         "el": "upload",
+                         "label": "",
+                         "placeholder": "อัพโหลด",
+                         "icon": "upload",
+                         "into": "room1",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                        },
+                        {
+                         "el": "pick-button",
+                         "label": "เลือกภาพ",
+                         "icon": "photo_library",
+                         "filter": "image",
+                         "into": "room1",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ],
+                 "where": "id=studio"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 mb-1",
+               "card": [
+                {
+                 "el": "row",
+                 "className": "!gap-1.5 !flex-nowrap items-center",
+                 "card": [
+                  {
+                   "el": "icon",
+                   "icon": "add_photo_alternate",
+                   "textSize": "text-[17px]",
+                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                  },
+                  {
+                   "el": "text",
+                   "value": "รูปห้องจริง 2 (ไม่บังคับ)",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "ถ่ายมุมกว้างเห็นโต๊ะ/ผนัง — หมีล็อกห้องให้ตรงรูปทุกคลิป",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+                },
+                {
+                 "el": "repeat",
+                 "coll": "characters",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                   "card": [
+                    {
+                     "el": "box",
+                     "className": "shrink-0",
+                     "card": [
+                      {
+                       "el": "box",
+                       "className": "relative w-[124px] shrink-0",
+                       "when": "item.slots.room2!=",
+                       "card": [
+                        {
+                         "el": "media-slot",
+                         "src": "{item.slots.room2}",
+                         "aspect": "1:1",
+                         "style": {
+                          "borderRadius": "16px"
+                         },
+                         "className": "ring-1 ring-[var(--ev-border)]"
+                        },
+                        {
+                         "el": "button",
+                         "action": "hook",
+                         "fn": "clearSlot",
+                         "to": "room2",
+                         "label": "",
+                         "icon": "close",
+                         "variant": "ghost",
+                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                        }
+                       ]
+                      },
+                      {
+                       "el": "box",
+                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                       "when": "item.slots.room2=",
+                       "card": [
+                        {
+                         "el": "upload",
+                         "label": "",
+                         "placeholder": "อัพโหลด",
+                         "icon": "upload",
+                         "into": "room2",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                        },
+                        {
+                         "el": "pick-button",
+                         "label": "เลือกภาพ",
+                         "icon": "photo_library",
+                         "filter": "image",
+                         "into": "room2",
+                         "resize": {
+                          "maxPx": 512,
+                          "quality": 0.8
+                         },
+                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ],
+                 "where": "id=studio"
+                }
+               ]
+              }
+             ]
+            }
            ]
           }
          ]
@@ -12118,7 +15144,7 @@
             },
             {
              "el": "text",
-             "value": "หน้าตาของทั้งคลิป — ใช้กับทุกงาน · เปลี่ยนเฉพาะงานได้ที่ ▸ ปรับเฉพาะงานนี้",
+             "value": "หน้าตาของทั้งคลิป — ใช้กับทุกเรื่อง · เปลี่ยนเฉพาะเรื่องได้ที่ ▸ ปรับเฉพาะเรื่องนี้",
              "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
             },
             {
@@ -12209,7 +15235,7 @@
             },
             {
              "el": "text",
-             "value": "แสงของห้องสตูดิโอ — มีผลทั้งบอร์ดและวิดีโอจริง · ตั้งเฉพาะงานได้ในหน้าเพิ่มงาน",
+             "value": "แสงของห้องสตูดิโอ — มีผลทั้งบอร์ดและวิดีโอจริง · ตั้งเฉพาะเรื่องได้ในหน้าเพิ่มเรื่อง",
              "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
             },
             {
@@ -12225,7 +15251,7 @@
               {
                "value": "",
                "label": "อัตโนมัติ",
-               "desc": "หมีเลือกให้เข้ากับงาน",
+               "desc": "หมีเลือกให้เข้ากับเรื่อง",
                "icon": "auto_awesome"
               },
               {
@@ -12262,7 +15288,7 @@
             },
             {
              "el": "text",
-             "value": "งานที่ตั้งแสงไว้เอง (▸ ปรับเฉพาะงานนี้) จะใช้ของงานก่อนเสมอ · แสงมีผลกับทั้งห้องสตูดิโอ",
+             "value": "เรื่องที่ตั้งแสงไว้เอง (▸ ปรับเฉพาะเรื่องนี้) จะใช้ของเรื่องก่อนเสมอ · แสงมีผลกับทั้งห้องสตูดิโอ",
              "className": "!text-[13px] @[640px]:!text-[12px] opacity-50 mt-1"
             }
            ]
@@ -12492,7 +15518,7 @@
               },
               {
                "el": "text",
-               "value": "เปลี่ยนได้ทุกเมื่อ — ถ้าเปลี่ยนเพศ ภาษา หรือสำเนียงหลังคิดบทแล้ว ให้กด \"คิดบทใหม่\" ที่การ์ดงานก่อน · สำเนียงเห็นชัดที่คำพูดในบท ส่วนน้ำเสียงในวิดีโอขึ้นกับโมเดล",
+               "value": "เปลี่ยนได้ทุกเมื่อ — ถ้าเปลี่ยนเพศ ภาษา หรือสำเนียงหลังคิดบทแล้ว ให้กด \"คิดบทใหม่\" ที่การ์ดเรื่องก่อน · สำเนียงเห็นชัดที่คำพูดในบท ส่วนน้ำเสียงในวิดีโอขึ้นกับโมเดล",
                "className": "!text-[13px] @[640px]:!text-[12px] opacity-50 leading-relaxed"
               }
              ]
@@ -12525,7 +15551,7 @@
             },
             {
              "el": "text",
-             "value": "สไตล์มีผลตอน \"คิดบท\" — ถ้าเปลี่ยนหลังผลิตแล้ว ให้กดปุ่มสมองที่งาน แล้วกด เริ่มรอบใหม่",
+             "value": "สไตล์มีผลตอน \"คิดบท\" — ถ้าเปลี่ยนหลังผลิตแล้ว ให้กดปุ่มสมองที่เรื่อง แล้วกด เริ่มรอบใหม่",
              "className": "!text-[16px] @[640px]:!text-[15px] opacity-75 leading-relaxed flex-1 min-w-0"
             }
            ]
@@ -12595,7 +15621,7 @@
               },
               {
                "el": "text",
-               "value": "เว้นว่าง = ตั้งให้จากชื่องานแรก",
+               "value": "เว้นว่าง = ตั้งให้จากชื่อเรื่องแรก",
                "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
               }
              ]
@@ -12700,7 +15726,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "จำนวนคลิป/งาน",
+                   "value": "จำนวนคลิป/เรื่อง",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
                   }
                  ]
@@ -12864,12 +15890,12 @@
                  "card": [
                   {
                    "el": "text",
-                   "value": "พักระหว่างงาน",
+                   "value": "พักระหว่างเรื่อง",
                    "className": "!text-[15px] @[640px]:!text-[14.5px] font-bold !text-[var(--ev-text)] truncate !whitespace-normal @[420px]:!whitespace-nowrap"
                   },
                   {
                    "el": "text",
-                   "value": "คั่นทุกงานที่ยิง AI — ยิ่งนานยิ่งปลอดภัย",
+                   "value": "คั่นทุกครั้งที่ยิง AI — ยิ่งนานยิ่งปลอดภัย",
                    "className": "!text-[12.5px] @[640px]:!text-[12px] opacity-60 truncate !whitespace-normal @[420px]:!whitespace-nowrap"
                   }
                  ]
@@ -12957,7 +15983,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "ตอนงานพลาด รอเท่านี้ก่อนยิงใหม่",
+                   "value": "ตอนยิงพลาด รอเท่านี้ก่อนยิงใหม่",
                    "className": "!text-[12.5px] @[640px]:!text-[12px] opacity-60 truncate !whitespace-normal @[420px]:!whitespace-nowrap"
                   }
                  ]
@@ -13084,7 +16110,7 @@
           },
           {
            "el": "text",
-           "value": "เขียนบทไม่สำเร็จบางงาน — กด \"เริ่ม\" อีกครั้งเพื่อลองเขียนใหม่",
+           "value": "เขียนบทไม่สำเร็จบางเรื่อง — กด \"เริ่ม\" อีกครั้งเพื่อลองเขียนใหม่",
            "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -13139,7 +16165,7 @@
             },
             {
              "el": "text",
-             "value": "กดปุ่มเริ่มอีกครั้งเพื่อลองใหม่ · ถ้ากดหลายครั้งแล้วยังไม่ผ่าน ให้เข้า “จัดการงาน” แล้วลองแก้ชื่อหรือจุดเด่นให้สั้นลง (บางคำทำให้ AI ไม่ยอมเขียนบทให้)",
+             "value": "กดปุ่มเริ่มอีกครั้งเพื่อลองใหม่ · ถ้ากดหลายครั้งแล้วยังไม่ผ่าน ให้เข้า “จัดการเรื่อง” แล้วลองแก้ชื่อหรือจุดเด่นให้สั้นลง (บางคำทำให้ AI ไม่ยอมเขียนบทให้)",
              "className": "!text-[13.5px] @[640px]:!text-[13px] !text-red-500/85 leading-relaxed"
             }
            ]
@@ -13217,7 +16243,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่ได้เลือกใช้งาน",
+             "value": "ยังไม่ได้เลือกเรื่อง",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             },
             {
@@ -13227,7 +16253,7 @@
             },
             {
              "el": "text",
-             "value": "เข้า \"จัดการงาน\" (ข้อ 1) ก่อน",
+             "value": "เข้า \"จัดการเรื่อง\" (ข้อ 1) ก่อน",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             }
            ]
@@ -13263,7 +16289,7 @@
           },
           "b": 0
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน"
+         "reason": "เพิ่ม/ติ๊กเลือกอย่างน้อย 1 เรื่องก่อน"
         },
         {
          "el": "gen-phase",
@@ -13300,7 +16326,7 @@
           },
           "b": 0
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน",
+         "reason": "เพิ่ม/ติ๊กเลือกอย่างน้อย 1 เรื่องก่อน",
          "when": {
           "op": "eq",
           "a": "{values.mode}",
@@ -13430,7 +16456,7 @@
         },
         {
          "el": "text",
-         "value": "จัดการงาน",
+         "value": "จัดการเรื่อง",
          "className": "font-bold !text-[22px] @[640px]:!text-[21px] !text-[var(--ev-text)]"
         },
         {
@@ -13439,7 +16465,7 @@
          "card": [
           {
            "el": "load-button",
-           "label": "โหลดงาน",
+           "label": "โหลดเรื่อง",
            "icon": "upload_file",
            "className": "!h-12 @[640px]:!h-11 !px-4 !rounded-xl !text-[18px] @[640px]:!text-[17px] [&_span]:!text-[18px] @[640px]:[&_span]:!text-[17px] !flex-1 justify-center @[420px]:!flex-none",
            "expect": "products",
@@ -13447,7 +16473,7 @@
           },
           {
            "el": "save-button",
-           "label": "เซฟงาน",
+           "label": "เซฟเรื่อง",
            "icon": "save",
            "className": "!h-12 @[640px]:!h-11 !px-4 !rounded-xl !text-[18px] @[640px]:!text-[17px] !flex-1 justify-center @[420px]:!flex-none",
            "scope": "products"
@@ -13497,7 +16523,7 @@
               },
               {
                "el": "text",
-               "value": "งานทั้งหมด",
+               "value": "เรื่องทั้งหมด",
                "className": "!text-[12px] @[420px]:!text-[15px] @[640px]:!text-[14px] opacity-65 font-medium"
               }
              ]
@@ -13567,7 +16593,7 @@
            "el": "input",
            "field": "__q",
            "label": "",
-           "placeholder": "ค้นหางาน…",
+           "placeholder": "ค้นหาเรื่อง…",
            "className": "!h-12 !px-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] flex-1 min-w-[200px] !basis-full @[420px]:!basis-auto"
           },
           {
@@ -13615,7 +16641,7 @@
             "preset": "custom",
             "vibe": ""
            },
-           "label": "เพิ่มงาน",
+           "label": "เพิ่มเรื่อง",
            "icon": "add",
            "className": "!h-12 !px-3 @[420px]:!px-5 !rounded-xl !text-[14px] @[420px]:!text-[16px] @[640px]:!text-[15px] font-bold shrink-0 !bg-gradient-to-b !from-[#7c3aed] !to-[#6d28d9] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
           }
@@ -13637,7 +16663,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ติ๊กถูก = งานที่จะผลิตคลิป",
+             "value": "ติ๊กถูก = เรื่องที่จะผลิตคลิป",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-65 "
             }
            ]
@@ -13670,7 +16696,7 @@
          "card": [
           {
            "el": "text",
-           "value": "ยังไม่มีงาน — กดเพิ่มงานใหม่ข้างล่าง",
+           "value": "ยังไม่มีเรื่อง — กดเพิ่มเรื่องใหม่ข้างล่าง",
            "className": "!text-[16px] @[640px]:!text-[15px] opacity-60 text-center w-full py-10",
            "when": {
             "op": "eq",
@@ -13745,7 +16771,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "เรื่องอื่นทำต่อไปแล้ว — เรื่องนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -13905,7 +16931,7 @@
           "preset": "custom",
           "vibe": ""
          },
-         "label": "เพิ่มงานใหม่",
+         "label": "เพิ่มเรื่องใหม่",
          "icon": "add",
          "className": "w-full justify-center !h-14 !rounded-2xl !text-[19px] @[640px]:!text-[18px] font-bold border-2 border-dashed border-[var(--ev-border)] !bg-transparent opacity-80 hover:opacity-100",
          "variant": "ghost"
@@ -13951,7 +16977,7 @@
             },
             {
              "el": "text",
-             "value": "ลบงานนี้?",
+             "value": "ลบเรื่องนี้?",
              "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)]"
             }
            ]
@@ -13963,7 +16989,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ต้องการลบ \"{item.name}\" ออกจากลิสต์งานใช่ไหม? การลบนี้กู้คืนไม่ได้",
+             "value": "ต้องการลบ \"{item.name}\" ออกจากลิสต์เรื่องใช่ไหม? การลบนี้กู้คืนไม่ได้",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-65 leading-relaxed"
             }
            ]
@@ -14055,13 +17081,13 @@
               },
               {
                "el": "text",
-               "value": "เพิ่มงาน",
+               "value": "เพิ่มเรื่อง",
                "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]",
                "when": "values.__editNew=true"
               },
               {
                "el": "text",
-               "value": "แก้ไขงาน",
+               "value": "แก้ไขเรื่อง",
                "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]",
                "when": "values.__editNew!=true"
               }
@@ -14092,7 +17118,7 @@
               },
               {
                "el": "text",
-               "value": "ใช้งานนี้",
+               "value": "ใช้เรื่องนี้",
                "className": "!text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)] whitespace-nowrap"
               }
              ]
@@ -14133,7 +17159,7 @@
             },
             {
              "el": "text",
-             "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+             "value": "เรื่องอื่นทำต่อไปแล้ว — เรื่องนี้กดคิดบทใหม่ได้เลย",
              "className": "!text-[12.5px] opacity-70 text-center px-2"
             },
             {
@@ -18761,58 +21787,160 @@
            "when": "item.hasProduct!=ไม่มี"
           },
           {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "el": "group",
+           "collapsible": true,
+           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+           "head": [
+            {
+             "el": "icon",
+             "icon": "sell",
+             "textSize": "text-[19px]",
+             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+            },
+            {
+             "el": "text",
+             "value": "ราคา ข้อเสนอ และคำปิดท้าย",
+             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
+            },
+            {
+             "el": "text",
+             "value": "ราคา · โปรโมชั่น · คำปิดท้าย (ไม่บังคับ)",
+             "className": "!text-[13px] opacity-40 truncate min-w-0"
+            }
+           ],
            "card": [
             {
-             "el": "row",
-             "className": "items-center gap-2 px-0.5",
-             "style": {
-              "flexWrap": "nowrap"
-             },
+             "el": "box",
+             "className": "flex flex-col gap-2",
              "card": [
               {
-               "el": "box",
-               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
-               "card": [
-                {
-                 "el": "icon",
-                 "icon": "face",
-                 "textSize": "text-[19px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-                }
-               ]
+               "el": "text",
+               "value": "ราคา",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
               {
-               "el": "text",
-               "value": "ใครอยู่ในคลิป",
-               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
-              },
-              {
-               "el": "text",
-               "value": "ไม่บังคับ",
-               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+               "el": "input",
+               "field": "price",
+               "placeholder": "฿390",
+               "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
               }
              ]
             },
             {
-             "el": "grid-select",
-             "field": "cast",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
+             "el": "box",
+             "className": "grid grid-cols-1 @[640px]:grid-cols-2 gap-3",
+             "card": [
               {
-               "value": "",
-               "label": "2 คนคุยกัน",
-               "desc": "พิธีกร + แขกรับเชิญ",
-               "icon": "groups"
+               "el": "box",
+               "className": "flex flex-col gap-2",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "โปรโมชั่น",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "promotion",
+                 "placeholder": "ลด 50% วันนี้เท่านั้น",
+                 "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
+                }
+               ]
               },
               {
-               "value": "solo",
-               "label": "คนเดียว",
-               "desc": "พิธีกรพูดกับกล้อง",
-               "icon": "person"
+               "el": "box",
+               "className": "flex flex-col gap-2",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "คำปิดท้าย",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "cta",
+                 "placeholder": "เช่น กดตะกร้าได้เลย",
+                 "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]",
+                 "maxLength": 30
+                }
+               ]
+              }
+             ]
+            }
+           ],
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.hasProduct}",
+              "b": "ไม่มี"
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.preset}",
+             "b": "service"
+            }
+           },
+           "bodyClass": "pt-2 gap-3",
+           "chevClass": "opacity-50 !text-[22px]"
+          },
+          {
+           "el": "group",
+           "collapsible": true,
+           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+           "head": [
+            {
+             "el": "icon",
+             "icon": "tune",
+             "textSize": "text-[19px]",
+             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+            },
+            {
+             "el": "text",
+             "value": "ปรับเฉพาะเรื่องนี้",
+             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
+            },
+            {
+             "el": "text",
+             "value": "คนพูด · ตัวละคร · ฉาก · ภาพ · จังหวะ — ว่าง = ตามรายการ",
+             "className": "!text-[13px] opacity-40 truncate min-w-0"
+            }
+           ],
+           "card": [
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "คนเดียว / 2 คน",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "cast",
+               "placeholder": "ตามรายการ",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "duo",
+                 "label": "2 คนคุยกัน",
+                 "icon": "groups"
+                },
+                {
+                 "value": "solo",
+                 "label": "คนเดียว",
+                 "icon": "person"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
              ]
             },
@@ -18828,28 +21956,53 @@
               {
                "el": "dropdown",
                "field": "turn",
-               "placeholder": "ยืดหยุ่น — โต้ตอบได้กลางช่วง เช่น 4 วิ + 6 วิ",
+               "placeholder": "ตามรายการ",
                "options": [
                 {
                  "value": "",
-                 "label": "ยืดหยุ่น — โต้ตอบได้กลางช่วง เช่น 4 วิ + 6 วิ",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "flex",
+                 "label": "ยืดหยุ่น",
                  "icon": "forum"
                 },
                 {
                  "value": "block",
-                 "label": "สลับทีละ 10 วิ — ชัวร์ ปากตรงคน",
+                 "label": "สลับทีละ 10 วิ",
                  "icon": "sync_alt"
                 }
                ],
                "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
              ],
-             "when": "item.cast!=solo"
-            },
-            {
-             "el": "text",
-             "value": "ใช้ตัวละครประจำช่องจากหน้าตั้งค่า · ยังไม่ได้ตั้ง = หมีออกแบบให้เข้ากับเรื่อง",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              }
+             }
             },
             {
              "el": "group",
@@ -18864,7 +22017,7 @@
               },
               {
                "el": "text",
-               "value": "เปลี่ยนตัวละครเฉพาะงานนี้",
+               "value": "เปลี่ยนตัวละครเฉพาะเรื่องนี้",
                "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
               },
               {
@@ -18892,13 +22045,60 @@
                    "el": "text",
                    "value": "พิธีกร · นั่งซ้าย",
                    "className": "!text-[15px] font-black px-0.5",
-                   "when": "item.cast!=solo"
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": "solo"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": "solo"
+                    }
+                   }
                   },
                   {
                    "el": "text",
                    "value": "พิธีกร",
                    "className": "!text-[15px] font-black px-0.5",
-                   "when": "item.cast=solo"
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": "solo"
+                   }
                   }
                  ]
                 },
@@ -19208,46 +22408,68 @@
                  ]
                 }
                ],
-               "when": "item.cast!=solo"
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.cast}",
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.cast}",
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 },
+                 "b": "solo"
+                }
+               }
               }
              ],
              "bodyClass": "pt-2 gap-3",
              "chevClass": "opacity-50 !text-[22px]"
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
-           "card": [
+            },
             {
-             "el": "row",
-             "className": "items-center gap-2 px-0.5",
-             "style": {
-              "flexWrap": "nowrap"
-             },
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
              "card": [
               {
-               "el": "box",
-               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
-               "card": [
+               "el": "text",
+               "value": "ฉาก",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "sceneMode",
+               "placeholder": "ตามรายการ",
+               "options": [
                 {
-                 "el": "icon",
-                 "icon": "chair",
-                 "textSize": "text-[19px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                 "value": "",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "auto",
+                 "label": "อัตโนมัติ — ตามเรื่อง",
+                 "icon": "auto_fix_high"
+                },
+                {
+                 "value": "custom",
+                 "label": "เล่าห้องเอง",
+                 "icon": "edit"
                 }
-               ]
-              },
-              {
-               "el": "text",
-               "value": "ถ่ายที่ไหน",
-               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
-              },
-              {
-               "el": "text",
-               "value": "ไม่บังคับ",
-               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
              ]
             },
@@ -19256,265 +22478,41 @@
              "className": "flex flex-col gap-1.5",
              "card": [
               {
-               "el": "grid-select",
-               "field": "sceneMode",
-               "cols": 2,
-               "contained": true,
-               "className": "!min-h-[44px] @[420px]:!min-h-0",
-               "options": [
-                {
-                 "value": "",
-                 "label": "อัตโนมัติ",
-                 "desc": "หมีออกแบบฉากให้เข้ากับเรื่อง",
-                 "icon": "auto_awesome"
-                },
-                {
-                 "value": "custom",
-                 "label": "กำหนดเอง",
-                 "desc": "พิมพ์รายละเอียด หรือใส่รูปฉาก",
-                 "icon": "edit"
-                }
-               ]
+               "el": "text",
+               "value": "เล่าห้องสำหรับเรื่องนี้",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
               {
-               "el": "box",
+               "el": "input",
+               "field": "room",
+               "placeholder": "เช่น ห้องมืดเทียนไข สำหรับตอนผี",
+               "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+              }
+             ],
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
                "when": {
                 "op": "eq",
                 "a": "{item.sceneMode}",
-                "b": "custom"
+                "b": ""
                },
-               "className": "flex flex-col gap-2 rounded-2xl border border-[var(--ev-border)] p-3 mt-1",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "อยากได้ฉากแบบไหน",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+               "then": "{values.pdScene}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.sceneMode}",
+                 "b": "auto"
                 },
-                {
-                 "el": "textarea",
-                 "field": "room",
-                 "placeholder": "เช่น สตูดิโอมืดไฟนีออนรูปไมค์ โต๊ะยาวสีดำ มีจานอาหารวางหน้าแต่ละคน · คาเฟ่ไม้ แสงหน้าต่าง",
-                 "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
-                },
-                {
-                 "el": "box",
-                 "className": "flex flex-col gap-1.5 mt-1",
-                 "card": [
-                  {
-                   "el": "row",
-                   "className": "!gap-1.5 !flex-nowrap items-center",
-                   "card": [
-                    {
-                     "el": "icon",
-                     "icon": "add_photo_alternate",
-                     "textSize": "text-[17px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                    },
-                    {
-                     "el": "text",
-                     "value": "หรือใส่รูปฉาก 1-2 รูป (ไม่บังคับ)",
-                     "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                    }
-                   ]
-                  },
-                  {
-                   "el": "text",
-                   "value": "ใส่รูปแล้ว ฉากจะเหมือนรูปตลอดคลิป",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                  },
-                  {
-                   "el": "box",
-                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "shrink-0",
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": {
-                        "op": "not",
-                        "a": {
-                         "op": "eq",
-                         "a": "{item.slots.room1}",
-                         "b": ""
-                        }
-                       },
-                       "card": [
-                        {
-                         "el": "media-slot",
-                         "src": "{item.slots.room1}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
-                        },
-                        {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "room1",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": {
-                        "op": "eq",
-                        "a": "{item.slots.room1}",
-                        "b": ""
-                       },
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "room1",
-                         "resize": {
-                          "maxPx": 768,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "room1",
-                         "resize": {
-                          "maxPx": 768,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                        }
-                       ]
-                      }
-                     ]
-                    },
-                    {
-                     "el": "box",
-                     "className": "shrink-0",
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": {
-                        "op": "not",
-                        "a": {
-                         "op": "eq",
-                         "a": "{item.slots.room2}",
-                         "b": ""
-                        }
-                       },
-                       "card": [
-                        {
-                         "el": "media-slot",
-                         "src": "{item.slots.room2}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
-                        },
-                        {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "room2",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": {
-                        "op": "eq",
-                        "a": "{item.slots.room2}",
-                        "b": ""
-                       },
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "room2",
-                         "resize": {
-                          "maxPx": 768,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "room2",
-                         "resize": {
-                          "maxPx": 768,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                        }
-                       ]
-                      }
-                     ],
-                     "when": {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.slots.room1}",
-                       "b": ""
-                      }
-                     }
-                    }
-                   ]
-                  }
-                 ]
-                }
-               ]
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "group",
-           "collapsible": true,
-           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-           "head": [
-            {
-             "el": "icon",
-             "icon": "tune",
-             "textSize": "text-[19px]",
-             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                "then": "",
+                "else": "{item.sceneMode}"
+               }
+              },
+              "b": "custom"
+             }
             },
-            {
-             "el": "text",
-             "value": "ปรับเฉพาะงานนี้",
-             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
-            },
-            {
-             "el": "text",
-             "value": "สไตล์ภาพ · แสง · ที่นั่ง · จังหวะพูด · ลูกเล่น (ว่าง = ใช้ค่าจากหน้าตั้งค่า)",
-             "className": "!text-[13px] opacity-40 truncate min-w-0"
-            }
-           ],
-           "card": [
             {
              "el": "box",
              "className": "flex flex-col gap-1.5",
@@ -19527,11 +22525,11 @@
               {
                "el": "dropdown",
                "field": "style",
-               "placeholder": "ใช้ค่าจากหน้าตั้งค่า",
+               "placeholder": "ตามรายการ",
                "options": [
                 {
                  "value": "",
-                 "label": "ใช้ค่าจากหน้าตั้งค่า",
+                 "label": "ตามรายการ",
                  "icon": "settings"
                 },
                 {
@@ -19586,11 +22584,11 @@
               {
                "el": "dropdown",
                "field": "tone",
-               "placeholder": "ใช้ค่าจากหน้าตั้งค่า",
+               "placeholder": "ตามรายการ",
                "options": [
                 {
                  "value": "",
-                 "label": "ใช้ค่าจากหน้าตั้งค่า",
+                 "label": "ตามรายการ",
                  "icon": "settings"
                 },
                 {
@@ -19635,12 +22633,17 @@
               {
                "el": "dropdown",
                "field": "camMode",
-               "placeholder": "อัตโนมัติ",
+               "placeholder": "ตามรายการ",
                "options": [
                 {
                  "value": "",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "auto",
                  "label": "อัตโนมัติ",
-                 "icon": "auto_awesome"
+                 "icon": "auto_fix_high"
                 },
                 {
                  "value": "front",
@@ -19656,7 +22659,71 @@
                "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
              ],
-             "when": "item.cast!=solo"
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              }
+             }
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "จังหวะพูด",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "pace",
+               "placeholder": "ตามรายการ",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "normal",
+                 "label": "ปกติ",
+                 "icon": "auto_fix_high"
+                },
+                {
+                 "value": "slow",
+                 "label": "ช้า ชัด — ฉากละ 4-5 คำ",
+                 "icon": "slow_motion_video"
+                },
+                {
+                 "value": "fast",
+                 "label": "ไว กระชับ — ฉากละ 7-9 คำ",
+                 "icon": "speed"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ]
             },
             {
              "el": "box",
@@ -19714,40 +22781,6 @@
              "card": [
               {
                "el": "text",
-               "value": "จังหวะพูด",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "dropdown",
-               "field": "pace",
-               "placeholder": "ปกติ",
-               "options": [
-                {
-                 "value": "",
-                 "label": "ปกติ",
-                 "icon": "auto_awesome"
-                },
-                {
-                 "value": "slow",
-                 "label": "ช้า ชัด — ฉากละ 4-5 คำ",
-                 "icon": "slow_motion_video"
-                },
-                {
-                 "value": "fast",
-                 "label": "ไว กระชับ — ฉากละ 7-9 คำ",
-                 "icon": "speed"
-                }
-               ],
-               "className": "!min-h-[48px] @[420px]:!min-h-0"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-1.5",
-             "card": [
-              {
-               "el": "text",
                "value": "ลูกเล่นพิเศษ (ไม่บังคับ)",
                "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
@@ -19760,107 +22793,6 @@
              ]
             }
            ],
-           "bodyClass": "pt-2 gap-3",
-           "chevClass": "opacity-50 !text-[22px]"
-          },
-          {
-           "el": "group",
-           "collapsible": true,
-           "className": "!rounded-2xl !p-3 @[420px]:!p-4 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-           "head": [
-            {
-             "el": "icon",
-             "icon": "sell",
-             "textSize": "text-[19px]",
-             "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-            },
-            {
-             "el": "text",
-             "value": "ราคา ข้อเสนอ และคำปิดท้าย",
-             "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
-            },
-            {
-             "el": "text",
-             "value": "ราคา · โปรโมชั่น · คำปิดท้าย (ไม่บังคับ)",
-             "className": "!text-[13px] opacity-40 truncate min-w-0"
-            }
-           ],
-           "card": [
-            {
-             "el": "box",
-             "className": "flex flex-col gap-2",
-             "card": [
-              {
-               "el": "text",
-               "value": "ราคา",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-              },
-              {
-               "el": "input",
-               "field": "price",
-               "placeholder": "฿390",
-               "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "grid grid-cols-1 @[640px]:grid-cols-2 gap-3",
-             "card": [
-              {
-               "el": "box",
-               "className": "flex flex-col gap-2",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "โปรโมชั่น",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "input",
-                 "field": "promotion",
-                 "placeholder": "ลด 50% วันนี้เท่านั้น",
-                 "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-2",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "คำปิดท้าย",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "input",
-                 "field": "cta",
-                 "placeholder": "เช่น กดตะกร้าได้เลย",
-                 "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]",
-                 "maxLength": 30
-                }
-               ]
-              }
-             ]
-            }
-           ],
-           "when": {
-            "op": "or",
-            "a": {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.hasProduct}",
-              "b": "ไม่มี"
-             }
-            },
-            "b": {
-             "op": "eq",
-             "a": "{item.preset}",
-             "b": "service"
-            }
-           },
            "bodyClass": "pt-2 gap-3",
            "chevClass": "opacity-50 !text-[22px]"
           },
@@ -19883,7 +22815,7 @@
              "el": "button",
              "action": "edit-close",
              "to": "products",
-             "label": "บันทึกงาน",
+             "label": "บันทึกเรื่อง",
              "variant": "solid",
              "className": "flex-[2] justify-center !h-14 !rounded-2xl !text-[20px] @[640px]:!text-[19px] font-bold",
              "disabledWhen": {
@@ -20255,7 +23187,7 @@
                 ]
                }
               },
-              "value": " — กดปุ่มคิดบทใหม่ที่การ์ดงานด้านล่าง หรือกดเริ่มอีกครั้งเพื่อเขียนใหม่เฉพาะตัวที่พลาด"
+              "value": " — กดปุ่มคิดบทใหม่ที่การ์ดเรื่องด้านล่าง หรือกดเริ่มอีกครั้งเพื่อเขียนใหม่เฉพาะตัวที่พลาด"
              }
             ]
            },
@@ -20293,7 +23225,7 @@
           },
           {
            "el": "text",
-           "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่งานเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
+           "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่เรื่องเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
            "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -20339,7 +23271,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่ได้เลือกใช้งาน",
+             "value": "ยังไม่ได้เลือกเรื่อง",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             },
             {
@@ -20349,7 +23281,7 @@
             },
             {
              "el": "text",
-             "value": "เข้า \"จัดการงาน\" (ข้อ 1) ก่อน",
+             "value": "เข้า \"จัดการเรื่อง\" (ข้อ 1) ก่อน",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             }
            ]
@@ -22491,7 +25423,7 @@
                 },
                 "b": 0
                },
-               "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน"
+               "reason": "เพิ่ม/ติ๊กเลือกอย่างน้อย 1 เรื่องก่อน"
               },
               {
                "el": "run-button",
@@ -37282,7 +40214,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "เรื่องอื่นทำต่อไปแล้ว — เรื่องนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -40937,7 +43869,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "เรื่องอื่นทำต่อไปแล้ว — เรื่องนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -41069,7 +44001,7 @@
              }
             ]
            },
-           "value": "งานกำลังเดินอยู่ — กด “หยุดพัก” ที่การ์ดสถานะก่อน จึงจะรีเซ็ตได้",
+           "value": "เรื่องกำลังเดินอยู่ — กด “หยุดพัก” ที่การ์ดสถานะก่อน จึงจะรีเซ็ตได้",
            "className": "!text-[12.5px] font-bold !text-amber-600 text-center pt-2"
           }
          ]
@@ -41105,7 +44037,7 @@
             },
             {
              "el": "text",
-             "value": "หยุดและรีเซ็ตงาน?",
+             "value": "หยุดและรีเซ็ตเรื่อง?",
              "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)]"
             }
            ]
@@ -42359,7 +45291,7 @@
              }
             ]
            },
-           "value": "งานกำลังเดินอยู่ — กด “หยุดพัก” ที่การ์ดสถานะก่อน จึงจะรีเซ็ตได้",
+           "value": "เรื่องกำลังเดินอยู่ — กด “หยุดพัก” ที่การ์ดสถานะก่อน จึงจะรีเซ็ตได้",
            "className": "!text-[12.5px] font-bold !text-amber-600 text-center pt-2"
           }
          ]
@@ -43425,6 +46357,9 @@
    },
    {
     "id": "ch2"
+   },
+   {
+    "id": "studio"
    }
   ]
  },
@@ -43479,7 +46414,7 @@
  "saveContent": {
   "item": {
    "coll": "products",
-   "label": "งาน",
+   "label": "เรื่อง",
    "icon": "inventory_2"
   },
   "leaf": "tasks",
@@ -43541,25 +46476,26 @@
     "batchDelay",
     "retryDelay",
     "sv*",
-    "char*"
+    "char*",
+    "pd*"
    ]
   },
   {
    "id": "items",
-   "label": "รายการงาน",
+   "label": "รายการเรื่อง",
    "icon": "inventory_2",
    "rank": 4,
    "colls": [
     "products"
    ],
-   "desc": "งานที่เพิ่มไว้ พร้อมรูปและรายละเอียด"
+   "desc": "เรื่องที่เพิ่มไว้ พร้อมรูปและรายละเอียด"
   },
   {
    "id": "prog",
-   "label": "ความคืบหน้างาน",
+   "label": "ความคืบหน้าเรื่อง",
    "icon": "donut_large",
    "rank": 9,
-   "desc": "งานที่สั่งผลิต",
+   "desc": "เรื่องที่สั่งผลิต",
    "colls": [
     "control",
     "tasks"
