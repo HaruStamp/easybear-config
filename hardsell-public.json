@@ -78,6 +78,7 @@
     "__delId": "",
     "__runExitAsk": "",
     "batchDelay": "10",
+    "clipDelay": "10",
     "retryDelay": "20",
     "viewMode": "",
     "svVoice": "สุ่มตามสินค้า",
@@ -355,7 +356,7 @@
               },
               "\n",
               "ย้ำ: ชื่อเทมเพลตและสไตล์ภาพ",
-              " คือสไตล์ภาพของคลิป ไม่ใช่จุดขาย — ห้ามใช้คำเหล่านี้ใน ovN ทุกฉาก, voN ทุกฉาก และ synopsis (ยกเว้นผู้ใช้เขียนคำนั้นไว้เองในชื่อ/จุดเด่น/ไอเดียของสินค้า) · บทพูดและข้อความบนภาพต้องพูดถึงสินค้าและประโยชน์ต่อผู้ใช้เท่านั้น\nย้ำเรื่องคำลงท้าย: ครับ / ค่ะ / คะ ใช้ได้อย่างมาก 2 ครั้งต่อคลิป (แนะนำครั้งเดียวที่ voN ของฉากปิดการขาย = ฉากสุดท้าย) — ฉากกลาง จบห้วนไม่มีคำลงท้าย\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
+              " คือสไตล์ภาพของคลิป ไม่ใช่จุดขาย — ห้ามใช้คำเหล่านี้ใน ovN ทุกฉาก, voN ทุกฉาก และ synopsis (ยกเว้นผู้ใช้เขียนคำนั้นไว้เองในชื่อ/จุดเด่น/ไอเดียของสินค้า) · บทพูดและข้อความบนภาพต้องพูดถึงสินค้าและประโยชน์ต่อผู้ใช้เท่านั้น\nย้ำเรื่องคำลงท้าย: ครับ / ค่ะ / คะ ใช้ได้อย่างมาก 2 ครั้งต่อคลิป (แนะนำครั้งเดียวที่ voN ของฉากปิดการขาย = ฉากสุดท้าย) — ฉากกลาง จบห้วนไม่มีคำลงท้าย\nท่าฉากปิดการขาย (ฉากสุดท้าย): พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า มองกล้อง ยิ้ม แล้วพูดคำชวนซื้อ — ห้ามชี้ลงด้านล่าง ห้ามชี้ไปที่มุมจอ ตะกร้า ปุ่ม ลิงก์ หรือสิ่งที่ไม่อยู่ในฉาก (AI วิดีโอจะวาดปุ่มซื้อปลอมขึ้นตรงจุดที่ชี้) · sNen ทุกฉากห้ามมีคำ point down / toward the bottom / screen / corner / basket / cart / button / link\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
             ]
           },
           "\n\nโหมดพรีเซนเตอร์: ",
@@ -1828,7 +1829,8 @@
       "startFrame": "{item.slots.video}",
       "where": "s5en!=",
       "tailTrim": 1,
-      "resolution": "720p"
+      "resolution": "720p",
+      "timeoutMs": 300000
     },
     {
       "id": "mnVideo",
@@ -2525,7 +2527,8 @@
       "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอ 8 วิ (ช็อตเดียวต่อเนื่อง)",
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอเสร็จแล้ว พร้อมดาวน์โหลด",
       "resolution": "720p",
-      "startFrame": "{item.slots.board}"
+      "startFrame": "{item.slots.board}",
+      "timeoutMs": 300000
     }
   ],
   "stages": [
@@ -4994,7 +4997,7 @@
                                     },
                                     {
                                       "el": "text",
-                                      "value": "คั่นทุกงานที่ยิง AI — ยิ่งนานยิ่งปลอดภัย",
+                                      "value": "พักก่อนเริ่มคลิปถัดไป — ยิ่งนานยิ่งปลอดภัย",
                                       "className": "!text-[12.5px] @[640px]:!text-[12px] opacity-60 truncate !whitespace-normal @[420px]:!whitespace-nowrap"
                                     }
                                   ]
@@ -5009,15 +5012,15 @@
                                     {
                                       "el": "button",
                                       "action": "set",
-                                      "to": "batchDelay",
+                                      "to": "clipDelay",
                                       "value": {
                                         "op": "max",
                                         "a": {
                                           "op": "sub",
-                                          "a": "{values.batchDelay}",
+                                          "a": "{values.clipDelay}",
                                           "b": 5
                                         },
-                                        "b": 0
+                                        "b": 5
                                       },
                                       "label": "−",
                                       "className": "!w-9 !h-9 !p-0 !rounded-xl !text-[18px] font-black justify-center !gap-0 shrink-0 !min-h-[48px] @[420px]:!min-h-0"
@@ -5031,7 +5034,7 @@
                                       "card": [
                                         {
                                           "el": "text",
-                                          "value": "{values.batchDelay}",
+                                          "value": "{values.clipDelay}",
                                           "className": "!text-[17px] font-black tabular-nums !text-[var(--ev-text)] leading-none"
                                         },
                                         {
@@ -5044,12 +5047,12 @@
                                     {
                                       "el": "button",
                                       "action": "set",
-                                      "to": "batchDelay",
+                                      "to": "clipDelay",
                                       "value": {
                                         "op": "min",
                                         "a": {
                                           "op": "add",
-                                          "a": "{values.batchDelay}",
+                                          "a": "{values.clipDelay}",
                                           "b": 5
                                         },
                                         "b": 60
@@ -18547,7 +18550,9 @@
         "mnVideo2"
       ],
       "childRef": "prod",
-      "capDefault": 999
+      "capDefault": 999,
+      "clipDelayMs": 10000,
+      "productDelayMs": 30000
     },
     "scopeColl": "control"
   },
