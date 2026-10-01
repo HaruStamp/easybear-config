@@ -14141,6 +14141,20 @@
      "hasProduct": "ไม่มี"
     }
    }
+  },
+  {
+   "id": "pdHasProd",
+   "type": "transform",
+   "over": "products",
+   "out": "__hasprod",
+   "fn": "setFields",
+   "aux": true,
+   "setFields": {
+    "where": "id={values.__editId}",
+    "fields": {
+     "hasProduct": "1 ชิ้น"
+    }
+   }
   }
  ],
  "stages": [
@@ -19064,27 +19078,9 @@
                ]
               },
               {
-               "el": "group",
-               "collapsible": true,
-               "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
-               "head": [
-                {
-                 "el": "icon",
-                 "icon": "more_horiz",
-                 "textSize": "text-[19px]",
-                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                },
-                {
-                 "el": "text",
-                 "value": "ปรับเพิ่ม",
-                 "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
-                },
-                {
-                 "el": "text",
-                 "value": "รูปแบบการคุย/รีวิว · จริง/แต่ง · ใส่สินค้า",
-                 "className": "!text-[13px] opacity-40 truncate min-w-0"
-                }
-               ],
+               "el": "box",
+               "className": "flex flex-col gap-2.5",
+               "when": "item.useScript!=1",
                "card": [
                 {
                  "el": "box",
@@ -19166,10 +19162,95 @@
                 {
                  "el": "box",
                  "className": "flex flex-col gap-1.5",
+                 "when": {
+                  "op": "and",
+                  "a": {
+                   "op": "or",
+                   "list": [
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "custom"
+                    },
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "tale"
+                    },
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "mystery"
+                    },
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "life"
+                    },
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "pop"
+                    },
+                    {
+                     "op": "eq",
+                     "a": "{item.preset}",
+                     "b": "belief"
+                    }
+                   ]
+                  },
+                  "b": {
+                   "op": "eq",
+                   "a": "{item.hasProduct}",
+                   "b": "ไม่มี"
+                  }
+                 },
                  "card": [
                   {
                    "el": "text",
-                   "value": "รูปแบบอื่น",
+                   "value": "เรื่องจริงหรือแต่ง",
+                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                  },
+                  {
+                   "el": "grid-select",
+                   "field": "truth",
+                   "options": [
+                    {
+                     "value": "",
+                     "label": "อัตโนมัติ",
+                     "icon": "auto_fix_high"
+                    },
+                    {
+                     "value": "real",
+                     "label": "อิงเรื่องจริง",
+                     "icon": "fact_check"
+                    },
+                    {
+                     "value": "fiction",
+                     "label": "แต่งขึ้น",
+                     "icon": "auto_stories"
+                    },
+                    {
+                     "value": "drama",
+                     "label": "อิงจริง เล่าแบบละคร",
+                     "icon": "theater_comedy"
+                    }
+                   ],
+                   "contained": true,
+                   "cols": 4,
+                   "mobile": {
+                    "cols": 2
+                   }
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "รูปแบบรีวิวอื่น",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
                   },
                   {
@@ -19207,98 +19288,8 @@
                   }
                  ],
                  "when": "item.preset=sell"
-                },
-                {
-                 "el": "box",
-                 "className": "grid grid-cols-1 @[560px]:grid-cols-2 gap-2.5",
-                 "card": [
-                  {
-                   "el": "box",
-                   "className": "flex flex-col gap-1.5",
-                   "card": [
-                    {
-                     "el": "text",
-                     "value": "เรื่องจริงหรือแต่ง",
-                     "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "truth",
-                     "placeholder": "อัตโนมัติ — ตามแนวเนื้อหา",
-                     "options": [
-                      {
-                       "value": "",
-                       "label": "อัตโนมัติ — ตามแนวเนื้อหา",
-                       "icon": "auto_fix_high"
-                      },
-                      {
-                       "value": "real",
-                       "label": "อิงเรื่องจริง — ใช้แต่ข้อเท็จจริง",
-                       "icon": "fact_check"
-                      },
-                      {
-                       "value": "fiction",
-                       "label": "แต่งขึ้น — ไม่อ้างว่าจริง",
-                       "icon": "auto_stories"
-                      },
-                      {
-                       "value": "drama",
-                       "label": "อิงจริง เล่าแบบละคร",
-                       "icon": "theater_comedy"
-                      }
-                     ],
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ],
-                   "when": "item.hasProduct=ไม่มี"
-                  },
-                  {
-                   "el": "box",
-                   "className": "flex flex-col gap-1.5",
-                   "card": [
-                    {
-                     "el": "text",
-                     "value": "ใส่สินค้าในคลิปด้วยไหม",
-                     "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                    },
-                    {
-                     "el": "dropdown",
-                     "field": "hasProduct",
-                     "placeholder": "ไม่ใส่สินค้า",
-                     "options": [
-                      {
-                       "value": "ไม่มี",
-                       "label": "ไม่ใส่สินค้า",
-                       "icon": "block"
-                      },
-                      {
-                       "value": "1 ชิ้น",
-                       "label": "ใส่สินค้า 1 ชิ้น",
-                       "icon": "inventory_2"
-                      },
-                      {
-                       "value": "หลายชิ้น",
-                       "label": "ใส่สินค้าหลายชิ้น",
-                       "icon": "inventory"
-                      }
-                     ],
-                     "className": "!min-h-[48px] @[420px]:!min-h-0"
-                    }
-                   ],
-                   "when": {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.preset}",
-                     "b": "sell"
-                    }
-                   }
-                  }
-                 ]
                 }
-               ],
-               "bodyClass": "pt-2 gap-3",
-               "chevClass": "opacity-50 !text-[22px]"
+               ]
               },
               {
                "el": "text",
@@ -19344,7 +19335,7 @@
                 },
                 {
                  "el": "gen-button",
-                 "op": "pdPreset_sell",
+                 "op": "pdHasProd",
                  "force": true,
                  "label": "มีสินค้า",
                  "icon": "storefront",
