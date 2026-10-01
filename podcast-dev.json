@@ -73,7 +73,8 @@
   "svVoice": "สุ่มตามสินค้า",
   "svSec": "20",
   "svLang": "ไทย",
-  "svAccent": "มาตรฐาน"
+  "svAccent": "มาตรฐาน",
+  "svStyle": ""
  },
  "collections": {
   "control": {
@@ -865,10 +866,24 @@
       ]
      },
      {
-      "op": "lookup",
-      "table": "stylePlan",
-      "key": "{item.style}",
-      "fallback": ""
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.style}",
+       "b": ""
+      },
+      "then": {
+       "op": "lookup",
+       "table": "stylePlan",
+       "key": "{values.svStyle}",
+       "fallback": ""
+      },
+      "else": {
+       "op": "lookup",
+       "table": "stylePlan",
+       "key": "{item.style}",
+       "fallback": ""
+      }
      },
      "\n",
      {
@@ -3913,7 +3928,16 @@
      "turn": "{parent.fields.turn}",
      "format": "{parent.fields.format}",
      "placement": "{parent.fields.placement}",
-     "style": "{parent.fields.style}",
+     "style": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.style}",
+       "b": ""
+      },
+      "then": "{values.svStyle}",
+      "else": "{parent.fields.style}"
+     },
      "pace": "{parent.fields.pace}",
      "hostName": "{parent.fields.hostName}",
      "guestName": "{parent.fields.guestName}",
@@ -11026,6 +11050,97 @@
           }
          ],
          "card": [
+          {
+           "el": "box",
+           "className": "flex flex-col gap-2",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 mt-1",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "icon",
+               "icon": "palette",
+               "textSize": "text-[18px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+              },
+              {
+               "el": "text",
+               "value": "สไตล์ภาพ",
+               "className": "!text-[17px] @[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "หน้าตาของทั้งคลิป — ใช้กับทุกงาน · เปลี่ยนเฉพาะงานได้ที่ ▸ ปรับเฉพาะงานนี้",
+             "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
+            },
+            {
+             "el": "grid-select",
+             "field": "svStyle",
+             "cols": 3,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ปกติ = สมจริง",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "real",
+               "label": "สมจริง",
+               "desc": "เหมือนถ่ายจริง",
+               "icon": "photo_camera"
+              },
+              {
+               "value": "anime",
+               "label": "อนิเมะ 2D",
+               "desc": "เส้นสะอาด สีสด",
+               "icon": "brush"
+              },
+              {
+               "value": "pixar",
+               "label": "การ์ตูน 3D",
+               "desc": "แบบแอนิเมชันฉายโรง",
+               "icon": "view_in_ar"
+              },
+              {
+               "value": "clay",
+               "label": "ดินน้ำมัน",
+               "desc": "สต็อปโมชัน",
+               "icon": "gesture"
+              },
+              {
+               "value": "thai",
+               "label": "ไทยท้องถิ่น",
+               "desc": "ของประดับแบบไทย",
+               "icon": "temple_buddhist"
+              },
+              {
+               "value": "cyber",
+               "label": "ไซเบอร์พังก์",
+               "desc": "นีออนม่วง-ฟ้า",
+               "icon": "bolt"
+              },
+              {
+               "value": "clean",
+               "label": "มินิมอล",
+               "desc": "พื้นเรียบ สีน้อย",
+               "icon": "crop_square"
+              }
+             ]
+            }
+           ]
+          },
           {
            "el": "box",
            "className": "flex flex-col gap-2",
@@ -18434,75 +18549,72 @@
             },
             {
              "el": "text",
-             "value": "ปรับละเอียด",
+             "value": "ปรับเฉพาะงานนี้",
              "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] whitespace-nowrap"
             },
             {
              "el": "text",
-             "value": "สไตล์ภาพ · แสง · ที่นั่ง · จังหวะพูด · ลูกเล่น",
+             "value": "สไตล์ภาพ · แสง · ที่นั่ง · จังหวะพูด · ลูกเล่น (ว่าง = ใช้ค่าจากหน้าตั้งค่า)",
              "className": "!text-[13px] opacity-40 truncate min-w-0"
             }
            ],
            "card": [
             {
-             "el": "text",
-             "value": "สไตล์ภาพ",
-             "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "style",
-             "cols": 2,
-             "contained": true,
-             "className": "!min-h-[44px] @[420px]:!min-h-0",
-             "options": [
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
               {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "ปกติ = สมจริง",
-               "icon": "auto_awesome"
+               "el": "text",
+               "value": "สไตล์ภาพ",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
               {
-               "value": "real",
-               "label": "สมจริง",
-               "desc": "เหมือนถ่ายจริง",
-               "icon": "photo_camera"
-              },
-              {
-               "value": "anime",
-               "label": "อนิเมะ 2D",
-               "desc": "เส้นสะอาด สีสด",
-               "icon": "brush"
-              },
-              {
-               "value": "pixar",
-               "label": "การ์ตูน 3D",
-               "desc": "แบบแอนิเมชันฉายโรง",
-               "icon": "view_in_ar"
-              },
-              {
-               "value": "clay",
-               "label": "ดินน้ำมัน",
-               "desc": "สต็อปโมชัน",
-               "icon": "gesture"
-              },
-              {
-               "value": "thai",
-               "label": "ไทยท้องถิ่น",
-               "desc": "ของประดับแบบไทย",
-               "icon": "temple_buddhist"
-              },
-              {
-               "value": "cyber",
-               "label": "ไซเบอร์พังก์",
-               "desc": "นีออนม่วง-ฟ้า",
-               "icon": "bolt"
-              },
-              {
-               "value": "clean",
-               "label": "มินิมอล",
-               "desc": "พื้นเรียบ สีน้อย",
-               "icon": "crop_square"
+               "el": "dropdown",
+               "field": "style",
+               "placeholder": "ใช้ค่าจากหน้าตั้งค่า",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ใช้ค่าจากหน้าตั้งค่า",
+                 "icon": "settings"
+                },
+                {
+                 "value": "real",
+                 "label": "สมจริง — เหมือนถ่ายจริง",
+                 "icon": "photo_camera"
+                },
+                {
+                 "value": "anime",
+                 "label": "อนิเมะ 2D — เส้นสะอาด สีสด",
+                 "icon": "brush"
+                },
+                {
+                 "value": "pixar",
+                 "label": "การ์ตูน 3D — แบบแอนิเมชันฉายโรง",
+                 "icon": "view_in_ar"
+                },
+                {
+                 "value": "clay",
+                 "label": "ดินน้ำมัน — สต็อปโมชัน",
+                 "icon": "gesture"
+                },
+                {
+                 "value": "thai",
+                 "label": "ไทยท้องถิ่น — ของประดับแบบไทย",
+                 "icon": "temple_buddhist"
+                },
+                {
+                 "value": "cyber",
+                 "label": "ไซเบอร์พังก์ — นีออนม่วง-ฟ้า",
+                 "icon": "bolt"
+                },
+                {
+                 "value": "clean",
+                 "label": "มินิมอล — พื้นเรียบ สีน้อย",
+                 "icon": "crop_square"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
              ]
             },
@@ -18518,12 +18630,12 @@
               {
                "el": "dropdown",
                "field": "tone",
-               "placeholder": "อัตโนมัติ",
+               "placeholder": "ใช้ค่าจากหน้าตั้งค่า",
                "options": [
                 {
                  "value": "",
-                 "label": "อัตโนมัติ",
-                 "icon": "auto_awesome"
+                 "label": "ใช้ค่าจากหน้าตั้งค่า",
+                 "icon": "settings"
                 },
                 {
                  "value": "แสงธรรมชาติกลางวัน",
