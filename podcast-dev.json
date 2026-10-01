@@ -94,7 +94,9 @@
   "pdScene": "",
   "pdCam": "",
   "pdPace": "",
-  "pdRoom": ""
+  "pdRoom": "",
+  "pdHostSrc": "",
+  "pdGuestSrc": ""
  },
  "collections": {
   "control": {
@@ -1438,7 +1440,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": " · มีรูปใบหน้า HOST แนบมา — ต้องเป็นคนนี้"
        }
       ]
@@ -1587,7 +1604,22 @@
            "sep": "",
            "parts": [
             {
-             "when": "characters[ch2].slots.face!=",
+             "when": {
+              "op": "and",
+              "a": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{characters[ch2].slots.face}",
+                "b": ""
+               }
+              },
+              "b": {
+               "op": "eq",
+               "a": "{values.pdGuestSrc}",
+               "b": "face"
+              }
+             },
              "value": " · มีรูปใบหน้า GUEST แนบมา — ต้องเป็นคนนี้"
             }
            ]
@@ -2200,76 +2232,30 @@
      },
      "then": "{characters[studio].slots.room2}"
     },
-    "{characters[ch1].slots.face}",
     {
      "op": "cond",
      "when": {
-      "op": "not",
+      "op": "eq",
+      "a": "{values.pdHostSrc}",
+      "b": "face"
+     },
+     "then": "{characters[ch1].slots.face}",
+     "else": ""
+    },
+    {
+     "op": "cond",
+     "when": {
+      "op": "and",
       "a": {
        "op": "eq",
+       "a": "{values.pdGuestSrc}",
+       "b": "face"
+      },
+      "b": {
+       "op": "not",
        "a": {
-        "op": "cond",
-        "when": {
-         "op": "eq",
-         "a": {
-          "op": "cond",
-          "when": {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.cast}",
-             "b": ""
-            },
-            "then": "{values.pdCast}",
-            "else": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": "solo"
-             },
-             "then": "solo",
-             "else": ""
-            }
-           },
-           "b": ""
-          },
-          "then": "{values.pdCast}",
-          "else": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": "solo"
-           },
-           "then": "solo",
-           "else": ""
-          }
-         },
-         "b": ""
-        },
-        "then": "{values.pdCast}",
-        "else": {
+        "op": "eq",
+        "a": {
          "op": "cond",
          "when": {
           "op": "eq",
@@ -2328,16 +2314,80 @@
             "else": ""
            }
           },
-          "b": "solo"
+          "b": ""
          },
-         "then": "solo",
-         "else": ""
-        }
-       },
-       "b": "solo"
+         "then": "{values.pdCast}",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.cast}",
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": ""
+              }
+             },
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": "solo"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "then": "solo",
+          "else": ""
+         }
+        },
+        "b": "solo"
+       }
       }
      },
-     "then": "{characters[ch2].slots.face}"
+     "then": "{characters[ch2].slots.face}",
+     "else": ""
     }
    ],
    "imagesNote": "{brain.mn.imgNote}",
@@ -5386,7 +5436,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -5396,7 +5461,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -5719,79 +5799,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -5850,13 +5880,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -6045,7 +6138,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -6055,7 +6163,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -6378,79 +6501,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -6509,13 +6582,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -6704,7 +6840,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -6714,7 +6865,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -7037,79 +7203,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -7168,13 +7284,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -7363,7 +7542,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -7373,7 +7567,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -7696,79 +7905,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -7827,13 +7986,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -8022,7 +8244,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -8032,7 +8269,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -8350,79 +8602,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -8481,13 +8683,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -8687,7 +8952,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "HOST ต้องเป็นคนในรูปใบหน้า HOST ที่แนบ (หน้า ทรงผม เหมือนเป๊ะ)\n"
        }
       ]
@@ -8697,7 +8977,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -9013,79 +9308,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -9144,13 +9389,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -9385,7 +9693,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -9395,7 +9718,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -9617,79 +9955,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -9748,13 +10036,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -9999,7 +10350,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -10009,7 +10375,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -10231,79 +10612,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -10362,13 +10693,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -10613,7 +11007,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -10623,7 +11032,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -10845,79 +11269,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -10976,13 +11350,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -11227,7 +11664,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -11237,7 +11689,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -11459,79 +11926,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -11590,13 +12007,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -11841,7 +12321,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -11851,7 +12346,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -12073,79 +12583,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -12204,13 +12664,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -12452,7 +12975,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch1].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch1].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdHostSrc}",
+          "b": "face"
+         }
+        },
         "value": "FACE LOCK HOST: HOST = attached HOST face photo. "
        }
       ]
@@ -12462,7 +13000,22 @@
       "sep": "",
       "parts": [
        {
-        "when": "characters[ch2].slots.face!=",
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{characters[ch2].slots.face}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.pdGuestSrc}",
+          "b": "face"
+         }
+        },
         "value": {
          "op": "block",
          "sep": "",
@@ -12699,79 +13252,29 @@
      {
       "from": "characters",
       "by": "ch1",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "eq",
+       "a": "{values.pdHostSrc}",
+       "b": "face"
+      }
      },
      {
       "from": "characters",
       "by": "ch2",
       "slot": "face",
       "when": {
-       "op": "not",
+       "op": "and",
        "a": {
         "op": "eq",
+        "a": "{values.pdGuestSrc}",
+        "b": "face"
+       },
+       "b": {
+        "op": "not",
         "a": {
-         "op": "cond",
-         "when": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
-            "op": "eq",
-            "a": {
-             "op": "cond",
-             "when": {
-              "op": "eq",
-              "a": "{item.cast}",
-              "b": ""
-             },
-             "then": "{values.pdCast}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": "solo"
-              },
-              "then": "solo",
-              "else": ""
-             }
-            },
-            "b": ""
-           },
-           "then": "{values.pdCast}",
-           "else": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.cast}",
-               "b": ""
-              },
-              "then": "{values.pdCast}",
-              "else": {
-               "op": "cond",
-               "when": {
-                "op": "eq",
-                "a": "{item.cast}",
-                "b": "solo"
-               },
-               "then": "solo",
-               "else": ""
-              }
-             },
-             "b": "solo"
-            },
-            "then": "solo",
-            "else": ""
-           }
-          },
-          "b": ""
-         },
-         "then": "{values.pdCast}",
-         "else": {
+         "op": "eq",
+         "a": {
           "op": "cond",
           "when": {
            "op": "eq",
@@ -12830,13 +13333,76 @@
              "else": ""
             }
            },
-           "b": "solo"
+           "b": ""
           },
-          "then": "solo",
-          "else": ""
-         }
-        },
-        "b": "solo"
+          "then": "{values.pdCast}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              },
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": "solo"
+              },
+              "then": "solo",
+              "else": ""
+             }
+            },
+            "b": "solo"
+           },
+           "then": "solo",
+           "else": ""
+          }
+         },
+         "b": "solo"
+        }
        }
       }
      },
@@ -14132,6 +14698,136 @@
              ]
             },
             {
+             "el": "grid-select",
+             "field": "pdHostSrc",
+             "options": [
+              {
+               "value": "",
+               "label": "สุ่มตัวละคร",
+               "desc": "หมีออกแบบให้",
+               "icon": "casino"
+              },
+              {
+               "value": "face",
+               "label": "ใช้รูปตัวละคร",
+               "desc": "ล็อกหน้าตามรูป",
+               "icon": "face"
+              }
+             ],
+             "cols": 2,
+             "contained": true
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 mb-1",
+             "card": [
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "add_photo_alternate",
+                 "textSize": "text-[17px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "รูปใบหน้าพิธีกร (ไม่บังคับ)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              },
+              {
+               "el": "repeat",
+               "coll": "characters",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "shrink-0",
+                   "card": [
+                    {
+                     "el": "box",
+                     "className": "relative w-[124px] shrink-0",
+                     "when": "item.slots.face!=",
+                     "card": [
+                      {
+                       "el": "media-slot",
+                       "src": "{item.slots.face}",
+                       "aspect": "1:1",
+                       "style": {
+                        "borderRadius": "16px"
+                       },
+                       "className": "ring-1 ring-[var(--ev-border)]"
+                      },
+                      {
+                       "el": "button",
+                       "action": "hook",
+                       "fn": "clearSlot",
+                       "to": "face",
+                       "label": "",
+                       "icon": "close",
+                       "variant": "ghost",
+                       "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                      }
+                     ]
+                    },
+                    {
+                     "el": "box",
+                     "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                     "when": "item.slots.face=",
+                     "card": [
+                      {
+                       "el": "upload",
+                       "label": "",
+                       "placeholder": "อัพโหลด",
+                       "icon": "upload",
+                       "into": "face",
+                       "resize": {
+                        "maxPx": 512,
+                        "quality": 0.8
+                       },
+                       "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                      },
+                      {
+                       "el": "pick-button",
+                       "label": "เลือกภาพ",
+                       "icon": "photo_library",
+                       "filter": "image",
+                       "into": "face",
+                       "resize": {
+                        "maxPx": 512,
+                        "quality": 0.8
+                       },
+                       "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "where": "id=ch1"
+              }
+             ],
+             "when": "values.pdHostSrc=face"
+            },
+            {
+             "el": "text",
+             "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = หมีออกแบบให้)",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+            },
+            {
              "el": "box",
              "className": "flex flex-col gap-1.5",
              "card": [
@@ -14143,11 +14839,11 @@
               {
                "el": "dropdown",
                "field": "pdHostKind",
-               "placeholder": "อัตโนมัติ — หมีเลือกให้",
+               "placeholder": "ให้หมีเลือก",
                "options": [
                 {
                  "value": "",
-                 "label": "อัตโนมัติ — หมีเลือกให้",
+                 "label": "ให้หมีเลือก",
                  "icon": "auto_fix_high"
                 },
                 {
@@ -14157,17 +14853,17 @@
                 },
                 {
                  "value": "สัตว์",
-                 "label": "สัตว์พูดได้ (ใส่เสื้อผ้า นั่งคุยเหมือนคน)",
+                 "label": "สัตว์พูดได้",
                  "icon": "pets"
                 },
                 {
                  "value": "มาสคอต",
-                 "label": "ตุ๊กตามาสคอต (ชุดตุ๊กตาตัวใหญ่)",
+                 "label": "ตุ๊กตามาสคอต",
                  "icon": "smart_toy"
                 },
                 {
                  "value": "การ์ตูน",
-                 "label": "ตัวการ์ตูน (วาดขึ้นใหม่)",
+                 "label": "ตัวการ์ตูน",
                  "icon": "face_retouching_natural"
                 }
                ],
@@ -14195,7 +14891,47 @@
             },
             {
              "el": "box",
-             "className": "grid grid-cols-2 gap-2.5",
+             "className": "grid grid-cols-2 gap-2",
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ชื่อเล่น",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "pdHostName",
+                 "placeholder": "ว่าง = ไม่เอ่ยชื่อ",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ลุค / การแต่งตัว",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "pdHostLook",
+                 "placeholder": "เช่น เสื้อฮู้ดดำ หูฟังเกมมิ่ง",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "grid grid-cols-2 gap-2",
              "card": [
               {
                "el": "box",
@@ -14276,217 +15012,52 @@
              ]
             },
             {
-             "el": "group",
-             "collapsible": true,
-             "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
-             "head": [
-              {
-               "el": "icon",
-               "icon": "more_horiz",
-               "textSize": "text-[19px]",
-               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-              },
-              {
-               "el": "text",
-               "value": "รายละเอียด",
-               "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
-              },
-              {
-               "el": "text",
-               "value": "เสียง · ชื่อ · ลุค · รูปหน้า",
-               "className": "!text-[13px] opacity-40 truncate min-w-0"
-              }
-             ],
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
              "card": [
               {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "โทนเสียง / บุคลิก",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "dropdown",
-                 "field": "pdHostVoice",
-                 "placeholder": "อัตโนมัติ",
-                 "options": [
-                  {
-                   "value": "",
-                   "label": "อัตโนมัติ",
-                   "icon": "auto_fix_high"
-                  },
-                  {
-                   "value": "อบอุ่น เป็นกันเอง",
-                   "label": "อบอุ่น เป็นกันเอง"
-                  },
-                  {
-                   "value": "กวน ๆ ตลก",
-                   "label": "กวน ๆ ตลก"
-                  },
-                  {
-                   "value": "จริงจัง น่าเชื่อถือ",
-                   "label": "จริงจัง น่าเชื่อถือ"
-                  },
-                  {
-                   "value": "ตื่นเต้น พลังสูง",
-                   "label": "ตื่นเต้น พลังสูง"
-                  },
-                  {
-                   "value": "นุ่ม ๆ เสียงต่ำ",
-                   "label": "นุ่ม ๆ เสียงต่ำ"
-                  },
-                  {
-                   "value": "น่ารัก สดใส",
-                   "label": "น่ารัก สดใส"
-                  }
-                 ],
-                 "className": "!min-h-[48px] @[420px]:!min-h-0"
-                }
-               ]
+               "el": "text",
+               "value": "โทนเสียง / บุคลิก",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
               {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
+               "el": "dropdown",
+               "field": "pdHostVoice",
+               "placeholder": "อัตโนมัติ",
+               "options": [
                 {
-                 "el": "text",
-                 "value": "ชื่อเล่น",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_fix_high"
                 },
                 {
-                 "el": "input",
-                 "field": "pdHostName",
-                 "placeholder": "ว่าง = ไม่เอ่ยชื่อ",
-                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                 "value": "อบอุ่น เป็นกันเอง",
+                 "label": "อบอุ่น เป็นกันเอง"
+                },
+                {
+                 "value": "กวน ๆ ตลก",
+                 "label": "กวน ๆ ตลก"
+                },
+                {
+                 "value": "จริงจัง น่าเชื่อถือ",
+                 "label": "จริงจัง น่าเชื่อถือ"
+                },
+                {
+                 "value": "ตื่นเต้น พลังสูง",
+                 "label": "ตื่นเต้น พลังสูง"
+                },
+                {
+                 "value": "นุ่ม ๆ เสียงต่ำ",
+                 "label": "นุ่ม ๆ เสียงต่ำ"
+                },
+                {
+                 "value": "น่ารัก สดใส",
+                 "label": "น่ารัก สดใส"
                 }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "ลุค / การแต่งตัว",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "input",
-                 "field": "pdHostLook",
-                 "placeholder": "เช่น เสื้อฮู้ดดำ หูฟังเกมมิ่ง",
-                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5 mb-1",
-               "card": [
-                {
-                 "el": "row",
-                 "className": "!gap-1.5 !flex-nowrap items-center",
-                 "card": [
-                  {
-                   "el": "icon",
-                   "icon": "add_photo_alternate",
-                   "textSize": "text-[17px]",
-                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                  },
-                  {
-                   "el": "text",
-                   "value": "รูปใบหน้าพิธีกร (ไม่บังคับ)",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  }
-                 ]
-                },
-                {
-                 "el": "text",
-                 "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                },
-                {
-                 "el": "repeat",
-                 "coll": "characters",
-                 "card": [
-                  {
-                   "el": "box",
-                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "shrink-0",
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": "item.slots.face!=",
-                       "card": [
-                        {
-                         "el": "media-slot",
-                         "src": "{item.slots.face}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
-                        },
-                        {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "face",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": "item.slots.face=",
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                        }
-                       ]
-                      }
-                     ]
-                    }
-                   ]
-                  }
-                 ],
-                 "where": "id=ch1"
-                }
-               ]
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
-             ],
-             "bodyClass": "pt-2 gap-3",
-             "chevClass": "opacity-50 !text-[22px]"
+             ]
             }
            ]
           },
@@ -14512,6 +15083,136 @@
              ]
             },
             {
+             "el": "grid-select",
+             "field": "pdGuestSrc",
+             "options": [
+              {
+               "value": "",
+               "label": "สุ่มตัวละคร",
+               "desc": "หมีออกแบบให้",
+               "icon": "casino"
+              },
+              {
+               "value": "face",
+               "label": "ใช้รูปตัวละคร",
+               "desc": "ล็อกหน้าตามรูป",
+               "icon": "face"
+              }
+             ],
+             "cols": 2,
+             "contained": true
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 mb-1",
+             "card": [
+              {
+               "el": "row",
+               "className": "!gap-1.5 !flex-nowrap items-center",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "add_photo_alternate",
+                 "textSize": "text-[17px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
+                },
+                {
+                 "el": "text",
+                 "value": "รูปใบหน้าแขก (ไม่บังคับ)",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+              },
+              {
+               "el": "repeat",
+               "coll": "characters",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "shrink-0",
+                   "card": [
+                    {
+                     "el": "box",
+                     "className": "relative w-[124px] shrink-0",
+                     "when": "item.slots.face!=",
+                     "card": [
+                      {
+                       "el": "media-slot",
+                       "src": "{item.slots.face}",
+                       "aspect": "1:1",
+                       "style": {
+                        "borderRadius": "16px"
+                       },
+                       "className": "ring-1 ring-[var(--ev-border)]"
+                      },
+                      {
+                       "el": "button",
+                       "action": "hook",
+                       "fn": "clearSlot",
+                       "to": "face",
+                       "label": "",
+                       "icon": "close",
+                       "variant": "ghost",
+                       "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                      }
+                     ]
+                    },
+                    {
+                     "el": "box",
+                     "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
+                     "when": "item.slots.face=",
+                     "card": [
+                      {
+                       "el": "upload",
+                       "label": "",
+                       "placeholder": "อัพโหลด",
+                       "icon": "upload",
+                       "into": "face",
+                       "resize": {
+                        "maxPx": 512,
+                        "quality": 0.8
+                       },
+                       "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
+                      },
+                      {
+                       "el": "pick-button",
+                       "label": "เลือกภาพ",
+                       "icon": "photo_library",
+                       "filter": "image",
+                       "into": "face",
+                       "resize": {
+                        "maxPx": 512,
+                        "quality": 0.8
+                       },
+                       "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ],
+               "where": "id=ch2"
+              }
+             ],
+             "when": "values.pdGuestSrc=face"
+            },
+            {
+             "el": "text",
+             "value": "บอกใบ้เพิ่มได้ (ไม่บังคับ — ว่าง = หมีออกแบบให้)",
+             "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
+            },
+            {
              "el": "box",
              "className": "flex flex-col gap-1.5",
              "card": [
@@ -14523,11 +15224,11 @@
               {
                "el": "dropdown",
                "field": "pdGuestKind",
-               "placeholder": "อัตโนมัติ — หมีเลือกให้",
+               "placeholder": "ให้หมีเลือก",
                "options": [
                 {
                  "value": "",
-                 "label": "อัตโนมัติ — หมีเลือกให้",
+                 "label": "ให้หมีเลือก",
                  "icon": "auto_fix_high"
                 },
                 {
@@ -14537,17 +15238,17 @@
                 },
                 {
                  "value": "สัตว์",
-                 "label": "สัตว์พูดได้ (ใส่เสื้อผ้า นั่งคุยเหมือนคน)",
+                 "label": "สัตว์พูดได้",
                  "icon": "pets"
                 },
                 {
                  "value": "มาสคอต",
-                 "label": "ตุ๊กตามาสคอต (ชุดตุ๊กตาตัวใหญ่)",
+                 "label": "ตุ๊กตามาสคอต",
                  "icon": "smart_toy"
                 },
                 {
                  "value": "การ์ตูน",
-                 "label": "ตัวการ์ตูน (วาดขึ้นใหม่)",
+                 "label": "ตัวการ์ตูน",
                  "icon": "face_retouching_natural"
                 }
                ],
@@ -14575,7 +15276,47 @@
             },
             {
              "el": "box",
-             "className": "grid grid-cols-2 gap-2.5",
+             "className": "grid grid-cols-2 gap-2",
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ชื่อเล่น",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "pdGuestName",
+                 "placeholder": "ว่าง = ไม่เอ่ยชื่อ",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ลุค / การแต่งตัว",
+                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "input",
+                 "field": "pdGuestLook",
+                 "placeholder": "เช่น เสื้อฮู้ดดำ หูฟังเกมมิ่ง",
+                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "grid grid-cols-2 gap-2",
              "card": [
               {
                "el": "box",
@@ -14656,217 +15397,52 @@
              ]
             },
             {
-             "el": "group",
-             "collapsible": true,
-             "className": "!rounded-xl !p-2.5 !border-[var(--ev-border)]",
-             "head": [
-              {
-               "el": "icon",
-               "icon": "more_horiz",
-               "textSize": "text-[19px]",
-               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-              },
-              {
-               "el": "text",
-               "value": "รายละเอียด",
-               "className": "!text-[14px] font-bold !text-[var(--ev-text)] whitespace-nowrap"
-              },
-              {
-               "el": "text",
-               "value": "เสียง · ชื่อ · ลุค · รูปหน้า",
-               "className": "!text-[13px] opacity-40 truncate min-w-0"
-              }
-             ],
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
              "card": [
               {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "โทนเสียง / บุคลิก",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "dropdown",
-                 "field": "pdGuestVoice",
-                 "placeholder": "อัตโนมัติ",
-                 "options": [
-                  {
-                   "value": "",
-                   "label": "อัตโนมัติ",
-                   "icon": "auto_fix_high"
-                  },
-                  {
-                   "value": "อบอุ่น เป็นกันเอง",
-                   "label": "อบอุ่น เป็นกันเอง"
-                  },
-                  {
-                   "value": "กวน ๆ ตลก",
-                   "label": "กวน ๆ ตลก"
-                  },
-                  {
-                   "value": "จริงจัง น่าเชื่อถือ",
-                   "label": "จริงจัง น่าเชื่อถือ"
-                  },
-                  {
-                   "value": "ตื่นเต้น พลังสูง",
-                   "label": "ตื่นเต้น พลังสูง"
-                  },
-                  {
-                   "value": "นุ่ม ๆ เสียงต่ำ",
-                   "label": "นุ่ม ๆ เสียงต่ำ"
-                  },
-                  {
-                   "value": "น่ารัก สดใส",
-                   "label": "น่ารัก สดใส"
-                  }
-                 ],
-                 "className": "!min-h-[48px] @[420px]:!min-h-0"
-                }
-               ]
+               "el": "text",
+               "value": "โทนเสียง / บุคลิก",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
               },
               {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
+               "el": "dropdown",
+               "field": "pdGuestVoice",
+               "placeholder": "อัตโนมัติ",
+               "options": [
                 {
-                 "el": "text",
-                 "value": "ชื่อเล่น",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_fix_high"
                 },
                 {
-                 "el": "input",
-                 "field": "pdGuestName",
-                 "placeholder": "ว่าง = ไม่เอ่ยชื่อ",
-                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
+                 "value": "อบอุ่น เป็นกันเอง",
+                 "label": "อบอุ่น เป็นกันเอง"
+                },
+                {
+                 "value": "กวน ๆ ตลก",
+                 "label": "กวน ๆ ตลก"
+                },
+                {
+                 "value": "จริงจัง น่าเชื่อถือ",
+                 "label": "จริงจัง น่าเชื่อถือ"
+                },
+                {
+                 "value": "ตื่นเต้น พลังสูง",
+                 "label": "ตื่นเต้น พลังสูง"
+                },
+                {
+                 "value": "นุ่ม ๆ เสียงต่ำ",
+                 "label": "นุ่ม ๆ เสียงต่ำ"
+                },
+                {
+                 "value": "น่ารัก สดใส",
+                 "label": "น่ารัก สดใส"
                 }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "ลุค / การแต่งตัว",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                },
-                {
-                 "el": "input",
-                 "field": "pdGuestLook",
-                 "placeholder": "เช่น เสื้อฮู้ดดำ หูฟังเกมมิ่ง",
-                 "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "flex flex-col gap-1.5 mb-1",
-               "card": [
-                {
-                 "el": "row",
-                 "className": "!gap-1.5 !flex-nowrap items-center",
-                 "card": [
-                  {
-                   "el": "icon",
-                   "icon": "add_photo_alternate",
-                   "textSize": "text-[17px]",
-                   "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                  },
-                  {
-                   "el": "text",
-                   "value": "รูปใบหน้าแขก (ไม่บังคับ)",
-                   "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
-                  }
-                 ]
-                },
-                {
-                 "el": "text",
-                 "value": "หน้าตรง เห็นชัด — ล็อกหน้าเป็นคนเดิมทุกช็อต ทุกคลิป · ไม่ใส่ = หมีออกแบบให้",
-                 "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug"
-                },
-                {
-                 "el": "repeat",
-                 "coll": "characters",
-                 "card": [
-                  {
-                   "el": "box",
-                   "className": "flex flex-row flex-wrap gap-2.5 mt-0.5",
-                   "card": [
-                    {
-                     "el": "box",
-                     "className": "shrink-0",
-                     "card": [
-                      {
-                       "el": "box",
-                       "className": "relative w-[124px] shrink-0",
-                       "when": "item.slots.face!=",
-                       "card": [
-                        {
-                         "el": "media-slot",
-                         "src": "{item.slots.face}",
-                         "aspect": "1:1",
-                         "style": {
-                          "borderRadius": "16px"
-                         },
-                         "className": "ring-1 ring-[var(--ev-border)]"
-                        },
-                        {
-                         "el": "button",
-                         "action": "hook",
-                         "fn": "clearSlot",
-                         "to": "face",
-                         "label": "",
-                         "icon": "close",
-                         "variant": "ghost",
-                         "className": "!absolute !top-1.5 !right-1.5 z-10 justify-center !gap-0 !w-11 !h-11 @[640px]:!w-8 @[640px]:!h-8 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                        }
-                       ]
-                      },
-                      {
-                       "el": "box",
-                       "className": "w-[124px] aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-col gap-1.5 p-1.5 justify-center",
-                       "when": "item.slots.face=",
-                       "card": [
-                        {
-                         "el": "upload",
-                         "label": "",
-                         "placeholder": "อัพโหลด",
-                         "icon": "upload",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)] whitespace-nowrap !px-2 !gap-1"
-                        },
-                        {
-                         "el": "pick-button",
-                         "label": "เลือกภาพ",
-                         "icon": "photo_library",
-                         "filter": "image",
-                         "into": "face",
-                         "resize": {
-                          "maxPx": 512,
-                          "quality": 0.8
-                         },
-                         "className": "w-full justify-center !h-[42px] !rounded-xl !border-0 font-black !text-[15px] @[640px]:!text-[14px] uppercase !bg-white !text-[#17253a] whitespace-nowrap !px-2 !gap-1"
-                        }
-                       ]
-                      }
-                     ]
-                    }
-                   ]
-                  }
-                 ],
-                 "where": "id=ch2"
-                }
-               ]
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
               }
-             ],
-             "bodyClass": "pt-2 gap-3",
-             "chevClass": "opacity-50 !text-[22px]"
+             ]
             }
            ],
            "when": "values.pdCast!=solo"
