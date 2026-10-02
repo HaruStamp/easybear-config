@@ -12966,17 +12966,20 @@
               {
                "value": "pixar",
                "label": "การ์ตูน 3D",
-               "desc": "แบบหนังพิกซาร์"
+               "desc": "แบบหนังพิกซาร์",
+               "icon": "view_in_ar"
               },
               {
                "value": "anime",
                "label": "อนิเมะ",
-               "desc": "ลายเส้นญี่ปุ่น"
+               "desc": "ลายเส้นญี่ปุ่น",
+               "icon": "draw"
               },
               {
                "value": "clay",
                "label": "ดินปั้น",
-               "desc": "สต็อปโมชัน"
+               "desc": "สต็อปโมชัน",
+               "icon": "toys"
               }
              ]
             }
@@ -14250,17 +14253,10 @@
                 },
                 {
                  "el": "media-slot",
-                 "src": "{item.slots.image}",
-                 "aspect": "1:1",
-                 "className": "!w-12 shrink-0 !rounded-xl",
-                 "when": "item.slots.image!="
-                },
-                {
-                 "el": "media-slot",
                  "src": "{item.slots.room1}",
                  "aspect": "1:1",
                  "className": "!w-12 shrink-0 !rounded-xl",
-                 "when": "item.slots.image="
+                 "when": "slots.room1!="
                 },
                 {
                  "el": "box",
@@ -14269,7 +14265,256 @@
                   {
                    "el": "text",
                    "value": "{item.name}",
-                   "className": "font-semibold !text-[20px] @[640px]:!text-[19px] truncate !text-[var(--ev-text)]"
+                   "className": "font-semibold !text-[20px] @[640px]:!text-[19px] line-clamp-2 break-words leading-snug !text-[var(--ev-text)]"
+                  },
+                  {
+                   "el": "text",
+                   "value": {
+                    "op": "concat",
+                    "parts": [
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.clipStyle}",
+                         "b": "selfie"
+                        },
+                        "value": "เซลฟี่ช็อตเดียว"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.clipStyle}",
+                         "b": "mv"
+                        },
+                        "value": "MV ตัดหลายช็อต"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.clipStyle}",
+                         "b": "story"
+                        },
+                        "value": "มีเรื่อง / มุก"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "not",
+                         "a": {
+                          "op": "eq",
+                          "a": "{item.songTempo}",
+                          "b": ""
+                         }
+                        },
+                        "value": {
+                         "op": "concat",
+                         "parts": [
+                          " · ",
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.songTempo}",
+                              "b": "slow"
+                             },
+                             "value": "ช้า"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.songTempo}",
+                              "b": "mid"
+                             },
+                             "value": "กลาง"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.songTempo}",
+                              "b": "fast"
+                             },
+                             "value": "เร็ว"
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "not",
+                         "a": {
+                          "op": "eq",
+                          "a": "{item.danceVibe}",
+                          "b": ""
+                         }
+                        },
+                        "value": {
+                         "op": "concat",
+                         "parts": [
+                          " · ",
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "cute"
+                             },
+                             "value": "ป๊อปน่ารัก"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "kpop"
+                             },
+                             "value": "K-pop ท่าพร้อมกัน"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "hiphop"
+                             },
+                             "value": "ฮิปฮอป / เบรกแดนซ์"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "tiktok"
+                             },
+                             "value": "ท่าฮิต TikTok"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "disco"
+                             },
+                             "value": "ดิสโก้"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "thai"
+                             },
+                             "value": "รำวง / ลูกทุ่ง"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "ballet"
+                             },
+                             "value": "บัลเล่ต์"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.danceVibe}",
+                              "b": "silly"
+                             },
+                             "value": "กวน ๆ ฮา ๆ"
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   "className": "!text-[13px] opacity-55 mt-0.5 line-clamp-1"
                   }
                  ]
                 }
@@ -15521,25 +15766,18 @@
               },
               {
                "el": "media-slot",
-               "src": "{item.slots.image}",
-               "aspect": "1:1",
-               "className": "!w-[60px] shrink-0 !rounded-xl",
-               "when": "item.slots.image!="
-              },
-              {
-               "el": "media-slot",
                "src": "{item.slots.room1}",
                "aspect": "1:1",
                "className": "!w-[60px] shrink-0 !rounded-xl",
-               "when": "item.slots.image="
+               "when": "slots.room1!="
               },
               {
                "el": "box",
                "className": "flex-1 min-w-0",
                "card": [
                 {
-                 "el": "row",
-                 "className": "items-center gap-2",
+                 "el": "box",
+                 "className": "flex flex-col items-start gap-0.5 min-w-0",
                  "style": {
                   "flexWrap": "nowrap"
                  },
@@ -15547,7 +15785,7 @@
                   {
                    "el": "text",
                    "value": "{item.name}",
-                   "className": "font-bold !text-[20px] @[640px]:!text-[19px] truncate !text-[var(--ev-text)]"
+                   "className": "font-bold !text-[20px] @[640px]:!text-[19px] line-clamp-2 break-words leading-snug !text-[var(--ev-text)]"
                   },
                   {
                    "el": "text",
@@ -15559,69 +15797,252 @@
                 },
                 {
                  "el": "text",
-                 "value": "{item.prodName}",
-                 "className": "!text-[18px] @[640px]:!text-[17px] opacity-70 truncate mt-1",
-                 "when": {
-                  "op": "and",
-                  "a": {
-                   "op": "not",
-                   "a": {
-                    "op": "eq",
-                    "a": "{item.prodName}",
-                    "b": ""
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.clipStyle}",
+                       "b": "selfie"
+                      },
+                      "value": "เซลฟี่ช็อตเดียว"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.clipStyle}",
+                       "b": "mv"
+                      },
+                      "value": "MV ตัดหลายช็อต"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.clipStyle}",
+                       "b": "story"
+                      },
+                      "value": "มีเรื่อง / มุก"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.songTempo}",
+                        "b": ""
+                       }
+                      },
+                      "value": {
+                       "op": "concat",
+                       "parts": [
+                        " · ",
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.songTempo}",
+                            "b": "slow"
+                           },
+                           "value": "ช้า"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.songTempo}",
+                            "b": "mid"
+                           },
+                           "value": "กลาง"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.songTempo}",
+                            "b": "fast"
+                           },
+                           "value": "เร็ว"
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.danceVibe}",
+                        "b": ""
+                       }
+                      },
+                      "value": {
+                       "op": "concat",
+                       "parts": [
+                        " · ",
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "cute"
+                           },
+                           "value": "ป๊อปน่ารัก"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "kpop"
+                           },
+                           "value": "K-pop ท่าพร้อมกัน"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "hiphop"
+                           },
+                           "value": "ฮิปฮอป / เบรกแดนซ์"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "tiktok"
+                           },
+                           "value": "ท่าฮิต TikTok"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "disco"
+                           },
+                           "value": "ดิสโก้"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "thai"
+                           },
+                           "value": "รำวง / ลูกทุ่ง"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "ballet"
+                           },
+                           "value": "บัลเล่ต์"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.danceVibe}",
+                            "b": "silly"
+                           },
+                           "value": "กวน ๆ ฮา ๆ"
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     }
+                    ]
                    }
-                  },
-                  "b": {
-                   "op": "not",
-                   "a": {
-                    "op": "eq",
-                    "a": "{item.hasProduct}",
-                    "b": "ไม่มี"
-                   }
-                  }
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "ไม่มีสินค้า — โชว์การทำ",
-                 "className": "!text-[18px] @[640px]:!text-[17px] opacity-70 truncate mt-1",
-                 "when": "item.hasProduct=ไม่มี"
-                },
-                {
-                 "el": "text",
-                 "value": "สินค้าหลายชิ้น",
-                 "className": "!text-[18px] @[640px]:!text-[17px] opacity-70 truncate mt-1",
-                 "when": {
-                  "op": "and",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.hasProduct}",
-                   "b": "หลายชิ้น"
-                  },
-                  "b": {
-                   "op": "eq",
-                   "a": "{item.prodName}",
-                   "b": ""
-                  }
-                 }
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "text-right shrink-0 mr-1",
-               "card": [
-                {
-                 "el": "box",
-                 "className": "!text-[17px] @[640px]:!text-[16px] font-bold px-2 py-1 rounded-lg bg-[var(--ev-surface2)] inline-block",
-                 "card": [
-                  {
-                   "el": "text",
-                   "value": "{item.tone}",
-                   "className": "!text-[17px] @[640px]:!text-[16px] font-bold !text-[var(--ev-accent)]"
-                  }
-                 ],
-                 "when": "item.tone!="
+                  ]
+                 },
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-60 mt-0.5 line-clamp-1"
                 }
                ]
               },
@@ -23731,138 +24152,6 @@
                    ]
                   },
                   {
-                   "el": "row",
-                   "style": {
-                    "flexWrap": "nowrap"
-                   },
-                   "className": "items-center gap-3 px-4 pb-3",
-                   "card": [
-                    {
-                     "el": "icon",
-                     "icon": "record_voice_over",
-                     "textSize": "text-[19px]",
-                     "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center shrink-0"
-                    },
-                    {
-                     "el": "text",
-                     "value": "เสียง",
-                     "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 shrink-0"
-                    },
-                    {
-                     "el": "text",
-                     "className": "!text-[15px] @[640px]:!text-[14px] font-semibold flex-1 min-w-0",
-                     "value": {
-                      "op": "block",
-                      "sep": "",
-                      "parts": [
-                       {
-                        "when": {
-                         "op": "eq",
-                         "a": "{values.svAudio}",
-                         "b": "ไม่มีเสียงพากย์"
-                        },
-                        "value": "ไม่มีเสียงพากย์ (เสียงบรรยากาศ)"
-                       },
-                       {
-                        "when": {
-                         "op": "eq",
-                         "a": "{values.svAudio}",
-                         "b": "ASMR"
-                        },
-                        "value": "ASMR — ไม่มีบทพูด"
-                       },
-                       {
-                        "when": {
-                         "op": "and",
-                         "list": [
-                          {
-                           "op": "not",
-                           "a": {
-                            "op": "eq",
-                            "a": "{values.svAudio}",
-                            "b": "ไม่มีเสียงพากย์"
-                           }
-                          },
-                          {
-                           "op": "not",
-                           "a": {
-                            "op": "eq",
-                            "a": "{values.svAudio}",
-                            "b": "ASMR"
-                           }
-                          }
-                         ]
-                        },
-                        "value": {
-                         "op": "block",
-                         "sep": "",
-                         "parts": [
-                          {
-                           "when": {
-                            "op": "and",
-                            "a": {
-                             "op": "eq",
-                             "a": "{values.svVoice}",
-                             "b": "สุ่มตามสินค้า"
-                            },
-                            "b": {
-                             "op": "not",
-                             "a": {
-                              "op": "eq",
-                              "a": "{item.voice}",
-                              "b": ""
-                             }
-                            }
-                           },
-                           "value": "{item.voice} (AI เลือกให้)"
-                          },
-                          {
-                           "when": {
-                            "op": "and",
-                            "a": {
-                             "op": "eq",
-                             "a": "{values.svVoice}",
-                             "b": "สุ่มตามสินค้า"
-                            },
-                            "b": {
-                             "op": "eq",
-                             "a": "{item.voice}",
-                             "b": ""
-                            }
-                           },
-                           "value": "AI จะเลือกให้ตอนเขียนบท"
-                          },
-                          {
-                           "when": "values.svVoice!=สุ่มตามสินค้า",
-                           "value": {
-                            "op": "matchTable",
-                            "value": "{values.svVoice}",
-                            "table": [
-                             {
-                              "any": [
-                               "ชาย"
-                              ],
-                              "value": "ชาย (คุณเลือกไว้)"
-                             },
-                             {
-                              "any": [
-                               "หญิง"
-                              ],
-                              "value": "หญิง (คุณเลือกไว้)"
-                             }
-                            ],
-                            "fallback": "หญิง (ค่าเริ่มต้น)"
-                           }
-                          }
-                         ]
-                        }
-                       }
-                      ]
-                     }
-                    }
-                   ]
-                  },
-                  {
                    "el": "box",
                    "className": "h-px bg-[var(--ev-border)]",
                    "card": []
@@ -24108,24 +24397,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo1",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -24332,24 +24603,6 @@
                              "el": "input",
                              "field": "ov2",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo2",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -24562,24 +24815,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo3",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -24786,24 +25021,6 @@
                              "el": "input",
                              "field": "ov4",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo4",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -25016,24 +25233,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo5",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -25240,24 +25439,6 @@
                              "el": "input",
                              "field": "ov6",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo6",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -25471,24 +25652,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo7",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -25696,24 +25859,6 @@
                              "el": "input",
                              "field": "ov8",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo8",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -25927,24 +26072,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo9",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -26152,24 +26279,6 @@
                              "el": "input",
                              "field": "ov10",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo10",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -26383,24 +26492,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo11",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -26608,24 +26699,6 @@
                              "el": "input",
                              "field": "ov12",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo12",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -26839,24 +26912,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo13",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -27064,24 +27119,6 @@
                              "el": "input",
                              "field": "ov14",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo14",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -27295,24 +27332,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo15",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -27520,24 +27539,6 @@
                              "el": "input",
                              "field": "ov16",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo16",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -27751,24 +27752,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo17",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -27976,24 +27959,6 @@
                              "el": "input",
                              "field": "ov18",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo18",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -28207,24 +28172,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo19",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -28432,24 +28379,6 @@
                              "el": "input",
                              "field": "ov20",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo20",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -28663,24 +28592,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo21",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -28888,24 +28799,6 @@
                              "el": "input",
                              "field": "ov22",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo22",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -29119,24 +29012,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo23",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -29344,24 +29219,6 @@
                              "el": "input",
                              "field": "ov24",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo24",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -29575,24 +29432,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo25",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -29800,24 +29639,6 @@
                              "el": "input",
                              "field": "ov26",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo26",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -30031,24 +29852,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo27",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -30256,24 +30059,6 @@
                              "el": "input",
                              "field": "ov28",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo28",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -30487,24 +30272,6 @@
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo29",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
                           }
                          ]
                         }
@@ -30712,24 +30479,6 @@
                              "el": "input",
                              "field": "ov30",
                              "placeholder": "ข้อความ overlay สั้นๆ ≤5 คำ",
-                             "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
-                            }
-                           ]
-                          },
-                          {
-                           "el": "box",
-                           "className": "flex flex-col gap-1.5",
-                           "card": [
-                            {
-                             "el": "text",
-                             "value": "บทพูด (VO)",
-                             "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                             "icon": "record_voice_over"
-                            },
-                            {
-                             "el": "input",
-                             "field": "vo30",
-                             "placeholder": "เสียงพากย์ประโยคสั้น",
                              "className": "!text-[16px] @[640px]:!text-[15px] !rounded-xl !px-3.5 !py-3 @[640px]:!py-2.5 border-[var(--ev-border)] !min-h-[48px] @[420px]:!min-h-0"
                             }
                            ]
@@ -35552,114 +35301,114 @@
              "className": "relative group flex flex-col",
              "card": [
               {
-               "el": "md",
-               "value": {
-                "op": "add",
-                "a": "{index}",
-                "b": 1
-               },
-               "className": "absolute top-1.5 left-1.5 z-30 w-7 h-7 @[420px]:w-8 @[420px]:h-8 bg-white !text-[#17253a] rounded-lg flex items-center justify-center !text-[13px] @[420px]:!text-[15px] font-black border border-[var(--ev-border)] shadow-sm"
-              },
-              {
-               "el": "media-slot",
-               "src": "{item.slots.video}",
-               "aspect": "9:16",
-               "style": {
-                "borderRadius": "18px"
-               },
-               "className": "ring-1 ring-[var(--ev-border)]",
-               "lightboxActions": [
+               "el": "box",
+               "className": "relative group",
+               "card": [
                 {
-                 "el": "row",
-                 "className": "w-full !grid grid-flow-col auto-cols-fr gap-2 !items-stretch",
-                 "card": [
+                 "el": "md",
+                 "value": {
+                  "op": "add",
+                  "a": "{index}",
+                  "b": 1
+                 },
+                 "className": "absolute top-1.5 left-1.5 z-30 w-7 h-7 @[420px]:w-8 @[420px]:h-8 bg-white !text-[#17253a] rounded-lg flex items-center justify-center !text-[13px] @[420px]:!text-[15px] font-black border border-[var(--ev-border)] shadow-sm"
+                },
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.video}",
+                 "aspect": "9:16",
+                 "style": {
+                  "borderRadius": "18px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]",
+                 "lightboxActions": [
                   {
-                   "el": "open-editor",
-                   "coll": "tasks",
-                   "only": true,
-                   "label": "ตัดต่อ",
-                   "icon": "movie_edit",
-                   "variant": "ghost",
-                   "className": "!w-full !min-w-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/90 !text-[#17253a] !min-h-[48px] @[420px]:!min-h-0"
-                  },
-                  {
-                   "el": "download-button",
-                   "to": "{item.slots.video}",
-                   "label": "ดาวน์โหลด",
-                   "icon": "download",
-                   "variant": "solid",
-                   "className": "!w-full !min-w-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#ec4899] !to-[#db2777] !text-white !min-h-[48px] @[420px]:!min-h-0",
-                   "segments": [
+                   "el": "row",
+                   "className": "w-full !grid grid-flow-col auto-cols-fr gap-2 !items-stretch",
+                   "card": [
                     {
-                     "slot": "video"
+                     "el": "open-editor",
+                     "coll": "tasks",
+                     "only": true,
+                     "label": "ตัดต่อ",
+                     "icon": "movie_edit",
+                     "variant": "ghost",
+                     "className": "!w-full !min-w-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/90 !text-[#17253a] !min-h-[48px] @[420px]:!min-h-0"
                     },
                     {
-                     "slot": "video2"
-                    },
-                    {
-                     "slot": "video3"
-                    },
-                    {
-                     "slot": "video4"
-                    },
-                    {
-                     "slot": "video5"
-                    },
-                    {
-                     "slot": "video6"
+                     "el": "download-button",
+                     "to": "{item.slots.video}",
+                     "label": "ดาวน์โหลด",
+                     "icon": "download",
+                     "variant": "solid",
+                     "className": "!w-full !min-w-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#ec4899] !to-[#db2777] !text-white !min-h-[48px] @[420px]:!min-h-0",
+                     "segments": [
+                      {
+                       "slot": "video"
+                      },
+                      {
+                       "slot": "video2"
+                      },
+                      {
+                       "slot": "video3"
+                      },
+                      {
+                       "slot": "video4"
+                      },
+                      {
+                       "slot": "video5"
+                      },
+                      {
+                       "slot": "video6"
+                      }
+                     ]
                     }
                    ]
                   }
-                 ]
-                }
-               ],
-               "segments": [
-                {
-                 "slot": "video"
-                },
-                {
-                 "slot": "video2"
-                },
-                {
-                 "slot": "video3"
-                },
-                {
-                 "slot": "video4"
-                },
-                {
-                 "slot": "video5"
-                },
-                {
-                 "slot": "video6"
-                }
-               ],
-               "busyLabel": {
-                "op": "block",
-                "sep": " ",
-                "parts": [
-                 {
-                  "value": {
-                   "op": "lookup",
-                   "table": "opNames",
-                   "key": "{values.__runStage}",
-                   "fallback": "กำลังทำ"
-                  }
-                 },
-                 {
-                  "when": {
-                   "op": "gt",
-                   "a": "{values.svSec}",
-                   "b": 10
+                 ],
+                 "segments": [
+                  {
+                   "slot": "video"
                   },
-                  "value": {
-                   "op": "concat",
-                   "parts": [
-                    {
-                     "op": "min",
-                     "a": {
-                      "op": "add",
-                      "a": {
-                       "op": "add",
+                  {
+                   "slot": "video2"
+                  },
+                  {
+                   "slot": "video3"
+                  },
+                  {
+                   "slot": "video4"
+                  },
+                  {
+                   "slot": "video5"
+                  },
+                  {
+                   "slot": "video6"
+                  }
+                 ],
+                 "busyLabel": {
+                  "op": "block",
+                  "sep": " ",
+                  "parts": [
+                   {
+                    "value": {
+                     "op": "lookup",
+                     "table": "opNames",
+                     "key": "{values.__runStage}",
+                     "fallback": "กำลังทำ"
+                    }
+                   },
+                   {
+                    "when": {
+                     "op": "gt",
+                     "a": "{values.svSec}",
+                     "b": 10
+                    },
+                    "value": {
+                     "op": "concat",
+                     "parts": [
+                      {
+                       "op": "min",
                        "a": {
                         "op": "add",
                         "a": {
@@ -35669,18 +35418,40 @@
                           "a": {
                            "op": "add",
                            "a": {
-                            "op": "not",
+                            "op": "add",
                             "a": {
-                             "op": "eq",
-                             "a": "{item.slots.video}",
-                             "b": ""
+                             "op": "add",
+                             "a": {
+                              "op": "not",
+                              "a": {
+                               "op": "eq",
+                               "a": "{item.slots.video}",
+                               "b": ""
+                              }
+                             },
+                             "b": {
+                              "op": "not",
+                              "a": {
+                               "op": "eq",
+                               "a": "{item.slots.video2}",
+                               "b": ""
+                              }
+                             }
+                            },
+                            "b": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": "{item.slots.video3}",
+                              "b": ""
+                             }
                             }
                            },
                            "b": {
                             "op": "not",
                             "a": {
                              "op": "eq",
-                             "a": "{item.slots.video2}",
+                             "a": "{item.slots.video4}",
                              "b": ""
                             }
                            }
@@ -35689,7 +35460,7 @@
                            "op": "not",
                            "a": {
                             "op": "eq",
-                            "a": "{item.slots.video3}",
+                            "a": "{item.slots.video5}",
                             "b": ""
                            }
                           }
@@ -35698,136 +35469,120 @@
                           "op": "not",
                           "a": {
                            "op": "eq",
-                           "a": "{item.slots.video4}",
+                           "a": "{item.slots.video6}",
                            "b": ""
                           }
                          }
                         },
-                        "b": {
-                         "op": "not",
-                         "a": {
-                          "op": "eq",
-                          "a": "{item.slots.video5}",
-                          "b": ""
-                         }
-                        }
+                        "b": 1
                        },
                        "b": {
-                        "op": "not",
-                        "a": {
-                         "op": "eq",
-                         "a": "{item.slots.video6}",
-                         "b": ""
-                        }
+                        "op": "div",
+                        "a": "{values.svSec}",
+                        "b": 10
                        }
                       },
-                      "b": 1
-                     },
-                     "b": {
-                      "op": "div",
-                      "a": "{values.svSec}",
-                      "b": 10
-                     }
-                    },
-                    "/",
-                    {
-                     "op": "div",
-                     "a": "{values.svSec}",
-                     "b": 10
+                      "/",
+                      {
+                       "op": "div",
+                       "a": "{values.svSec}",
+                       "b": 10
+                      }
+                     ]
                     }
-                   ]
-                  }
-                 }
-                ]
-               }
-              },
-              {
-               "el": "row",
-               "style": {
-                "flexWrap": "nowrap"
-               },
-               "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7 rounded-b-[18px] bg-gradient-to-t from-black/70 to-transparent pointer-events-none",
-               "card": [
-                {
-                 "el": "text",
-                 "value": "{item.productName}",
-                 "className": "!text-[12.5px] font-bold truncate !text-white shrink min-w-0"
-                },
-                {
-                 "el": "text",
-                 "value": {
-                  "op": "concat",
-                  "parts": [
-                   "{item.secAt}",
-                   " วิ"
+                   }
                   ]
+                 }
+                },
+                {
+                 "el": "row",
+                 "style": {
+                  "flexWrap": "nowrap"
                  },
-                 "icon": "timer",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center gap-1",
+                 "className": "absolute bottom-0 left-0 right-0 z-10 items-center gap-1.5 px-2.5 pb-2 pt-7 rounded-b-[18px] bg-gradient-to-t from-black/70 to-transparent pointer-events-none",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "{item.productName}",
+                   "className": "!text-[12.5px] font-bold truncate !text-white shrink min-w-0"
+                  },
+                  {
+                   "el": "text",
+                   "value": {
+                    "op": "concat",
+                    "parts": [
+                     "{item.secAt}",
+                     " วิ"
+                    ]
+                   },
+                   "icon": "timer",
+                   "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center gap-1",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.secAt}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "text",
+                   "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
+                   "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.clipsAt}",
+                     "b": ""
+                    }
+                   }
+                  },
+                  {
+                   "el": "text",
+                   "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
+                   "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.clipsAt}",
+                    "b": ""
+                   }
+                  }
+                 ]
+                },
+                {
+                 "el": "button",
+                 "action": "toggle",
+                 "field": "picked",
+                 "label": "",
+                 "icon": "check_box_outline_blank",
+                 "variant": "ghost",
                  "when": {
                   "op": "not",
                   "a": {
                    "op": "eq",
-                   "a": "{item.secAt}",
-                   "b": ""
+                   "a": "{item.picked}",
+                   "b": "true"
                   }
-                 }
+                 },
+                 "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-black/50 !text-white justify-center !gap-0 opacity-100 @[420px]:opacity-0 @[420px]:group-hover:opacity-100 transition !border-0 !min-h-[48px] @[420px]:!min-h-0"
                 },
                 {
-                 "el": "text",
-                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.clipsAt}",
-                   "b": ""
-                  }
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
-                 "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
+                 "el": "button",
+                 "action": "toggle",
+                 "field": "picked",
+                 "label": "",
+                 "icon": "check_box",
+                 "variant": "ghost",
                  "when": {
                   "op": "eq",
-                  "a": "{item.clipsAt}",
-                  "b": ""
-                 }
+                  "a": "{item.picked}",
+                  "b": "true"
+                 },
+                 "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0 !min-h-[48px] @[420px]:!min-h-0"
                 }
                ]
-              },
-              {
-               "el": "button",
-               "action": "toggle",
-               "field": "picked",
-               "label": "",
-               "icon": "check_box_outline_blank",
-               "variant": "ghost",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.picked}",
-                 "b": "true"
-                }
-               },
-               "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-black/50 !text-white justify-center !gap-0 opacity-100 @[420px]:opacity-0 @[420px]:group-hover:opacity-100 transition !border-0 !min-h-[48px] @[420px]:!min-h-0"
-              },
-              {
-               "el": "button",
-               "action": "toggle",
-               "field": "picked",
-               "label": "",
-               "icon": "check_box",
-               "variant": "ghost",
-               "when": {
-                "op": "eq",
-                "a": "{item.picked}",
-                "b": "true"
-               },
-               "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0 !min-h-[48px] @[420px]:!min-h-0"
               },
               {
                "el": "box",
