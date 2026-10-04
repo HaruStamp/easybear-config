@@ -9,7 +9,7 @@ Config สำหรับ Architecture C spike — Flow interpreter app ดึ�
 |---|---|---|
 | `apps.json` | launcher ของ golden EasyBear Engine (การ์ด 6 แอป · +podcast 2026-09-27 → ชี้ `<app>-dev.json` ตั้งแต่ 2026-09-17) | ✅ live |
 | `showhow-dev.json` · `hardsell-dev.json` · `minimal-dev.json` · `film-dev.json` · `flow-dev.json` | **มาตรฐาน -dev/-public (REGISTRY §EBS · 2026-09-17)** — สร้างขั้น ① จาก `showhow.json` / `hardsell-v2.json` / `minimal-lab.json` / `film.json` / `flow.json` (md5 เท่าต้นฉบับ) · ทีมแอปแก้/push ไฟล์ `-dev` ของตัวเอง · ชื่อเก่า = alias จนกว่าขั้น ⑥ | ✅ live |
-| `podcast-dev.json` | **easybear-podcast** (หมีแว่น พอดแคสต์ · เกิด 2026-09-27) — Dev `cc4239ed` + การ์ด launcher · 🔴 **สร้างด้วย `easybear-podcast/scripts/build-podcast.py` จาก `showhow-dev.json` — แก้ที่สคริปต์แล้ว build ห้ามแก้ JSON มือ** · ยังไม่มี `podcast-public.json` | ✅ live (ทีม podcast) |
+| `podcast-dev.json` | **easybear-podcast** (หมีแว่น พอดแคสต์ · เกิด 2026-09-27) — Dev `cc4239ed` + การ์ด launcher · 🔴 **สร้างด้วย `easybear-podcast/scripts/build-podcast.py` จาก `showhow-dev.json` — แก้ที่สคริปต์แล้ว build ห้ามแก้ JSON มือ** · `podcast-public.json` = สำเนา dev ตอนปล่อย (v0.2.0 · 2026-10-04 · พี่หมีสั่ง) | ✅ live (ทีม podcast) |
 | `minimal-public.json` | **ลูกค้า (สายเดียว · พี่หมีเคาะ "ยุบ" 2026-09-17)** = เนื้อ `minimal-v2.json` (md5 `tH6+aJ…` 1,344,506 B) · tool public v2.0.0 `bb6139f5` จะย้ายมาชี้ไฟล์นี้ (ขั้น ⑤) · ลูกค้าสาย v1.6.0 ย้ายไปใช้ tool v2 แล้ว `minimal.json` เลิก | 🔴 push เฉพาะพี่หมีสั่งออกรุ่น |
 | `film.json` | การ์ด "การละคร" บน launcher (Engine + film.json) | ✅ live |
 | `flow.json` | การ์ด "หมีทำแทน Flow" | ✅ live |
