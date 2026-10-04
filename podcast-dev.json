@@ -527,7 +527,7 @@
          },
          "b": "1"
         },
-        "value": "🔴🔴 โหมดสายเข้ารายการ (ผู้ใช้เลือก — มาก่อนกฎเหล็กทุกข้อด้านล่าง): HOST = พิธีกรในสตูดิโอ เป็นคนเดียวที่อยู่ในภาพ · GUEST = ผู้ฟังที่โทรเข้ารายการ ได้ยินแค่เสียงผ่านโทรศัพท์ ไม่เคยปรากฏในภาพ · บทเปิดด้วย HOST รับสาย (เช่น \"สายแรกเข้ามาแล้วครับ สวัสดีครับ\") แล้ว GUEST เล่าเรื่อง/ถาม HOST ตอบ ต่อไปเรื่อย ๆ แบบรายการวิทยุ · sp ยังเป็น host/guest ตามผู้พูด · ทุกฉาก cam ใช้ชุดผู้เล่า (\"ภาพกว้างผู้เล่า\" \"ระยะกลางผู้เล่า\" \"โคลสอัพผู้เล่า\") · ฉากที่ GUEST พูด sNth/sNen = HOST ฟังผ่านหูฟัง พยักหน้า ปากปิด · guestSheet = ลักษณะเสียงคนโทร (ไม่ใช้วาด) · กฎ 2 คนในเฟรม ที่นั่ง ภาพกว้างเห็นทั้งคู่ = ไม่ใช้\n\n"
+        "value": "🔴🔴 โหมดสายเข้ารายการ (ผู้ใช้เลือก — มาก่อนกฎเหล็กทุกข้อด้านล่าง): HOST = พิธีกรในสตูดิโอ เป็นคนเดียวที่อยู่ในภาพ · GUEST = ผู้ฟังที่โทรเข้ารายการ ได้ยินแค่เสียงผ่านโทรศัพท์ ไม่เคยปรากฏในภาพ · บทเปิดด้วย HOST รับสาย (เช่น \"สายแรกเข้ามาแล้วครับ สวัสดีครับ\") แล้ว GUEST เล่าเรื่อง/ถาม HOST ตอบ ต่อไปเรื่อย ๆ แบบรายการวิทยุ · sp ยังเป็น host/guest ตามผู้พูด · ฉากที่ HOST พูด cam ใช้ชุดผู้เล่า (\"ภาพกว้างผู้เล่า\" \"ระยะกลางผู้เล่า\" \"โคลสอัพผู้เล่า\") · 🔴 ฉากที่ GUEST พูด cam = \"ภาพประกอบ\" และ sNth/sNen = ภาพคัทอะเวย์ที่ไม่เห็นหน้า/ปากของ HOST เลย เช่น ไฟสายโทรเข้ากะพริบบนคอนโซล มือปรับเฟดเดอร์ หูฟังบนโต๊ะ ไมค์ในห้องมืด หรือภาพประกอบสิ่งที่คนโทรกำลังเล่า (เปลี่ยนภาพตามเนื้อเรื่อง ห้ามมีคนพูด) — กันพิธีกรขยับปากตามเสียงคนโทร · guestSheet = ลักษณะเสียงคนโทร (ไม่ใช้วาด) · กฎ 2 คนในเฟรม ที่นั่ง ภาพกว้างเห็นทั้งคู่ = ไม่ใช้\n\n"
        }
       ]
      },
@@ -17837,7 +17837,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -17846,21 +17861,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -19310,7 +19333,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -19323,11 +19346,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
@@ -20470,7 +20523,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -20479,21 +20547,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -21943,7 +22019,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -21956,11 +22032,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
@@ -23103,7 +23209,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -23112,21 +23233,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -24576,7 +24705,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -24589,11 +24718,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
@@ -25736,7 +25895,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -25745,21 +25919,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -27209,7 +27391,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -27222,11 +27404,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
@@ -28369,7 +28581,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -28378,21 +28605,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -29842,7 +30077,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -29855,11 +30090,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
@@ -31018,7 +31283,22 @@
        "sep": "",
        "parts": [
         {
-         "when": "item.broll=",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": "{item.broll}",
+           "b": ""
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           }
+          }
+         },
          "value": "ONE continuous shot, "
         },
         {
@@ -31027,21 +31307,29 @@
         },
         {
          "when": {
-          "op": "and",
+          "op": "or",
           "a": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
-           }
+           "op": "eq",
+           "a": "{item.callIn}",
+           "b": "1"
           },
           "b": {
-           "op": "not",
+           "op": "and",
            "a": {
-            "op": "eq",
-            "a": "{item.broll}",
-            "b": "top"
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            }
+           },
+           "b": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "top"
+            }
            }
           }
          },
@@ -32511,7 +32799,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; GUEST lines play over the cutaway shots only: HOST face and mouth never visible while GUEST speaks; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -32524,11 +32812,41 @@
          "sep": "",
          "parts": [
           {
-           "when": "item.broll=",
+           "when": {
+            "op": "and",
+            "a": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": ""
+            },
+            "b": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             }
+            }
+           },
            "value": ", no scene change."
           },
           {
-           "when": "item.broll!=",
+           "when": {
+            "op": "or",
+            "a": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": ""
+             }
+            },
+            "b": {
+             "op": "eq",
+             "a": "{item.callIn}",
+             "b": "1"
+            }
+           },
            "value": "."
           }
          ]
