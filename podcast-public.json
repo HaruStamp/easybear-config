@@ -527,7 +527,7 @@
          },
          "b": "1"
         },
-        "value": "🔴🔴 โหมดสายเข้ารายการ (ผู้ใช้เลือก — มาก่อนกฎเหล็กทุกข้อด้านล่าง): HOST = พิธีกรในสตูดิโอ เป็นคนเดียวที่อยู่ในภาพ · GUEST = ผู้ฟังที่โทรเข้ารายการ ได้ยินแค่เสียงผ่านโทรศัพท์ ไม่เคยปรากฏในภาพ · บทเปิดด้วย HOST รับสาย (เช่น \"สายแรกเข้ามาแล้วครับ สวัสดีครับ\") แล้ว GUEST เล่าเรื่อง/ถาม HOST ตอบ ต่อไปเรื่อย ๆ แบบรายการวิทยุ · sp ยังเป็น host/guest ตามผู้พูด · ทุกฉาก cam ใช้ชุดผู้เล่า (\"ภาพกว้างผู้เล่า\" \"ระยะกลางผู้เล่า\" \"โคลสอัพผู้เล่า\") · ฉากที่ GUEST พูด sNth/sNen = HOST ฟังผ่านหูฟัง พยักหน้า ปากปิด · guestSheet = ลักษณะเสียงคนโทร (ไม่ใช้วาด) · กฎ 2 คนในเฟรม ที่นั่ง ภาพกว้างเห็นทั้งคู่ = ไม่ใช้\n\n"
+        "value": "🔴🔴 โหมดสายเข้ารายการ (ผู้ใช้เลือก — มาก่อนกฎเหล็กทุกข้อด้านล่าง): HOST = พิธีกรในสตูดิโอ เป็นคนเดียวที่อยู่ในภาพ · GUEST = ผู้ฟังที่โทรเข้ารายการ ได้ยินแค่เสียงผ่านโทรศัพท์ ไม่เคยปรากฏในภาพ · บทเปิดด้วย HOST รับสาย (เช่น \"สายแรกเข้ามาแล้วครับ สวัสดีครับ\") แล้ว GUEST เล่าเรื่อง/ถาม HOST ตอบ ต่อไปเรื่อย ๆ แบบรายการวิทยุ · sp ยังเป็น host/guest ตามผู้พูด · ฉากที่ HOST พูด cam ใช้ชุดผู้เล่า (\"ภาพกว้างผู้เล่า\" \"ระยะกลางผู้เล่า\" \"โคลสอัพผู้เล่า\") · 🔴 ฉากที่ GUEST พูด cam ใช้ชุดผู้เล่าเหมือนกัน (โฟกัสพิธีกรตลอด ห้ามภาพประกอบ/คัทอะเวย์) แต่ sNth/sNen = HOST เงียบฟัง ปากปิดสนิท แสดงแค่สีหน้า พยักหน้า แตะหูฟัง (ห้ามคำว่า พูด/ตอบ/อธิบาย ในฉากนั้น) · แต่ละช่วง 10 วินาทีเป็นของคนพูดคนเดียว (ช่วงคนโทร = มีแต่เสียงคนโทร) · guestSheet = ลักษณะเสียงคนโทร (ไม่ใช้วาด) · กฎ 2 คนในเฟรม ที่นั่ง ภาพกว้างเห็นทั้งคู่ = ไม่ใช้\n\n"
        }
       ]
      },
@@ -559,19 +559,37 @@
            "op": "cond",
            "when": {
             "op": "eq",
-            "a": "{item.broll}",
-            "b": ""
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.cast}",
+              "b": ""
+             },
+             "then": "{values.pdCast}",
+             "else": "{item.cast}"
+            },
+            "b": "call"
            },
-           "then": "{values.pdBroll}",
+           "then": "",
            "else": {
             "op": "cond",
             "when": {
              "op": "eq",
              "a": "{item.broll}",
-             "b": "none"
+             "b": ""
             },
-            "then": "",
-            "else": "{item.broll}"
+            "then": "{values.pdBroll}",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.broll}",
+              "b": "none"
+             },
+             "then": "",
+             "else": "{item.broll}"
+            }
            }
           }
          },
@@ -628,19 +646,37 @@
          "op": "cond",
          "when": {
           "op": "eq",
-          "a": "{item.turn}",
-          "b": ""
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": "{item.cast}"
+          },
+          "b": "call"
          },
-         "then": "{values.pdTurn}",
+         "then": "block",
          "else": {
           "op": "cond",
           "when": {
            "op": "eq",
            "a": "{item.turn}",
-           "b": "block"
+           "b": ""
           },
-          "then": "block",
-          "else": ""
+          "then": "{values.pdTurn}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.turn}",
+            "b": "block"
+           },
+           "then": "block",
+           "else": ""
+          }
          }
         },
         "{values.svSec}"
@@ -709,31 +745,20 @@
              "op": "cond",
              "when": {
               "op": "eq",
-              "a": "{item.turn}",
-              "b": ""
-             },
-             "then": "{values.pdTurn}",
-             "else": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.turn}",
-               "b": "block"
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.cast}",
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": "{item.cast}"
               },
-              "then": "block",
-              "else": ""
-             }
-            },
-            "b": "block"
-           },
-           "value": "{brain.mn.sys}"
-          },
-          {
-           "when": {
-            "op": "not",
-            "a": {
-             "op": "eq",
-             "a": {
+              "b": "call"
+             },
+             "then": "block",
+             "else": {
               "op": "cond",
               "when": {
                "op": "eq",
@@ -750,6 +775,53 @@
                },
                "then": "block",
                "else": ""
+              }
+             }
+            },
+            "b": "block"
+           },
+           "value": "{brain.mn.sys}"
+          },
+          {
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": "{item.cast}"
+               },
+               "b": "call"
+              },
+              "then": "block",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.turn}",
+                "b": ""
+               },
+               "then": "{values.pdTurn}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.turn}",
+                 "b": "block"
+                },
+                "then": "block",
+                "else": ""
+               }
               }
              },
              "b": "block"
@@ -854,19 +926,37 @@
          "op": "cond",
          "when": {
           "op": "eq",
-          "a": "{item.turn}",
-          "b": ""
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": "{item.cast}"
+          },
+          "b": "call"
          },
-         "then": "{values.pdTurn}",
+         "then": "block",
          "else": {
           "op": "cond",
           "when": {
            "op": "eq",
            "a": "{item.turn}",
-           "b": "block"
+           "b": ""
           },
-          "then": "block",
-          "else": ""
+          "then": "{values.pdTurn}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.turn}",
+            "b": "block"
+           },
+           "then": "block",
+           "else": ""
+          }
          }
         },
         "{values.svSec}"
@@ -1477,19 +1567,37 @@
               "op": "cond",
               "when": {
                "op": "eq",
-               "a": "{item.broll}",
-               "b": ""
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.cast}",
+                 "b": ""
+                },
+                "then": "{values.pdCast}",
+                "else": "{item.cast}"
+               },
+               "b": "call"
               },
-              "then": "{values.pdBroll}",
+              "then": "",
               "else": {
                "op": "cond",
                "when": {
                 "op": "eq",
                 "a": "{item.broll}",
-                "b": "none"
+                "b": ""
                },
-               "then": "",
-               "else": "{item.broll}"
+               "then": "{values.pdBroll}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.broll}",
+                 "b": "none"
+                },
+                "then": "",
+                "else": "{item.broll}"
+               }
               }
              }
             },
@@ -1760,19 +1868,37 @@
           "op": "cond",
           "when": {
            "op": "eq",
-           "a": "{item.broll}",
-           "b": ""
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.cast}",
+             "b": ""
+            },
+            "then": "{values.pdCast}",
+            "else": "{item.cast}"
+           },
+           "b": "call"
           },
-          "then": "{values.pdBroll}",
+          "then": "",
           "else": {
            "op": "cond",
            "when": {
             "op": "eq",
             "a": "{item.broll}",
-            "b": "none"
+            "b": ""
            },
-           "then": "",
-           "else": "{item.broll}"
+           "then": "{values.pdBroll}",
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.broll}",
+             "b": "none"
+            },
+            "then": "",
+            "else": "{item.broll}"
+           }
           }
          }
         },
@@ -2233,19 +2359,37 @@
                   "op": "cond",
                   "when": {
                    "op": "eq",
-                   "a": "{item.broll}",
-                   "b": ""
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "call"
                   },
-                  "then": "{values.pdBroll}",
+                  "then": "",
                   "else": {
                    "op": "cond",
                    "when": {
                     "op": "eq",
                     "a": "{item.broll}",
-                    "b": "none"
+                    "b": ""
                    },
-                   "then": "",
-                   "else": "{item.broll}"
+                   "then": "{values.pdBroll}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.broll}",
+                     "b": "none"
+                    },
+                    "then": "",
+                    "else": "{item.broll}"
+                   }
                   }
                  }
                 },
@@ -8169,19 +8313,37 @@
          "op": "cond",
          "when": {
           "op": "eq",
-          "a": "{parent.fields.broll}",
-          "b": ""
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{parent.fields.cast}",
+            "b": ""
+           },
+           "then": "{values.pdCast}",
+           "else": "{parent.fields.cast}"
+          },
+          "b": "call"
          },
-         "then": "{values.pdBroll}",
+         "then": "",
          "else": {
           "op": "cond",
           "when": {
            "op": "eq",
            "a": "{parent.fields.broll}",
-           "b": "none"
+           "b": ""
           },
-          "then": "",
-          "else": "{parent.fields.broll}"
+          "then": "{values.pdBroll}",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{parent.fields.broll}",
+            "b": "none"
+           },
+           "then": "",
+           "else": "{parent.fields.broll}"
+          }
          }
         }
        },
@@ -8378,19 +8540,37 @@
       "op": "cond",
       "when": {
        "op": "eq",
-       "a": "{parent.fields.turn}",
-       "b": ""
+       "a": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{parent.fields.cast}",
+         "b": ""
+        },
+        "then": "{values.pdCast}",
+        "else": "{parent.fields.cast}"
+       },
+       "b": "call"
       },
-      "then": "{values.pdTurn}",
+      "then": "block",
       "else": {
        "op": "cond",
        "when": {
         "op": "eq",
         "a": "{parent.fields.turn}",
-        "b": "block"
+        "b": ""
        },
-       "then": "block",
-       "else": ""
+       "then": "{values.pdTurn}",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{parent.fields.turn}",
+         "b": "block"
+        },
+        "then": "block",
+        "else": ""
+       }
       }
      },
      "format": "{parent.fields.format}",
@@ -8509,19 +8689,37 @@
        "op": "cond",
        "when": {
         "op": "eq",
-        "a": "{parent.fields.broll}",
-        "b": ""
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{parent.fields.cast}",
+          "b": ""
+         },
+         "then": "{values.pdCast}",
+         "else": "{parent.fields.cast}"
+        },
+        "b": "call"
        },
-       "then": "{values.pdBroll}",
+       "then": "",
        "else": {
         "op": "cond",
         "when": {
          "op": "eq",
          "a": "{parent.fields.broll}",
-         "b": "none"
+         "b": ""
         },
-        "then": "",
-        "else": "{parent.fields.broll}"
+        "then": "{values.pdBroll}",
+        "else": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{parent.fields.broll}",
+          "b": "none"
+         },
+         "then": "",
+         "else": "{parent.fields.broll}"
+        }
        }
       }
      },
@@ -18151,8 +18349,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp26}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp27}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp28}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp29}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp30}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp26}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp27}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp28}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp29}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp30}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -18383,6 +19420,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov30}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp26}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp27}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp28}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp29}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp30}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -19310,7 +20391,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -20784,8 +21865,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp21}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp22}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp23}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp24}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp25}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp21}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp22}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp23}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp24}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp25}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -21016,6 +22936,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov25}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp21}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp22}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp23}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp24}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp25}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -21943,7 +23907,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -23417,8 +25381,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp16}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp17}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp18}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp19}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp20}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp16}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp17}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp18}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp19}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp20}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -23649,6 +26452,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov20}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp16}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp17}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp18}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp19}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp20}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -24576,7 +27423,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -26050,8 +28897,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp11}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp12}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp13}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp14}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp15}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp11}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp12}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp13}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp14}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp15}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -26282,6 +29968,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov15}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp11}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp12}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp13}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp14}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp15}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -27209,7 +30939,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -28683,8 +32413,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp6}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp7}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp8}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp9}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp10}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp6}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp7}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp8}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp9}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp10}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -28915,6 +33484,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov10}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp6}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp7}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp8}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp9}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp10}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -29842,7 +34455,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -31332,8 +35945,847 @@
          }
         },
         {
-         "when": "item.cast=solo",
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               },
+               "b": ""
+              },
+              "then": "{values.pdCast}",
+              "else": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  },
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "solo"
+                  },
+                  "then": "solo",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "full"
+                   },
+                   "then": "solo",
+                   "else": ""
+                  }
+                 }
+                },
+                "b": "solo"
+               },
+               "then": "solo",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "full"
+                },
+                "then": "solo",
+                "else": ""
+               }
+              }
+             },
+             "b": "solo"
+            },
+            "then": "solo",
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "solo"
+                 },
+                 "then": "solo",
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "solo"
+                      },
+                      "then": "solo",
+                      "else": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.cast}",
+                          "b": ""
+                         },
+                         "then": "{values.pdCast}",
+                         "else": "{item.cast}"
+                        },
+                        "b": "full"
+                       },
+                       "then": "solo",
+                       "else": ""
+                      }
+                     },
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    }
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": ""
+               },
+               "then": "{values.pdCast}",
+               "else": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   },
+                   "b": ""
+                  },
+                  "then": "{values.pdCast}",
+                  "else": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.cast}",
+                      "b": ""
+                     },
+                     "then": "{values.pdCast}",
+                     "else": "{item.cast}"
+                    },
+                    "b": "solo"
+                   },
+                   "then": "solo",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "full"
+                    },
+                    "then": "solo",
+                    "else": ""
+                   }
+                  }
+                 },
+                 "b": "solo"
+                },
+                "then": "solo",
+                "else": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": {
+                   "op": "cond",
+                   "when": {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "solo"
+                     },
+                     "then": "solo",
+                     "else": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.cast}",
+                         "b": ""
+                        },
+                        "then": "{values.pdCast}",
+                        "else": "{item.cast}"
+                       },
+                       "b": "full"
+                      },
+                      "then": "solo",
+                      "else": ""
+                     }
+                    },
+                    "b": ""
+                   },
+                   "then": "{values.pdCast}",
+                   "else": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.cast}",
+                       "b": ""
+                      },
+                      "then": "{values.pdCast}",
+                      "else": "{item.cast}"
+                     },
+                     "b": "solo"
+                    },
+                    "then": "solo",
+                    "else": {
+                     "op": "cond",
+                     "when": {
+                      "op": "eq",
+                      "a": {
+                       "op": "cond",
+                       "when": {
+                        "op": "eq",
+                        "a": "{item.cast}",
+                        "b": ""
+                       },
+                       "then": "{values.pdCast}",
+                       "else": "{item.cast}"
+                      },
+                      "b": "full"
+                     },
+                     "then": "solo",
+                     "else": ""
+                    }
+                   }
+                  },
+                  "b": "full"
+                 },
+                 "then": "solo",
+                 "else": ""
+                }
+               }
+              },
+              "b": "full"
+             },
+             "then": "solo",
+             "else": ""
+            }
+           },
+           "b": "solo"
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.callIn}",
+              "b": "1"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp1}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp2}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp3}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp4}",
+              "b": "guest"
+             },
+             {
+              "op": "eq",
+              "a": "{item.sp5}",
+              "b": "guest"
+             }
+            ]
+           }
+          }
+         },
          "value": "\nRULES: HOST alone in frame, speaks to camera (lip-sync); no second person."
+        },
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp1}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp2}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp3}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp4}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp5}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nRULES: HOST alone in frame, silent listener (mouth closed); no second person."
         }
        ]
       },
@@ -31584,6 +37036,50 @@
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
          "value": " Thai overlay: \"{item.ov5}\""
+        }
+       ]
+      },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.callIn}",
+            "b": "1"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp1}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp2}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp3}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp4}",
+            "b": "guest"
+           },
+           {
+            "op": "eq",
+            "a": "{item.sp5}",
+            "b": "guest"
+           }
+          ]
+         },
+         "value": "\nTHIS PART: HOST is silent the whole time, mouth closed, only listens and reacts; all speech is the off-screen CALLER."
         }
        ]
       },
@@ -32511,7 +38007,7 @@
           "a": "{item.callIn}",
           "b": "1"
          },
-         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; during GUEST lines HOST listens on headphones, mouth closed."
+         "value": "\n\nAudio: Thai phone-in show, no music. HOST (on camera, lip-synced) voice = {item.hostVoiceEN}. GUEST = phone caller, never on screen; GUEST voice = {item.guestVoiceEN}, heavily telephone-filtered (narrow band, thin, slight line hiss, like a radio call-in), clearly different from HOST studio voice; while GUEST speaks HOST is silent, mouth closed, only listens and reacts; HOST lips move only on HOST lines."
         }
        ]
       },
@@ -35902,11 +41398,22 @@
              "when": {
               "op": "and",
               "a": {
-               "op": "not",
+               "op": "and",
                "a": {
-                "op": "eq",
-                "a": "{values.pdCast}",
-                "b": "solo"
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{values.pdCast}",
+                 "b": "solo"
+                }
+               },
+               "b": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{values.pdCast}",
+                 "b": "full"
+                }
                }
               },
               "b": {
@@ -35914,7 +41421,7 @@
                "a": {
                 "op": "eq",
                 "a": "{values.pdCast}",
-                "b": "full"
+                "b": "call"
                }
               }
              }
@@ -36176,11 +41683,22 @@
               }
              ],
              "when": {
-              "op": "not",
+              "op": "and",
               "a": {
-               "op": "eq",
-               "a": "{values.pdCast}",
-               "b": "full"
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.pdCast}",
+                "b": "full"
+               }
+              },
+              "b": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.pdCast}",
+                "b": "call"
+               }
               }
              }
             },
@@ -44900,27 +50418,12 @@
               }
              ],
              "when": {
-              "op": "not",
+              "op": "and",
               "a": {
-               "op": "eq",
+               "op": "not",
                "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": {
-                  "op": "cond",
-                  "when": {
-                   "op": "eq",
-                   "a": "{item.cast}",
-                   "b": ""
-                  },
-                  "then": "{values.pdCast}",
-                  "else": "{item.cast}"
-                 },
-                 "b": "solo"
-                },
-                "then": "solo",
-                "else": {
+                "op": "eq",
+                "a": {
                  "op": "cond",
                  "when": {
                   "op": "eq",
@@ -44934,13 +50437,48 @@
                    "then": "{values.pdCast}",
                    "else": "{item.cast}"
                   },
-                  "b": "full"
+                  "b": "solo"
                  },
                  "then": "solo",
-                 "else": ""
-                }
-               },
-               "b": "solo"
+                 "else": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": {
+                    "op": "cond",
+                    "when": {
+                     "op": "eq",
+                     "a": "{item.cast}",
+                     "b": ""
+                    },
+                    "then": "{values.pdCast}",
+                    "else": "{item.cast}"
+                   },
+                   "b": "full"
+                  },
+                  "then": "solo",
+                  "else": ""
+                 }
+                },
+                "b": "solo"
+               }
+              },
+              "b": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": "{item.cast}"
+                },
+                "b": "call"
+               }
               }
              }
             },
@@ -46253,20 +51791,40 @@
               }
              ],
              "when": {
-              "op": "not",
+              "op": "and",
               "a": {
-               "op": "eq",
+               "op": "not",
                "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.cast}",
-                 "b": ""
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": "{item.cast}"
                 },
-                "then": "{values.pdCast}",
-                "else": "{item.cast}"
-               },
-               "b": "full"
+                "b": "full"
+               }
+              },
+              "b": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cast}",
+                  "b": ""
+                 },
+                 "then": "{values.pdCast}",
+                 "else": "{item.cast}"
+                },
+                "b": "call"
+               }
               }
              }
             },
