@@ -8,6 +8,8 @@
 #   ② วิดีโอ durationSeconds 8 เป็น 10 · ตัด trimEndIfNext + tailTrim ทิ้ง (Meta ต่อเต็มคลิป ไม่ตัดท้าย · ช่วง 2 เริ่มจากเฟรมท้ายจริง)
 #   ③ ข้อความบท: ฉากละ 2 วิ เป็น 2.5 วิ (4 ฉาก/ช่วง เท่าเดิม) · ช่วงเวลา 0-2s เป็น 0-2.5s · บทพูดฉากละ 32 เป็น 40 ตัวอักษร
 #      (อัตราเดิม 16 ตัวอักษร/วิ) · รวม 128/256 เป็น 160/320 · about 8 seconds เป็น 10
+#   ④ หน้าจอ: ตัดหมวด โมเดล AI (dropdown imageModel/videoModel · Meta เลือกโมเดลไม่ได้) · ชิปที่โชว์ {values.videoModel} เป็นข้อความคงที่ Meta AI
+#      (ขอเพิ่มโดย metabear-starter 2026-10-10 · ops ยังอ้าง values.*Model ตามเดิม — ทีม metabear map ชื่อโมเดลเองตอน build)
 #   ชื่อโมเดล/เวลารอผล = ทีม metabear ปรับเองตอน build (meta-config.mjs) ไม่ทำที่นี่
 import json, re, sys
 from pathlib import Path
@@ -57,9 +59,32 @@ def key(k):
 def is_sv(v):
     return isinstance(v, str) and v.startswith('{values.svSec}')
 
+MODEL_FIELDS = {'imageModel', 'videoModel'}
+def ui_fields(x, acc):
+    if isinstance(x, dict):
+        if isinstance(x.get('field'), str): acc.add(x['field'])
+        if 'action' in x or 'chain' in x: acc.add('<action>')
+        for v in x.values(): ui_fields(v, acc)
+    elif isinstance(x, list):
+        for v in x: ui_fields(v, acc)
+    return acc
+
+def model_only(x):   # กล่องที่มีแต่ตัวเลือกโมเดล (ไม่มีช่องอื่น/ปุ่ม) = ตัดทั้งกล่อง
+    if not isinstance(x, dict) or 'el' not in x: return False
+    f = ui_fields(x, set())
+    return bool(f) and f <= MODEL_FIELDS
+
 def walk(o, path):
     if isinstance(o, list):
+        if path.startswith('/phases/'):
+            keep = []
+            for i, v in enumerate(o):
+                if model_only(v): log.append(('model-ui-drop', f'{path}/{i}')); continue
+                keep.append(walk(v, f'{path}/{i}'))
+            return keep
         return [walk(v, f'{path}/{i}') for i, v in enumerate(o)]
+    if isinstance(o, str) and path.startswith('/phases/') and o.startswith('{values.videoModel}'):
+        log.append(('model-chip', path)); return 'Meta AI' + o[len('{values.videoModel}'):]
     if not isinstance(o, dict):
         return text(o, path) if isinstance(o, str) else o
     out = {}
@@ -97,6 +122,8 @@ if m.get('values', {}).get('svSec') in SEC:
 # ยาม: ห้ามเหลือ 8/16 ที่ผูก svSec
 s = json.dumps(m, ensure_ascii=False)
 left = [x for x in ('values.svSec=16', '"trimEndIfNext"', '"tailTrim"', '"durationSeconds": 8', 'about 8 seconds') if x in s]
+ph = json.dumps(m['phases'], ensure_ascii=False)
+left += [x for x in ('{values.videoModel}', '{values.imageModel}', '"field": "videoModel"', '"field": "imageModel"') if x in ph]
 left += [k for t in m['lookups'].values() if isinstance(t, dict) for k in t if re.fullmatch(r'(8|16)(\|\d+)?', k)]
 if left:
     sys.exit(f'🔴 ยังเหลือของ 8/16: {left}')
