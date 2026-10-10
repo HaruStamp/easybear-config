@@ -16,7 +16,6 @@ Config สำหรับ Architecture C spike — Flow interpreter app ดึ�
 | `showhow.json` | การ์ด "ทำให้ดู" + Dev showhow (`9f906e67`) | ✅ live (ทีม showhow) |
 | ~~`hardsell-v2.json`~~ | **ลบจาก GCS + รีโปแล้ว 2026-09-17** (พี่หมีสั่ง · Dev เก่า v2.0–v2.6 rename DELETE- ครบ 7 ตัว · backup ใน scratchpad starter) | 🗑️ |
 | `hardsell-public.json` | public รุ่นถัดไปของ hardsell (สร้าง 2026-09-17 = hardsell-dev · public v1.6.0 ปัจจุบันไม่อ่าน GCS) | ✅ พร้อม · push เฉพาะพี่หมีสั่งออกรุ่น |
-| `hardsell-meta-dev.json` | **ต้นทาง hardsell ของ EasyBear Meta** (10/20 วิ แทน 8/16 · ไม่ตัดท้ายคลิป · 2026-10-10 พี่หมีสั่งผ่าน metabear-starter) · 🔴 **สร้างจาก `hardsell-dev.json` ด้วย `scripts/hardsell-meta-from-dev.py` เท่านั้น ห้ามแก้มือ** · ขึ้น GCS ด้วย `easybear-hardsell/scripts/push-hardsell.sh hardsell-meta-dev` (สร้างใหม่ + ยาม 4 ตัวแบบ 10/20) · Flow ไม่อ่านไฟล์นี้ | ✅ live (ต้นทางของ `metabear-hardsell-dev.json`) |
 | `hardsell.json` | การ์ด "ขายดุ" บน launcher (hook-pack เดิม) | 🟡 live แต่แอปขายไม่ใช้แล้ว |
 | `minimal.json` | ลูกค้าสาย v1.6.0 (public `3fff3b4c`) — **จะเลิกเมื่อพี่หมีย้ายลูกค้าไป tool v2** (ยุบสายเดียว 2026-09-17) | 🔴 live · ห้าม push/ลบ จนย้ายเสร็จ |
 | `minimal-lab.json` | Lab minimal (`e8bac573`) · ยาม 11 ตัว | ✅ live (ทีม minimal) |
