@@ -5,6 +5,7 @@
   → รอบแรกทำเป็น "แนวคลิป: รีวิวแบบเพื่อนเล่า" · ทดสอบจริง 2 คลิป (ไฟโซล่า / กระทะ) ผ่าน
   → พี่หมีเคาะชื่อ "ฉากในคลิป: จัดฉากคุมโทน / ฉากชีวิตจริง" (ทุกแบบยังเป็นมินิมอล ต่างที่การจัดฉาก+วิธีเล่า) + เพิ่ม "กำหนดฉากเอง" แบบ showhow
 ตัวเลือก (values.svVibe — ค่าเก็บเดิม '' / 'รีวิวแบบเพื่อนเล่า' ไม่เปลี่ยน · เปลี่ยนแค่ป้าย):
+  'อัตโนมัติ'        ค่าเริ่มต้น (พี่หมีเคาะ) — บทเลือก คุมโทน/ชีวิตจริง ตามสินค้า · วิดีโอหัวกลาง ๆ ตามที่ฉากบอก
   ''               จัดฉากคุมโทน — prompt เดิมทุกไบต์
   'รีวิวแบบเพื่อนเล่า' ฉากชีวิตจริง — ฉาก Pinterest/MUJI/IKEA · ลงมือทุกฉาก · โชว์ผลจริง + โทนเพื่อนเล่า
   'กำหนดฉากเอง'      ผู้ใช้พิมพ์ฉาก (svScene · เข้าเฉพาะบท ไม่เข้า prompt วิดีโอ — ไทยในวิดีโอถูกวาดเป็นตัวหนังสือ + ความยาวคุมไม่ได้)
@@ -15,7 +16,7 @@
   ④ V1/V4 สัตว์ขึ้นเคาน์เตอร์ครัว ⇒ สัตว์อยู่บนพื้น/โซฟา/ข้างโต๊ะ ห้ามขึ้นเคาน์เตอร์ครัวหรือเตา
 🪤 รูปอ้างอิงวิดีโอ Omni สูงสุด 7 ใบ (ตัดท้าย = บอร์ดหาย) ⇒ กำหนดฉากเอง: รูปฉากเข้าแทน image5 (สินค้า 4 + หน้า + ฉาก + บอร์ด = 7)
 🪤 ความยาว: แนวเดิมยาวสุด 3,893/3,900 ⇒ โหมดใหม่ชดเชยด้วยคำบรรยายฟอนต์สั้น + "Overlay" · โทนเพื่อนเล่าย้ายบทพูดเข้ารายฉากแทนบทรวม
-🛡 svVibe ว่าง/ไฟล์เซฟเก่า = prompt เดิมทุกไบต์ · ห่อของเดิมด้วย block ในตำแหน่งเดิม
+🛡 svVibe ว่าง ('' = จัดฉากคุมโทน) = prompt เดิมทุกไบต์ · ⚠️ ไฟล์เซฟเก่า/ค่าเริ่มต้น = อัตโนมัติ (ไม่ใช่แบบเดิม — ตั้งใจ) · ห่อของเดิมด้วย block ในตำแหน่งเดิม
 รันซ้ำได้ (เจอ svVibe แล้ว = ข้าม) · ต้องรันหลัง v55
 """
 import json, os, re, copy
@@ -26,13 +27,13 @@ if 'svVibe' in cfg['values']:
     print('⏭ v56 แพตช์ไปแล้ว — ไม่ทำซ้ำ'); raise SystemExit(0)
 assert 'svLang' in cfg['values'], 'ต้องรัน v55 ก่อน'
 
-REAL_V, CUST_V, FRIEND_V = 'รีวิวแบบเพื่อนเล่า', 'กำหนดฉากเอง', 'แบบเพื่อนเล่า'
+REAL_V, CUST_V, FRIEND_V, AUTO_V = 'รีวิวแบบเพื่อนเล่า', 'กำหนดฉากเอง', 'แบบเพื่อนเล่า', 'อัตโนมัติ'
 def eq(f, v): return {'op': 'eq', 'a': '{values.%s}' % f, 'b': v}
 def NOT(x): return {'op': 'not', 'a': x}
 def AND(*x): return {'op': 'and', 'list': list(x)}
 def OR(*x): return {'op': 'or', 'list': list(x)}
-S_REAL, S_CUST = eq('svVibe', REAL_V), eq('svVibe', CUST_V)
-NEW = OR(S_REAL, S_CUST)
+S_REAL, S_CUST, S_AUTO = eq('svVibe', REAL_V), eq('svVibe', CUST_V), eq('svVibe', AUTO_V)
+NEW = OR(S_REAL, S_CUST, S_AUTO)
 FRIEND = OR(S_REAL, AND(S_CUST, eq('svVoTone', FRIEND_V)))
 VOICE_ON = AND(NOT(eq('svAudio', 'ไม่มีเสียงพากย์')), NOT(eq('svAudio', 'ASMR')))
 H = 'มีพรีเซนเตอร์ไทย 1 คนในคลิป'; NONE = 'ไม่มีคนในคลิป — โฟกัสสินค้าล้วน'
@@ -51,11 +52,15 @@ ops = {o['id']: o for o in cfg['ops']}
 
 # ── บท (mnPlan sys) — ต่อท้ายบล็อกภาษา v55
 PLAN_REAL = ('\n\n★ ฉากในคลิป: ฉากชีวิตจริง — ทับกฎสไตล์ด้านบนเฉพาะเรื่องต่อไปนี้:'
-             '\n- ฉากเป็นสถานที่ใช้งานจริงแบบมินิมอลอบอุ่น (บ้าน ห้อง ครัว ระเบียง สวน — ไม้ธรรมชาติ ของแต่งโทนครีม ต้นไม้ แบบ Pinterest / MUJI / IKEA) ไม่ใช่สตูดิโอพื้นเรียบ · แสงธรรมชาติ'
+             '\n- ฉากเป็นสถานที่ใช้งานจริงที่เรียบโล่ง อบอุ่น (บ้าน ห้อง ครัว ระเบียง สวน — ไม้ธรรมชาติ ของแต่งโทนครีม ต้นไม้ แบบ Pinterest / MUJI / IKEA) ไม่ใช่สตูดิโอพื้นเรียบ · แสงธรรมชาติ'
              '\n- ทุกฉากมีการลงมือทำกับสินค้าจริง (หยิบ แกะ คลี่ ติดตั้ง กด ทา ใช้) ตามระดับผู้แสดงที่ตั้งไว้ · ต้องมีอย่างน้อย 1 ฉากโชว์ผลการทำงานจริงของสินค้า (เช่น ไฟสว่างตอนค่ำ ก่อน-หลังใช้ ผลลัพธ์หลังใช้)')
 PLAN_CUST = ('\n\n★ ฉากในคลิป: ผู้ใช้กำหนดสถานที่เอง — ทับกฎฉาก/สไตล์ภาพด้านบนเฉพาะเรื่องสถานที่: {values.svScene}'
-             '\n- ทุกฉากทุกคลิปอยู่ในสถานที่นี้ (ปรับมุมกล้องและระยะได้) · ถ้าผู้ใช้เว้นว่าง ให้เลือกสถานที่มินิมอลที่เข้ากับสินค้าเองแล้วใช้ที่เดิมทุกฉาก'
+             '\n- ทุกฉากทุกคลิปอยู่ในสถานที่นี้ (ปรับมุมกล้องและระยะได้) · ถ้าผู้ใช้เว้นว่าง ให้เลือกสถานที่เรียบโล่งที่เข้ากับสินค้าเองแล้วใช้ที่เดิมทุกฉาก'
              '\n- s*en ทุกฉากระบุสถานที่นี้เป็นภาษาอังกฤษ (ระบบแนบรูปสถานที่ให้ตอนวาดภาพและทำวิดีโอ ถ้าผู้ใช้ใส่รูปไว้)')
+PLAN_AUTO = ('\n\n★ ฉากในคลิป: อัตโนมัติ — เลือกเองว่าคลิปนี้จะเป็นแบบไหน แล้วใช้แบบเดียวทั้งคลิป:'
+             '\n- (ก) จัดฉากคุมโทน: สตูดิโอ/พื้นเรียบโทนพาสเทล สินค้าเด่น เสียงพากย์แบบโฆษณา — เหมาะกับสินค้าที่ขายความสวยหรือภาพลักษณ์ (บิวตี้ แฟชั่น เครื่องประดับ ของพรีเมียม)'
+             '\n- (ข) ฉากชีวิตจริง: สถานที่ใช้งานจริงที่เรียบโล่ง อบอุ่น (Pinterest / MUJI / IKEA) ลงมือใช้สินค้าทุกฉาก มีฉากโชว์ผลการทำงานจริง เสียงพากย์แบบเพื่อนแนะนำเพื่อน — เหมาะกับสินค้าที่ต้องใช้ ติดตั้ง หรือเห็นผลจากการใช้ (ของใช้ในบ้าน ไฟ เครื่องครัว ทำความสะอาด สัตว์เลี้ยง)'
+             '\n- s*en ทุกฉากบอกสถานที่/พื้นหลังให้ชัด (สตูดิโอพื้นเรียบ หรือห้อง/ระเบียง/สวนที่ระบุ) · ห้ามเขียนคำว่า ตะกร้า ปุ่มซื้อ หน้าจอ หรือราคา ลงใน s*th และ s*en')
 PLAN_FRIEND = ('\n\n★ วิธีเล่า: แบบเพื่อนเล่า'
                '\n- vo: ภาษาพูดแบบเพื่อนแนะนำเพื่อน เป็นกันเอง เร็วนิด ๆ ไม่ขายแรง เหมือนคนใช้จริงเล่า (เปิดได้แบบ "แก ...อันนี้ดีมาก" · ปิดแบบชวนเพื่อน เช่น "แปะตะกร้าไว้ให้แล้ว") · ถ้าภาษาเป็น English ใช้ภาษาพูดอังกฤษโทนเดียวกัน · กฎคำลงท้ายและเพศเสียงยังใช้ตามเดิม'
                '\n- ov: ขึ้นต้นได้ด้วยอีโมจิ 1 ตัวที่เข้ากับข้อความ (ข้อยกเว้นของกฎห้าม emoji) · ov1 เป็นชื่อสินค้าแบบสั้น'
@@ -64,27 +69,30 @@ PLAN_EN_PRICE = '\n- (English) ถ้าพูดหรือเขียนร�
 PLAN_PET = '\n- ตัวละครสัตว์อยู่บนพื้น โซฟา หรือข้างโต๊ะ ห้ามขึ้นเคาน์เตอร์ครัว โต๊ะทำอาหาร หรือเตา'
 sp = ops['mnPlan']['systemInstruction']['parts']
 assert isinstance(sp[-1], dict) and 'ภาษาของคลิป: English' in json.dumps(sp[-1], ensure_ascii=False), 'ท้าย sys ไม่ใช่บล็อกภาษา v55'
-sp[-1] = plus(sp[-1], (S_REAL, PLAN_REAL), (S_CUST, PLAN_CUST), (FRIEND, PLAN_FRIEND),
+sp[-1] = plus(sp[-1], (S_AUTO, PLAN_AUTO), (S_REAL, PLAN_REAL), (S_CUST, PLAN_CUST), (FRIEND, PLAN_FRIEND),
               (AND(NEW, eq('svLang', 'English')), PLAN_EN_PRICE), (AND(NEW, PET_ACTIVE), PLAN_PET))
 
 # ── บอร์ด — ต่อท้ายส่วนตัวละคร + รูปฉาก
 BOARD_REAL = ' · ฉากชีวิตจริง: บ้าน/สวนแบบมินิมอลอบอุ่น ไม่ใช่สตูดิโอ · ห้ามวาดหน้าจอร้านค้า/ตะกร้า/ราคา'
+BOARD_AUTO = ' · ฉาก: ตามบท (จัดฉากคุมโทนหรือฉากชีวิตจริงตามที่บทเลือก) · ห้ามวาดหน้าจอร้านค้า/ตะกร้า/ราคา'
 BOARD_CUST = ' · ฉาก: สถานที่ตามบท (ผู้ใช้กำหนด) · ถ้ามีรูปสถานที่แนบ ทุกช่องเป็นที่นั้น'
 SCENE_REF = {'from': 'scenes', 'by': 'sc1', 'slot': 'room1', 'when': S_CUST}
 for oid in ('mnBoard', 'mnBoard2', 'mnBoard3'):
     o = ops[oid]; p = o['prompt']['parts']
     assert 'charBoard' in json.dumps(p[6]), oid
-    p[6] = plus(p[6], (S_REAL, BOARD_REAL), (S_CUST, BOARD_CUST))
+    p[6] = plus(p[6], (S_AUTO, BOARD_AUTO), (S_REAL, BOARD_REAL), (S_CUST, BOARD_CUST))
     also = o['refs']['also']
     i_face = next(i for i, r in enumerate(also) if r.get('slot') == 'face')
     also.insert(i_face + 1, copy.deepcopy(SCENE_REF))
 
 # ── วิดีโอ
 OLD_LEAD = 'A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.'
-REAL_LEAD = ('A UGC-style product review, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below: '
-             'photorealistic cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.')
+REAL_LEAD = ('A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: '
+             'cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.')   # live-action มีบรรทัด "Every frame is live-action photography" อยู่แล้ว
 CUST_LEAD = ('A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. '
              'If a location photo is attached (just before the storyboard), use that exact place.')
+AUTO_LEAD = ('A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: '
+             'clean pastel studio or cozy lived-in home.')   # ค่าเริ่มต้น ⇒ คงกฎล็อกช็อตเดียว (ยาม minimal-cliplen)
 FRIEND_VOICE = ' Tone: casual friend-to-friend, not salesy.'
 FRIEND_NEG = ' Also avoid: shopping UI, cart, price.'
 SCRIPT_RX = re.compile(r' ?Voice-over script \((?:Thai|English)\): "[^"]*"')
@@ -93,9 +101,8 @@ def strip_script(x):
     if isinstance(x, list): return [strip_script(v) for v in x]
     if isinstance(x, dict): return {k: (v if k in ('when', 'key', 'table', 'op') else strip_script(v)) for k, v in x.items()}
     return x
-def short_text(x):   # ชดเชยความยาว: คำบรรยายฟอนต์ฉบับสั้น + "Overlay" แทน "Thai overlay"
+def short_text(x):   # ชดเชยความยาว: คำบรรยายฟอนต์ฉบับสั้น ("Thai overlay" ต้องคงไว้ — ยาม camera-en)
     if isinstance(x, str):
-        x = x.replace(' Thai overlay: "', ' Overlay: "')
         if '{values.svText}' in x:
             bits = x.split('{values.svText}'); parts = []
             for i, b in enumerate(bits):
@@ -110,7 +117,7 @@ n_nar = 0
 for oid in ('mnVideo', 'mnVideo2', 'mnVideo3'):
     o = ops[oid]; p = o['prompt']['parts']
     assert isinstance(p[0], str) and p[0].startswith(OLD_LEAD), oid
-    p[0] = pick(p[0], (S_REAL, p[0].replace(OLD_LEAD, REAL_LEAD, 1)), (S_CUST, p[0].replace(OLD_LEAD, CUST_LEAD, 1)))
+    p[0] = pick(p[0], (S_AUTO, p[0].replace(OLD_LEAD, AUTO_LEAD, 1)), (S_REAL, p[0].replace(OLD_LEAD, REAL_LEAD, 1)), (S_CUST, p[0].replace(OLD_LEAD, CUST_LEAD, 1)))
     iv = [i for i, x in enumerate(p) if 'Voice-over script' in json.dumps(x, ensure_ascii=False)]
     ineg = [i for i, x in enumerate(p) if 'Negative:' in json.dumps(x, ensure_ascii=False)]
     its = [i for i, x in enumerate(p) if 'ON-SCREEN TEXT STYLE' in json.dumps(x, ensure_ascii=False)]
@@ -118,7 +125,7 @@ for oid in ('mnVideo', 'mnVideo2', 'mnVideo3'):
     noscript = strip_script(copy.deepcopy(p[iv[0]]))
     assert json.dumps(noscript) != json.dumps(p[iv[0]]), (oid, 'ตัดบทรวมไม่ได้')
     p[iv[0]] = pick(p[iv[0]], (FRIEND, {'op': 'concat', 'parts': [noscript, only(VOICE_ON, FRIEND_VOICE)]}))
-    p[ineg[0]] = plus(p[ineg[0]], (FRIEND, FRIEND_NEG))
+    p[ineg[0]] = plus(p[ineg[0]], (OR(FRIEND, S_AUTO), FRIEND_NEG))
     p[its[0]] = pick(p[its[0]], (NEW, short_text(copy.deepcopy(p[its[0]]))))
     for i, part in enumerate(p):
         m = re.search(r'\{item\.ov(\d+)\}', json.dumps(part)) if isinstance(part, dict) and i > ineg[0] else None
@@ -153,6 +160,7 @@ vibe['card'][0]['card'][1]['value'] = 'ฉากในคลิป'
 vibe['card'][1]['value'] = 'ทุกแบบยังเป็นมินิมอล — ต่างที่การจัดฉากและวิธีเล่า'
 sel = vibe['card'][2]; assert sel['field'] == 'svLang'
 sel.update(field='svVibe', options=[
+    {'value': AUTO_V, 'label': 'อัตโนมัติ', 'desc': 'หมีเลือกฉากให้เข้ากับสินค้า', 'icon': 'auto_awesome'},
     {'value': '', 'label': 'จัดฉากคุมโทน', 'desc': 'สะอาด โทนเดียวทั้งคลิป เสียงโฆษณา', 'icon': 'palette'},
     {'value': REAL_V, 'label': 'ฉากชีวิตจริง', 'desc': 'เหมือนคนใช้จริงถ่ายเอง เสียงเพื่อนเล่า', 'icon': 'home'},
     {'value': CUST_V, 'label': 'กำหนดฉาก', 'desc': 'พิมพ์หรือใส่รูปสถานที่เอง', 'icon': 'edit_note'}])
@@ -193,7 +201,7 @@ panel['when'] = S_CUST
 panel['card'] = [look, photo, {'el': 'text', 'value': 'วิธีเล่า', 'className': lbl_cls}, tone]
 vibe['card'].append(panel)
 area.insert(1, vibe)
-cfg['values'].update(svVibe='', svScene='', svVoTone='')
+cfg['values'].update(svVibe=AUTO_V, svScene='', svVoTone='')   # พี่หมีเคาะ 2026-10-16: ค่าเริ่มต้น = อัตโนมัติ (ไฟล์เซฟเก่าที่ไม่มี svVibe ได้อัตโนมัติด้วย · กด "จัดฉากคุมโทน" = prompt เดิมทุกไบต์)
 
 json.dump(cfg, open(PATH, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 print('✅ v56 · ฉากในคลิป 3 แบบ (คุมโทน/ชีวิตจริง/กำหนดเอง) · รูปฉาก scenes/sc1 · VO รายฉาก %d' % n_nar)
