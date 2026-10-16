@@ -48,15 +48,15 @@ AUTO_CAST = AND(SHOWN, eq('svCast', C_AUTO))
 # ── ระดับการเห็นใหม่ (ทั้ง 2 key ของ svCharSrc ได้แถวเดียวกัน — รูปใช้เฉพาะเห็นเต็มตัว)
 VIS_PLAN = {
     AUTO_V: 'กฎพรีเซนเตอร์: เลือกเองว่าจะให้เห็นผู้แสดงแค่ไหนให้เข้ากับสินค้า (ไม่มีคน / เห็นแต่มือ / พรีเซนเตอร์ 1 คน) — สินค้าที่ต้องสาธิตให้เห็นมือใช้งาน · สินค้าแฟชั่น/บิวตี้มีพรีเซนเตอร์ได้ · เลือกแล้วใช้แบบเดียวกันทุกฉากทุกคลิป · สินค้ายังเป็นจุดโฟกัสหลัก',
-    HANDS: 'กฎพรีเซนเตอร์: เห็นแต่มือและแขนของผู้แสดง ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือถือ/ใช้/สาธิตสินค้าอย่างเป็นธรรมชาติ (ฉากโชว์สินค้าเดี่ยวไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ',
+    HANDS: 'กฎพรีเซนเตอร์: เห็นแต่มือและแขนของผู้แสดง ห้ามเห็นหน้า ศีรษะ ไหล่ หรือตัวเต็ม — มือถือ/ใช้/สาธิตสินค้าอย่างเป็นธรรมชาติ (ฉากโชว์สินค้าเดี่ยวไม่มีมือได้) · ห้ามมุม over-the-shoulder หรือมุมที่ติดศีรษะ · s*en เขียนว่า hands only ห้ามใช้คำ woman/man/person (คลิปจริง S4: "woman\'s hands" + over-the-shoulder = ได้หน้าคนเต็ม ๆ)',
 }
 VIS_BOARD = {
     AUTO_V: 'ผู้แสดงในภาพตามบท แบบเดียวกันทุกช่อง สินค้าเด่นกว่าคนเสมอ',
-    HANDS: 'เห็นแต่มือ/แขนที่ถือหรือใช้สินค้า ห้ามมีใบหน้าหรือตัวเต็มในทุกช่อง',
+    HANDS: 'เห็นแต่มือ/แขนที่ถือหรือใช้สินค้า ห้ามมีใบหน้า ศีรษะ ไหล่ หรือตัวเต็มในทุกช่อง',
 }
 VIS_VIDEO = {
     AUTO_V: 'People: exactly as written in each scene, identical across every shot; the product stays the focus.',
-    HANDS: "Only the presenter's hands and forearms are visible, holding or using the product; never a face or full body; natural hands with correct fingers.",
+    HANDS: "Hands only: hands and forearms holding or using the product; never a face, head, shoulders or body; natural hands, correct fingers.",
 }
 
 # ── ต่อท้าย (ระดับการเห็นอื่นที่ไม่ใช่เต็มตัว + สัตว์ · หรือ อัตโนมัติ)
