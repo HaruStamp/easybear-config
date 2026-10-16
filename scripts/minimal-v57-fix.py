@@ -49,5 +49,29 @@ if done_before:
     print('แพตช์แล้วก่อนหน้า (เขียนแถวเสียงซ้ำอย่างเดียว)')
 else:
     assert all(v > 0 for v in hits.values()), hits
+
+# ④ (คลิปจริง V2b) แมวทำตัวเหมือนคนขยับปากพูดเอง ⇒ ได้เสียงสูงแบบตัวการ์ตูน (f0 177 ทั้งที่ล็อกชาย) → ห้าม lip-sync · เสียงเป็นผู้บรรยายนอกจอ
+ANTHRO_TAIL = ' Never lip-syncs; the voice-over is an off-screen narrator.'
+for k in list(L['charVideoPetEN']):
+    if k.startswith('สัตว์ทำตัวเหมือนคน|') and not L['charVideoPetEN'][k].endswith(ANTHRO_TAIL):
+        L['charVideoPetEN'][k] += ANTHRO_TAIL
+H = 'มีพรีเซนเตอร์ไทย 1 คนในคลิป|'
+for src in ('AI เลือกนาย/นางแบบให้เหมาะกับสินค้า', 'ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต'):
+    assert len(L['charVideoPetEN']['สัตว์ทำตัวเหมือนคน|' + src]) <= len(L['charVideoEN'][H + src]), 'แถวสัตว์ยาวกว่าแถวคน'
+
+# ⑤ (คลิปจริง V3b) English โหมดจัดฉากคุมโทน อ่านราคา "five-ninety" ไม่มีสกุล — กฎ baht เดิมเปิดเฉพาะฉากแบบใหม่ ⇒ เปิดทุกฉากเมื่อเป็น English
+PRICE = '(English) ถ้าพูดหรือเขียนราคา ต้องมีคำว่า baht'
+mp = next(o for o in c['ops'] if o['id'] == 'mnPlan')
+found = 0
+def fix_gate(x):
+    global found
+    if isinstance(x, dict):
+        if isinstance(x.get('value'), str) and PRICE in x['value'] and 'when' in x:
+            x['when'] = {'op': 'eq', 'a': '{values.svLang}', 'b': 'English'}; found += 1
+        for v in x.values(): fix_gate(v)
+    elif isinstance(x, list):
+        for v in x: fix_gate(v)
+fix_gate(mp['systemInstruction'])
+assert found == 1, found
 json.dump(c, open(P, 'w'), ensure_ascii=False, indent=2)
 print('ok', P)
