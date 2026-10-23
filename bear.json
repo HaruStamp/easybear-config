@@ -1,0 +1,27 @@
+{
+  "$schema": "docs/ORDER.md §8.2",
+  "team": "easybear-config",
+  "department": "flow",
+  "head": "easybear-starter",
+  "role": "คลัง config ของแอป easybear ทุกตัว (repo ร่วม) — 1 แอป = <app>-dev.json (ทีม) + <app>-public.json (ลูกค้า) บน GCS · push = live ทันที",
+  "room": "ไม่มีห้องของตัวเอง — แต่ละทีมแอปแก้/push ไฟล์ของตัวเอง · starter คุมภาพรวม",
+  "forbidden": [
+    "ไฟล์ config ของแอปอื่น — แก้เฉพาะ <app>-*.json ของทีมตัวเอง (ทีมเจ้าของ: ชื่อไฟล์ขึ้นต้นด้วยชื่อแอป · apps.json/film-dev.json = easybear-starter)",
+    "push <app>-public.json โดยไม่มีคำสั่งหัวหน้าแผน/พี่หมี (ถึงลูกค้าทันที)",
+    "push คอมมิตของทีมอื่นที่ค้างในเครื่อง — เช็ค git log origin/main..HEAD ก่อนทุกครั้ง"
+  ],
+  "keys": [],
+  "install": {
+    "brew": ["google-cloud-sdk (gcloud storage cp)"]
+  },
+  "commands": {
+    "push": "./push-gcs.sh <file>.json"
+  },
+  "logins": ["gcloud auth (สิทธิ์เขียน bucket easybear-config-578946198765)"],
+  "deployed": [
+    { "what": "GCS bucket (config live ทุกแอป · no-cache)", "id": "gs://easybear-config-578946198765", "version": "ตาม md5 ต่อไฟล์ — ทีมแอปจดในบัตรตัวเอง" }
+  ],
+  "data_outside_git": [
+    { "path": "~/.config/gcloud", "kind": "file", "note": "credential gcloud สำหรับ push-gcs.sh", "move": "ล็อกอินใหม่ (gcloud auth login)" }
+  ]
+}
