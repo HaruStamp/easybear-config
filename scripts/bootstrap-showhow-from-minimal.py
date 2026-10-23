@@ -13,7 +13,7 @@
 #   stMerge  = merge over products from tasks  → slot 'full' = คลิปเต็มไฟล์เดียว
 import json, os
 
-ROOT = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config'
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC, DST = os.path.join(ROOT, 'minimal.json'), os.path.join(ROOT, 'showhow-dev.json')
 
 # ── 0) rename op ids + brain namespace บนข้อความดิบ (ครอบ UI ที่อ้างถึงด้วย) ──

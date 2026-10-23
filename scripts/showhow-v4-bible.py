@@ -6,7 +6,7 @@
 #      user-instruction priority · สินค้าต้องถูกใช้งานจริง · โหมด "เห็นแต่มือ" · ท่าเปิด "ลงมือเลย"
 import json, os
 
-ROOT = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config'
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = DST = os.path.join(ROOT, 'showhow-dev.json')   # rename ทีหลังเมื่อเคาะชื่อ
 
 raw = open(SRC, encoding='utf-8').read()

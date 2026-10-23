@@ -3,7 +3,7 @@
 # showhow-v2 (ประวัติ · one-shot รันไปแล้ว) — แก้จาก config ตัวปัจจุบัน (ไม่ใช่ bootstrap ใหม่) · รันซ้ำได้ (idempotent)
 import json, os, copy
 
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
+P = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'showhow-dev.json')
 cfg = json.load(open(P, encoding='utf-8'))
 OPS = {o['id']: o for o in cfg['ops']}
 V = cfg['values']

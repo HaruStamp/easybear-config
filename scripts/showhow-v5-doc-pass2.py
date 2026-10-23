@@ -5,7 +5,7 @@
 #         STYLE BALANCE · LIGHTING CONTINUITY · STORAGE PRODUCT PATTERN · VIDEO END RULE
 import json, os
 
-P = '/Users/tammaster/Desktop/Dev/bear-clan/easybear-config/showhow-dev.json'
+P = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'showhow-dev.json')
 cfg = json.load(open(P, encoding='utf-8'))
 OPS = {o['id']: o for o in cfg['ops']}
 sys = cfg['brain']['sh']['sys']
