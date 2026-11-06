@@ -367,7 +367,7 @@
  },
  "brain": {
   "mn": {
-   "imgNote": "Attached photos in order: the model photo (if any), then the garment photos — front, back, detail (only those that exist), then the location photo if any. Study the garment's exact colour, fabric, pattern, cut, length and details and describe them precisely in \"outfit\"; describe the model precisely in \"model\"."
+   "imgNote": "Attached photos in order: the model photo (if any), then the garment photos — front, back, detail (only those that exist), then the location photo if any, then extra set-piece photos (worn together with the garment) if any. Study the garment's exact colour, fabric, pattern, cut, length and details and describe them precisely in \"outfit\"; describe the model precisely in \"model\"."
   }
  },
  "ops": [
@@ -394,7 +394,7 @@
       "op": "lookup",
       "table": "fsOut",
       "key": "{values.svSec}",
-      "fallback": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+      "fallback": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
      }
     ]
    },
@@ -459,6 +459,36 @@
          "b": ""
         },
         "value": "โปรโมชัน: ไม่มี — ห้ามพูดถึงราคาหรือส่วนลด\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.slots.image4}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.itemName2}",
+            "b": ""
+           }
+          }
+         ]
+        },
+        "value": "ชุดเซ็ต (ใส่คู่กันทุกฉาก ตามรูปเพิ่ม): {item.itemName2} {item.itemName3}\n"
        }
       ]
      },
@@ -695,7 +725,9 @@
       "b": "custom"
      },
      "then": "{item.slots.room1}"
-    }
+    },
+    "{item.slots.image4}",
+    "{item.slots.image5}"
    ],
    "imagesNote": "{brain.mn.imgNote}",
    "logRun": {
@@ -4307,7 +4339,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -4323,7 +4355,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -4382,6 +4414,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -4415,6 +4462,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -4611,7 +4668,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -4627,7 +4684,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -4686,6 +4743,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -4719,6 +4791,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -4915,7 +4997,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -4931,7 +5013,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -4990,6 +5072,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -5023,6 +5120,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -5219,7 +5326,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5235,7 +5342,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -5294,6 +5401,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -5327,6 +5449,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -5523,7 +5655,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5539,7 +5671,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -5598,6 +5730,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -5631,6 +5778,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -5827,7 +5984,7 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5843,7 +6000,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -5902,6 +6059,21 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+       }
+      ]
+     },
      "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
     ]
    },
@@ -5935,6 +6107,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -5970,8 +6152,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -6130,7 +6312,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -6146,7 +6328,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -6202,6 +6384,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -6479,6 +6676,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -6507,6 +6714,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -6555,8 +6767,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -6715,7 +6927,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -6731,7 +6943,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -6787,6 +6999,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -7064,6 +7291,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -7092,6 +7329,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -7140,8 +7382,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -7300,7 +7542,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -7316,7 +7558,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -7372,6 +7614,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -7649,6 +7906,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -7677,6 +7944,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -7725,8 +7997,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -7885,7 +8157,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -7901,7 +8173,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -7957,6 +8229,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -8234,6 +8521,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -8262,6 +8559,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -8310,8 +8612,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -8470,7 +8772,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -8486,7 +8788,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -8542,6 +8844,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -8819,6 +9136,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -8847,6 +9174,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -8895,8 +9227,8 @@
        }
       ]
      },
-     "Vertical 9:16 fashion review clip, ~10 s, for a Thai clothing shop.\nLOOK: ",
-     "authentic Thai clothing-shop phone video, natural daylight, neutral true-white balance (NOT yellow, NOT hazy), real skin texture, NOT AI-looking, NOT CGI, NOT plastic skin",
+     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
       "op": "block",
@@ -9055,7 +9387,7 @@
        }
       ]
      },
-     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
+     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -9071,7 +9403,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
       ]
      },
@@ -9127,6 +9459,21 @@
          ]
         },
         "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image4"
+        },
+        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
        }
       ]
      },
@@ -9404,6 +9751,16 @@
        "a": "{item.scene}",
        "b": "custom"
       }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
      }
     ]
    },
@@ -9432,6 +9789,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "spin"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "live"
         }
        ]
       },
@@ -9855,6 +10217,34 @@
                          "b": "minimal"
                         },
                         "value": "มินิมอลคุมโทน"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.clipStyle}",
+                         "b": "live"
+                        },
+                        "value": "ไลฟ์ขายหน้ากล้อง"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.clipStyle}",
+                         "b": "hanger"
+                        },
+                        "value": "จากไม้แขวนสู่ใส่จริง"
                        }
                       ]
                      },
@@ -11688,6 +12078,34 @@
                     "parts": [
                      {
                       "when": {
+                       "op": "eq",
+                       "a": "{item.clipStyle}",
+                       "b": "live"
+                      },
+                      "value": "ไลฟ์ขายหน้ากล้อง"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": "{item.clipStyle}",
+                       "b": "hanger"
+                      },
+                      "value": "จากไม้แขวนสู่ใส่จริง"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
                        "op": "not",
                        "a": {
                         "op": "eq",
@@ -12410,6 +12828,165 @@
             },
             {
              "el": "text",
+             "value": "ชุดเซ็ต — ชิ้นอื่นที่ใส่คู่กันในคลิปเดียว (ไม่บังคับ) เช่น กางเกง เสื้อคลุม กระเป๋า",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "row",
+             "className": "gap-3 items-start flex-wrap",
+             "card": [
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ชิ้นที่ 2",
+                 "className": "!text-[13.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "box",
+                 "className": "relative w-[104px] @[560px]:w-[132px] shrink-0",
+                 "when": "item.slots.image4!=",
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.image4}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "14px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "image4",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                 "when": "item.slots.image4=",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "image4",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "image4",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                },
+                {
+                 "el": "input",
+                 "field": "itemName2",
+                 "placeholder": "ชื่อ เช่น กางเกงขากว้าง",
+                 "className": "!h-10 !px-3 !rounded-xl !text-[15px] w-[150px]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ชิ้นที่ 3",
+                 "className": "!text-[13.5px] font-bold opacity-70 px-0.5"
+                },
+                {
+                 "el": "box",
+                 "className": "relative w-[104px] @[560px]:w-[132px] shrink-0",
+                 "when": "item.slots.image5!=",
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.image5}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "14px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "image5",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                 "when": "item.slots.image5=",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "image5",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "image5",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                },
+                {
+                 "el": "input",
+                 "field": "itemName3",
+                 "placeholder": "ชื่อ เช่น กางเกงขากว้าง",
+                 "className": "!h-10 !px-3 !rounded-xl !text-[15px] w-[150px]"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "text",
              "value": "จุดเด่น / เนื้อผ้า (ไม่บังคับ)",
              "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
             },
@@ -12522,6 +13099,18 @@
                "label": "มินิมอลคุมโทน",
                "desc": "ฉากเรียบโทนเดียวกับชุด กล้องนิ่ง ตัดทุก 2 วิแบบโฆษณา · เหมาะชุดเรียบหรู อยากให้ดูแพง",
                "icon": "palette"
+              },
+              {
+               "value": "live",
+               "label": "ไลฟ์ขายหน้ากล้อง",
+               "desc": "พูดครึ่งตัวเหมือนไลฟ์ ยกผ้าให้ดูใกล้ ๆ แล้วถอยให้เห็นเต็มตัว · เหมาะขายของรายวัน",
+               "icon": "live_tv"
+              },
+              {
+               "value": "hanger",
+               "label": "จากไม้แขวนสู่ใส่จริง",
+               "desc": "ช็อตแรกเห็นชุดบนไม้แขวน แล้วตัดไปนางแบบใส่จริง · เหมาะร้านที่มีรูปชุดแขวนหรือวางราบ",
+               "icon": "dry_cleaning"
               }
              ]
             },
@@ -12659,7 +13248,109 @@
                "label": "ริมทะเล",
                "icon": "beach_access"
               }
-             ]
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.clipStyle}",
+               "b": "mirror"
+              }
+             }
+            },
+            {
+             "el": "grid-select",
+             "field": "scene",
+             "cols": 3,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "หมีเลือกให้เข้ากับชุด",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "custom",
+               "label": "ห้องเรา / หน้าร้าน",
+               "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
+               "icon": "add_a_photo"
+              },
+              {
+               "value": "closet",
+               "label": "ห้องแต่งตัว",
+               "icon": "checkroom"
+              },
+              {
+               "value": "bedroom",
+               "label": "ห้องนอนมินิมอล",
+               "icon": "bed"
+              },
+              {
+               "value": "boutique",
+               "label": "ร้านเสื้อผ้า",
+               "icon": "storefront"
+              },
+              {
+               "value": "studio",
+               "label": "สตูดิโอพื้นขาว",
+               "icon": "photo_camera_back"
+              }
+             ],
+             "when": {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "mirror"
+             }
+            },
+            {
+             "el": "text",
+             "value": "เซลฟี่หน้ากระจกเหมาะกับฉากในร่ม — ฉากที่เลือกไว้เป็นกลางแจ้ง กดเลือกใหม่ด้านบน",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] px-0.5 leading-snug !text-[var(--ev-accent)] font-bold",
+             "when": {
+              "op": "and",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.clipStyle}",
+                "b": "mirror"
+               },
+               {
+                "op": "or",
+                "list": [
+                 {
+                  "op": "eq",
+                  "a": "{item.scene}",
+                  "b": "cafe"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{item.scene}",
+                  "b": "street"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{item.scene}",
+                  "b": "park"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{item.scene}",
+                  "b": "rooftop"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{item.scene}",
+                  "b": "beach"
+                 }
+                ]
+               }
+              ]
+             }
             },
             {
              "el": "box",
@@ -32530,21 +33221,27 @@
    "walk": "WALK TO CAMERA — ONE continuous take, camera fixed at chest height (slightly low hero angle). Scene 1 = the model walks toward the camera from a few metres away with natural confident steps (NOT a runway catwalk), the fabric moving with each step. Then she slows, stops at medium-full distance, poses (hand on hip, hair touch, small turn to the side) and talks to the camera. Full body visible in every scene.",
    "spin": "TURN AROUND — ONE continuous take, fixed camera, full body head-to-toe. Scene 1 = front view + hook line. Then the model turns slowly on the spot (about 3 seconds for a full turn) so the viewer sees the sides and the BACK of the outfit, the hem flares a little, then she faces the camera again and talks. Exactly ONE slow full turn per 10 seconds — never a fast spin or twirl.",
    "lookbook": "LOOKBOOK SHOOT — shot by a photographer (third-person camera, NOT a selfie, NO mirror, NO phone in hand). Hard cut every scene (2 s) to a new pose: full-body contrapposto, hand on hip, one step forward, looking over the shoulder (back of the outfit), a medium shot of one detail (neckline, sleeve, waist). Full body in most scenes; the final scene returns to a full-body pose. Her talk continues across the cuts as one voice.",
-   "minimal": "MINIMAL TONE AD — like a premium minimal product ad: a clean uncluttered set in ONE colour family matched to the garment (soft pastel or neutral backdrop, at most one simple plinth or prop), soft even light. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): calm elegant full-body pose, slow push-in, a medium shot on the fabric or a detail, a slow side turn, and a full-body pose at the end. Calm, premium talk."
+   "minimal": "MINIMAL TONE AD — like a premium minimal product ad: a clean uncluttered set in ONE colour family matched to the garment (soft pastel or neutral backdrop, at most one simple plinth or prop), soft even light. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): calm elegant full-body pose, slow push-in, a medium shot on the fabric or a detail, a slow side turn, and a full-body pose at the end. Calm, premium talk.",
+   "live": "LIVE SELLING — ONE continuous take like a TikTok Shop live: fixed phone camera on a tripod at chest height. The model faces the camera half-body and talks warmly like a live seller, pulls and stretches the fabric toward the lens to show the texture, steps back so the full outfit is visible, then comes closer again for the call-to-action. No cuts.",
+   "hanger": "HANGER TO WORN — scene 1: the garment alone on a wooden hanger against a plain wall (no person; she talks off-screen). Then a hard cut to the model wearing the same garment, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror."
   },
   "fsStyleVideo": {
    "mirror": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image.",
    "walk": "ONE CONTINUOUS TAKE — fixed camera at chest height; the model walks toward the camera with natural steps (not a runway catwalk), the fabric swings and drapes naturally, then she stops and talks to the camera; full body visible head-to-toe; no cuts. The opening frame is supplied — continue from exactly that image.",
    "spin": "ONE CONTINUOUS TAKE — fixed camera, full body head-to-toe; the model turns slowly on the spot (one full turn over ~3 s, NOT a fast spin), showing the sides and back, then faces the camera again; face, hair and outfit identical after the turn; no cuts. The opening frame is supplied — continue from exactly that image.",
    "lookbook": "LOOKBOOK EDIT — a hard cut at every scene boundary (every 2 s) to a new pose, third-person photographer camera (no selfie, no mirror, no phone), full body in most scenes. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
-   "minimal": "MINIMAL TONE AD — hard cut every 2 s; clean one-colour set matched to the outfit, soft even light; third-person camera (no selfie, mirror or phone); calm poses, slow moves. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot."
+   "minimal": "MINIMAL TONE AD — hard cut every 2 s; clean one-colour set matched to the outfit, soft even light; third-person camera (no selfie, mirror or phone); calm poses, slow moves. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
+   "live": "ONE CONTINUOUS TAKE — live-selling video: fixed tripod phone camera at chest height; half-body talking to camera, she pulls the fabric toward the lens, steps back to full body, then closer again; no cuts. The opening frame is supplied — continue from exactly that image.",
+   "hanger": "HANGER TO WORN — scene 1 = the garment alone on a hanger, no person (voice only); then a hard cut every 2 s to the model wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot."
   },
   "fsStyleBoard": {
    "mirror": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance",
    "walk": "full-body shot from a few metres away: the model mid-step walking toward the camera, camera at chest height slightly low",
    "spin": "full-body front view: the model standing facing the camera in a relaxed contrapposto stance, about to turn around",
    "lookbook": "full-body lookbook photo shot by a photographer: the model standing in a relaxed contrapposto pose, the whole outfit visible",
-   "minimal": "full-body photo on a clean minimal set in one colour family matched to the outfit, soft even light, the model in a calm elegant pose"
+   "minimal": "full-body photo on a clean minimal set in one colour family matched to the outfit, soft even light, the model in a calm elegant pose",
+   "live": "half-body shot facing a tripod phone camera at chest height, the model about to talk to viewers like a live seller, the outfit clearly visible",
+   "hanger": "full-body photo of the model wearing the outfit in a relaxed pose, a plain wall behind her"
   },
   "fsSceneEN": {
    "closet": "a bright walk-in dressing room with neat clothes rails and a full-length mirror",
@@ -32585,9 +33282,9 @@
    "male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\""
   },
   "fsOut": {
-   "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+   "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
   }
  },
  "seed": {
