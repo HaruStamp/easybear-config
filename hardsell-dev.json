@@ -88,6 +88,7 @@
     "textStyleId": "golden-triangle",
     "imageModel": "🍌 Nano Banana Pro",
     "videoModel": "Veo 3.1 - Fast",
+    "svRes": "720p",
     "styleCat": "ugc",
     "camLocks": ""
   },
@@ -1318,16 +1319,108 @@
               }
             ]
           },
-          "\n\nLabels, timings and camera notes are instructions only — never show them."
+          "\n\nLabels, timings and camera notes are instructions only — never show them.",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.svRes}",
+                      "b": "360p"
+                    },
+                    {
+                      "op": "contains",
+                      "a": "{values.videoModel}",
+                      "b": "Omni"
+                    }
+                  ]
+                },
+                "value": "\n\n360p mode: no frame is supplied — attached image 1 is the opening shot of part 1; continue the same take with the same person, outfit, place, light and product. Every mention of the first frame means that image."
+              }
+            ]
+          }
         ]
       },
       "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 2 (8 วิ)",
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 2 เสร็จแล้ว",
       "when": "values.svSec=16",
-      "startFrame": "{item.slots.video}",
+      "startFrame": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.svRes}",
+                "b": "360p"
+              },
+              {
+                "op": "contains",
+                "a": "{values.videoModel}",
+                "b": "Omni"
+              }
+            ]
+          }
+        },
+        "then": "{item.slots.video}"
+      },
+      "refs": {
+        "op": "lookupRefs",
+        "from": "tasks",
+        "by": "",
+        "slot": "board",
+        "also": [
+          {
+            "from": "tasks",
+            "by": "{item.id}",
+            "slot": "board",
+            "when": {
+              "op": "and",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.svRes}",
+                  "b": "360p"
+                },
+                {
+                  "op": "contains",
+                  "a": "{values.videoModel}",
+                  "b": "Omni"
+                }
+              ]
+            }
+          }
+        ]
+      },
       "where": "s5en!=",
       "tailTrim": 1,
-      "resolution": "720p",
+      "resolution": {
+        "op": "cond",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.svRes}",
+              "b": "360p"
+            },
+            {
+              "op": "contains",
+              "a": "{values.videoModel}",
+              "b": "Omni"
+            }
+          ]
+        },
+        "then": "360p",
+        "else": "720p"
+      },
       "timeoutMs": 300000
     },
     {
@@ -1515,13 +1608,105 @@
                 }
               }
             ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.svRes}",
+                      "b": "360p"
+                    },
+                    {
+                      "op": "contains",
+                      "a": "{values.videoModel}",
+                      "b": "Omni"
+                    }
+                  ]
+                },
+                "value": "\n\n360p mode: no frame is supplied — attached image 1 is the opening shot; start the clip looking exactly like it (same person, outfit, place, light, product and headline). Every mention of the first frame means that image."
+              }
+            ]
           }
         ]
       },
       "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอ 8 วิ (ช็อตเดียวต่อเนื่อง)",
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอเสร็จแล้ว พร้อมดาวน์โหลด",
-      "resolution": "720p",
-      "startFrame": "{item.slots.board}",
+      "resolution": {
+        "op": "cond",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.svRes}",
+              "b": "360p"
+            },
+            {
+              "op": "contains",
+              "a": "{values.videoModel}",
+              "b": "Omni"
+            }
+          ]
+        },
+        "then": "360p",
+        "else": "720p"
+      },
+      "startFrame": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.svRes}",
+                "b": "360p"
+              },
+              {
+                "op": "contains",
+                "a": "{values.videoModel}",
+                "b": "Omni"
+              }
+            ]
+          }
+        },
+        "then": "{item.slots.board}"
+      },
+      "refs": {
+        "op": "lookupRefs",
+        "from": "tasks",
+        "by": "",
+        "slot": "board",
+        "also": [
+          {
+            "from": "tasks",
+            "by": "{item.id}",
+            "slot": "board",
+            "when": {
+              "op": "and",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.svRes}",
+                  "b": "360p"
+                },
+                {
+                  "op": "contains",
+                  "a": "{values.videoModel}",
+                  "b": "Omni"
+                }
+              ]
+            }
+          }
+        ]
+      },
       "timeoutMs": 300000
     }
   ],
@@ -3949,6 +4134,65 @@
                                     }
                                   ],
                                   "className": "!min-h-[48px] @[420px]:!min-h-0"
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-1.5 mt-1",
+                                  "when": {
+                                    "op": "contains",
+                                    "a": "{values.videoModel}",
+                                    "b": "Omni"
+                                  },
+                                  "card": [
+                                    {
+                                      "el": "text",
+                                      "value": "ความละเอียด",
+                                      "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5",
+                                      "icon": "aspect_ratio"
+                                    },
+                                    {
+                                      "el": "grid-select",
+                                      "field": "svRes",
+                                      "cols": 2,
+                                      "mobile": {
+                                        "cols": 2
+                                      },
+                                      "contained": true,
+                                      "className": "!min-h-[48px] @[420px]:!min-h-0",
+                                      "options": [
+                                        {
+                                          "value": "720p",
+                                          "label": "ชัด 720p",
+                                          "desc": "ภาพคม ลง Shopee ได้"
+                                        },
+                                        {
+                                          "value": "360p",
+                                          "label": "ประหยัด 360p",
+                                          "desc": "ใช้เครดิตราวครึ่งหนึ่ง · ภาพไม่คม"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "360p: ใช้ภาพเฟรมแรกเป็นภาพอ้างอิงแทนการขยับจากภาพนั้นตรงๆ — เปิดคลิปอาจไม่ตรงภาพเฟรมแรกเป๊ะ และคลิป 16 วิ ช่วงที่ 2 อาจต่อไม่เนียนเท่า 720p",
+                                      "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 px-0.5 leading-snug",
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{values.svRes}",
+                                            "b": "360p"
+                                          },
+                                          {
+                                            "op": "contains",
+                                            "a": "{values.videoModel}",
+                                            "b": "Omni"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
                                 }
                               ]
                             }
