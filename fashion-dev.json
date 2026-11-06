@@ -76,7 +76,10 @@
   "svAccent": "มาตรฐาน",
   "fsModelDesc": "",
   "fsGender": "female",
-  "fsBody": ""
+  "fsBody": "",
+  "fsFace": "",
+  "fsShape": "",
+  "svRes": "720p"
  },
  "collections": {
   "control": {
@@ -379,7 +382,7 @@
    "systemInstruction": {
     "op": "concat",
     "parts": [
-     "You are the director of short vertical (9:16) fashion review videos for Thai online clothing sellers (TikTok Shop, Shopee Video, Facebook Reels). ONE model wears the shop's garment and talks to the viewer in Thai like a friendly seller. The goal is to SELL the garment: show the whole outfit, how it fits and moves, the fabric and details, and the back when the style allows. The first 2 seconds must hook (the full outfit + a hook line).\nHard rules: the garment must be exactly the one in the product photos — never redesign, recolour or simplify it; the same model with the same look in every scene; full body (head to toe) in most scenes; no other people; no brand names or logos; never invent prices, discounts, stock or sizes the user did not give.\nSPEECH (vo): Thai only, 4-6 words per 2-second scene, every scene filled, one continuous friendly talk: hook in scene 1, then fabric / cut / how it feels, size and fit only from the user's data, a call-to-action in the last scene (e.g. กดตะกร้าได้เลย). Spell numbers as Thai words; no English abbreviations; say \"ตัวนี้\" instead of brand names; never end with \"...\".\nบทใช้ตัวอักษร ตัวเลข และเครื่องหมายวรรคตอนปกติเท่านั้น ห้ามใส่ emoji หรือสัญลักษณ์ภาพทุกชนิด (เช่น หน้ายิ้ม ดาว ไฟ หัวใจ ลูกศร) — NO emoji or pictographic symbols in ANY output field (title, synopsis, caption, hashtags, scenes, speech, on-screen text).\n\nCLIP STYLE: ",
+     "You are the director of short vertical (9:16) fashion review videos for Thai online clothing sellers (TikTok Shop, Shopee Video, Facebook Reels). ONE model wears the shop's garment and talks to the viewer in Thai like a friendly seller. The goal is to SELL the garment: show the whole outfit, how it fits and moves, the fabric and details, and the back when the style allows. The first 2 seconds must hook (the full outfit + a hook line).\nHard rules: the garment must be exactly the one in the product photos — never redesign, recolour or simplify it; the same model with the same look in every scene; full body (head to toe) in most scenes; no other people; no brand names or logos; never invent prices, discounts, stock or sizes the user did not give; \"outfit\" must be word-for-word identical in every clip; keep the model's real body size (never slimmer); never compare her to a celebrity.\nSPEECH (vo): Thai only, 4-6 words per 2-second scene, every scene filled, one continuous friendly talk: hook in scene 1, then fabric / cut / how it feels, size and fit only from the user's data, a call-to-action in the last scene (e.g. กดตะกร้าได้เลย). Spell numbers as Thai words; no English abbreviations; say \"ตัวนี้\" instead of brand names; never end with \"...\".\nบทใช้ตัวอักษร ตัวเลข และเครื่องหมายวรรคตอนปกติเท่านั้น ห้ามใส่ emoji หรือสัญลักษณ์ภาพทุกชนิด (เช่น หน้ายิ้ม ดาว ไฟ หัวใจ ลูกศร) — NO emoji or pictographic symbols in ANY output field (title, synopsis, caption, hashtags, scenes, speech, on-screen text).\n\nCLIP STYLE: ",
      {
       "op": "lookup",
       "table": "fsStylePlan",
@@ -518,6 +521,55 @@
          }
         },
         "value": " · ส่วนสูง/ไซซ์ที่ใส่: {values.fsBody} (พูดถึงได้)"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " · รูปร่าง: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          " (ต้องเขียนใน model)"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsFace}",
+         "b": "hide"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\n",
+          "ใบหน้า: ไม่เห็นหน้าทุกฉาก (เซลฟี่ = มือถือบังหน้า · แบบอื่น = เฟรมใต้คาง หรือหันหลัง) — sNen/camN ต้องไม่เห็นหน้า"
+         ]
+        }
        }
       ]
      },
@@ -3744,11 +3796,42 @@
       "parts": [
        {
         "when": {
-         "op": "eq",
-         "a": "{values.fsModelDesc}",
-         "b": ""
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.fsModelDesc}",
+           "b": ""
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{values.fsGender}",
+            "b": "male"
+           }
+          }
+         ]
         },
         "value": "a friendly natural-looking Thai woman in her 20s"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{values.fsModelDesc}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{values.fsGender}",
+           "b": "male"
+          }
+         ]
+        },
+        "value": "a friendly natural-looking Thai man in his 20s"
        },
        {
         "when": {
@@ -3763,7 +3846,61 @@
        }
       ]
      },
-     ". ONE person, full body head to toe, standing straight facing the camera, relaxed natural smile, arms relaxed. Wearing a plain fitted white T-shirt and simple light-grey trousers (neutral base outfit — it will be replaced by the shop's garment), plain white sneakers. Ordinary attractive everyday face, not a celebrity look-alike, no moles. Plain soft light-grey studio background, even soft daylight, ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          ", ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          " body — keep this body size exactly"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsFace}",
+          "b": "hide"
+         }
+        },
+        "value": ". ONE person, full body head to toe, standing straight facing the camera, relaxed natural smile, arms relaxed"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsFace}",
+         "b": "hide"
+        },
+        "value": ". ONE person, framed from the chin down to the feet — the face is NOT shown — standing straight, arms relaxed"
+       }
+      ]
+     },
+     ". Wearing a plain fitted white T-shirt and simple light-grey trousers (neutral base outfit — it will be replaced by the shop's garment), plain white sneakers. Ordinary non-famous everyday face with its own small quirks, never a celebrity look-alike. Plain soft light-grey studio background, even soft daylight, ",
      "authentic Thai online clothing-shop video, real smartphone/camera footage, natural daylight with neutral true-white balance (NOT yellow, NOT warm cast, NOT hazy, NOT washed-out), real skin texture, fresh vivid but natural colours — NOT AI-looking, NOT CGI, NOT plastic skin, NOT glossy magazine retouch",
      ". No text, no logos, no watermark, no other people."
     ]
@@ -4043,8 +4180,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -4060,7 +4260,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -4075,7 +4275,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -4115,7 +4315,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -4242,8 +4442,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -4259,7 +4522,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -4274,7 +4537,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -4314,7 +4577,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -4441,8 +4704,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -4458,7 +4784,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -4473,7 +4799,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -4513,7 +4839,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -4640,8 +4966,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -4657,7 +5046,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -4672,7 +5061,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -4712,7 +5101,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -4839,8 +5228,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -4856,7 +5308,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -4871,7 +5323,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -4911,7 +5363,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -5038,8 +5490,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -5055,7 +5570,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -5070,7 +5585,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -5110,7 +5625,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -5178,7 +5693,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 6 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 6 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -5236,8 +5751,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -5253,7 +5831,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -5268,7 +5846,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -5308,7 +5886,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -5618,7 +6196,7 @@
    },
    "tailTrim": 0.1,
    "where": "s26en!=",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
   {
@@ -5645,7 +6223,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 5 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 5 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -5703,8 +6281,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -5720,7 +6361,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -5735,7 +6376,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -5775,7 +6416,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -6085,7 +6726,7 @@
    },
    "tailTrim": 0.1,
    "where": "s21en!=",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
   {
@@ -6112,7 +6753,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 4 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 4 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -6170,8 +6811,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -6187,7 +6891,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -6202,7 +6906,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -6242,7 +6946,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -6552,7 +7256,7 @@
    },
    "tailTrim": 0.1,
    "where": "s16en!=",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
   {
@@ -6579,7 +7283,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 3 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 3 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -6637,8 +7341,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -6654,7 +7421,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -6669,7 +7436,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -6709,7 +7476,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -7019,7 +7786,7 @@
    },
    "tailTrim": 0.1,
    "where": "s11en!=",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
   {
@@ -7046,7 +7813,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 2 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 2 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -7104,8 +7871,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -7121,7 +7951,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -7136,7 +7966,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -7176,7 +8006,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -7486,7 +8316,7 @@
    },
    "tailTrim": 0.1,
    "where": "s6en!=",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
   {
@@ -7513,7 +8343,7 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 1 of one longer clip: same model, outfit, place and light; no restart, no re-introduction, no ending unless this is the final part.\n\n"
+        "value": "CONTINUATION — part 1 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
        }
       ]
      },
@@ -7571,8 +8401,71 @@
        }
       ]
      },
-     ".\nMODEL: {item.modelEN}\nOUTFIT: {item.outfitEN}\n",
-     "Attached images: model photo, garment photos (front, back, detail), place photo — only those that exist, in this order.\n",
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": "{values.fsFace}|{item.clipStyle}",
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs in order (only those attached): model, garment front/back/detail, place.\n",
      {
       "op": "block",
       "sep": "",
@@ -7588,7 +8481,7 @@
          },
          "b": 0
         },
-        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body (ignore the base outfit in that photo).\n"
+        "value": "MODEL LOCK: the model photo is the same person in every frame — same face, hair, skin tone and body size, never slimmer (ignore the base outfit in that photo).\n"
        }
       ]
      },
@@ -7603,7 +8496,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos show the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour it; natural fit, real drape and folds.\n"
+        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
        }
       ]
      },
@@ -7643,7 +8536,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the attached place photo is the real location — keep its layout, surfaces and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
        }
       ]
      },
@@ -7926,7 +8819,7 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 1 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 1 เสร็จแล้ว",
-   "resolution": "720p",
+   "resolution": "{values.svRes}",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -8151,224 +9044,7 @@
            "card": [
             {
              "el": "text",
-             "value": "นางแบบของร้าน",
-             "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]"
-            }
-           ]
-          }
-         ],
-         "card": [
-          {
-           "el": "text",
-           "value": "อัปรูปนางแบบจริงของร้าน (เห็นเต็มตัวยิ่งดี) = หน้าเหมือนเดิมทุกคลิป · หรือพิมพ์ลักษณะแล้วกด \"ให้หมีวาดนางแบบ\" · ว่าง = หมีกดวาดให้ตอนผลิต",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-          },
-          {
-           "el": "row",
-           "className": "gap-3 items-start flex-wrap @[560px]:flex-nowrap",
-           "card": [
-            {
-             "el": "repeat",
-             "coll": "characters",
-             "where": "id=model",
-             "card": [
-              {
-               "el": "box",
-               "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
-               "when": "item.slots.face!=",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.face}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "14px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "face",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "when": "item.slots.face=",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "face",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "face",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
-                }
-               ]
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex-1 min-w-[200px] flex flex-col gap-2 !basis-full @[560px]:!basis-auto",
-             "card": [
-              {
-               "el": "textarea",
-               "field": "fsModelDesc",
-               "placeholder": "ลักษณะ เช่น ผู้หญิงไทย อายุ 25 ผมยาวสีน้ำตาล หุ่นสมส่วน ยิ้มสดใส",
-               "className": "!p-3 !rounded-xl !text-[16px] @[640px]:!text-[15px] !leading-relaxed !min-h-[72px]"
-              },
-              {
-               "el": "repeat",
-               "coll": "characters",
-               "where": "id=model",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "fsModel",
-                 "label": "ให้หมีวาดนางแบบ",
-                 "icon": "brush",
-                 "variant": "solid",
-                 "className": "justify-center !h-12 !rounded-xl font-bold",
-                 "when": {
-                  "op": "eq",
-                  "a": "{item.slots.face}",
-                  "b": ""
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "ได้รูปแล้ว — หมีล็อกหน้าตานางแบบตามรูปทุกช็อต ทุกสินค้า · ไม่ชอบรูป กด ✕ แล้ววาด/อัปใหม่",
-                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.face}",
-                   "b": ""
-                  }
-                 }
-                }
-               ]
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-1.5",
-           "card": [
-            {
-             "el": "text",
-             "value": "เสียงพูด",
-             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "fsGender",
-             "cols": 2,
-             "mobile": {
-              "cols": 2
-             },
-             "contained": true,
-             "className": "!min-h-[48px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "female",
-               "label": "ผู้หญิง",
-               "desc": "พูดลงท้าย ค่ะ",
-               "icon": "face_3"
-              },
-              {
-               "value": "male",
-               "label": "ผู้ชาย",
-               "desc": "พูดลงท้าย ครับ",
-               "icon": "face_6"
-              }
-             ]
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-1.5",
-           "card": [
-            {
-             "el": "text",
-             "value": "ส่วนสูง / ไซซ์ที่นางแบบใส่ (ไม่บังคับ)",
-             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
-            },
-            {
-             "el": "input",
-             "field": "fsBody",
-             "placeholder": "เช่น สูง 162 ซม. ใส่ไซซ์ M",
-             "className": "!h-12 !px-3.5 !rounded-xl !text-[17px] @[640px]:!text-[16px]"
-            },
-            {
-             "el": "text",
-             "value": "หมีพูดถึงในคลิปเพื่อให้ลูกค้าเทียบไซซ์ — ลดการคืนสินค้า",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-            }
-           ]
-          },
-          {
-           "el": "text",
-           "value": "🎙 นางแบบพูดรีวิวเป็นภาษาไทยเองในคลิป · ไม่มีเพลง (ใส่เพลงเองตอนโพสต์ได้) · แบบคลิป ฉาก และข้อความบนคลิป ตั้งในแต่ละสินค้า",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-          }
-         ]
-        },
-        {
-         "el": "group",
-         "collapsible": true,
-         "startOpen": true,
-         "className": "!rounded-[24px] !p-5 @[640px]:!p-6 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
-         "head": [
-          {
-           "el": "box",
-           "className": "w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
-           "card": [
-            {
-             "el": "text",
-             "value": "2",
-             "className": "!text-[21px] @[640px]:!text-[20px] font-black !text-white"
-            }
-           ],
-           "style": {
-            "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #a61e4d))"
-           }
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col min-w-0 gap-0.5",
-           "card": [
-            {
-             "el": "text",
-             "value": "งาน",
+             "value": "ชุด",
              "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]"
             }
            ]
@@ -8393,7 +9069,7 @@
                 "from": "products",
                 "where": "enabled=true"
                },
-               " งาน จาก ",
+               " ชุด จาก ",
                {
                 "op": "count",
                 "from": "products"
@@ -8408,7 +9084,7 @@
              "action": "set",
              "to": "__page",
              "value": "products",
-             "label": "จัดการงาน",
+             "label": "จัดการชุด",
              "icon": "tune",
              "variant": "solid",
              "className": "ml-auto shrink-0 !h-12 !px-5 !rounded-xl !text-[19px] @[640px]:!text-[18px] font-bold transition-all hover:-translate-y-0.5 active:translate-y-0"
@@ -8421,7 +9097,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่มีงาน — กด \"จัดการงาน\" เพื่อเพิ่ม",
+             "value": "ยังไม่มีชุด — กด \"จัดการชุด\" เพื่อเพิ่ม",
              "className": "!text-[16px] @[640px]:!text-[15px] opacity-60 text-center w-full py-8",
              "when": {
               "op": "eq",
@@ -8718,7 +9394,7 @@
                               "a": "{item.scene}",
                               "b": "custom"
                              },
-                             "value": "ฉากกำหนดเอง"
+                             "value": "ห้องเรา / หน้าร้าน"
                             }
                            ]
                           }
@@ -8738,6 +9414,313 @@
              ]
             }
            ]
+          }
+         ]
+        },
+        {
+         "el": "group",
+         "collapsible": true,
+         "startOpen": true,
+         "className": "!rounded-[24px] !p-5 @[640px]:!p-6 bg-[var(--ev-surface)] !border-[var(--ev-border)]",
+         "head": [
+          {
+           "el": "box",
+           "className": "w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 ring-4 ring-[var(--ev-accent)]/15",
+           "card": [
+            {
+             "el": "text",
+             "value": "2",
+             "className": "!text-[21px] @[640px]:!text-[20px] font-black !text-white"
+            }
+           ],
+           "style": {
+            "background": "linear-gradient(135deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 72%, #a61e4d))"
+           }
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col min-w-0 gap-0.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "นางแบบของร้าน",
+             "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]"
+            }
+           ]
+          }
+         ],
+         "card": [
+          {
+           "el": "text",
+           "value": "อัปรูปนางแบบของร้าน หรือรูปตัวเองก็ได้ (เห็นเต็มตัวยิ่งดี) = หน้าและหุ่นเหมือนเดิมทุกคลิป · หรือพิมพ์ลักษณะแล้วกด \"ให้หมีวาดนางแบบ\" · ว่าง = หมีวาดให้ตอนผลิต",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+          },
+          {
+           "el": "row",
+           "className": "gap-3 items-start flex-wrap @[560px]:flex-nowrap",
+           "card": [
+            {
+             "el": "repeat",
+             "coll": "characters",
+             "where": "id=model",
+             "card": [
+              {
+               "el": "box",
+               "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
+               "when": "item.slots.face!=",
+               "card": [
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.face}",
+                 "aspect": "1:1",
+                 "style": {
+                  "borderRadius": "14px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]"
+                },
+                {
+                 "el": "button",
+                 "action": "hook",
+                 "fn": "clearSlot",
+                 "to": "face",
+                 "label": "",
+                 "icon": "close",
+                 "variant": "ghost",
+                 "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+               "when": "item.slots.face=",
+               "card": [
+                {
+                 "el": "upload",
+                 "label": "",
+                 "placeholder": "อัพโหลด",
+                 "icon": "upload",
+                 "into": "face",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                },
+                {
+                 "el": "pick-button",
+                 "label": "เลือกภาพ",
+                 "icon": "photo_library",
+                 "filter": "image",
+                 "into": "face",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex-1 min-w-[200px] flex flex-col gap-2 !basis-full @[560px]:!basis-auto",
+             "card": [
+              {
+               "el": "textarea",
+               "field": "fsModelDesc",
+               "placeholder": "ลักษณะ เช่น ผู้หญิงไทย อายุ 25 ผมยาวสีน้ำตาล หุ่นสมส่วน ยิ้มสดใส",
+               "className": "!p-3 !rounded-xl !text-[16px] @[640px]:!text-[15px] !leading-relaxed !min-h-[72px]"
+              },
+              {
+               "el": "repeat",
+               "coll": "characters",
+               "where": "id=model",
+               "card": [
+                {
+                 "el": "gen-button",
+                 "op": "fsModel",
+                 "label": "ให้หมีวาดนางแบบ",
+                 "icon": "brush",
+                 "variant": "solid",
+                 "className": "justify-center !h-12 !rounded-xl font-bold",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.slots.face}",
+                  "b": ""
+                 }
+                },
+                {
+                 "el": "text",
+                 "value": "ได้รูปแล้ว — หมีล็อกหน้าตาและรูปร่างตามรูปทุกช็อต ทุกชุด · ไม่ชอบรูป กดปุ่มลบที่รูป แล้ววาดหรืออัปใหม่",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.slots.face}",
+                   "b": ""
+                  }
+                 }
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "เสียงพูด",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "fsGender",
+             "cols": 2,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "female",
+               "label": "ผู้หญิง",
+               "desc": "พูดลงท้าย ค่ะ",
+               "icon": "face_3"
+              },
+              {
+               "value": "male",
+               "label": "ผู้ชาย",
+               "desc": "พูดลงท้าย ครับ",
+               "icon": "face_6"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "ใบหน้านางแบบ",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "fsFace",
+             "cols": 2,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "เห็นหน้า",
+               "desc": "เซลฟี่ถือมือถือระดับอก ไม่บังหน้า",
+               "icon": "face"
+              },
+              {
+               "value": "hide",
+               "label": "ไม่เห็นหน้า",
+               "desc": "เซลฟี่ = มือถือบังหน้า · แบบอื่นตัดเฟรมใต้คาง · ช่วยเลี่ยง Flow บล็อกหน้าคล้ายคนดัง",
+               "icon": "visibility_off"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "รูปร่าง",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "fsShape",
+             "cols": 5,
+             "mobile": {
+              "cols": 3
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามรูปหรือคำอธิบาย",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "slim",
+               "label": "เพรียว"
+              },
+              {
+               "value": "average",
+               "label": "สมส่วน"
+              },
+              {
+               "value": "curvy",
+               "label": "อวบ"
+              },
+              {
+               "value": "plus",
+               "label": "พลัสไซซ์"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "หมีล็อกรูปร่างตามนี้ทุกช็อต — ไม่ทำให้ผอมลง",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "ส่วนสูง / ไซซ์ที่นางแบบใส่ (ไม่บังคับ)",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "input",
+             "field": "fsBody",
+             "placeholder": "เช่น สูง 162 ซม. ใส่ไซซ์ M",
+             "className": "!h-12 !px-3.5 !rounded-xl !text-[17px] @[640px]:!text-[16px]"
+            },
+            {
+             "el": "text",
+             "value": "หมีพูดถึงในคลิปเพื่อให้ลูกค้าเทียบไซซ์ — ลดการคืนสินค้า",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+            }
+           ]
+          },
+          {
+           "el": "text",
+           "value": "นางแบบพูดรีวิวเป็นภาษาไทยเองในคลิป · ไม่มีเพลง (ใส่เพลงเองตอนโพสต์ได้) · แบบคลิป ฉาก และข้อความบนคลิป ตั้งในแต่ละชุด",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+          },
+          {
+           "el": "text",
+           "value": "Flow ไม่ยอมสร้างเพราะหน้าคล้ายคนดัง → ลบรูปแล้วให้หมีวาดใหม่ หรือเลือก \"ไม่เห็นหน้า\"",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
           }
          ]
         },
@@ -8804,7 +9787,7 @@
               },
               {
                "el": "text",
-               "value": "เว้นว่าง = ตั้งให้จากชื่องานแรก",
+               "value": "เว้นว่าง = ตั้งให้จากชื่อชุดแรก",
                "className": "!text-[15px] @[640px]:!text-[14px] opacity-70 px-0.5"
               }
              ]
@@ -8850,20 +9833,53 @@
               {
                "value": "10",
                "label": "10 วิ",
-               "desc": "ใช้ 15 เครดิต"
+               "desc": "ใช้ 15 เครดิต (360p 7)"
               },
               {
                "value": "20",
                "label": "20 วิ",
-               "desc": "ใช้ 30 เครดิต"
+               "desc": "ใช้ 30 เครดิต (360p 14)"
               },
               {
                "value": "30",
                "label": "30 วิ",
-               "desc": "ใช้ 45 เครดิต"
+               "desc": "ใช้ 45 เครดิต (360p 21)"
               }
              ],
              "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold"
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 mt-1",
+             "card": [
+              {
+               "el": "text",
+               "value": "ความละเอียด",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "svRes",
+               "cols": 2,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "720p",
+                 "label": "ชัด 720p",
+                 "desc": "15 เครดิต / 10 วิ · ลง Shopee ได้"
+                },
+                {
+                 "value": "360p",
+                 "label": "ประหยัด 360p",
+                 "desc": "7 เครดิต / 10 วิ · ภาพไม่คม Shopee ไม่รับ"
+                }
+               ]
+              }
+             ]
             }
            ]
           },
@@ -8894,7 +9910,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "จำนวนคลิป/งาน",
+                   "value": "จำนวนคลิป/ชุด",
                    "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
                   }
                  ]
@@ -9019,7 +10035,7 @@
                   "from": "products",
                   "where": "enabled=true"
                  },
-                 " งาน × {values.clipsPerProduct} คลิป"
+                 " ชุด × {values.clipsPerProduct} คลิป"
                 ]
                },
                "className": "!text-[17px] @[640px]:!text-[16px] opacity-70 truncate !whitespace-normal @[420px]:!whitespace-nowrap"
@@ -9245,7 +10261,7 @@
           },
           {
            "el": "text",
-           "value": "เขียนบทไม่สำเร็จบางงาน — กด \"เริ่ม\" อีกครั้งเพื่อลองเขียนใหม่",
+           "value": "เขียนบทไม่สำเร็จบางชุด — กด \"เริ่ม\" อีกครั้งเพื่อลองเขียนใหม่",
            "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -9293,14 +10309,14 @@
                 "from": "products",
                 "where": "status=error"
                },
-               " งาน — ยังไม่ได้เริ่มผลิต"
+               " ชุด — ยังไม่ได้เริ่มผลิต"
               ]
              },
              "className": "!text-[15px] @[640px]:!text-[14px] !text-red-500 font-bold leading-relaxed"
             },
             {
              "el": "text",
-             "value": "กดปุ่มเริ่มอีกครั้งเพื่อลองใหม่ · ถ้ากดหลายครั้งแล้วยังไม่ผ่าน ให้เข้า “จัดการงาน” แล้วลองแก้ชื่อหรือจุดเด่นให้สั้นลง (บางคำทำให้ AI ไม่ยอมเขียนบทให้)",
+             "value": "กดปุ่มเริ่มอีกครั้งเพื่อลองใหม่ · ถ้ากดหลายครั้งแล้วยังไม่ผ่าน ให้เข้า “จัดการชุด” แล้วลองแก้ชื่อหรือจุดเด่นให้สั้นลง (บางคำทำให้ AI ไม่ยอมเขียนบทให้)",
              "className": "!text-[13.5px] @[640px]:!text-[13px] !text-red-500/85 leading-relaxed"
             }
            ]
@@ -9378,7 +10394,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่ได้เลือกใช้งาน",
+             "value": "ยังไม่ได้เลือกชุด",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             },
             {
@@ -9388,7 +10404,7 @@
             },
             {
              "el": "text",
-             "value": "เข้า \"จัดการงาน\" (ข้อ 2) ก่อน",
+             "value": "เข้า \"จัดการชุด\" (ข้อ 1) ก่อน",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             }
            ]
@@ -9424,7 +10440,7 @@
           },
           "b": 0
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน"
+         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน"
         },
         {
          "el": "gen-phase",
@@ -9461,7 +10477,7 @@
           },
           "b": 0
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน",
+         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน",
          "when": {
           "op": "eq",
           "a": "{values.mode}",
@@ -9604,7 +10620,7 @@
         },
         {
          "el": "text",
-         "value": "จัดการงาน",
+         "value": "จัดการชุด",
          "className": "font-bold !text-[22px] @[640px]:!text-[21px] !text-[var(--ev-text)]"
         },
         {
@@ -9613,7 +10629,7 @@
          "card": [
           {
            "el": "load-button",
-           "label": "โหลดงาน",
+           "label": "โหลดชุด",
            "icon": "upload_file",
            "className": "!h-12 @[640px]:!h-11 !px-4 !rounded-xl !text-[18px] @[640px]:!text-[17px] [&_span]:!text-[18px] @[640px]:[&_span]:!text-[17px] !flex-1 justify-center @[420px]:!flex-none",
            "expect": "products",
@@ -9621,7 +10637,7 @@
           },
           {
            "el": "save-button",
-           "label": "เซฟงาน",
+           "label": "เซฟชุด",
            "icon": "save",
            "className": "!h-12 @[640px]:!h-11 !px-4 !rounded-xl !text-[18px] @[640px]:!text-[17px] !flex-1 justify-center @[420px]:!flex-none",
            "scope": "products"
@@ -9671,7 +10687,7 @@
               },
               {
                "el": "text",
-               "value": "งานทั้งหมด",
+               "value": "ชุดทั้งหมด",
                "className": "!text-[12px] @[420px]:!text-[15px] @[640px]:!text-[14px] opacity-65 font-medium"
               }
              ]
@@ -9741,7 +10757,7 @@
            "el": "input",
            "field": "__q",
            "label": "",
-           "placeholder": "ค้นหางาน…",
+           "placeholder": "ค้นหาชุด…",
            "className": "!h-12 !px-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] flex-1 min-w-[200px] !basis-full @[420px]:!basis-auto"
           },
           {
@@ -9788,7 +10804,7 @@
             "scene": "",
             "onscreenText": ""
            },
-           "label": "เพิ่มงาน",
+           "label": "เพิ่มชุด",
            "icon": "add",
            "className": "!h-12 !px-3 @[420px]:!px-5 !rounded-xl !text-[14px] @[420px]:!text-[16px] @[640px]:!text-[15px] font-bold shrink-0 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white"
           }
@@ -9810,7 +10826,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ติ๊กถูก = งานที่จะผลิตคลิป",
+             "value": "ติ๊กถูก = ชุดที่จะผลิตคลิป",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-65 "
             }
            ]
@@ -9843,7 +10859,7 @@
          "card": [
           {
            "el": "text",
-           "value": "ยังไม่มีงาน — กดเพิ่มงานใหม่ข้างล่าง",
+           "value": "ยังไม่มีชุด — กดเพิ่มชุดใหม่ข้างล่าง",
            "className": "!text-[16px] @[640px]:!text-[15px] opacity-60 text-center w-full py-10",
            "when": {
             "op": "eq",
@@ -9918,7 +10934,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "ชุดอื่นทำต่อไปแล้ว — ชุดนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -10178,7 +11194,7 @@
                             "a": "{item.scene}",
                             "b": "custom"
                            },
-                           "value": "ฉากกำหนดเอง"
+                           "value": "ห้องเรา / หน้าร้าน"
                           }
                          ]
                         }
@@ -10238,7 +11254,7 @@
           "scene": "",
           "onscreenText": ""
          },
-         "label": "เพิ่มงานใหม่",
+         "label": "เพิ่มชุดใหม่",
          "icon": "add",
          "className": "w-full justify-center !h-14 !rounded-2xl !text-[19px] @[640px]:!text-[18px] font-bold border-2 border-dashed border-[var(--ev-border)] !bg-transparent opacity-80 hover:opacity-100",
          "variant": "ghost"
@@ -10284,7 +11300,7 @@
             },
             {
              "el": "text",
-             "value": "ลบงานนี้?",
+             "value": "ลบชุดนี้?",
              "className": "!text-[20px] @[640px]:!text-[19px] font-black !text-[var(--ev-text)]"
             }
            ]
@@ -10296,7 +11312,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ต้องการลบ \"{item.name}\" ออกจากลิสต์งานใช่ไหม? การลบนี้กู้คืนไม่ได้",
+             "value": "ต้องการลบ \"{item.name}\" ออกจากลิสต์ชุดใช่ไหม? การลบนี้กู้คืนไม่ได้",
              "className": "!text-[15px] @[640px]:!text-[14px] opacity-65 leading-relaxed"
             }
            ]
@@ -10388,13 +11404,13 @@
               },
               {
                "el": "text",
-               "value": "เพิ่มงาน",
+               "value": "เพิ่มชุด",
                "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]",
                "when": "values.__editNew=true"
               },
               {
                "el": "text",
-               "value": "แก้ไขงาน",
+               "value": "แก้ไขชุด",
                "className": "font-bold !text-[21px] @[640px]:!text-[20px] !text-[var(--ev-text)]",
                "when": "values.__editNew!=true"
               }
@@ -10425,7 +11441,7 @@
               },
               {
                "el": "text",
-               "value": "ใช้งานนี้",
+               "value": "ใช้ชุดนี้",
                "className": "!text-[19px] @[640px]:!text-[18px] !text-[var(--ev-text)] whitespace-nowrap"
               }
              ]
@@ -10466,7 +11482,7 @@
             },
             {
              "el": "text",
-             "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+             "value": "ชุดอื่นทำต่อไปแล้ว — ชุดนี้กดคิดบทใหม่ได้เลย",
              "className": "!text-[12.5px] opacity-70 text-center px-2"
             },
             {
@@ -10936,6 +11952,12 @@
                "icon": "auto_awesome"
               },
               {
+               "value": "custom",
+               "label": "ห้องเรา / หน้าร้าน",
+               "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
+               "icon": "add_a_photo"
+              },
+              {
                "value": "closet",
                "label": "ห้องแต่งตัว",
                "icon": "checkroom"
@@ -10979,12 +12001,6 @@
                "value": "beach",
                "label": "ริมทะเล",
                "icon": "beach_access"
-              },
-              {
-               "value": "custom",
-               "label": "กำหนดเอง",
-               "desc": "พิมพ์ หรือใส่รูปหน้าร้านจริง",
-               "icon": "edit_location"
               }
              ]
             },
@@ -10994,19 +12010,8 @@
              "card": [
               {
                "el": "text",
-               "value": "อยากได้ฉากแบบไหน (ไม่บังคับ)",
+               "value": "ใส่รูปห้องหรือหน้าร้านจริง 1 รูป — หมีใช้เป็นฉากจริงทุกช็อต",
                "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
-              },
-              {
-               "el": "textarea",
-               "field": "sceneCustom",
-               "placeholder": "เช่น หน้าร้านเรา ราวแขวนผ้าสีขาว · ห้องลองชุด",
-               "className": "!p-3.5 !rounded-xl !text-[17px] @[640px]:!text-[16px] !leading-relaxed !min-h-[88px]"
-              },
-              {
-               "el": "text",
-               "value": "หรือใส่รูปสถานที่ 1 รูป (ไม่บังคับ) — ใช้เป็นฉากจริงทุกช็อต",
-               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
               },
               {
                "el": "row",
@@ -11070,6 +12075,17 @@
                  ]
                 }
                ]
+              },
+              {
+               "el": "text",
+               "value": "หรือพิมพ์บอกฉาก (ไม่บังคับ)",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "textarea",
+               "field": "sceneCustom",
+               "placeholder": "เช่น หน้าร้านเรา ราวแขวนผ้าสีขาว · ห้องลองชุด",
+               "className": "!p-3.5 !rounded-xl !text-[17px] @[640px]:!text-[16px] !leading-relaxed !min-h-[88px]"
               }
              ],
              "when": {
@@ -11160,7 +12176,7 @@
              "el": "button",
              "action": "edit-close",
              "to": "products",
-             "label": "บันทึกงาน",
+             "label": "บันทึกชุด",
              "variant": "solid",
              "className": "flex-[2] justify-center !h-14 !rounded-2xl !text-[20px] @[640px]:!text-[19px] font-bold",
              "disabledWhen": {
@@ -11431,7 +12447,7 @@
                 ]
                }
               },
-              "value": " — กดปุ่มคิดบทใหม่ที่การ์ดงานด้านล่าง หรือกดเริ่มอีกครั้งเพื่อเขียนใหม่เฉพาะตัวที่พลาด"
+              "value": " — กดปุ่มคิดบทใหม่ที่การ์ดชุดด้านล่าง หรือกดเริ่มอีกครั้งเพื่อเขียนใหม่เฉพาะตัวที่พลาด"
              }
             ]
            },
@@ -11469,7 +12485,7 @@
           },
           {
            "el": "text",
-           "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่งานเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
+           "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่ชุดเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
            "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
           }
          ],
@@ -11515,7 +12531,7 @@
            "card": [
             {
              "el": "text",
-             "value": "ยังไม่ได้เลือกใช้งาน",
+             "value": "ยังไม่ได้เลือกชุด",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             },
             {
@@ -11525,7 +12541,7 @@
             },
             {
              "el": "text",
-             "value": "เข้า \"จัดการงาน\" (ข้อ 2) ก่อน",
+             "value": "เข้า \"จัดการชุด\" (ข้อ 1) ก่อน",
              "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed "
             }
            ]
@@ -13609,7 +14625,7 @@
                 "parts": [
                  "ผลิตต่อรอบถัดไป · เหลือ ",
                  "{values.__runLoopLeft}",
-                 " งาน"
+                 " ชุด"
                 ]
                },
                "when": {
@@ -13667,7 +14683,7 @@
                 },
                 "b": 0
                },
-               "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 งานก่อน"
+               "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน"
               },
               {
                "el": "run-button",
@@ -18197,7 +19213,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "💬 {item.caption}",
+                   "value": "{item.caption}",
                    "className": "!text-[14px] @[640px]:!text-[13px] leading-relaxed font-bold",
                    "when": "item.caption!="
                   },
@@ -26444,7 +27460,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "ชุดอื่นทำต่อไปแล้ว — ชุดนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -28971,7 +29987,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "งานอื่นทำต่อไปแล้ว — งานนี้กดคิดบทใหม่ได้เลย",
+                 "value": "ชุดอื่นทำต่อไปแล้ว — ชุดนี้กดคิดบทใหม่ได้เลย",
                  "className": "!text-[12.5px] opacity-70 text-center px-2"
                 },
                 {
@@ -30240,7 +31256,7 @@
                "card": [
                 {
                  "el": "text",
-                 "value": "💬 {item.caption}",
+                 "value": "{item.caption}",
                  "className": "!text-[13.5px] @[640px]:!text-[13px] font-bold leading-snug line-clamp-2",
                  "when": "item.caption!="
                 },
@@ -30861,7 +31877,7 @@
   "fsStyleVideo": {
    "mirror": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image.",
    "walk": "ONE CONTINUOUS TAKE — fixed camera at chest height; the model walks toward the camera with natural steps (not a runway catwalk), the fabric swings and drapes naturally, then she stops and talks to the camera; full body visible head-to-toe; no cuts. The opening frame is supplied — continue from exactly that image.",
-   "spin": "ONE CONTINUOUS TAKE — fixed camera, full body head-to-toe; the model turns slowly on the spot (one full turn over ~3 s, NOT a fast spin), showing the sides and the back of the outfit, then faces the camera again; face, hair and outfit stay identical after the turn; no cuts. The opening frame is supplied — continue from exactly that image.",
+   "spin": "ONE CONTINUOUS TAKE — fixed camera, full body head-to-toe; the model turns slowly on the spot (one full turn over ~3 s, NOT a fast spin), showing the sides and back, then faces the camera again; face, hair and outfit identical after the turn; no cuts. The opening frame is supplied — continue from exactly that image.",
    "lookbook": "LOOKBOOK EDIT — a hard cut at every scene boundary (every 2 s) to a new pose, third-person photographer camera (no selfie, no mirror, no phone), full body in most scenes. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot."
   },
   "fsStyleBoard": {
@@ -30880,6 +31896,24 @@
    "park": "a green park path with trees",
    "rooftop": "a rooftop terrace with a city view",
    "beach": "a tropical beach with soft sand and a calm sea"
+  },
+  "fsFaceEN": {
+   "|mirror": "FACE VISIBLE: phone held at chest height; her face stays fully visible in the reflection.",
+   "hide|mirror": "FACE HIDDEN: she holds the phone in front of her face, covering it in the reflection.",
+   "hide|walk": "FACE HIDDEN: never show the face — frame from the chin down, or she turns away.",
+   "hide|spin": "FACE HIDDEN: never show the face — frame from the chin down, or she turns away.",
+   "hide|lookbook": "FACE HIDDEN: never show the face — frame from the chin down, or she turns away.",
+   "hide|live": "FACE HIDDEN: never show the face — frame from the chin down, or she turns away.",
+   "hide|hanger": "FACE HIDDEN: never show the face — frame from the chin down, or she turns away."
+  },
+  "fsFacePlan": {
+   "hide": "ใบหน้า: ไม่เห็นหน้าทุกฉาก (เซลฟี่ = มือถือบังหน้า · แบบอื่น = เฟรมใต้คาง หรือหันหลัง) — sNen/camN ต้องไม่เห็นหน้า"
+  },
+  "fsShapeEN": {
+   "slim": "slim",
+   "average": "average medium build",
+   "curvy": "curvy, full-figured",
+   "plus": "plus-size"
   },
   "fsVoiceEN": {
    "female": "a natural young adult FEMALE Thai voice (never a male voice)",
