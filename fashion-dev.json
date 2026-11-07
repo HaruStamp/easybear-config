@@ -141,7 +141,9 @@
     "speech",
     "textFont",
     "pet",
-    "petDesc"
+    "petDesc",
+    "sec",
+    "mGender"
    ],
    "slots": [
     "image",
@@ -153,7 +155,8 @@
     "room2",
     "openRef",
     "endRef",
-    "pet"
+    "pet",
+    "mface"
    ],
    "idPrefix": "pd",
    "addDefaults": {
@@ -163,7 +166,9 @@
     "speech": "",
     "textFont": "",
     "pet": "",
-    "petDesc": ""
+    "petDesc": "",
+    "sec": "",
+    "mGender": ""
    }
   },
   "tasks": {
@@ -352,7 +357,9 @@
     "speech",
     "textFont",
     "pet",
-    "petDesc"
+    "petDesc",
+    "sec",
+    "mGender"
    ],
    "slots": [
     "board",
@@ -537,14 +544,52 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.slots.mface}",
+            "b": ""
+           }
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.slots.mface}",
+             "b": ""
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": " · มีรูปนางแบบแนบ (ใช้หน้าตาตามรูป)"
        }
@@ -619,8 +664,8 @@
      "\n",
      {
       "op": "lookup",
-      "table": "fsVoicePlan",
-      "key": "{values.fsGender}",
+      "table": "fsVoicePlan@g",
+      "key": "{item.mGender}|{values.fsGender}",
       "fallback": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\""
      },
      {
@@ -679,6 +724,62 @@
            ]
           },
           " (มีรูปแนบ = ตัวเดียวกับในรูป · เขียนไว้ใน sNen)"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.mGender}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.mGender}",
+            "b": "{values.fsGender}"
+           }
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nชุดนี้ใช้",
+          {
+           "op": "lookup",
+           "table": "fsGenderTH",
+           "key": "{item.mGender}",
+           "fallback": ""
+          },
+          "คนละคนกับนางแบบหลัก — ไม่ใช้ลักษณะนางแบบหลักด้านบน",
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "eq",
+              "a": "{item.slots.mface}",
+              "b": ""
+             },
+             "value": " (ไม่มีรูป = คิดลักษณะให้เอง)"
+            }
+           ]
+          }
          ]
         }
        }
@@ -787,7 +888,37 @@
     ]
    },
    "images": [
-    "{characters[model].slots.face}",
+    {
+     "op": "cond",
+     "when": {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.slots.mface}",
+       "b": ""
+      }
+     },
+     "then": "{item.slots.mface}",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "or",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.mGender}",
+         "b": ""
+        },
+        {
+         "op": "eq",
+         "a": "{item.mGender}",
+         "b": "{values.fsGender}"
+        }
+       ]
+      },
+      "then": "{characters[model].slots.face}"
+     }
+    },
     "{item.slots.image}",
     "{item.slots.image2}",
     "{item.slots.image3}",
@@ -4692,7 +4823,8 @@
      "speech": "{parent.fields.speech}",
      "textFont": "{parent.fields.textFont}",
      "pet": "{parent.fields.pet}",
-     "petDesc": "{parent.fields.petDesc}"
+     "petDesc": "{parent.fields.petDesc}",
+     "mGender": "{parent.fields.mGender}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -4932,14 +5064,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -5020,10 +5192,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -5320,14 +5536,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -5408,10 +5664,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -5708,14 +6008,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -5796,10 +6136,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -6096,14 +6480,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -6184,10 +6608,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -6484,14 +6952,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -6572,10 +7080,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -6872,14 +7424,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -6960,10 +7552,54 @@
    },
    "refs": {
     "op": "lookupRefs",
-    "from": "characters",
-    "by": "model",
-    "slot": "face",
+    "from": "products",
+    "by": "{item.refs.prod}",
+    "slot": "mface",
     "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
+     },
      {
       "from": "products",
       "by": "{item.refs.prod}",
@@ -7259,14 +7895,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -7368,8 +8044,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -7637,9 +8313,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -7982,14 +8702,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -8091,8 +8851,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -8360,9 +9120,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -8705,14 +9509,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -8814,8 +9658,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -9083,9 +9927,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -9428,14 +10316,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -9537,8 +10465,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -9806,9 +10734,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -10151,14 +11123,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -10260,8 +11272,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -10529,9 +11541,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -10874,14 +11930,54 @@
       "parts": [
        {
         "when": {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "mface"
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": "{item.mGender}",
+               "b": "{values.fsGender}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
         },
         "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
        }
@@ -10983,8 +12079,8 @@
           "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
           {
            "op": "lookup",
-           "table": "fsVoiceEN",
-           "key": "{values.fsGender}",
+           "table": "fsVoiceEN@g",
+           "key": "{item.mGender}|{values.fsGender}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -11252,9 +12348,53 @@
     "slot": "board",
     "also": [
      {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "mface"
+     },
+     {
       "from": "characters",
       "by": "model",
-      "slot": "face"
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "refsFilled",
+          "key": "prod",
+          "from": "products",
+          "slot": "mface"
+         }
+        },
+        {
+         "op": "gt",
+         "a": {
+          "op": "count",
+          "from": "characters",
+          "where": "id=model",
+          "slot": "face"
+         },
+         "b": 0
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": "{item.mGender}",
+           "b": "{values.fsGender}"
+          }
+         ]
+        }
+       ]
+      }
      },
      {
       "from": "products",
@@ -12112,6 +13252,11 @@
                    "b": ""
                   }
                  }
+                },
+                {
+                 "el": "text",
+                 "value": "หมีวาดนางแบบหลักได้ 1 คน ใช้กับทุกชุด — อยากได้คนละคนต่อชุด อัปรูปเองที่ \"นางแบบของชุดนี้\" ในหน้าเพิ่มชุด",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
                 }
                ]
               }
@@ -13468,7 +14613,9 @@
             "speech": "",
             "textFont": "",
             "pet": "",
-            "petDesc": ""
+            "petDesc": "",
+            "sec": "",
+            "mGender": ""
            },
            "label": "เพิ่มชุด",
            "icon": "add",
@@ -13964,7 +15111,9 @@
           "speech": "",
           "textFont": "",
           "pet": "",
-          "petDesc": ""
+          "petDesc": "",
+          "sec": "",
+          "mGender": ""
          },
          "label": "เพิ่มชุดใหม่",
          "icon": "add",
@@ -14842,6 +15991,140 @@
              "el": "text",
              "value": "ว่างได้ทุกช่องยกเว้นชื่อ — หมีดูจากรูปชุดแล้วเขียนบทให้เอง · ไม่เดาไซซ์หรือราคาที่ไม่ได้บอก",
              "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "person",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "นางแบบของชุดนี้",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "mGender",
+             "cols": 3,
+             "mobile": {
+              "cols": 3
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "คนหลัก",
+               "desc": "ตามหน้าตั้งค่า"
+              },
+              {
+               "value": "female",
+               "label": "ผู้หญิง",
+               "desc": "พูดลงท้าย ค่ะ",
+               "icon": "face_3"
+              },
+              {
+               "value": "male",
+               "label": "ผู้ชาย",
+               "desc": "พูดลงท้าย ครับ",
+               "icon": "face_6"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "ชุดผู้ชาย/ผู้หญิงปนกันได้ — อัปรูปนายแบบหรือนางแบบของชุดนี้ · ไม่อัป: เพศตรงกับคนหลัก = ใช้คนหลัก · ไม่ตรง = หมีคิดหน้าให้เอง (อาจต่างกันแต่ละคลิป)",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+            },
+            {
+             "el": "row",
+             "className": "gap-3 items-start flex-wrap",
+             "card": [
+              {
+               "el": "box",
+               "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
+               "when": "item.slots.mface!=",
+               "card": [
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.mface}",
+                 "aspect": "1:1",
+                 "style": {
+                  "borderRadius": "14px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]"
+                },
+                {
+                 "el": "button",
+                 "action": "hook",
+                 "fn": "clearSlot",
+                 "to": "mface",
+                 "label": "",
+                 "icon": "close",
+                 "variant": "ghost",
+                 "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+               "when": "item.slots.mface=",
+               "card": [
+                {
+                 "el": "upload",
+                 "label": "",
+                 "placeholder": "อัพโหลด",
+                 "icon": "upload",
+                 "into": "mface",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                },
+                {
+                 "el": "pick-button",
+                 "label": "เลือกภาพ",
+                 "icon": "photo_library",
+                 "filter": "image",
+                 "into": "mface",
+                 "resize": {
+                  "maxPx": 768,
+                  "quality": 0.8
+                 },
+                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                }
+               ]
+              }
+             ]
             }
            ]
           },
@@ -35398,6 +36681,43 @@
    "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "20": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "30": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+  },
+  "fsGEff": {
+   "|": "female",
+   "|female": "female",
+   "|male": "male",
+   "female|": "female",
+   "female|female": "female",
+   "female|male": "female",
+   "male|": "male",
+   "male|female": "male",
+   "male|male": "male"
+  },
+  "fsVoiceEN@g": {
+   "|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|male": "a natural young adult MALE Thai voice (never a female voice)",
+   "female|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "male|": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male": "a natural young adult MALE Thai voice (never a female voice)"
+  },
+  "fsVoicePlan@g": {
+   "|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "|female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "female|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "female|female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "female|male": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "male|": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "male|female": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "male|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\""
+  },
+  "fsGenderTH": {
+   "female": "นางแบบผู้หญิง",
+   "male": "นายแบบผู้ชาย"
   }
  },
  "seed": {
