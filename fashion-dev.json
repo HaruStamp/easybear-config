@@ -412,8 +412,8 @@
      "\n\n",
      {
       "op": "lookup",
-      "table": "fsOut",
-      "key": "{values.svSec}",
+      "table": "fsOut@sec",
+      "key": "{item.sec}|{values.svSec}|{values.svRes}",
       "fallback": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
      }
     ]
@@ -421,7 +421,14 @@
    "prompt": {
     "op": "concat",
     "parts": [
-     "ออกแบบคลิปรีวิวเสื้อผ้า จำนวน {values.clipsPerProduct} คลิป ยาวคลิปละ {values.svSec} วินาที\n\n",
+     "ออกแบบคลิปรีวิวเสื้อผ้า จำนวน {values.clipsPerProduct} คลิป ยาวคลิปละ ",
+     {
+      "op": "lookup",
+      "table": "fsSecEff",
+      "key": "{item.sec}|{values.svSec}|{values.svRes}",
+      "fallback": "10"
+     },
+     " วินาที\n\n",
      "สินค้า: {item.name}\n",
      {
       "op": "block",
@@ -953,8 +960,8 @@
      "[{item.name}] หมีกำลังเขียนบทรีวิว {values.clipsPerProduct} คลิป (",
      {
       "op": "lookup",
-      "table": "lenLabel",
-      "key": "{values.svSec}",
+      "table": "lenLabel@sec",
+      "key": "{item.sec}|{values.svSec}|{values.svRes}",
       "fallback": "10 วินาที"
      },
      ")"
@@ -1150,7 +1157,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1168,7 +1180,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1186,7 +1203,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1214,7 +1236,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1232,7 +1259,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1250,7 +1282,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1278,7 +1315,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1296,7 +1338,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1314,7 +1361,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1342,7 +1394,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1360,7 +1417,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1378,7 +1440,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1406,7 +1473,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1424,7 +1496,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1442,7 +1519,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -1470,7 +1552,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1488,7 +1575,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1506,7 +1598,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1534,7 +1631,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1552,7 +1654,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1570,7 +1677,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1598,7 +1710,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1616,7 +1733,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1634,7 +1756,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1662,7 +1789,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1680,7 +1812,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1698,7 +1835,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1726,7 +1868,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1744,7 +1891,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -1762,7 +1914,12 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2115,7 +2272,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2138,7 +2300,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2161,7 +2328,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2194,7 +2366,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2217,7 +2394,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2240,7 +2422,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2273,7 +2460,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2296,7 +2488,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2319,7 +2516,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2352,7 +2554,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2375,7 +2582,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2398,7 +2610,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2431,7 +2648,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2454,7 +2676,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2477,7 +2704,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -2510,7 +2742,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2533,7 +2770,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2556,7 +2798,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2589,7 +2836,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2612,7 +2864,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2635,7 +2892,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2668,7 +2930,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2691,7 +2958,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2714,7 +2986,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2747,7 +3024,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2770,7 +3052,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2793,7 +3080,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2826,7 +3118,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2849,7 +3146,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -2872,7 +3174,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3225,7 +3532,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3248,7 +3560,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3271,7 +3588,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3304,7 +3626,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3327,7 +3654,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3350,7 +3682,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3383,7 +3720,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3406,7 +3748,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3429,7 +3776,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3462,7 +3814,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3485,7 +3842,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3508,7 +3870,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3541,7 +3908,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3564,7 +3936,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3587,7 +3964,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "10"
        },
        {
@@ -3620,7 +4002,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3643,7 +4030,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3666,7 +4058,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3699,7 +4096,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3722,7 +4124,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3745,7 +4152,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3778,7 +4190,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3801,7 +4218,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3824,7 +4246,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3857,7 +4284,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3880,7 +4312,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3903,7 +4340,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3936,7 +4378,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3959,7 +4406,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -3982,7 +4434,12 @@
        },
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "lookup",
+         "table": "fsSecEff",
+         "key": "{item.sec}|{values.svSec}|{values.svRes}",
+         "fallback": "10"
+        },
         "b": "20"
        },
        {
@@ -4014,15 +4471,15 @@
      "\n\nคำเตือน: รอบที่แล้วบทขาดฟิลด์ฉาก (ว่างหรือไม่มีคีย์) — รอบนี้ต้องส่ง JSON ครบทุกคีย์ของทุกฉาก s1th..s",
      {
       "op": "lookup",
-      "table": "lenScenes",
-      "key": "{values.svSec}",
+      "table": "lenScenes@sec",
+      "key": "{item.sec}|{values.svSec}|{values.svRes}",
       "fallback": "5"
      },
      "th และ s1en..s",
      {
       "op": "lookup",
-      "table": "lenScenes",
-      "key": "{values.svSec}",
+      "table": "lenScenes@sec",
+      "key": "{item.sec}|{values.svSec}|{values.svRes}",
       "fallback": "5"
      },
      "en (รวม ov/vo/cam) ของทุกคลิป ห้ามเว้นว่างหรือข้ามคีย์แม้แต่ตัวเดียว"
@@ -4809,7 +5266,12 @@
      "ov30": "{item.fields.ov30}",
      "vo30": "{item.fields.vo30}",
      "cam30": "{item.fields.cam30}",
-     "secAt": "{values.svSec}",
+     "secAt": {
+      "op": "lookup",
+      "table": "fsSecEff",
+      "key": "{parent.fields.sec}|{values.svSec}|{values.svRes}",
+      "fallback": "10"
+     },
      "clipsAt": "{values.clipsPerProduct}",
      "modelEN": "{item.fields.model}",
      "outfitEN": "{item.fields.outfit}",
@@ -8110,7 +8572,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|26",
+        "key": "{item.secAt}|26",
         "fallback": "Scene 26"
        },
        ": {item.s26en} Camera: {item.cam26}.",
@@ -8150,7 +8612,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|27",
+        "key": "{item.secAt}|27",
         "fallback": "Scene 27"
        },
        ": {item.s27en} Camera: {item.cam27}.",
@@ -8190,7 +8652,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|28",
+        "key": "{item.secAt}|28",
         "fallback": "Scene 28"
        },
        ": {item.s28en} Camera: {item.cam28}.",
@@ -8230,7 +8692,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|29",
+        "key": "{item.secAt}|29",
         "fallback": "Scene 29"
        },
        ": {item.s29en} Camera: {item.cam29}.",
@@ -8270,7 +8732,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|30",
+        "key": "{item.secAt}|30",
         "fallback": "Scene 30"
        },
        ": {item.s30en} Camera: {item.cam30}.",
@@ -8413,7 +8875,6 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 6 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 6 เสร็จแล้ว",
-   "when": "values.svSec>50",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -8457,7 +8918,10 @@
     "then": "{item.slots.video5}"
    },
    "tailTrim": 0.1,
-   "where": "s26en!=",
+   "where": [
+    "s26en!=",
+    "secAt>50"
+   ],
    "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
@@ -8917,7 +9381,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|21",
+        "key": "{item.secAt}|21",
         "fallback": "Scene 21"
        },
        ": {item.s21en} Camera: {item.cam21}.",
@@ -8957,7 +9421,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|22",
+        "key": "{item.secAt}|22",
         "fallback": "Scene 22"
        },
        ": {item.s22en} Camera: {item.cam22}.",
@@ -8997,7 +9461,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|23",
+        "key": "{item.secAt}|23",
         "fallback": "Scene 23"
        },
        ": {item.s23en} Camera: {item.cam23}.",
@@ -9037,7 +9501,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|24",
+        "key": "{item.secAt}|24",
         "fallback": "Scene 24"
        },
        ": {item.s24en} Camera: {item.cam24}.",
@@ -9077,7 +9541,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|25",
+        "key": "{item.secAt}|25",
         "fallback": "Scene 25"
        },
        ": {item.s25en} Camera: {item.cam25}.",
@@ -9220,7 +9684,6 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 5 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 5 เสร็จแล้ว",
-   "when": "values.svSec>40",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -9264,7 +9727,10 @@
     "then": "{item.slots.video4}"
    },
    "tailTrim": 0.1,
-   "where": "s21en!=",
+   "where": [
+    "s21en!=",
+    "secAt>40"
+   ],
    "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
@@ -9724,7 +10190,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|16",
+        "key": "{item.secAt}|16",
         "fallback": "Scene 16"
        },
        ": {item.s16en} Camera: {item.cam16}.",
@@ -9764,7 +10230,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|17",
+        "key": "{item.secAt}|17",
         "fallback": "Scene 17"
        },
        ": {item.s17en} Camera: {item.cam17}.",
@@ -9804,7 +10270,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|18",
+        "key": "{item.secAt}|18",
         "fallback": "Scene 18"
        },
        ": {item.s18en} Camera: {item.cam18}.",
@@ -9844,7 +10310,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|19",
+        "key": "{item.secAt}|19",
         "fallback": "Scene 19"
        },
        ": {item.s19en} Camera: {item.cam19}.",
@@ -9884,7 +10350,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|20",
+        "key": "{item.secAt}|20",
         "fallback": "Scene 20"
        },
        ": {item.s20en} Camera: {item.cam20}.",
@@ -10027,7 +10493,6 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 4 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 4 เสร็จแล้ว",
-   "when": "values.svSec>30",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -10071,7 +10536,10 @@
     "then": "{item.slots.video3}"
    },
    "tailTrim": 0.1,
-   "where": "s16en!=",
+   "where": [
+    "s16en!=",
+    "secAt>30"
+   ],
    "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
@@ -10531,7 +10999,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|11",
+        "key": "{item.secAt}|11",
         "fallback": "Scene 11"
        },
        ": {item.s11en} Camera: {item.cam11}.",
@@ -10571,7 +11039,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|12",
+        "key": "{item.secAt}|12",
         "fallback": "Scene 12"
        },
        ": {item.s12en} Camera: {item.cam12}.",
@@ -10611,7 +11079,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|13",
+        "key": "{item.secAt}|13",
         "fallback": "Scene 13"
        },
        ": {item.s13en} Camera: {item.cam13}.",
@@ -10651,7 +11119,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|14",
+        "key": "{item.secAt}|14",
         "fallback": "Scene 14"
        },
        ": {item.s14en} Camera: {item.cam14}.",
@@ -10691,7 +11159,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|15",
+        "key": "{item.secAt}|15",
         "fallback": "Scene 15"
        },
        ": {item.s15en} Camera: {item.cam15}.",
@@ -10834,7 +11302,6 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 3 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 3 เสร็จแล้ว",
-   "when": "values.svSec>20",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -10878,7 +11345,10 @@
     "then": "{item.slots.video2}"
    },
    "tailTrim": 0.1,
-   "where": "s11en!=",
+   "where": [
+    "s11en!=",
+    "secAt>20"
+   ],
    "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
@@ -11338,7 +11808,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|6",
+        "key": "{item.secAt}|6",
         "fallback": "Scene 6"
        },
        ": {item.s6en} Camera: {item.cam6}.",
@@ -11378,7 +11848,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|7",
+        "key": "{item.secAt}|7",
         "fallback": "Scene 7"
        },
        ": {item.s7en} Camera: {item.cam7}.",
@@ -11418,7 +11888,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|8",
+        "key": "{item.secAt}|8",
         "fallback": "Scene 8"
        },
        ": {item.s8en} Camera: {item.cam8}.",
@@ -11458,7 +11928,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|9",
+        "key": "{item.secAt}|9",
         "fallback": "Scene 9"
        },
        ": {item.s9en} Camera: {item.cam9}.",
@@ -11498,7 +11968,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|10",
+        "key": "{item.secAt}|10",
         "fallback": "Scene 10"
        },
        ": {item.s10en} Camera: {item.cam10}.",
@@ -11641,7 +12111,6 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอช่วงที่ 2 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 2 เสร็จแล้ว",
-   "when": "values.svSec>10",
    "startFrame": {
     "op": "cond",
     "when": {
@@ -11685,7 +12154,10 @@
     "then": "{item.slots.video}"
    },
    "tailTrim": 0.1,
-   "where": "s6en!=",
+   "where": [
+    "s6en!=",
+    "secAt>10"
+   ],
    "resolution": "{values.svRes}",
    "timeoutMs": 300000
   },
@@ -12145,7 +12617,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|1",
+        "key": "{item.secAt}|1",
         "fallback": "Scene 1"
        },
        ": {item.s1en} Camera: {item.cam1}.",
@@ -12185,7 +12657,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|2",
+        "key": "{item.secAt}|2",
         "fallback": "Scene 2"
        },
        ": {item.s2en} Camera: {item.cam2}.",
@@ -12225,7 +12697,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|3",
+        "key": "{item.secAt}|3",
         "fallback": "Scene 3"
        },
        ": {item.s3en} Camera: {item.cam3}.",
@@ -12265,7 +12737,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|4",
+        "key": "{item.secAt}|4",
         "fallback": "Scene 4"
        },
        ": {item.s4en} Camera: {item.cam4}.",
@@ -12305,7 +12777,7 @@
        {
         "op": "lookup",
         "table": "sceneEN",
-        "key": "{values.svSec}|5",
+        "key": "{item.secAt}|5",
         "fallback": "Scene 5"
        },
        ": {item.s5en} Camera: {item.cam5}.",
@@ -16235,6 +16707,93 @@
                 "b": ""
                }
               ]
+             }
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "timer",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ความยาวคลิปของชุดนี้",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "sec",
+             "cols": 4,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "ตามหน้าตั้งค่า",
+               "desc": "ใช้ความยาวที่ตั้งไว้"
+              },
+              {
+               "value": "10",
+               "label": "10 วิ",
+               "desc": "720p 30 เครดิต"
+              },
+              {
+               "value": "20",
+               "label": "20 วิ",
+               "desc": "720p 60 เครดิต"
+              },
+              {
+               "value": "30",
+               "label": "30 วิ",
+               "desc": "720p 90 เครดิต"
+              }
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.svRes}",
+               "b": "360p"
+              }
+             }
+            },
+            {
+             "el": "text",
+             "value": "ตั้งประหยัด 360p ไว้ — คลิปยาว 10 วิทุกชุด (เปลี่ยนเป็น 720p ที่หน้าตั้งค่าถึงจะเลือกความยาวได้)",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+             "when": {
+              "op": "eq",
+              "a": "{values.svRes}",
+              "b": "360p"
              }
             }
            ]
@@ -21077,7 +21636,7 @@
                           "op": "not",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 10
                           }
                          }
@@ -21089,7 +21648,7 @@
                           "op": "and",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 9999
                           },
                           "b": {
@@ -21176,7 +21735,7 @@
                              "a": 1,
                              "b": {
                               "op": "div",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 10
                              }
                             }
@@ -21187,7 +21746,7 @@
                             "a": 1,
                             "b": {
                              "op": "div",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             }
                            }
@@ -21201,7 +21760,7 @@
                           "op": "and",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 10
                           },
                           "b": {
@@ -21288,7 +21847,7 @@
                              "a": 1,
                              "b": {
                               "op": "div",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 10
                              }
                             }
@@ -21299,7 +21858,7 @@
                             "a": 1,
                             "b": {
                              "op": "div",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             }
                            }
@@ -21421,7 +21980,7 @@
                             "op": "and",
                             "a": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 9999
                             },
                             "b": {
@@ -21468,7 +22027,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 9999
                            },
                            "b": {
@@ -21583,7 +22142,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -21591,7 +22150,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -21626,7 +22185,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -21741,7 +22300,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -21749,7 +22308,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -21995,7 +22554,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -22072,14 +22631,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -22185,7 +22744,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 0
                              },
                              {
@@ -22428,7 +22987,7 @@
                             "op": "and",
                             "a": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 9999
                             },
                             "b": {
@@ -22523,7 +23082,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 9999
                            },
                            "b": {
@@ -22655,7 +23214,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -22663,7 +23222,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -22698,7 +23257,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -22830,7 +23389,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -22838,7 +23397,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -22979,7 +23538,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -23056,14 +23615,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -23336,7 +23895,7 @@
                        "op": "and",
                        "a": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 9999
                        },
                        "b": {
@@ -23364,7 +23923,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 9999
                       },
                       "b": {
@@ -23392,7 +23951,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -23479,7 +24038,7 @@
                       "op": "not",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      }
@@ -23491,7 +24050,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 9999
                       },
                       "b": {
@@ -23578,7 +24137,7 @@
                          "a": 1,
                          "b": {
                           "op": "div",
-                          "a": "{values.svSec}",
+                          "a": "{item.secAt}",
                           "b": 10
                          }
                         }
@@ -23589,7 +24148,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -23603,7 +24162,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -23690,7 +24249,7 @@
                          "a": 1,
                          "b": {
                           "op": "div",
-                          "a": "{values.svSec}",
+                          "a": "{item.secAt}",
                           "b": 10
                          }
                         }
@@ -23701,7 +24260,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -24013,7 +24572,7 @@
                        {
                         "op": "lookup",
                         "table": "lenSecs",
-                        "key": "{values.svSec}",
+                        "key": "{item.secAt}",
                         "fallback": "10"
                        },
                        " วิ · 9:16"
@@ -24150,7 +24709,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|1",
+                            "key": "{item.secAt}|1",
                             "fallback": "ฉาก 1"
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -24377,7 +24936,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|2",
+                            "key": "{item.secAt}|2",
                             "fallback": "ฉาก 2"
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -24604,7 +25163,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|3",
+                            "key": "{item.secAt}|3",
                             "fallback": "ฉาก 3"
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -24831,7 +25390,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|4",
+                            "key": "{item.secAt}|4",
                             "fallback": "ฉาก 4"
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -25058,7 +25617,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|5",
+                            "key": "{item.secAt}|5",
                             "fallback": "ฉาก 5"
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -25285,7 +25844,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|6",
+                            "key": "{item.secAt}|6",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -25484,7 +26043,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -25513,7 +26072,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|7",
+                            "key": "{item.secAt}|7",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -25712,7 +26271,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -25741,7 +26300,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|8",
+                            "key": "{item.secAt}|8",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -25940,7 +26499,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -25969,7 +26528,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|9",
+                            "key": "{item.secAt}|9",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -26168,7 +26727,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -26197,7 +26756,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|10",
+                            "key": "{item.secAt}|10",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -26396,7 +26955,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -26425,7 +26984,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|11",
+                            "key": "{item.secAt}|11",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -26624,7 +27183,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -26653,7 +27212,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|12",
+                            "key": "{item.secAt}|12",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -26852,7 +27411,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -26881,7 +27440,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|13",
+                            "key": "{item.secAt}|13",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -27080,7 +27639,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -27109,7 +27668,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|14",
+                            "key": "{item.secAt}|14",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -27308,7 +27867,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -27337,7 +27896,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|15",
+                            "key": "{item.secAt}|15",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -27536,7 +28095,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -27565,7 +28124,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|16",
+                            "key": "{item.secAt}|16",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -27764,7 +28323,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -27793,7 +28352,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|17",
+                            "key": "{item.secAt}|17",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -27992,7 +28551,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -28021,7 +28580,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|18",
+                            "key": "{item.secAt}|18",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -28220,7 +28779,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -28249,7 +28808,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|19",
+                            "key": "{item.secAt}|19",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -28448,7 +29007,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -28477,7 +29036,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|20",
+                            "key": "{item.secAt}|20",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -28676,7 +29235,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -28705,7 +29264,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|21",
+                            "key": "{item.secAt}|21",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -28904,7 +29463,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -28933,7 +29492,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|22",
+                            "key": "{item.secAt}|22",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -29132,7 +29691,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -29161,7 +29720,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|23",
+                            "key": "{item.secAt}|23",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -29360,7 +29919,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -29389,7 +29948,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|24",
+                            "key": "{item.secAt}|24",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -29588,7 +30147,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -29617,7 +30176,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|25",
+                            "key": "{item.secAt}|25",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -29816,7 +30375,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -29845,7 +30404,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|26",
+                            "key": "{item.secAt}|26",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -30044,7 +30603,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -30073,7 +30632,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|27",
+                            "key": "{item.secAt}|27",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -30272,7 +30831,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -30301,7 +30860,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|28",
+                            "key": "{item.secAt}|28",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -30500,7 +31059,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -30529,7 +31088,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|29",
+                            "key": "{item.secAt}|29",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -30728,7 +31287,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -30757,7 +31316,7 @@
                            "value": {
                             "op": "lookup",
                             "table": "sceneAct",
-                            "key": "{values.svSec}|30",
+                            "key": "{item.secAt}|30",
                             "fallback": ""
                            },
                            "className": "!text-[15px] @[640px]:!text-[14px] font-bold !text-[var(--ev-text)]"
@@ -30956,7 +31515,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       }
                      ]
                     }
@@ -31619,7 +32178,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -31630,7 +32189,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -31641,7 +32200,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -31652,7 +32211,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -31663,7 +32222,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -31804,7 +32363,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -31818,7 +32377,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -31832,7 +32391,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -31846,7 +32405,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -31860,7 +32419,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -31874,7 +32433,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -31901,7 +32460,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -31912,7 +32471,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -31923,7 +32482,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -31934,7 +32493,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -31945,7 +32504,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -32316,7 +32875,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -32330,7 +32889,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -32344,7 +32903,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 20
                        }
                       },
@@ -32358,7 +32917,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 30
                        }
                       },
@@ -32372,7 +32931,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 40
                        }
                       },
@@ -32386,7 +32945,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 50
                        }
                       }
@@ -32483,7 +33042,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -32560,14 +33119,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -32695,7 +33254,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -32772,14 +33331,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -32871,7 +33430,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -32882,7 +33441,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -32893,7 +33452,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -32904,7 +33463,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -32915,7 +33474,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -33020,7 +33579,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 0
                      },
                      {
@@ -33289,7 +33848,7 @@
                     "op": "and",
                     "a": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 9999
                     },
                     "b": {
@@ -33377,7 +33936,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 9999
                    },
                    "b": {
@@ -33533,7 +34092,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -33541,7 +34100,7 @@
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -33576,7 +34135,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 10
                    },
                    "b": {
@@ -33732,7 +34291,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -33740,7 +34299,7 @@
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -34140,7 +34699,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 9999
                    },
                    "b": {
@@ -34168,7 +34727,7 @@
                   "op": "and",
                   "a": {
                    "op": "gt",
-                   "a": "{values.svSec}",
+                   "a": "{item.secAt}",
                    "b": 9999
                   },
                   "b": {
@@ -34196,7 +34755,7 @@
                   "op": "and",
                   "a": {
                    "op": "gt",
-                   "a": "{values.svSec}",
+                   "a": "{item.secAt}",
                    "b": 10
                   },
                   "b": {
@@ -35796,7 +36355,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -35873,14 +36432,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -36681,6 +37240,158 @@
    "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "20": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "30": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+  },
+  "fsSecEff": {
+   "|10|": "10",
+   "|10|720p": "10",
+   "|10|360p": "10",
+   "|20|": "20",
+   "|20|720p": "20",
+   "|20|360p": "10",
+   "|30|": "30",
+   "|30|720p": "30",
+   "|30|360p": "10",
+   "10|10|": "10",
+   "10|10|720p": "10",
+   "10|10|360p": "10",
+   "10|20|": "10",
+   "10|20|720p": "10",
+   "10|20|360p": "10",
+   "10|30|": "10",
+   "10|30|720p": "10",
+   "10|30|360p": "10",
+   "20|10|": "20",
+   "20|10|720p": "20",
+   "20|10|360p": "10",
+   "20|20|": "20",
+   "20|20|720p": "20",
+   "20|20|360p": "10",
+   "20|30|": "20",
+   "20|30|720p": "20",
+   "20|30|360p": "10",
+   "30|10|": "30",
+   "30|10|720p": "30",
+   "30|10|360p": "10",
+   "30|20|": "30",
+   "30|20|720p": "30",
+   "30|20|360p": "10",
+   "30|30|": "30",
+   "30|30|720p": "30",
+   "30|30|360p": "10"
+  },
+  "fsOut@sec": {
+   "|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+  },
+  "lenLabel@sec": {
+   "|10|": "10 วินาที",
+   "|10|720p": "10 วินาที",
+   "|10|360p": "10 วินาที",
+   "|20|": "20 วินาที",
+   "|20|720p": "20 วินาที",
+   "|20|360p": "10 วินาที",
+   "|30|": "30 วินาที",
+   "|30|720p": "30 วินาที",
+   "|30|360p": "10 วินาที",
+   "10|10|": "10 วินาที",
+   "10|10|720p": "10 วินาที",
+   "10|10|360p": "10 วินาที",
+   "10|20|": "10 วินาที",
+   "10|20|720p": "10 วินาที",
+   "10|20|360p": "10 วินาที",
+   "10|30|": "10 วินาที",
+   "10|30|720p": "10 วินาที",
+   "10|30|360p": "10 วินาที",
+   "20|10|": "20 วินาที",
+   "20|10|720p": "20 วินาที",
+   "20|10|360p": "10 วินาที",
+   "20|20|": "20 วินาที",
+   "20|20|720p": "20 วินาที",
+   "20|20|360p": "10 วินาที",
+   "20|30|": "20 วินาที",
+   "20|30|720p": "20 วินาที",
+   "20|30|360p": "10 วินาที",
+   "30|10|": "30 วินาที",
+   "30|10|720p": "30 วินาที",
+   "30|10|360p": "10 วินาที",
+   "30|20|": "30 วินาที",
+   "30|20|720p": "30 วินาที",
+   "30|20|360p": "10 วินาที",
+   "30|30|": "30 วินาที",
+   "30|30|720p": "30 วินาที",
+   "30|30|360p": "10 วินาที"
+  },
+  "lenScenes@sec": {
+   "|10|": "5",
+   "|10|720p": "5",
+   "|10|360p": "5",
+   "|20|": "10",
+   "|20|720p": "10",
+   "|20|360p": "5",
+   "|30|": "15",
+   "|30|720p": "15",
+   "|30|360p": "5",
+   "10|10|": "5",
+   "10|10|720p": "5",
+   "10|10|360p": "5",
+   "10|20|": "5",
+   "10|20|720p": "5",
+   "10|20|360p": "5",
+   "10|30|": "5",
+   "10|30|720p": "5",
+   "10|30|360p": "5",
+   "20|10|": "10",
+   "20|10|720p": "10",
+   "20|10|360p": "5",
+   "20|20|": "10",
+   "20|20|720p": "10",
+   "20|20|360p": "5",
+   "20|30|": "10",
+   "20|30|720p": "10",
+   "20|30|360p": "5",
+   "30|10|": "15",
+   "30|10|720p": "15",
+   "30|10|360p": "5",
+   "30|20|": "15",
+   "30|20|720p": "15",
+   "30|20|360p": "5",
+   "30|30|": "15",
+   "30|30|720p": "15",
+   "30|30|360p": "5"
   },
   "fsGEff": {
    "|": "female",
