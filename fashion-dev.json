@@ -137,7 +137,11 @@
     "clipStyle",
     "scene",
     "sceneCustom",
-    "onscreenText"
+    "onscreenText",
+    "speech",
+    "textFont",
+    "pet",
+    "petDesc"
    ],
    "slots": [
     "image",
@@ -148,13 +152,18 @@
     "room1",
     "room2",
     "openRef",
-    "endRef"
+    "endRef",
+    "pet"
    ],
    "idPrefix": "pd",
    "addDefaults": {
     "clipStyle": "mirror",
     "scene": "",
-    "onscreenText": ""
+    "onscreenText": "",
+    "speech": "",
+    "textFont": "",
+    "pet": "",
+    "petDesc": ""
    }
   },
   "tasks": {
@@ -339,7 +348,11 @@
     "scene",
     "sceneCustom",
     "onscreenText",
-    "sizeInfo"
+    "sizeInfo",
+    "speech",
+    "textFont",
+    "pet",
+    "petDesc"
    ],
    "slots": [
     "board",
@@ -367,7 +380,7 @@
  },
  "brain": {
   "mn": {
-   "imgNote": "Attached photos in order: the model photo (if any), then the garment photos — front, back, detail (only those that exist), then the location photo if any, then extra set-piece photos (worn together with the garment) if any. Study the garment's exact colour, fabric, pattern, cut, length and details and describe them precisely in \"outfit\"; describe the model precisely in \"model\"."
+   "imgNote": "Attached photos in order: the model photo (if any), then the garment photos — front, back, detail (only those that exist), then the location photo if any, then extra set-piece photos (worn together with the garment) if any, then the pet photo if any. Study the garment's exact colour, fabric, pattern, cut, length and details and describe them precisely in \"outfit\"; describe the model precisely in \"model\"."
   }
  },
  "ops": [
@@ -610,6 +623,67 @@
       "key": "{values.fsGender}",
       "fallback": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\""
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "\nเสียง: ไม่มีเสียงพูด — นางแบบไม่พูดเลย (โพสท่าเงียบ ๆ มีแต่เสียงบรรยากาศ) · ใส่ voN = \"\" ทุกฉาก (ข้ามกฎ SPEECH)"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nสัตว์เลี้ยงในคลิป: ",
+          {
+           "op": "lookup",
+           "table": "fsPetTH",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          " ทุกฉาก",
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " — {item.petDesc}"
+            }
+           ]
+          },
+          " (มีรูปแนบ = ตัวเดียวกับในรูป · เขียนไว้ใน sNen)"
+         ]
+        }
+       }
+      ]
+     },
      "\n\nฉาก: ",
      {
       "op": "block",
@@ -727,7 +801,19 @@
      "then": "{item.slots.room1}"
     },
     "{item.slots.image4}",
-    "{item.slots.image5}"
+    "{item.slots.image5}",
+    {
+     "op": "cond",
+     "when": {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{item.pet}",
+       "b": ""
+      }
+     },
+     "then": "{item.slots.pet}"
+    }
    ],
    "imagesNote": "{brain.mn.imgNote}",
    "logRun": {
@@ -775,12 +861,22 @@
       }
      },
      {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{item.data.plan.0.vo1}",
-       "b": ""
-      }
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.speech}",
+        "b": "none"
+       },
+       {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.data.plan.0.vo1}",
+         "b": ""
+        }
+       }
+      ]
      },
      {
       "op": "not",
@@ -799,12 +895,22 @@
       }
      },
      {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{item.data.plan.0.vo2}",
-       "b": ""
-      }
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.speech}",
+        "b": "none"
+       },
+       {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.data.plan.0.vo2}",
+         "b": ""
+        }
+       }
+      ]
      },
      {
       "op": "not",
@@ -823,12 +929,22 @@
       }
      },
      {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{item.data.plan.0.vo3}",
-       "b": ""
-      }
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.speech}",
+        "b": "none"
+       },
+       {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.data.plan.0.vo3}",
+         "b": ""
+        }
+       }
+      ]
      },
      {
       "op": "not",
@@ -847,12 +963,22 @@
       }
      },
      {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{item.data.plan.0.vo4}",
-       "b": ""
-      }
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.speech}",
+        "b": "none"
+       },
+       {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.data.plan.0.vo4}",
+         "b": ""
+        }
+       }
+      ]
      },
      {
       "op": "not",
@@ -871,12 +997,22 @@
       }
      },
      {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{item.data.plan.0.vo5}",
-       "b": ""
-      }
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.speech}",
+        "b": "none"
+       },
+       {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.data.plan.0.vo5}",
+         "b": ""
+        }
+       }
+      ]
      },
      {
       "op": "or",
@@ -923,12 +1059,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo6}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo6}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -977,12 +1123,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo7}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo7}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1031,12 +1187,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo8}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo8}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1085,12 +1251,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo9}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo9}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1139,12 +1315,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo10}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo10}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1193,12 +1379,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo11}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo11}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1247,12 +1443,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo12}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo12}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1301,12 +1507,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo13}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo13}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1355,12 +1571,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo14}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo14}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1409,12 +1635,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.0.vo15}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.0.vo15}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1463,12 +1699,22 @@
         "b": "1"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo1}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo1}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1517,12 +1763,22 @@
         "b": "1"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo2}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo2}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1571,12 +1827,22 @@
         "b": "1"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo3}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo3}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1625,12 +1891,22 @@
         "b": "1"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo4}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo4}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1679,12 +1955,22 @@
         "b": "1"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo5}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo5}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1748,12 +2034,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo6}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo6}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1817,12 +2113,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo7}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo7}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1886,12 +2192,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo8}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo8}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -1955,12 +2271,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo9}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo9}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2024,12 +2350,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo10}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo10}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2093,12 +2429,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo11}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo11}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2162,12 +2508,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo12}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo12}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2231,12 +2587,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo13}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo13}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2300,12 +2666,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo14}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo14}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2369,12 +2745,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.1.vo15}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.1.vo15}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2423,12 +2809,22 @@
         "b": "2"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo1}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo1}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2477,12 +2873,22 @@
         "b": "2"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo2}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo2}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2531,12 +2937,22 @@
         "b": "2"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo3}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo3}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2585,12 +3001,22 @@
         "b": "2"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo4}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo4}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2639,12 +3065,22 @@
         "b": "2"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo5}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo5}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2708,12 +3144,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo6}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo6}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2777,12 +3223,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo7}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo7}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2846,12 +3302,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo8}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo8}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2915,12 +3381,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo9}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo9}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -2984,12 +3460,22 @@
         "b": "10"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo10}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo10}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -3053,12 +3539,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo11}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo11}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -3122,12 +3618,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo12}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo12}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -3191,12 +3697,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo13}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo13}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -3260,12 +3776,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo14}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo14}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      },
@@ -3329,12 +3855,22 @@
         "b": "20"
        },
        {
-        "op": "not",
-        "a": {
-         "op": "eq",
-         "a": "{item.data.plan.2.vo15}",
-         "b": ""
-        }
+        "op": "or",
+        "list": [
+         {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         },
+         {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.data.plan.2.vo15}",
+           "b": ""
+          }
+         }
+        ]
        }
       ]
      }
@@ -4152,7 +4688,11 @@
      "scene": "{parent.fields.scene}",
      "sceneCustom": "{parent.fields.sceneCustom}",
      "onscreenText": "{parent.fields.onscreenText}",
-     "sizeInfo": "{parent.fields.sizeInfo}"
+     "sizeInfo": "{parent.fields.sizeInfo}",
+     "speech": "{parent.fields.speech}",
+     "textFont": "{parent.fields.textFont}",
+     "pet": "{parent.fields.pet}",
+     "petDesc": "{parent.fields.petDesc}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -4339,7 +4879,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -4370,7 +4956,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -4385,7 +4971,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -4410,7 +4996,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -4425,7 +5011,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -4452,6 +5038,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -4668,7 +5267,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -4699,7 +5344,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -4714,7 +5359,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -4739,7 +5384,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -4754,7 +5399,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -4781,6 +5426,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -4997,7 +5655,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5028,7 +5732,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -5043,7 +5747,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -5068,7 +5772,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -5083,7 +5787,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -5110,6 +5814,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -5326,7 +6043,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5357,7 +6120,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -5372,7 +6135,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -5397,7 +6160,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -5412,7 +6175,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -5439,6 +6202,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -5655,7 +6431,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -5686,7 +6508,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -5701,7 +6523,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -5726,7 +6548,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -5741,7 +6563,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -5768,6 +6590,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -5984,7 +6819,53 @@
       ]
      },
      "\nOUTFIT: {item.outfitEN}\n",
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -6015,7 +6896,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -6030,7 +6911,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -6055,7 +6936,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -6070,7 +6951,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -6097,6 +6978,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -6148,11 +7042,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 6 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 6 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -6312,7 +7206,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -6343,7 +7283,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -6358,7 +7298,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -6383,7 +7323,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -6398,7 +7338,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -6409,17 +7349,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo26} {item.vo27} {item.vo28} {item.vo29} {item.vo30}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo26} {item.vo27} {item.vo28} {item.vo29} {item.vo30}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -6434,10 +7403,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -6472,7 +7461,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov26}\"."
+          "value": " Text \"{item.ov26}\"."
          }
         ]
        },
@@ -6512,7 +7501,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov27}\"."
+          "value": " Text \"{item.ov27}\"."
          }
         ]
        },
@@ -6552,7 +7541,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov28}\"."
+          "value": " Text \"{item.ov28}\"."
          }
         ]
        },
@@ -6592,7 +7581,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov29}\"."
+          "value": " Text \"{item.ov29}\"."
          }
         ]
        },
@@ -6632,7 +7621,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov30}\"."
+          "value": " Text \"{item.ov30}\"."
          }
         ]
        },
@@ -6666,6 +7655,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -6763,11 +7765,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 5 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 5 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -6927,7 +7929,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -6958,7 +8006,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -6973,7 +8021,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -6998,7 +8046,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -7013,7 +8061,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -7024,17 +8072,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo21} {item.vo22} {item.vo23} {item.vo24} {item.vo25}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo21} {item.vo22} {item.vo23} {item.vo24} {item.vo25}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -7049,10 +8126,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -7087,7 +8184,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov21}\"."
+          "value": " Text \"{item.ov21}\"."
          }
         ]
        },
@@ -7127,7 +8224,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov22}\"."
+          "value": " Text \"{item.ov22}\"."
          }
         ]
        },
@@ -7167,7 +8264,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov23}\"."
+          "value": " Text \"{item.ov23}\"."
          }
         ]
        },
@@ -7207,7 +8304,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov24}\"."
+          "value": " Text \"{item.ov24}\"."
          }
         ]
        },
@@ -7247,7 +8344,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov25}\"."
+          "value": " Text \"{item.ov25}\"."
          }
         ]
        },
@@ -7281,6 +8378,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -7378,11 +8488,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 4 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 4 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -7542,7 +8652,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -7573,7 +8729,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -7588,7 +8744,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -7613,7 +8769,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -7628,7 +8784,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -7639,17 +8795,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo16} {item.vo17} {item.vo18} {item.vo19} {item.vo20}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo16} {item.vo17} {item.vo18} {item.vo19} {item.vo20}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -7664,10 +8849,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -7702,7 +8907,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov16}\"."
+          "value": " Text \"{item.ov16}\"."
          }
         ]
        },
@@ -7742,7 +8947,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov17}\"."
+          "value": " Text \"{item.ov17}\"."
          }
         ]
        },
@@ -7782,7 +8987,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov18}\"."
+          "value": " Text \"{item.ov18}\"."
          }
         ]
        },
@@ -7822,7 +9027,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov19}\"."
+          "value": " Text \"{item.ov19}\"."
          }
         ]
        },
@@ -7862,7 +9067,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov20}\"."
+          "value": " Text \"{item.ov20}\"."
          }
         ]
        },
@@ -7896,6 +9101,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -7993,11 +9211,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 3 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 3 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -8157,7 +9375,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -8188,7 +9452,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -8203,7 +9467,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -8228,7 +9492,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -8243,7 +9507,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -8254,17 +9518,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo11} {item.vo12} {item.vo13} {item.vo14} {item.vo15}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo11} {item.vo12} {item.vo13} {item.vo14} {item.vo15}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -8279,10 +9572,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -8317,7 +9630,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov11}\"."
+          "value": " Text \"{item.ov11}\"."
          }
         ]
        },
@@ -8357,7 +9670,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov12}\"."
+          "value": " Text \"{item.ov12}\"."
          }
         ]
        },
@@ -8397,7 +9710,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov13}\"."
+          "value": " Text \"{item.ov13}\"."
          }
         ]
        },
@@ -8437,7 +9750,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov14}\"."
+          "value": " Text \"{item.ov14}\"."
          }
         ]
        },
@@ -8477,7 +9790,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov15}\"."
+          "value": " Text \"{item.ov15}\"."
          }
         ]
        },
@@ -8511,6 +9824,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -8608,11 +9934,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 2 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 2 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -8772,7 +10098,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -8803,7 +10175,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -8818,7 +10190,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -8843,7 +10215,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -8858,7 +10230,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -8869,17 +10241,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo6} {item.vo7} {item.vo8} {item.vo9} {item.vo10}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo6} {item.vo7} {item.vo8} {item.vo9} {item.vo10}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -8894,10 +10295,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -8932,7 +10353,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov6}\"."
+          "value": " Text \"{item.ov6}\"."
          }
         ]
        },
@@ -8972,7 +10393,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov7}\"."
+          "value": " Text \"{item.ov7}\"."
          }
         ]
        },
@@ -9012,7 +10433,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov8}\"."
+          "value": " Text \"{item.ov8}\"."
          }
         ]
        },
@@ -9052,7 +10473,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov9}\"."
+          "value": " Text \"{item.ov9}\"."
          }
         ]
        },
@@ -9092,7 +10513,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov10}\"."
+          "value": " Text \"{item.ov10}\"."
          }
         ]
        },
@@ -9126,6 +10547,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -9223,11 +10657,11 @@
           "b": "1"
          }
         },
-        "value": "CONTINUATION — part 1 of one clip: same model, outfit, place, light; no restart, no re-introduction, no ending unless final part.\n\n"
+        "value": "CONTINUATION — part 1 of one clip: same model, outfit, place, light; no restart or re-intro; end only in the final part.\n\n"
        }
       ]
      },
-     "Vertical 9:16 Thai fashion review clip, ~10 s.\nLOOK: ",
+     "Vertical 9:16 Thai fashion clip, ~10 s.\nLOOK: ",
      "authentic Thai shop phone video, natural daylight, true-white balance (NOT yellow, NOT hazy), real skin — NOT AI-looking, NOT CGI",
      ". Lighting/mood: {item.palette}.\nSETTING: ",
      {
@@ -9387,7 +10821,53 @@
        }
       ]
      },
-     "Refs (only those attached): model, garment front/back/detail, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.petDesc}",
+               "b": ""
+              }
+             },
+             "value": " ({item.petDesc})"
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
      {
       "op": "block",
       "sep": "",
@@ -9418,7 +10898,7 @@
          "from": "products",
          "slot": "image"
         },
-        "value": "GARMENT LOCK: the garment photos are the exact product — same fabric, pattern, colour, cut, length, neckline and details; never redesign, simplify or recolour; natural drape.\n"
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
        }
       ]
      },
@@ -9433,7 +10913,7 @@
          "from": "products",
          "slot": "image2"
         },
-        "value": "The back-view photo is the back of the outfit — match it whenever the back shows.\n"
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
        }
       ]
      },
@@ -9458,7 +10938,7 @@
           }
          ]
         },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light in every scene.\n"
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
        }
       ]
      },
@@ -9473,7 +10953,7 @@
          "from": "products",
          "slot": "image4"
         },
-        "value": "SET LOCK: the extra set-piece photos are worn together with the main garment, exactly as photographed.\n"
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
       ]
      },
@@ -9484,17 +10964,46 @@
       "fallback": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image."
      },
      "\n",
-     "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
      {
-      "op": "lookup",
-      "table": "fsVoiceEN",
-      "key": "{values.fsGender}",
-      "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.speech}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: the model speaks Thai to the camera with natural lip-sync, ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN",
+           "key": "{values.fsGender}",
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm seller tone, no long pauses; she says exactly: \"",
+          "{item.vo1} {item.vo2} {item.vo3} {item.vo4} {item.vo5}",
+          "\"\n",
+          "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.speech}",
+         "b": "none"
+        },
+        "value": "SPEECH: NONE — she never talks, mouth relaxed, no lip-sync; ignore any talking cue.\nAUDIO: only soft natural ambience — NO music, no voices, no narrator.\n"
+       }
+      ]
      },
-     ", warm friendly seller tone, continuous with no long pauses — she says exactly: \"",
-     "{item.vo1} {item.vo2} {item.vo3} {item.vo4} {item.vo5}",
-     "\"\n",
-     "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n",
      {
       "op": "block",
       "sep": "",
@@ -9509,10 +11018,30 @@
          }
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": "size"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "ON-SCREEN THAI TEXT where a scene says Text; style: ",
+          {
+           "op": "lookup",
+           "table": "fsFontEN",
+           "key": "{item.textFont}",
+           "fallback": "bold Thai sans-serif, white fill, thick dark outline, soft shadow"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
-     "Negative: other people, redesigned or recoloured garment, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
+     "Negative: other people, morphing face, split screen, app interface, logos, watermark, slow motion.\n",
      "SHOT LIST:\n",
      {
       "op": "concat",
@@ -9547,7 +11076,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov1}\"."
+          "value": " Text \"{item.ov1}\"."
          }
         ]
        },
@@ -9587,7 +11116,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov2}\"."
+          "value": " Text \"{item.ov2}\"."
          }
         ]
        },
@@ -9627,7 +11156,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov3}\"."
+          "value": " Text \"{item.ov3}\"."
          }
         ]
        },
@@ -9667,7 +11196,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov4}\"."
+          "value": " Text \"{item.ov4}\"."
          }
         ]
        },
@@ -9707,7 +11236,7 @@
             }
            ]
           },
-          "value": " On-screen Thai text: \"{item.ov5}\"."
+          "value": " Text \"{item.ov5}\"."
          }
         ]
        },
@@ -9741,6 +11270,19 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{item.pet}",
+        "b": ""
+       }
+      }
      },
      {
       "from": "products",
@@ -10721,7 +12263,7 @@
           },
           {
            "el": "text",
-           "value": "นางแบบพูดรีวิวเป็นภาษาไทยเองในคลิป · ไม่มีเพลง (ใส่เพลงเองตอนโพสต์ได้) · แบบคลิป ฉาก และข้อความบนคลิป ตั้งในแต่ละชุด",
+           "value": "ไม่มีเพลงในคลิป (ใส่เพลงเองตอนโพสต์ได้) · แบบคลิป ฉาก เสียงพูด สัตว์เลี้ยง และข้อความบนคลิป ตั้งในแต่ละชุด",
            "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
           },
           {
@@ -11322,6 +12864,39 @@
                ]
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2.5 mt-1",
+             "card": [
+              {
+               "el": "text",
+               "value": "โหมดการผลิต",
+               "icon": "bolt",
+               "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none"
+              },
+              {
+               "el": "grid-select",
+               "field": "mode",
+               "cols": 2,
+               "contained": true,
+               "options": [
+                {
+                 "value": "manual",
+                 "label": "ทีละขั้น",
+                 "desc": "เขียนบท → ตรวจ → สร้างบอร์ด → วิดีโอ",
+                 "icon": "fact_check"
+                },
+                {
+                 "value": "auto",
+                 "label": "ออโต้",
+                 "desc": "กดครั้งเดียวจบ — บอร์ด + วิดีโอต่อเนื่อง",
+                 "icon": "bolt"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              }
+             ]
             }
            ]
           }
@@ -11889,7 +13464,11 @@
             "hasProduct": "1 ชิ้น",
             "clipStyle": "mirror",
             "scene": "",
-            "onscreenText": ""
+            "onscreenText": "",
+            "speech": "",
+            "textFont": "",
+            "pet": "",
+            "petDesc": ""
            },
            "label": "เพิ่มชุด",
            "icon": "add",
@@ -12381,7 +13960,11 @@
           "hasProduct": "1 ชิ้น",
           "clipStyle": "mirror",
           "scene": "",
-          "onscreenText": ""
+          "onscreenText": "",
+          "speech": "",
+          "textFont": "",
+          "pet": "",
+          "petDesc": ""
          },
          "label": "เพิ่มชุดใหม่",
          "icon": "add",
@@ -13536,6 +15119,11 @@
                "value": "studio",
                "label": "สตูดิโอพื้นขาว",
                "icon": "photo_camera_back"
+              },
+              {
+               "value": "cafe",
+               "label": "คาเฟ่",
+               "icon": "local_cafe"
               }
              ],
              "when": {
@@ -13559,11 +15147,6 @@
                {
                 "op": "or",
                 "list": [
-                 {
-                  "op": "eq",
-                  "a": "{item.scene}",
-                  "b": "cafe"
-                 },
                  {
                   "op": "eq",
                   "a": "{item.scene}",
@@ -13698,6 +15281,226 @@
                "card": [
                 {
                  "el": "icon",
+                 "icon": "record_voice_over",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "เสียงในคลิป",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "speech",
+             "cols": 2,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "นางแบบพูดรีวิว",
+               "desc": "พูดไทยเองตลอดคลิป ปากตรงเสียง",
+               "icon": "record_voice_over"
+              },
+              {
+               "value": "none",
+               "label": "ไม่มีเสียงพูด",
+               "desc": "โพสท่าเงียบ ๆ มีแต่เสียงบรรยากาศ ใส่เพลงเองตอนโพสต์",
+               "icon": "voice_over_off"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
+                 "icon": "pets",
+                 "textSize": "text-[19px]",
+                 "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "สัตว์เลี้ยงในคลิป",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ไม่บังคับ",
+               "className": "!text-[12.5px] opacity-50 font-bold ml-auto whitespace-nowrap"
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "pet",
+             "cols": 3,
+             "mobile": {
+              "cols": 3
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "ไม่มี",
+               "icon": "block"
+              },
+              {
+               "value": "hold",
+               "label": "อุ้มไว้",
+               "desc": "นางแบบอุ้มในอ้อมแขน",
+               "icon": "pets"
+              },
+              {
+               "value": "floor",
+               "label": "บนพื้น",
+               "desc": "นอนหรือนั่งข้างนางแบบ",
+               "icon": "chair"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2",
+             "card": [
+              {
+               "el": "text",
+               "value": "ใส่รูปสัตว์เลี้ยง 1 รูป — หมีใช้ตัวเดียวกับในรูปทุกช็อต",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "row",
+               "className": "gap-3 items-start flex-wrap",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
+                 "when": "item.slots.pet!=",
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.pet}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "14px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "pet",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                 "when": "item.slots.pet=",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "pet",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "pet",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "หรือพิมพ์บอก (ไม่บังคับ)",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "input",
+               "field": "petDesc",
+               "placeholder": "เช่น แมวส้มขนสั้น · หมาชิวาวาสีครีม",
+               "className": "!h-12 !px-3.5 !rounded-xl !text-[17px] @[640px]:!text-[16px]"
+              }
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{item.pet}",
+               "b": ""
+              }
+             }
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+           "card": [
+            {
+             "el": "row",
+             "className": "items-center gap-2 px-0.5",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "box",
+               "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+               "card": [
+                {
+                 "el": "icon",
                  "icon": "title",
                  "textSize": "text-[19px]",
                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
@@ -13739,6 +15542,64 @@
                "icon": "straighten"
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "แบบตัวอักษร",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "textFont",
+               "cols": 3,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "ตัวหนาขอบหนา",
+                 "desc": "อ่านง่ายทุกพื้นหลัง"
+                },
+                {
+                 "value": "thin",
+                 "label": "บางมินิมอล",
+                 "desc": "เรียบหรู ดูแพง"
+                },
+                {
+                 "value": "card",
+                 "label": "ป้ายการ์ดขาว",
+                 "desc": "สะอาด อ่านง่าย"
+                },
+                {
+                 "value": "pop",
+                 "label": "เน้นคำสำคัญ",
+                 "desc": "เด่นแบบคลิปไวรัล"
+                },
+                {
+                 "value": "cute",
+                 "label": "ลายมือน่ารัก",
+                 "desc": "อบอุ่น เป็นกันเอง"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ตัวอักษรในคลิปวาดโดย AI — คำยาวหรือคำยากอาจเพี้ยน ใช้ข้อความสั้น ๆ จะสวยที่สุด",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+              }
+             ],
+             "when": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": "size"
+             }
             }
            ]
           },
@@ -33509,6 +35370,21 @@
    "average": "average medium build",
    "curvy": "curvy, size XL, fuller hips, thighs and arms",
    "plus": "plus-size 2XL-3XL, round full body"
+  },
+  "fsFontEN": {
+   "": "bold Thai sans-serif, white fill, thick dark outline, soft shadow",
+   "thin": "thin clean Thai sans-serif, wide letter spacing, white, clear dark shadow",
+   "card": "bold dark Thai text on a white rounded card, soft shadow",
+   "pop": "very bold white Thai text, thin dark outline, key word in bright yellow",
+   "cute": "cute rounded Thai handwritten letters, white, soft shadow"
+  },
+  "fsPetEN": {
+   "hold": "she holds the pet in her arms",
+   "floor": "the pet lies or sits calmly on the floor near her"
+  },
+  "fsPetTH": {
+   "hold": "นางแบบอุ้มสัตว์เลี้ยงไว้",
+   "floor": "สัตว์เลี้ยงนอน/นั่งบนพื้นใกล้นางแบบ"
   },
   "fsVoiceEN": {
    "female": "a natural young adult FEMALE Thai voice (never a male voice)",
