@@ -80,6 +80,8 @@
   "fsFace": "",
   "fsShape": "",
   "svRes": "720p",
+  "fsModelSrc": "",
+  "fsAge": "",
   "fsClipStyle": "mirror",
   "fsScene": "",
   "fsSceneCustom": "",
@@ -601,6 +603,34 @@
       "parts": [
        {
         "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsAge}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " · ",
+          {
+           "op": "lookup",
+           "table": "fsAgeTH",
+           "key": "{values.fsAge}",
+           "fallback": ""
+          }
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "or",
          "list": [
           {
@@ -1039,7 +1069,7 @@
          },
          "b": ""
         },
-        "value": "อัตโนมัติ — เลือกฉากที่เข้ากับชุดและแบบคลิป (ทางการ → ดาดฟ้า/สตูดิโอ · ลำลอง → คาเฟ่ · ชุดซัมเมอร์ → ริมทะเล · สตรีท → ถนน · เซลฟี่กระจก → ห้องแต่งตัว/ห้องนอน · มินิมอลคุมโทน → ฉากเรียบโทนเดียวกับชุด)"
+        "value": "อัตโนมัติ — เลือกฉากที่เข้ากับชุดและแบบคลิป (ทางการ → ดาดฟ้า/สตูดิโอ · ลำลอง → คาเฟ่ · ชุดซัมเมอร์ → ริมทะเล · สตรีท → ถนน · เซลฟี่กระจก → ห้องแต่งตัว/ห้องนอน · มินิมอลคุมโทน → ฉากเรียบโทนเดียวกับชุด · สตรีทสแนป → ถนน/ย่านเมืองเก่า · ลมพัดฟีลหนัง → ทุ่งดอกไม้/ริมทะเล · แกะกล่อง → ห้องนอน/ห้องพักโรงแรม)"
        },
        {
         "when": {
@@ -1155,21 +1185,74 @@
        },
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": {
-           "op": "cond",
-           "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           "then": "{item.onscreenText}",
-           "else": "{values.fsOnText}"
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.onscreenText}",
+             "else": "{values.fsOnText}"
+            },
+            "b": ""
+           }
           },
-          "b": "size"
-         }
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.onscreenText}",
+             "else": "{values.fsOnText}"
+            },
+            "b": "size"
+           }
+          }
+         ]
+        },
+        "value": {
+         "op": "lookup",
+         "table": "fsOnTextPlan",
+         "key": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.own}",
+           "b": "true"
+          },
+          "then": "{item.onscreenText}",
+          "else": "{values.fsOnText}"
+         },
+         "fallback": "ใส่ ov1 = ไซซ์/สัดส่วนสั้น ≤ 8 คำ (จากข้อมูลผู้ใช้เท่านั้น ไม่มีข้อมูล = ชื่อสินค้าสั้น ๆ) · ov ฉากสุดท้าย = ชวนซื้อสั้น ≤ 5 คำ · ฉากอื่นว่าง"
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.own}",
+           "b": "true"
+          },
+          "then": "{item.onscreenText}",
+          "else": "{values.fsOnText}"
+         },
+         "b": ""
         },
         "value": "ไม่มี — ovN ว่างทุกฉาก"
        }
@@ -7124,58 +7207,84 @@
     "parts": [
      "Model reference photo for a clothing-shop video series: ",
      {
-      "op": "block",
-      "sep": "",
+      "op": "concat",
       "parts": [
        {
-        "when": {
-         "op": "and",
-         "list": [
-          {
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
            "op": "eq",
-           "a": "{values.fsModelDesc}",
+           "a": "{values.fsAge}",
            "b": ""
           },
-          {
+          "value": {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": "male"
+              }
+             },
+             "value": "a friendly natural-looking Thai woman in her 20s"
+            },
+            {
+             "when": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": "male"
+             },
+             "value": "a friendly natural-looking Thai man in his 20s"
+            }
+           ]
+          }
+         },
+         {
+          "when": {
            "op": "not",
            "a": {
             "op": "eq",
-            "a": "{values.fsGender}",
-            "b": "male"
+            "a": "{values.fsAge}",
+            "b": ""
            }
-          }
-         ]
-        },
-        "value": "a friendly natural-looking Thai woman in her 20s"
-       },
-       {
-        "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "eq",
-           "a": "{values.fsModelDesc}",
-           "b": ""
           },
-          {
-           "op": "eq",
-           "a": "{values.fsGender}",
-           "b": "male"
+          "value": {
+           "op": "concat",
+           "parts": [
+            "a friendly natural-looking ",
+            {
+             "op": "lookup",
+             "table": "fsAgeEN",
+             "key": "{values.fsAge}|{values.fsGender}",
+             "fallback": ""
+            }
+           ]
           }
-         ]
-        },
-        "value": "a friendly natural-looking Thai man in his 20s"
+         }
+        ]
        },
        {
-        "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{values.fsModelDesc}",
-          "b": ""
+        "op": "block",
+        "sep": "",
+        "parts": [
+         {
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{values.fsModelDesc}",
+            "b": ""
+           }
+          },
+          "value": ", look: {values.fsModelDesc}"
          }
-        },
-        "value": "{values.fsModelDesc}"
+        ]
        }
       ]
      },
@@ -11954,20 +12063,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -12006,9 +12115,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -12046,9 +12158,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -12086,9 +12201,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -12126,9 +12244,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -12166,9 +12287,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -12425,6 +12549,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -12941,20 +13070,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -12993,9 +13122,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -13033,9 +13165,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -13073,9 +13208,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -13113,9 +13251,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -13153,9 +13294,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -13412,6 +13556,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -13928,20 +14077,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -13980,9 +14129,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -14020,9 +14172,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -14060,9 +14215,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -14100,9 +14258,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -14140,9 +14301,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -14399,6 +14563,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -14915,20 +15084,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -14967,9 +15136,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15007,9 +15179,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15047,9 +15222,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15087,9 +15265,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15127,9 +15308,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15386,6 +15570,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -15902,20 +16091,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -15954,9 +16143,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -15994,9 +16186,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -16034,9 +16229,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -16074,9 +16272,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -16114,9 +16315,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -16373,6 +16577,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -16889,20 +17098,20 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.onscreenText}",
-          "b": "size"
-         }
+         "op": "eq",
+         "a": "{item.onscreenText}",
+         "b": ""
         },
         "value": "NO ON-SCREEN TEXT: no captions, titles or subtitles.\n"
        },
        {
         "when": {
-         "op": "eq",
-         "a": "{item.onscreenText}",
-         "b": "size"
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.onscreenText}",
+          "b": ""
+         }
         },
         "value": {
          "op": "concat",
@@ -16941,9 +17150,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -16981,9 +17193,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -17021,9 +17236,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -17061,9 +17279,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -17101,9 +17322,12 @@
            "op": "and",
            "list": [
             {
-             "op": "eq",
-             "a": "{item.onscreenText}",
-             "b": "size"
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.onscreenText}",
+              "b": ""
+             }
             },
             {
              "op": "not",
@@ -17361,6 +17585,11 @@
          "op": "eq",
          "a": "{item.clipStyle}",
          "b": "live"
+        },
+        {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "street"
         }
        ]
       },
@@ -17380,6 +17609,10 @@
   }
  ],
  "stages": [
+  {
+   "op": "fsModel",
+   "__why": "E23: ยังไม่มีรูปนางแบบ = หมีวาด 1 คนก่อนเขียนบท แล้วใช้หน้าเดิมทุกคลิป (มีรูปแล้ว where ไม่ตรง = ข้าม)"
+  },
   {
    "op": "mnPlan"
   },
@@ -17893,6 +18126,75 @@
                       "parts": [
                        {
                         "when": {
+                         "op": "eq",
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "street"
+                        },
+                        "value": "สตรีทสแนป"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "unbox"
+                        },
+                        "value": "แกะกล่องลองใส่"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
+                         "op": "eq",
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "breeze"
+                        },
+                        "value": "ลมพัดฟีลหนัง"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
                          "op": "not",
                          "a": {
                           "op": "eq",
@@ -18137,6 +18439,75 @@
                                "then": "{item.scene}",
                                "else": "{values.fsScene}"
                               },
+                              "b": "hotel"
+                             },
+                             "value": "ห้องพักโรงแรม"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.scene}",
+                               "else": "{values.fsScene}"
+                              },
+                              "b": "flower"
+                             },
+                             "value": "ทุ่งดอกไม้"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.scene}",
+                               "else": "{values.fsScene}"
+                              },
+                              "b": "oldtown"
+                             },
+                             "value": "ย่านเมืองเก่า"
+                            }
+                           ]
+                          },
+                          {
+                           "op": "block",
+                           "sep": "",
+                           "parts": [
+                            {
+                             "when": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.scene}",
+                               "else": "{values.fsScene}"
+                              },
                               "b": "custom"
                              },
                              "value": "ห้องเรา / หน้าร้าน"
@@ -18281,6 +18652,24 @@
                "label": "จากไม้แขวนสู่ใส่จริง",
                "desc": "ช็อตแรกเห็นชุดบนไม้แขวน แล้วตัดไปนางแบบใส่จริง · เหมาะร้านที่มีรูปชุดแขวนหรือวางราบ",
                "icon": "dry_cleaning"
+              },
+              {
+               "value": "street",
+               "label": "สตรีทสแนป",
+               "desc": "เพื่อนถือกล้องเดินตาม เดินเล่นหัวเราะ หันมามองกล้อง · เหมาะชุดลำลอง สตรีท ใส่เที่ยว",
+               "icon": "camera"
+              },
+              {
+               "value": "unbox",
+               "label": "แกะกล่องลองใส่",
+               "desc": "ฉากแรกแกะพัสดุหยิบชุดขึ้นมาโชว์ แล้วตัดไปใส่จริง · เหมาะร้านออนไลน์ ของมาใหม่",
+               "icon": "inventory_2"
+              },
+              {
+               "value": "breeze",
+               "label": "ลมพัดฟีลหนัง",
+               "desc": "แสงย้อนนุ่ม ๆ ลมพัดผ้าและผมพลิ้ว กล้องเคลื่อนช้า ตัดทุก 2 วิ · เหมาะเดรส ผ้าพลิ้ว ชุดออกงาน",
+               "icon": "air"
               }
              ]
             }
@@ -18329,7 +18718,7 @@
             {
              "el": "grid-select",
              "field": "fsScene",
-             "cols": 3,
+             "cols": 2,
              "mobile": {
               "cols": 2
              },
@@ -18347,7 +18736,19 @@
                "label": "ห้องเรา / หน้าร้าน",
                "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
                "icon": "add_a_photo"
-              },
+              }
+             ]
+            },
+            {
+             "el": "grid-select",
+             "field": "fsScene",
+             "cols": 3,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
               {
                "value": "closet",
                "label": "ห้องแต่งตัว",
@@ -18392,6 +18793,21 @@
                "value": "beach",
                "label": "ริมทะเล",
                "icon": "beach_access"
+              },
+              {
+               "value": "hotel",
+               "label": "ห้องพักโรงแรม",
+               "icon": "hotel"
+              },
+              {
+               "value": "flower",
+               "label": "ทุ่งดอกไม้",
+               "icon": "local_florist"
+              },
+              {
+               "value": "oldtown",
+               "label": "ย่านเมืองเก่า",
+               "icon": "account_balance"
               }
              ],
              "when": {
@@ -18413,18 +18829,6 @@
              "contained": true,
              "className": "!min-h-[48px] @[420px]:!min-h-0",
              "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "หมีเลือกให้เข้ากับชุด",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "custom",
-               "label": "ห้องเรา / หน้าร้าน",
-               "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
-               "icon": "add_a_photo"
-              },
               {
                "value": "closet",
                "label": "ห้องแต่งตัว",
@@ -18449,6 +18853,11 @@
                "value": "cafe",
                "label": "คาเฟ่",
                "icon": "local_cafe"
+              },
+              {
+               "value": "hotel",
+               "label": "ห้องพักโรงแรม",
+               "icon": "hotel"
               }
              ],
              "when": {
@@ -18491,6 +18900,16 @@
                   "op": "eq",
                   "a": "{values.fsScene}",
                   "b": "beach"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{values.fsScene}",
+                  "b": "flower"
+                 },
+                 {
+                  "op": "eq",
+                  "a": "{values.fsScene}",
+                  "b": "oldtown"
                  }
                 ]
                }
@@ -18629,7 +19048,7 @@
             {
              "el": "grid-select",
              "field": "fsOnText",
-             "cols": 2,
+             "cols": 4,
              "mobile": {
               "cols": 2
              },
@@ -18647,6 +19066,18 @@
                "label": "ไซซ์ + ชวนซื้อ",
                "desc": "หมีใส่ข้อความสั้นต้นคลิปและท้ายคลิป",
                "icon": "straighten"
+              },
+              {
+               "value": "hook",
+               "label": "ประโยคเด็ด + ชวนซื้อ",
+               "desc": "ประโยคดึงคนดูต้นคลิป ท้ายคลิปชวนซื้อ",
+               "icon": "bolt"
+              },
+              {
+               "value": "promo",
+               "label": "โปร + ชวนซื้อ",
+               "desc": "บอกโปรต้นคลิป (จากช่องโปรโมชัน)",
+               "icon": "sell"
               }
              ]
             },
@@ -18662,7 +19093,7 @@
               {
                "el": "grid-select",
                "field": "fsTextFont",
-               "cols": 3,
+               "cols": 4,
                "mobile": {
                 "cols": 2
                },
@@ -18693,6 +19124,21 @@
                  "value": "cute",
                  "label": "ลายมือน่ารัก",
                  "desc": "อบอุ่น เป็นกันเอง"
+                },
+                {
+                 "value": "mag",
+                 "label": "หัวนิตยสาร",
+                 "desc": "ฟีลแฟชั่นแมกกาซีน"
+                },
+                {
+                 "value": "neon",
+                 "label": "นีออนเรืองแสง",
+                 "desc": "สายกลางคืน สตรีท"
+                },
+                {
+                 "value": "sticker",
+                 "label": "สติกเกอร์ขอบขาว",
+                 "desc": "สดใส ขี้เล่น"
                 }
                ]
               },
@@ -18703,9 +19149,12 @@
               }
              ],
              "when": {
-              "op": "eq",
-              "a": "{values.fsOnText}",
-              "b": "size"
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.fsOnText}",
+               "b": ""
+              }
              }
             }
            ]
@@ -18963,127 +19412,26 @@
          ],
          "card": [
           {
-           "el": "text",
-           "value": "อัปรูปนางแบบของร้าน หรือรูปตัวเองก็ได้ (เห็นเต็มตัวยิ่งดี) = หน้าและหุ่นเหมือนเดิมทุกคลิป · หรือพิมพ์ลักษณะแล้วกด \"ให้หมีวาดนางแบบ\" · ว่าง = หมีเขียนลักษณะให้เองทุกคลิป (หน้าอาจต่างกันในแต่ละคลิป)",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-          },
-          {
-           "el": "row",
-           "className": "gap-3 items-start flex-wrap @[560px]:flex-nowrap",
-           "card": [
+           "el": "grid-select",
+           "field": "fsModelSrc",
+           "cols": 2,
+           "mobile": {
+            "cols": 1
+           },
+           "contained": true,
+           "className": "!min-h-[48px] @[420px]:!min-h-0",
+           "options": [
             {
-             "el": "repeat",
-             "coll": "characters",
-             "where": "id=model",
-             "card": [
-              {
-               "el": "box",
-               "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
-               "when": "item.slots.face!=",
-               "card": [
-                {
-                 "el": "media-slot",
-                 "src": "{item.slots.face}",
-                 "aspect": "1:1",
-                 "style": {
-                  "borderRadius": "14px"
-                 },
-                 "className": "ring-1 ring-[var(--ev-border)]"
-                },
-                {
-                 "el": "button",
-                 "action": "hook",
-                 "fn": "clearSlot",
-                 "to": "face",
-                 "label": "",
-                 "icon": "close",
-                 "variant": "ghost",
-                 "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
-                }
-               ]
-              },
-              {
-               "el": "box",
-               "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
-               "when": "item.slots.face=",
-               "card": [
-                {
-                 "el": "upload",
-                 "label": "",
-                 "placeholder": "อัพโหลด",
-                 "icon": "upload",
-                 "into": "face",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
-                },
-                {
-                 "el": "pick-button",
-                 "label": "เลือกภาพ",
-                 "icon": "photo_library",
-                 "filter": "image",
-                 "into": "face",
-                 "resize": {
-                  "maxPx": 768,
-                  "quality": 0.8
-                 },
-                 "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
-                }
-               ]
-              }
-             ]
+             "value": "",
+             "label": "หมีออกแบบให้",
+             "desc": "เลือกเพศ อายุ รูปร่าง — หมีวาด 1 คน ใช้หน้าเดิมทุกคลิป",
+             "icon": "casino"
             },
             {
-             "el": "box",
-             "className": "flex-1 min-w-[200px] flex flex-col gap-2 !basis-full @[560px]:!basis-auto",
-             "card": [
-              {
-               "el": "textarea",
-               "field": "fsModelDesc",
-               "placeholder": "ลักษณะ เช่น ผู้หญิงไทย อายุ 25 ผมยาวสีน้ำตาล หุ่นสมส่วน ยิ้มสดใส",
-               "className": "!p-3 !rounded-xl !text-[16px] @[640px]:!text-[15px] !leading-relaxed !min-h-[72px]"
-              },
-              {
-               "el": "repeat",
-               "coll": "characters",
-               "where": "id=model",
-               "card": [
-                {
-                 "el": "gen-button",
-                 "op": "fsModel",
-                 "label": "ให้หมีวาดนางแบบ",
-                 "icon": "brush",
-                 "variant": "solid",
-                 "className": "justify-center !h-12 !rounded-xl font-bold",
-                 "when": {
-                  "op": "eq",
-                  "a": "{item.slots.face}",
-                  "b": ""
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "ได้รูปแล้ว — หมีล็อกหน้าตาและรูปร่างตามรูปทุกช็อต ทุกชุด · ไม่ชอบรูป กดปุ่มลบที่รูป แล้ววาดหรืออัปใหม่",
-                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.face}",
-                   "b": ""
-                  }
-                 }
-                },
-                {
-                 "el": "text",
-                 "value": "หมีวาดนางแบบหลักได้ 1 คน ใช้กับทุกชุด — อยากได้คนละคนต่อชุด เปิด \"ตั้งค่าเฉพาะชุดนี้\" ในหน้าเพิ่มชุดแล้วอัปรูป",
-                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-                }
-               ]
-              }
-             ]
+             "value": "photo",
+             "label": "ใช้รูปนางแบบของร้าน",
+             "desc": "อัปรูปนางแบบหรือรูปตัวเอง — ล็อกหน้าตามรูป",
+             "icon": "add_a_photo"
             }
            ]
           },
@@ -19109,16 +19457,364 @@
               {
                "value": "female",
                "label": "ผู้หญิง",
-               "desc": "พูดลงท้าย ค่ะ",
+               "desc": "นางแบบ · พูดลงท้าย ค่ะ",
                "icon": "face_3"
               },
               {
                "value": "male",
                "label": "ผู้ชาย",
-               "desc": "พูดลงท้าย ครับ",
+               "desc": "นายแบบ · พูดลงท้าย ครับ",
                "icon": "face_6"
               }
              ]
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-3",
+           "card": [
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "ช่วงวัย",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "fsAge",
+               "cols": 5,
+               "mobile": {
+                "cols": 3
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "desc": "20 กว่า ๆ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "20s",
+                 "label": "20+"
+                },
+                {
+                 "value": "30s",
+                 "label": "30+"
+                },
+                {
+                 "value": "40s",
+                 "label": "40+"
+                },
+                {
+                 "value": "50s",
+                 "label": "50+"
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "ลุคเพิ่มเติม (ไม่บังคับ)",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "textarea",
+               "field": "fsModelDesc",
+               "placeholder": "เช่น ผมยาวสีน้ำตาล ผิวสองสี ยิ้มสดใส",
+               "className": "!p-3 !rounded-xl !text-[16px] @[640px]:!text-[15px] !leading-relaxed !min-h-[60px]"
+              }
+             ]
+            },
+            {
+             "el": "repeat",
+             "coll": "characters",
+             "where": "id=model",
+             "card": [
+              {
+               "el": "row",
+               "className": "gap-3 items-center flex-wrap",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "flex gap-3",
+                 "card": [
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] @[560px]:w-[120px] shrink-0",
+                   "when": "item.slots.face!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.face}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "face",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "when": "item.slots.face=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "face",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "face",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  }
+                 ],
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.slots.face}",
+                   "b": ""
+                  }
+                 }
+                },
+                {
+                 "el": "box",
+                 "className": "flex-1 min-w-[180px] flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "gen-button",
+                   "op": "fsModel",
+                   "label": "ดูหน้านางแบบก่อน",
+                   "icon": "brush",
+                   "variant": "outline",
+                   "className": "justify-center !h-11 !rounded-xl font-bold",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.face}",
+                    "b": ""
+                   }
+                  },
+                  {
+                   "el": "text",
+                   "value": "ไม่กดก็ได้ — หมีวาดให้เองตอนเริ่มผลิต",
+                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.slots.face}",
+                    "b": ""
+                   }
+                  },
+                  {
+                   "el": "text",
+                   "value": "ได้หน้านางแบบแล้ว — ใช้หน้านี้ทุกคลิป ทุกชุด · ไม่ชอบ กดลบที่รูปแล้วกดดูใหม่",
+                   "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.face}",
+                     "b": ""
+                    }
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ],
+           "when": {
+            "op": "eq",
+            "a": "{values.fsModelSrc}",
+            "b": ""
+           }
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-2",
+           "card": [
+            {
+             "el": "text",
+             "value": "อัปรูปนางแบบของร้าน หรือรูปตัวเองก็ได้ (เห็นเต็มตัวยิ่งดี) — หมีล็อกหน้าและหุ่นตามรูปทุกช็อต",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+            },
+            {
+             "el": "repeat",
+             "coll": "characters",
+             "where": "id=model",
+             "card": [
+              {
+               "el": "row",
+               "className": "gap-3 items-start flex-wrap",
+               "card": [
+                {
+                 "el": "box",
+                 "className": "relative w-[120px] @[560px]:w-[140px] shrink-0",
+                 "when": "item.slots.face!=",
+                 "card": [
+                  {
+                   "el": "media-slot",
+                   "src": "{item.slots.face}",
+                   "aspect": "1:1",
+                   "style": {
+                    "borderRadius": "14px"
+                   },
+                   "className": "ring-1 ring-[var(--ev-border)]"
+                  },
+                  {
+                   "el": "button",
+                   "action": "hook",
+                   "fn": "clearSlot",
+                   "to": "face",
+                   "label": "",
+                   "icon": "close",
+                   "variant": "ghost",
+                   "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                 "when": "item.slots.face=",
+                 "card": [
+                  {
+                   "el": "upload",
+                   "label": "",
+                   "placeholder": "อัพโหลด",
+                   "icon": "upload",
+                   "into": "face",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                  },
+                  {
+                   "el": "pick-button",
+                   "label": "เลือกภาพ",
+                   "icon": "photo_library",
+                   "filter": "image",
+                   "into": "face",
+                   "resize": {
+                    "maxPx": 768,
+                    "quality": 0.8
+                   },
+                   "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ยังไม่ได้อัปรูป — ถ้าไม่อัป หมีจะวาดให้ 1 คนตอนเริ่มผลิต",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
+               "when": {
+                "op": "eq",
+                "a": "{item.slots.face}",
+                "b": ""
+               }
+              }
+             ]
+            }
+           ],
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{values.fsModelSrc}",
+             "b": ""
+            }
+           }
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "รูปร่าง",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "fsShape",
+             "cols": 5,
+             "mobile": {
+              "cols": 3
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามรูปหรือที่เลือก",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "slim",
+               "label": "เพรียว"
+              },
+              {
+               "value": "average",
+               "label": "สมส่วน"
+              },
+              {
+               "value": "curvy",
+               "label": "อวบ"
+              },
+              {
+               "value": "plus",
+               "label": "พลัสไซซ์"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "หมีล็อกรูปร่างตามนี้ทุกช็อต — ไม่ทำให้ผอมลง",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
             }
            ]
           },
@@ -19163,56 +19859,6 @@
            "card": [
             {
              "el": "text",
-             "value": "รูปร่าง",
-             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "fsShape",
-             "cols": 5,
-             "mobile": {
-              "cols": 3
-             },
-             "contained": true,
-             "className": "!min-h-[48px] @[420px]:!min-h-0",
-             "options": [
-              {
-               "value": "",
-               "label": "อัตโนมัติ",
-               "desc": "ตามรูปหรือคำอธิบาย",
-               "icon": "auto_awesome"
-              },
-              {
-               "value": "slim",
-               "label": "เพรียว"
-              },
-              {
-               "value": "average",
-               "label": "สมส่วน"
-              },
-              {
-               "value": "curvy",
-               "label": "อวบ"
-              },
-              {
-               "value": "plus",
-               "label": "พลัสไซซ์"
-              }
-             ]
-            },
-            {
-             "el": "text",
-             "value": "หมีล็อกรูปร่างตามนี้ทุกช็อต — ไม่ทำให้ผอมลง",
-             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
-            }
-           ]
-          },
-          {
-           "el": "box",
-           "className": "flex flex-col gap-1.5",
-           "card": [
-            {
-             "el": "text",
              "value": "ส่วนสูง / ไซซ์ที่นางแบบใส่ (ไม่บังคับ)",
              "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
             },
@@ -19232,6 +19878,11 @@
           {
            "el": "text",
            "value": "ไม่มีเพลงในคลิป (ใส่เพลงเองตอนโพสต์ได้) · สไตล์ ฉาก เสียง สัตว์เลี้ยง ข้อความ ตั้งที่ \"สไตล์คลิป\" ด้านบน",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+          },
+          {
+           "el": "text",
+           "value": "หมีวาดนางแบบหลักได้ 1 คน ใช้กับทุกชุด — อยากได้คนละคนต่อชุด เปิด \"ตั้งค่าเฉพาะชุดนี้\" ในหน้าเพิ่มชุดแล้วอัปรูป",
            "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
           },
           {
@@ -20798,6 +21449,75 @@
                     "parts": [
                      {
                       "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.own}",
+                         "b": "true"
+                        },
+                        "then": "{item.clipStyle}",
+                        "else": "{values.fsClipStyle}"
+                       },
+                       "b": "street"
+                      },
+                      "value": "สตรีทสแนป"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.own}",
+                         "b": "true"
+                        },
+                        "then": "{item.clipStyle}",
+                        "else": "{values.fsClipStyle}"
+                       },
+                       "b": "unbox"
+                      },
+                      "value": "แกะกล่องลองใส่"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "eq",
+                         "a": "{item.own}",
+                         "b": "true"
+                        },
+                        "then": "{item.clipStyle}",
+                        "else": "{values.fsClipStyle}"
+                       },
+                       "b": "breeze"
+                      },
+                      "value": "ลมพัดฟีลหนัง"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
                        "op": "not",
                        "a": {
                         "op": "eq",
@@ -21022,6 +21742,75 @@
                             "b": "beach"
                            },
                            "value": "ริมทะเล"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.scene}",
+                             "else": "{values.fsScene}"
+                            },
+                            "b": "hotel"
+                           },
+                           "value": "ห้องพักโรงแรม"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.scene}",
+                             "else": "{values.fsScene}"
+                            },
+                            "b": "flower"
+                           },
+                           "value": "ทุ่งดอกไม้"
+                          }
+                         ]
+                        },
+                        {
+                         "op": "block",
+                         "sep": "",
+                         "parts": [
+                          {
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.scene}",
+                             "else": "{values.fsScene}"
+                            },
+                            "b": "oldtown"
+                           },
+                           "value": "ย่านเมืองเก่า"
                           }
                          ]
                         },
@@ -22144,6 +22933,48 @@
                   "parts": [
                    {
                     "when": {
+                     "op": "eq",
+                     "a": "{values.fsClipStyle}",
+                     "b": "street"
+                    },
+                    "value": "สตรีทสแนป"
+                   }
+                  ]
+                 },
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": {
+                     "op": "eq",
+                     "a": "{values.fsClipStyle}",
+                     "b": "unbox"
+                    },
+                    "value": "แกะกล่องลองใส่"
+                   }
+                  ]
+                 },
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": {
+                     "op": "eq",
+                     "a": "{values.fsClipStyle}",
+                     "b": "breeze"
+                    },
+                    "value": "ลมพัดฟีลหนัง"
+                   }
+                  ]
+                 },
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": {
                      "op": "not",
                      "a": {
                       "op": "eq",
@@ -22278,6 +23109,48 @@
                           "b": "beach"
                          },
                          "value": "ริมทะเล"
+                        }
+                       ]
+                      },
+                      {
+                       "op": "block",
+                       "sep": "",
+                       "parts": [
+                        {
+                         "when": {
+                          "op": "eq",
+                          "a": "{values.fsScene}",
+                          "b": "hotel"
+                         },
+                         "value": "ห้องพักโรงแรม"
+                        }
+                       ]
+                      },
+                      {
+                       "op": "block",
+                       "sep": "",
+                       "parts": [
+                        {
+                         "when": {
+                          "op": "eq",
+                          "a": "{values.fsScene}",
+                          "b": "flower"
+                         },
+                         "value": "ทุ่งดอกไม้"
+                        }
+                       ]
+                      },
+                      {
+                       "op": "block",
+                       "sep": "",
+                       "parts": [
+                        {
+                         "when": {
+                          "op": "eq",
+                          "a": "{values.fsScene}",
+                          "b": "oldtown"
+                         },
+                         "value": "ย่านเมืองเก่า"
                         }
                        ]
                       },
@@ -22443,6 +23316,24 @@
                  "label": "จากไม้แขวนสู่ใส่จริง",
                  "desc": "ช็อตแรกเห็นชุดบนไม้แขวน แล้วตัดไปนางแบบใส่จริง · เหมาะร้านที่มีรูปชุดแขวนหรือวางราบ",
                  "icon": "dry_cleaning"
+                },
+                {
+                 "value": "street",
+                 "label": "สตรีทสแนป",
+                 "desc": "เพื่อนถือกล้องเดินตาม เดินเล่นหัวเราะ หันมามองกล้อง · เหมาะชุดลำลอง สตรีท ใส่เที่ยว",
+                 "icon": "camera"
+                },
+                {
+                 "value": "unbox",
+                 "label": "แกะกล่องลองใส่",
+                 "desc": "ฉากแรกแกะพัสดุหยิบชุดขึ้นมาโชว์ แล้วตัดไปใส่จริง · เหมาะร้านออนไลน์ ของมาใหม่",
+                 "icon": "inventory_2"
+                },
+                {
+                 "value": "breeze",
+                 "label": "ลมพัดฟีลหนัง",
+                 "desc": "แสงย้อนนุ่ม ๆ ลมพัดผ้าและผมพลิ้ว กล้องเคลื่อนช้า ตัดทุก 2 วิ · เหมาะเดรส ผ้าพลิ้ว ชุดออกงาน",
+                 "icon": "air"
                 }
                ]
               },
@@ -22516,7 +23407,7 @@
               {
                "el": "grid-select",
                "field": "scene",
-               "cols": 3,
+               "cols": 2,
                "mobile": {
                 "cols": 2
                },
@@ -22534,7 +23425,19 @@
                  "label": "ห้องเรา / หน้าร้าน",
                  "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
                  "icon": "add_a_photo"
-                },
+                }
+               ]
+              },
+              {
+               "el": "grid-select",
+               "field": "scene",
+               "cols": 3,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
                 {
                  "value": "closet",
                  "label": "ห้องแต่งตัว",
@@ -22579,6 +23482,21 @@
                  "value": "beach",
                  "label": "ริมทะเล",
                  "icon": "beach_access"
+                },
+                {
+                 "value": "hotel",
+                 "label": "ห้องพักโรงแรม",
+                 "icon": "hotel"
+                },
+                {
+                 "value": "flower",
+                 "label": "ทุ่งดอกไม้",
+                 "icon": "local_florist"
+                },
+                {
+                 "value": "oldtown",
+                 "label": "ย่านเมืองเก่า",
+                 "icon": "account_balance"
                 }
                ],
                "when": {
@@ -22600,18 +23518,6 @@
                "contained": true,
                "className": "!min-h-[48px] @[420px]:!min-h-0",
                "options": [
-                {
-                 "value": "",
-                 "label": "อัตโนมัติ",
-                 "desc": "หมีเลือกให้เข้ากับชุด",
-                 "icon": "auto_awesome"
-                },
-                {
-                 "value": "custom",
-                 "label": "ห้องเรา / หน้าร้าน",
-                 "desc": "ใส่รูปสถานที่จริง หรือพิมพ์เอง",
-                 "icon": "add_a_photo"
-                },
                 {
                  "value": "closet",
                  "label": "ห้องแต่งตัว",
@@ -22636,6 +23542,11 @@
                  "value": "cafe",
                  "label": "คาเฟ่",
                  "icon": "local_cafe"
+                },
+                {
+                 "value": "hotel",
+                 "label": "ห้องพักโรงแรม",
+                 "icon": "hotel"
                 }
                ],
                "when": {
@@ -22678,6 +23589,16 @@
                     "op": "eq",
                     "a": "{item.scene}",
                     "b": "beach"
+                   },
+                   {
+                    "op": "eq",
+                    "a": "{item.scene}",
+                    "b": "flower"
+                   },
+                   {
+                    "op": "eq",
+                    "a": "{item.scene}",
+                    "b": "oldtown"
                    }
                   ]
                  }
@@ -23035,7 +23956,7 @@
               {
                "el": "grid-select",
                "field": "onscreenText",
-               "cols": 2,
+               "cols": 4,
                "mobile": {
                 "cols": 2
                },
@@ -23053,6 +23974,18 @@
                  "label": "ไซซ์ + ชวนซื้อ",
                  "desc": "หมีใส่ข้อความสั้นต้นคลิปและท้ายคลิป",
                  "icon": "straighten"
+                },
+                {
+                 "value": "hook",
+                 "label": "ประโยคเด็ด + ชวนซื้อ",
+                 "desc": "ประโยคดึงคนดูต้นคลิป ท้ายคลิปชวนซื้อ",
+                 "icon": "bolt"
+                },
+                {
+                 "value": "promo",
+                 "label": "โปร + ชวนซื้อ",
+                 "desc": "บอกโปรต้นคลิป (จากช่องโปรโมชัน)",
+                 "icon": "sell"
                 }
                ]
               },
@@ -23068,7 +24001,7 @@
                 {
                  "el": "grid-select",
                  "field": "textFont",
-                 "cols": 3,
+                 "cols": 4,
                  "mobile": {
                   "cols": 2
                  },
@@ -23099,6 +24032,21 @@
                    "value": "cute",
                    "label": "ลายมือน่ารัก",
                    "desc": "อบอุ่น เป็นกันเอง"
+                  },
+                  {
+                   "value": "mag",
+                   "label": "หัวนิตยสาร",
+                   "desc": "ฟีลแฟชั่นแมกกาซีน"
+                  },
+                  {
+                   "value": "neon",
+                   "label": "นีออนเรืองแสง",
+                   "desc": "สายกลางคืน สตรีท"
+                  },
+                  {
+                   "value": "sticker",
+                   "label": "สติกเกอร์ขอบขาว",
+                   "desc": "สดใส ขี้เล่น"
                   }
                  ]
                 },
@@ -23109,9 +24057,12 @@
                 }
                ],
                "when": {
-                "op": "eq",
-                "a": "{item.onscreenText}",
-                "b": "size"
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.onscreenText}",
+                 "b": ""
+                }
                }
               }
              ]
@@ -43061,7 +44012,10 @@
    "lookbook": "LOOKBOOK SHOOT — shot by a photographer (third-person camera, NOT a selfie, NO mirror, NO phone in hand). Hard cut every scene (2 s) to a new pose: full-body contrapposto, hand on hip, one step forward, looking over the shoulder (back of the outfit), a medium shot of one detail (neckline, sleeve, waist). Full body in most scenes; the final scene returns to a full-body pose. Her talk continues across the cuts as one voice.",
    "minimal": "MINIMAL TONE AD — like a premium minimal product ad: a clean uncluttered set in ONE colour family matched to the garment (soft pastel or neutral backdrop, at most one simple plinth or prop), soft even light. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): calm elegant full-body pose, slow push-in, a medium shot on the fabric or a detail, a slow side turn, and a full-body pose at the end. Calm, premium talk.",
    "live": "LIVE SELLING — ONE continuous take like a TikTok Shop live seen through the seller's own phone: the viewer IS the camera (fixed, chest height) — NO tripod, phone or camera visible in frame. The model faces the camera waist-up (talking distance, NOT full body) and talks warmly like a live seller, pulls and stretches the fabric toward the lens to show the texture, steps back so the full outfit is visible, then comes closer again for the call-to-action. No cuts.",
-   "hanger": "HANGER TO WORN — scene 1: the garment alone on a wooden hanger against a plain wall (no person; she talks off-screen). Then a hard cut to the model wearing the same garment, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror."
+   "hanger": "HANGER TO WORN — scene 1: the garment alone on a wooden hanger against a plain wall (no person; she talks off-screen). Then a hard cut to the model wearing the same garment, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror.",
+   "street": "STREET SNAP — ONE continuous hand-held take, like a friend filming her on a phone while walking alongside (third-person, NOT a selfie, NO mirror, no phone in her hand). She strolls casually, glances back over her shoulder, laughs, adjusts her bag or hair, then turns to the camera and talks like chatting with a friend. Gentle natural hand-held follow, full body in most moments.",
+   "unbox": "UNBOX TO WORN — scene 1: the model sits or stands at a table, opens a shipping box and lifts the folded garment out toward the camera, excited, talking (the garment in her hands must match the garment photos). Then a hard cut to her wearing it, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror.",
+   "breeze": "CINEMATIC BREEZE — dreamy film-like fashion ad: soft backlight or golden-hour light, a gentle breeze moves the fabric and her hair in every shot, the camera glides slowly. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): full-body pose with the hem moving, slow side turn, medium shot of the fabric in the wind, looking back over the shoulder, full-body pose at the end. Her talk stays at normal speed, calm and warm."
   },
   "fsStyleVideo": {
    "mirror": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image.",
@@ -43070,7 +44024,10 @@
    "lookbook": "LOOKBOOK EDIT — a hard cut at every scene boundary (every 2 s) to a new pose, third-person photographer camera (no selfie, no mirror, no phone), full body in most scenes. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
    "minimal": "MINIMAL TONE AD — hard cut every 2 s; clean one-colour set matched to the outfit, soft even light; third-person camera (no selfie, mirror or phone); calm poses, slow moves. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
    "live": "ONE CONTINUOUS TAKE — live-selling video seen from the fixed phone itself (no tripod, phone or camera in frame); half-body talking to camera, she pulls the fabric toward the lens, steps back to full body, then closer again; no cuts. The opening frame is supplied — continue from exactly that image.",
-   "hanger": "HANGER TO WORN — scene 1 = the garment alone on a hanger, no person (voice only); then a hard cut every 2 s to the model wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot."
+   "hanger": "HANGER TO WORN — scene 1 = the garment alone on a hanger, no person (voice only); then a hard cut every 2 s to the model wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot.",
+   "street": "ONE CONTINUOUS TAKE — candid street snap filmed hand-held by a friend walking alongside (no selfie, mirror or phone in her hand); she strolls, glances back, laughs, then talks to the camera; full body in most moments; no cuts. The opening frame is supplied — continue from exactly that image.",
+   "unbox": "UNBOX TO WORN — scene 1 = she opens a shipping box and lifts the garment out toward the camera; then a hard cut every 2 s to her wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot.",
+   "breeze": "CINEMATIC BREEZE — hard cut every 2 s; soft backlight, gentle breeze in fabric and hair, slow gliding third-person camera (no selfie, mirror or phone); speech at normal speed. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot."
   },
   "fsStyleBoard": {
    "mirror": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance",
@@ -43079,7 +44036,10 @@
    "lookbook": "full-body lookbook photo shot by a photographer: the model standing in a relaxed contrapposto pose, the whole outfit visible",
    "minimal": "full-body photo on a clean minimal set in one colour family matched to the outfit, soft even light, the model in a calm elegant pose",
    "live": "WAIST-UP shot (NOT full body) at talking distance from the seller's own fixed phone at chest height (no tripod, phone or camera in frame), the model about to talk to viewers like a live seller",
-   "hanger": "full-body photo of the model wearing the outfit in a relaxed pose, a plain wall behind her"
+   "hanger": "full-body photo of the model wearing the outfit in a relaxed pose, a plain wall behind her",
+   "street": "candid full-body street-snap photo taken by a friend: the model mid-stroll glancing back over her shoulder toward the camera",
+   "unbox": "full-body photo of the model wearing the outfit in a relaxed pose, natural light",
+   "breeze": "full-body cinematic fashion photo, soft backlight, a gentle breeze lifting the hem and hair, the model in a graceful pose"
   },
   "fsSceneEN": {
    "closet": "a bright walk-in dressing room with neat clothes rails and a full-length mirror",
@@ -43090,7 +44050,10 @@
    "street": "a chic city sidewalk with modern shop fronts",
    "park": "a green park path with trees",
    "rooftop": "a rooftop terrace with a city view",
-   "beach": "a tropical beach with soft sand and a calm sea"
+   "beach": "a tropical beach with soft sand and a calm sea",
+   "hotel": "a bright luxury hotel room with a big window, neutral tones and a full-length mirror",
+   "flower": "a soft blooming flower field in gentle daylight",
+   "oldtown": "a charming old-town street with colourful vintage shophouses"
   },
   "fsFaceEN": {
    "|mirror": "FACE VISIBLE: phone held at chest height; her face stays fully visible in the reflection.",
@@ -43100,7 +44063,10 @@
    "hide|lookbook": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|minimal": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|live": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
-   "hide|hanger": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips."
+   "hide|hanger": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
+   "hide|street": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
+   "hide|unbox": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
+   "hide|breeze": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips."
   },
   "fsFacePlan": {
    "hide": "ใบหน้า: ไม่เห็นหน้าทุกฉากรวมฉากสุดท้าย (เซลฟี่ = มือถือบังหน้า · แบบอื่น = เฟรมตั้งแต่คอลงไป หรือหันหลัง) — sNen/camN ต้องไม่เห็นหน้า"
@@ -43111,12 +44077,20 @@
    "curvy": "curvy, size XL, fuller hips, thighs and arms",
    "plus": "plus-size 2XL-3XL, round full body"
   },
+  "fsOnTextPlan": {
+   "size": "ใส่ ov1 = ไซซ์/สัดส่วนสั้น ≤ 8 คำ (จากข้อมูลผู้ใช้เท่านั้น ไม่มีข้อมูล = ชื่อสินค้าสั้น ๆ) · ov ฉากสุดท้าย = ชวนซื้อสั้น ≤ 5 คำ · ฉากอื่นว่าง",
+   "hook": "ใส่ ov1 = ประโยคเด็ดดึงคนดู ≤ 6 คำ (เช่น ชุดนี้ใส่แล้วผอมลง · จากจุดเด่นจริงของชุด ห้ามแต่งเกินจริง) · ov ฉากสุดท้าย = ชวนซื้อสั้น ≤ 5 คำ · ฉากอื่นว่าง",
+   "promo": "ใส่ ov1 = โปรโมชันสั้น ≤ 8 คำ (จากช่องโปรโมชันเท่านั้น · ว่าง = ชื่อสินค้าสั้น ๆ ห้ามแต่งราคา/ส่วนลด) · ov ฉากสุดท้าย = ชวนซื้อสั้น ≤ 5 คำ · ฉากอื่นว่าง"
+  },
   "fsFontEN": {
    "": "bold Thai sans-serif, white fill, thick dark outline, soft shadow",
    "thin": "thin clean Thai sans-serif, wide letter spacing, white, clear dark shadow",
    "card": "bold dark Thai text on a white rounded card, soft shadow",
    "pop": "very bold white Thai text, thin dark outline, key word in bright yellow",
-   "cute": "cute rounded Thai handwritten letters, white, soft shadow"
+   "cute": "cute rounded Thai handwritten letters, white, soft shadow",
+   "mag": "elegant high-contrast Thai serif like a fashion magazine headline, white, subtle shadow",
+   "neon": "bold Thai sans-serif glowing like a pink-and-white neon sign, soft glow",
+   "sticker": "bold colourful Thai letters with a thick white sticker outline, slight playful tilt"
   },
   "fsPetEN": {
    "hold": "she holds the pet in her arms",
@@ -43138,6 +44112,22 @@
    "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "20": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
    "30": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+  },
+  "fsAgeEN": {
+   "20s|female": "a Thai woman in her early 20s",
+   "20s|male": "a Thai man in his early 20s",
+   "30s|female": "a Thai woman in her 30s",
+   "30s|male": "a Thai man in his 30s",
+   "40s|female": "a Thai woman in her 40s",
+   "40s|male": "a Thai man in his 40s",
+   "50s|female": "a Thai woman in her 50s",
+   "50s|male": "a Thai man in his 50s"
+  },
+  "fsAgeTH": {
+   "20s": "อายุราว 20+ ปี",
+   "30s": "อายุราว 30+ ปี",
+   "40s": "อายุราว 40+ ปี",
+   "50s": "อายุราว 50+ ปี"
   },
   "fsSecEff": {
    "|10|": "10",
