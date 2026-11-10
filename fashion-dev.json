@@ -158,6 +158,8 @@
     "petKind",
     "sec",
     "mGender",
+    "mDesc",
+    "mFace",
     "own"
    ],
    "slots": [
@@ -186,6 +188,8 @@
     "petKind": "",
     "sec": "",
     "mGender": "",
+    "mDesc": "",
+    "mFace": "",
     "own": ""
    }
   },
@@ -379,6 +383,8 @@
     "petKind",
     "sec",
     "mGender",
+    "mDesc",
+    "mFace",
     "own"
    ],
    "slots": [
@@ -685,21 +691,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -710,10 +735,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -778,7 +803,27 @@
        {
         "when": {
          "op": "eq",
-         "a": "{values.fsFace}",
+         "a": {
+          "op": "lookup",
+          "table": "fsFaceEff",
+          "key": {
+           "op": "concat",
+           "parts": [
+            {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.mFace}",
+             "else": ""
+            },
+            "|{values.fsFace}|{values.fsAge}"
+           ]
+          },
+          "fallback": ""
+         },
          "b": "hide"
         },
         "value": {
@@ -1093,6 +1138,74 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.own}",
+            "b": "true"
+           },
+           "then": "{item.mDesc}",
+           "else": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nนางแบบของชุดนี้ (ผู้ใช้บอก): ",
+          {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": "{item.own}",
+            "b": "true"
+           },
+           "then": "{item.mDesc}",
+           "else": ""
+          },
+          " — ใช้ลักษณะนี้กับชุดนี้แทนนางแบบหลัก เขียนลง model ให้ครบ",
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.slots.mface}",
+                "else": ""
+               },
+               "b": ""
+              }
+             },
+             "value": " · มีรูปแนบ = หน้าตาตามรูป"
+            }
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
      "\n\nฉาก: ",
      {
       "op": "block",
@@ -1377,21 +1490,40 @@
      "else": {
       "op": "cond",
       "when": {
-       "op": "or",
+       "op": "and",
        "list": [
         {
-         "op": "eq",
-         "a": {
-          "op": "cond",
-          "when": {
+         "op": "or",
+         "list": [
+          {
            "op": "eq",
-           "a": "{item.own}",
-           "b": "true"
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.mGender}",
+            "else": ""
+           },
+           "b": ""
           },
-          "then": "{item.mGender}",
-          "else": ""
-         },
-         "b": ""
+          {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.mGender}",
+            "else": ""
+           },
+           "b": "{values.fsGender}"
+          }
+         ]
         },
         {
          "op": "eq",
@@ -1402,10 +1534,10 @@
            "a": "{item.own}",
            "b": "true"
           },
-          "then": "{item.mGender}",
+          "then": "{item.mDesc}",
           "else": ""
          },
-         "b": "{values.fsGender}"
+         "b": ""
         }
        ]
       },
@@ -7292,65 +7424,12 @@
      {
       "op": "concat",
       "parts": [
+       "a friendly natural-looking ",
        {
-        "op": "block",
-        "sep": "",
-        "parts": [
-         {
-          "when": {
-           "op": "eq",
-           "a": "{values.fsAge}",
-           "b": ""
-          },
-          "value": {
-           "op": "block",
-           "sep": "",
-           "parts": [
-            {
-             "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{values.fsGender}",
-               "b": "male"
-              }
-             },
-             "value": "a friendly natural-looking Thai woman in her 20s"
-            },
-            {
-             "when": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": "male"
-             },
-             "value": "a friendly natural-looking Thai man in his 20s"
-            }
-           ]
-          }
-         },
-         {
-          "when": {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{values.fsAge}",
-            "b": ""
-           }
-          },
-          "value": {
-           "op": "concat",
-           "parts": [
-            "a friendly natural-looking ",
-            {
-             "op": "lookup",
-             "table": "fsAgeEN",
-             "key": "{values.fsAge}|{values.fsGender}",
-             "fallback": ""
-            }
-           ]
-          }
-         }
-        ]
+        "op": "lookup",
+        "table": "fsAgeEN",
+        "key": "{values.fsAge}|{values.fsGender}",
+        "fallback": "Thai woman in her 20s"
        },
        {
         "op": "block",
@@ -7409,7 +7488,12 @@
          "op": "not",
          "a": {
           "op": "eq",
-          "a": "{values.fsFace}",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEff",
+           "key": "|{values.fsFace}|{values.fsAge}",
+           "fallback": ""
+          },
           "b": "hide"
          }
         },
@@ -7418,7 +7502,12 @@
        {
         "when": {
          "op": "eq",
-         "a": "{values.fsFace}",
+         "a": {
+          "op": "lookup",
+          "table": "fsFaceEff",
+          "key": "|{values.fsFace}|{values.fsAge}",
+          "fallback": ""
+         },
          "b": "hide"
         },
         "value": ". ONE person, framed from the chin down to the feet — the face is NOT shown — standing straight, arms relaxed"
@@ -7741,6 +7830,26 @@
       "then": "{parent.fields.mGender}",
       "else": ""
      },
+     "mDesc": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.mDesc}",
+      "else": ""
+     },
+     "mFace": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.mFace}",
+      "else": ""
+     },
      "own": "{parent.fields.own}"
     },
     "refs": {
@@ -7780,7 +7889,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -7792,7 +7912,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -8386,21 +8517,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -8411,10 +8561,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -8589,21 +8739,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -8614,10 +8783,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -8788,7 +8957,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -8800,7 +8980,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -9394,21 +9585,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -9419,10 +9629,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -9597,21 +9807,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -9622,10 +9851,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -9796,7 +10025,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -9808,7 +10048,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -10402,21 +10653,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -10427,10 +10697,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -10605,21 +10875,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -10630,10 +10919,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -10804,7 +11093,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -10816,7 +11116,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -11410,21 +11721,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -11435,10 +11765,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -11613,21 +11943,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -11638,10 +11987,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -11812,7 +12161,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -11824,7 +12184,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -12418,21 +12789,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -12443,10 +12833,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -12621,21 +13011,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -12646,10 +13055,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -12820,7 +13229,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -12832,7 +13252,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -13426,21 +13857,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -13451,10 +13901,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -13629,21 +14079,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -13654,10 +14123,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -13954,7 +14423,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -13966,7 +14446,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -14433,21 +14924,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -14458,10 +14968,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -14608,7 +15118,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -14937,21 +15447,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -14962,10 +15491,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -15315,7 +15844,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -15327,7 +15867,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -15794,21 +16345,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -15819,10 +16389,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -15969,7 +16539,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -16298,21 +16868,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -16323,10 +16912,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -16676,7 +17265,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -16688,7 +17288,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -17155,21 +17766,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -17180,10 +17810,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -17330,7 +17960,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -17659,21 +18289,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -17684,10 +18333,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -18037,7 +18686,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -18049,7 +18709,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -18516,21 +19187,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -18541,10 +19231,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -18691,7 +19381,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -19020,21 +19710,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -19045,10 +19754,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -19398,7 +20107,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -19410,7 +20130,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -19877,21 +20608,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -19902,10 +20652,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -20052,7 +20802,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -20381,21 +21131,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -20406,10 +21175,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -20759,7 +21528,18 @@
           "a": {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "b": ""
@@ -20771,7 +21551,18 @@
           {
            "op": "lookup",
            "table": "fsFaceEN",
-           "key": "{values.fsFace}|{item.clipStyle}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
            "fallback": ""
           },
           "\n"
@@ -21238,21 +22029,40 @@
              "b": 0
             },
             {
-             "op": "or",
+             "op": "and",
              "list": [
               {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
                 },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
               },
               {
                "op": "eq",
@@ -21263,10 +22073,10 @@
                  "a": "{item.own}",
                  "b": "true"
                 },
-                "then": "{item.mGender}",
+                "then": "{item.mDesc}",
                 "else": ""
                },
-               "b": "{values.fsGender}"
+               "b": ""
               }
              ]
             }
@@ -21413,7 +22223,7 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}",
+           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -21742,21 +22552,40 @@
          "b": 0
         },
         {
-         "op": "or",
+         "op": "and",
          "list": [
           {
-           "op": "eq",
-           "a": {
-            "op": "cond",
-            "when": {
+           "op": "or",
+           "list": [
+            {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": ""
             },
-            "then": "{item.mGender}",
-            "else": ""
-           },
-           "b": ""
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mGender}",
+              "else": ""
+             },
+             "b": "{values.fsGender}"
+            }
+           ]
           },
           {
            "op": "eq",
@@ -21767,10 +22596,10 @@
              "a": "{item.own}",
              "b": "true"
             },
-            "then": "{item.mGender}",
+            "then": "{item.mDesc}",
             "else": ""
            },
-           "b": "{values.fsGender}"
+           "b": ""
           }
          ]
         }
@@ -26430,7 +27259,7 @@
             {
              "el": "grid-select",
              "field": "fsGender",
-             "cols": 2,
+             "cols": 4,
              "mobile": {
               "cols": 2
              },
@@ -26448,6 +27277,18 @@
                "label": "ผู้ชาย",
                "desc": "นายแบบ · พูดลงท้าย ครับ",
                "icon": "face_6"
+              },
+              {
+               "value": "trans",
+               "label": "สาวสอง",
+               "desc": "LGBTQ+ · พูดลงท้าย ค่ะ",
+               "icon": "transgender"
+              },
+              {
+               "value": "tom",
+               "label": "ทอม",
+               "desc": "LGBTQ+ · ลุคบอย พูดลงท้าย ครับ",
+               "icon": "face_5"
               }
              ]
             }
@@ -26465,7 +27306,7 @@
             {
              "el": "grid-select",
              "field": "fsAge",
-             "cols": 5,
+             "cols": 6,
              "mobile": {
               "cols": 3
              },
@@ -26493,15 +27334,75 @@
               {
                "value": "50s",
                "label": "50+"
+              },
+              {
+               "value": "kid",
+               "label": "เด็ก 5-10"
               }
-             ]
+             ],
+             "when": {
+              "op": "eq",
+              "a": "{values.fsModelSrc}",
+              "b": ""
+             }
+            },
+            {
+             "el": "grid-select",
+             "field": "fsAge",
+             "cols": 6,
+             "mobile": {
+              "cols": 3
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามรูป",
+               "icon": "auto_awesome"
+              },
+              {
+               "value": "20s",
+               "label": "20+"
+              },
+              {
+               "value": "30s",
+               "label": "30+"
+              },
+              {
+               "value": "40s",
+               "label": "40+"
+              },
+              {
+               "value": "50s",
+               "label": "50+"
+              },
+              {
+               "value": "kid",
+               "label": "เด็ก 5-10"
+              }
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.fsModelSrc}",
+               "b": ""
+              }
+             }
+            },
+            {
+             "el": "text",
+             "value": "เด็ก = ล็อกไม่เห็นหน้าทุกคลิป ทุกชุด · ท่าทางและชุดสมวัย",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+             "when": {
+              "op": "eq",
+              "a": "{values.fsAge}",
+              "b": "kid"
+             }
             }
-           ],
-           "when": {
-            "op": "eq",
-            "a": "{values.fsModelSrc}",
-            "b": ""
-           }
+           ]
           },
           {
            "el": "box",
@@ -26606,7 +27507,25 @@
                "desc": "เซลฟี่ = มือถือบังหน้า · แบบอื่นตัดหัวออกจากเฟรม · ช่วยเลี่ยง Flow บล็อกหน้าคล้ายคนดัง",
                "icon": "visibility_off"
               }
-             ]
+             ],
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.fsAge}",
+               "b": "kid"
+              }
+             }
+            },
+            {
+             "el": "text",
+             "value": "🔒 นางแบบเด็ก — ล็อกไม่เห็นหน้า (ครอปตั้งแต่คอลงไป หรือหันหลัง)",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
+             "when": {
+              "op": "eq",
+              "a": "{values.fsAge}",
+              "b": "kid"
+             }
             }
            ]
           },
@@ -27939,6 +28858,8 @@
             "petKind": "",
             "sec": "",
             "mGender": "",
+            "mDesc": "",
+            "mFace": "",
             "own": ""
            },
            "label": "เพิ่มชุด",
@@ -29048,6 +29969,8 @@
           "petKind": "",
           "sec": "",
           "mGender": "",
+          "mDesc": "",
+          "mFace": "",
           "own": ""
          },
          "label": "เพิ่มชุดใหม่",
@@ -32858,7 +33781,7 @@
               {
                "el": "grid-select",
                "field": "mGender",
-               "cols": 3,
+               "cols": 5,
                "mobile": {
                 "cols": 3
                },
@@ -32881,12 +33804,24 @@
                  "label": "ผู้ชาย",
                  "desc": "พูดลงท้าย ครับ",
                  "icon": "face_6"
+                },
+                {
+                 "value": "trans",
+                 "label": "สาวสอง",
+                 "desc": "พูดลงท้าย ค่ะ",
+                 "icon": "transgender"
+                },
+                {
+                 "value": "tom",
+                 "label": "ทอม",
+                 "desc": "พูดลงท้าย ครับ",
+                 "icon": "face_5"
                 }
                ]
               },
               {
                "el": "text",
-               "value": "ชุดผู้ชาย/ผู้หญิงปนกันได้ — อัปรูปนายแบบหรือนางแบบของชุดนี้ · ไม่อัป: เพศตรงกับคนหลัก = ใช้คนหลัก · ไม่ตรง = หมีคิดหน้าให้เอง (อาจต่างกันแต่ละคลิป)",
+               "value": "ชุดผู้ชาย/ผู้หญิงปนกันได้ — อัปรูป หรือพิมพ์ลักษณะก็ได้ · ไม่อัป ไม่พิมพ์ + เพศตรงกับคนหลัก = ใช้คนหลัก · พิมพ์ลักษณะ/เพศไม่ตรง = AI คิดหน้าให้ตามนั้น (อาจต่างกันแต่ละคลิป)",
                "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
               },
               {
@@ -32949,6 +33884,78 @@
                    "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
                   }
                  ]
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ลักษณะนางแบบของชุดนี้ (ไม่บังคับ)",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "textarea",
+                 "field": "mDesc",
+                 "placeholder": "เช่น ผู้ชายผมสั้น ใส่แว่น · สาวผมบ็อบสีชมพู · ผู้หญิงวัย 40 ผมยาว",
+                 "className": "!p-3 !rounded-xl !text-[16px] @[640px]:!text-[15px] !leading-relaxed !min-h-[60px]"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ใบหน้าในคลิปของชุดนี้",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "mFace",
+                 "cols": 3,
+                 "mobile": {
+                  "cols": 3
+                 },
+                 "contained": true,
+                 "className": "!min-h-[48px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "ตามหน้าตั้งค่า"
+                  },
+                  {
+                   "value": "show",
+                   "label": "เห็นหน้า",
+                   "icon": "face"
+                  },
+                  {
+                   "value": "hide",
+                   "label": "ไม่เห็นหน้า",
+                   "icon": "visibility_off"
+                  }
+                 ],
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{values.fsAge}",
+                   "b": "kid"
+                  }
+                 }
+                },
+                {
+                 "el": "text",
+                 "value": "🔒 ตั้งนางแบบเด็กไว้ที่หน้าตั้งค่า — ล็อกไม่เห็นหน้าทุกชุด",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
+                 "when": {
+                  "op": "eq",
+                  "a": "{values.fsAge}",
+                  "b": "kid"
+                 }
                 }
                ]
               }
@@ -53658,11 +54665,11 @@
    "promo": "ใส่ ov1 = โปรโมชันสั้น ≤ 8 คำ (จากช่องโปรโมชันเท่านั้น · ว่าง = ชื่อสินค้าสั้น ๆ ห้ามแต่งราคา/ส่วนลด) · ov ฉากสุดท้าย = ชวนซื้อสั้น ≤ 5 คำ · ฉากอื่นว่าง"
   },
   "fsFontEN": {
-   "": "bold Thai sans-serif, white fill, thick dark outline, soft shadow",
-   "thin": "thin clean Thai sans-serif, wide letter spacing, white, clear dark shadow",
-   "card": "bold dark Thai text on a white rounded card, soft shadow",
-   "pop": "very bold white Thai text, thin dark outline, key word in bright yellow",
-   "cute": "cute rounded Thai handwritten letters, white, soft shadow",
+   "": "bold rounded modern Thai display font like trendy fashion ads, white, soft pink shadow",
+   "thin": "thin elegant Thai sans-serif, airy letter spacing, white, soft drop shadow, luxe look",
+   "card": "bold dark Thai text on a white rounded pill card with a pastel accent, soft shadow",
+   "pop": "chunky bold white Thai text, dark outline, key word in bright yellow, punchy viral look",
+   "cute": "cute bubbly rounded Thai hand-lettering, white with a pastel pink outline, soft shadow",
    "mag": "elegant high-contrast Thai serif like a fashion magazine headline, white, subtle shadow",
    "neon": "bold Thai sans-serif glowing like a pink-and-white neon sign, soft glow",
    "sticker": "bold colourful Thai letters with a thick white sticker outline, slight playful tilt"
@@ -53677,11 +54684,15 @@
   },
   "fsVoiceEN": {
    "female": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "male": "a natural young adult MALE Thai voice (never a female voice)"
+   "male": "a natural young adult MALE Thai voice (never a female voice)",
+   "trans": "a natural soft feminine Thai voice of a trans woman",
+   "tom": "a natural casual low-pitched Thai voice of a tomboy woman"
   },
   "fsVoicePlan": {
    "female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
-   "male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\""
+   "male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "trans": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน"
   },
   "fsOut": {
    "10": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
@@ -53737,20 +54748,37 @@
    "hedgehog": "เม่นแคระ"
   },
   "fsAgeEN": {
-   "20s|female": "a Thai woman in her early 20s",
-   "20s|male": "a Thai man in his early 20s",
-   "30s|female": "a Thai woman in her 30s",
-   "30s|male": "a Thai man in his 30s",
-   "40s|female": "a Thai woman in her 40s",
-   "40s|male": "a Thai man in his 40s",
-   "50s|female": "a Thai woman in her 50s",
-   "50s|male": "a Thai man in his 50s"
+   "|female": "Thai woman in her 20s",
+   "20s|female": "Thai woman in her early 20s",
+   "30s|female": "Thai woman in her 30s",
+   "40s|female": "Thai woman in her 40s",
+   "50s|female": "Thai woman in her 50s",
+   "kid|female": "Thai girl about 7 years old (child model, age-appropriate modest kids' styling)",
+   "|male": "Thai man in his 20s",
+   "20s|male": "Thai man in his early 20s",
+   "30s|male": "Thai man in his 30s",
+   "40s|male": "Thai man in his 40s",
+   "50s|male": "Thai man in his 50s",
+   "kid|male": "Thai boy about 7 years old (child model, age-appropriate modest kids' styling)",
+   "|trans": "Thai transgender woman in her 20s",
+   "20s|trans": "Thai transgender woman in her early 20s",
+   "30s|trans": "Thai transgender woman in her 30s",
+   "40s|trans": "Thai transgender woman in her 40s",
+   "50s|trans": "Thai transgender woman in her 50s",
+   "kid|trans": "Thai child about 7 years old (child model, age-appropriate modest kids' styling)",
+   "|tom": "Thai tomboy woman with a short boyish haircut in her 20s",
+   "20s|tom": "Thai tomboy woman with a short boyish haircut in her early 20s",
+   "30s|tom": "Thai tomboy woman with a short boyish haircut in her 30s",
+   "40s|tom": "Thai tomboy woman with a short boyish haircut in her 40s",
+   "50s|tom": "Thai tomboy woman with a short boyish haircut in her 50s",
+   "kid|tom": "Thai child about 7 years old (child model, age-appropriate modest kids' styling)"
   },
   "fsAgeTH": {
    "20s": "อายุราว 20+ ปี",
    "30s": "อายุราว 30+ ปี",
    "40s": "อายุราว 40+ ปี",
-   "50s": "อายุราว 50+ ปี"
+   "50s": "อายุราว 50+ ปี",
+   "kid": "นางแบบเด็กอายุ 5-10 ปี — ท่าทางและชุดสมวัย บทพูดสั้น ง่าย สดใสแบบเด็ก · ไม่เห็นหน้าทุกฉาก"
   },
   "fsSecEff": {
    "|10|": "10",
@@ -53908,38 +54936,251 @@
    "|": "female",
    "|female": "female",
    "|male": "male",
+   "|trans": "trans",
+   "|tom": "tom",
    "female|": "female",
    "female|female": "female",
    "female|male": "female",
+   "female|trans": "female",
+   "female|tom": "female",
    "male|": "male",
    "male|female": "male",
-   "male|male": "male"
+   "male|male": "male",
+   "male|trans": "male",
+   "male|tom": "male",
+   "trans|": "trans",
+   "trans|female": "trans",
+   "trans|male": "trans",
+   "trans|trans": "trans",
+   "trans|tom": "trans",
+   "tom|": "tom",
+   "tom|female": "tom",
+   "tom|male": "tom",
+   "tom|trans": "tom",
+   "tom|tom": "tom"
   },
   "fsVoiceEN@g": {
-   "|": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "|female": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "|male": "a natural young adult MALE Thai voice (never a female voice)",
-   "female|": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "female|female": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "female|male": "a natural young adult FEMALE Thai voice (never a male voice)",
-   "male|": "a natural young adult MALE Thai voice (never a female voice)",
-   "male|female": "a natural young adult MALE Thai voice (never a female voice)",
-   "male|male": "a natural young adult MALE Thai voice (never a female voice)"
+   "||": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "||20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "||30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "||40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "||50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "||kid": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|kid": "a natural little GIRL's Thai voice (never an adult voice)",
+   "|male|": "a natural young adult MALE Thai voice (never a female voice)",
+   "|male|20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "|male|30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "|male|40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "|male|50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "|male|kid": "a natural little BOY's Thai voice (never an adult voice)",
+   "|trans|": "a natural soft feminine Thai voice of a trans woman",
+   "|trans|20s": "a natural soft feminine Thai voice of a trans woman",
+   "|trans|30s": "a natural soft feminine Thai voice of a trans woman",
+   "|trans|40s": "a natural soft feminine Thai voice of a trans woman",
+   "|trans|50s": "a natural soft feminine Thai voice of a trans woman",
+   "|trans|kid": "a natural young CHILD's Thai voice (never an adult voice)",
+   "|tom|": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "|tom|20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "|tom|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "|tom|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "|tom|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "|tom|kid": "a natural young CHILD's Thai voice (never an adult voice)",
+   "female||": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female||20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female||30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female||40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female||50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female||kid": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|kid": "a natural little GIRL's Thai voice (never an adult voice)",
+   "female|male|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male|20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male|30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male|40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male|50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|male|kid": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|kid": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|20s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|30s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|40s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|50s": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|kid": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "male||": "a natural young adult MALE Thai voice (never a female voice)",
+   "male||20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male||30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male||40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male||50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male||kid": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|kid": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|kid": "a natural little BOY's Thai voice (never an adult voice)",
+   "male|trans|": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|trans|20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|trans|30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|trans|40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|trans|50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|trans|kid": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|20s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|30s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|40s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|50s": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|kid": "a natural young adult MALE Thai voice (never a female voice)",
+   "trans||": "a natural soft feminine Thai voice of a trans woman",
+   "trans||20s": "a natural soft feminine Thai voice of a trans woman",
+   "trans||30s": "a natural soft feminine Thai voice of a trans woman",
+   "trans||40s": "a natural soft feminine Thai voice of a trans woman",
+   "trans||50s": "a natural soft feminine Thai voice of a trans woman",
+   "trans||kid": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|20s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|30s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|40s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|50s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|kid": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|20s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|30s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|40s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|50s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|kid": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|20s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|30s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|40s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|50s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|kid": "a natural young CHILD's Thai voice (never an adult voice)",
+   "trans|tom|": "a natural soft feminine Thai voice of a trans woman",
+   "trans|tom|20s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|tom|30s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|tom|40s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|tom|50s": "a natural soft feminine Thai voice of a trans woman",
+   "trans|tom|kid": "a natural soft feminine Thai voice of a trans woman",
+   "tom||": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom||20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom||30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom||40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom||50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom||kid": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|kid": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|kid": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|kid": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|20s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|kid": "a natural young CHILD's Thai voice (never an adult voice)"
   },
   "fsVoicePlan@g": {
    "|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "|female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "|trans": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "|tom": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน",
    "female|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "female|female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "female|male": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "female|trans": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "female|tom": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "male|": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
    "male|female": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
-   "male|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\""
+   "male|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "male|trans": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "male|tom": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
+   "trans|": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "trans|female": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "trans|male": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "trans|trans": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "trans|tom": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom|": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom|female": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom|male": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom|trans": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน",
+   "tom|tom": "นางแบบเป็นทอม (LGBTQ+) ลุคบอย ผมสั้น — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) · แทนตัวเองว่า \"เรา\" · เป็นธรรมชาติ ไม่ล้อเลียน"
   },
   "fsGenderTH": {
    "female": "นางแบบผู้หญิง",
-   "male": "นายแบบผู้ชาย"
+   "male": "นายแบบผู้ชาย",
+   "trans": "นางแบบสาวสอง",
+   "tom": "นางแบบทอม"
+  },
+  "fsFaceEff": {
+   "||": "",
+   "||20s": "",
+   "||30s": "",
+   "||40s": "",
+   "||50s": "",
+   "||kid": "hide",
+   "|hide|": "hide",
+   "|hide|20s": "hide",
+   "|hide|30s": "hide",
+   "|hide|40s": "hide",
+   "|hide|50s": "hide",
+   "|hide|kid": "hide",
+   "show||": "",
+   "show||20s": "",
+   "show||30s": "",
+   "show||40s": "",
+   "show||50s": "",
+   "show||kid": "hide",
+   "show|hide|": "",
+   "show|hide|20s": "",
+   "show|hide|30s": "",
+   "show|hide|40s": "",
+   "show|hide|50s": "",
+   "show|hide|kid": "hide",
+   "hide||": "hide",
+   "hide||20s": "hide",
+   "hide||30s": "hide",
+   "hide||40s": "hide",
+   "hide||50s": "hide",
+   "hide||kid": "hide",
+   "hide|hide|": "hide",
+   "hide|hide|20s": "hide",
+   "hide|hide|30s": "hide",
+   "hide|hide|40s": "hide",
+   "hide|hide|50s": "hide",
+   "hide|hide|kid": "hide"
   }
  },
  "seed": {
