@@ -160,7 +160,8 @@
     "mGender",
     "mDesc",
     "mFace",
-    "own"
+    "own",
+    "mAge"
    ],
    "slots": [
     "image",
@@ -190,7 +191,8 @@
     "mGender": "",
     "mDesc": "",
     "mFace": "",
-    "own": ""
+    "own": "",
+    "mAge": ""
    }
   },
   "tasks": {
@@ -385,7 +387,8 @@
     "mGender",
     "mDesc",
     "mFace",
-    "own"
+    "own",
+    "mAge"
    ],
    "slots": [
     "board",
@@ -436,11 +439,34 @@
        "op": "cond",
        "when": {
         "op": "eq",
-        "a": "{item.own}",
-        "b": "true"
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.own}",
+          "b": "true"
+         },
+         "then": "{item.clipStyle}",
+         "else": "{values.fsClipStyle}"
+        },
+        "b": "random"
        },
-       "then": "{item.clipStyle}",
-       "else": "{values.fsClipStyle}"
+       "then": {
+        "op": "lookup",
+        "table": "fsRandStyle",
+        "key": "{item.id}",
+        "fallback": "walk"
+       },
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        },
+        "then": "{item.clipStyle}",
+        "else": "{values.fsClipStyle}"
+       }
       },
       "fallback": "MIRROR SELFIE — ONE continuous take for the whole clip, no cuts. The model stands in front of a full-length mirror holding a smartphone; we see her reflection head-to-toe, like a real seller's OOTD video. Moves stay small and natural: shift weight, turn the body left and right (max ~45°) to show the side silhouette, smooth the fabric, touch a detail, hand on hip, one small step back. She talks to the reflection the whole time. camN = only small framing drift, never a new angle. If the chosen place has no mirror, put a full-length standing mirror in it."
      },
@@ -734,6 +760,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -814,7 +873,38 @@
              "then": "{item.mFace}",
              "else": ""
             },
-            "|{values.fsFace}|{values.fsAge}"
+            "|{values.fsFace}|",
+            {
+             "op": "cond",
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              }
+             },
+             "then": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "else": "{values.fsAge}"
+            }
            ]
           },
           "fallback": ""
@@ -1201,6 +1291,75 @@
        }
       ]
      },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.mAge}",
+             "else": ""
+            },
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.mAge}",
+             "else": ""
+            },
+            "b": "{values.fsAge}"
+           }
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nช่วงวัยนางแบบของชุดนี้: ",
+          {
+           "op": "lookup",
+           "table": "fsAgeTH",
+           "key": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.mAge}",
+            "else": ""
+           },
+           "fallback": ""
+          },
+          " — คนละวัยกับนางแบบหลัก ใช้คนใหม่ตามวัยนี้ (ไม่ใช้หน้า/หุ่นนางแบบหลัก) เขียนลง model ให้ครบ"
+         ]
+        }
+       }
+      ]
+     },
      "\n\nฉาก: ",
      {
       "op": "block",
@@ -1216,11 +1375,34 @@
             "op": "cond",
             "when": {
              "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.clipStyle}",
+              "else": "{values.fsClipStyle}"
+             },
+             "b": "random"
             },
-            "then": "{item.clipStyle}",
-            "else": "{values.fsClipStyle}"
+            "then": {
+             "op": "lookup",
+             "table": "fsRandStyle",
+             "key": "{item.id}",
+             "fallback": "walk"
+            },
+            "else": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.clipStyle}",
+             "else": "{values.fsClipStyle}"
+            }
            },
            "b": "minimal"
           },
@@ -1533,6 +1715,39 @@
           "else": ""
          },
          "b": ""
+        },
+        {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.mAge}",
+            "else": ""
+           },
+           "b": ""
+          },
+          {
+           "op": "eq",
+           "a": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.mAge}",
+            "else": ""
+           },
+           "b": "{values.fsAge}"
+          }
+         ]
         }
        ]
       },
@@ -7728,11 +7943,34 @@
       "op": "cond",
       "when": {
        "op": "eq",
-       "a": "{parent.fields.own}",
-       "b": "true"
+       "a": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{parent.fields.own}",
+         "b": "true"
+        },
+        "then": "{parent.fields.clipStyle}",
+        "else": "{values.fsClipStyle}"
+       },
+       "b": "random"
       },
-      "then": "{parent.fields.clipStyle}",
-      "else": "{values.fsClipStyle}"
+      "then": {
+       "op": "lookup",
+       "table": "fsRandStyle",
+       "key": "{parent.id}",
+       "fallback": "walk"
+      },
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.own}",
+        "b": "true"
+       },
+       "then": "{parent.fields.clipStyle}",
+       "else": "{values.fsClipStyle}"
+      }
      },
      "scene": {
       "op": "cond",
@@ -7845,7 +8083,17 @@
       "then": "{parent.fields.mFace}",
       "else": ""
      },
-     "own": "{parent.fields.own}"
+     "own": "{parent.fields.own}",
+     "mAge": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.mAge}",
+      "else": ""
+     }
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -7890,7 +8138,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -7913,7 +8179,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -8560,6 +8844,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -8782,6 +9099,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -8958,7 +9308,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -8981,7 +9349,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -9628,6 +10014,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -9850,6 +10269,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -10026,7 +10478,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -10049,7 +10519,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -10696,6 +11184,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -10918,6 +11439,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -11094,7 +11648,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -11117,7 +11689,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -11764,6 +12354,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -11986,6 +12609,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -12162,7 +12818,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -12185,7 +12859,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -12832,6 +13524,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -13054,6 +13779,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -13230,7 +13988,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -13253,7 +14029,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -13900,6 +14694,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -14122,6 +14949,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -14424,7 +15284,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -14447,7 +15325,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -14967,6 +15863,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -15113,7 +16042,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -15490,6 +16437,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -15845,7 +16825,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -15868,7 +16866,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -16388,6 +17404,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -16534,7 +17583,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -16911,6 +17978,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -17266,7 +18366,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -17289,7 +18407,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -17809,6 +18945,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -17955,7 +19124,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -18332,6 +19519,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -18687,7 +19907,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -18710,7 +19948,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -19230,6 +20486,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -19376,7 +20665,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -19753,6 +21060,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -20108,7 +21448,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -20131,7 +21489,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -20651,6 +22027,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -20797,7 +22206,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -21174,6 +22601,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -21529,7 +22989,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -21552,7 +23030,25 @@
              {
               "op": "lookup",
               "table": "fsFaceEff",
-              "key": "{item.mFace}|{values.fsFace}|{values.fsAge}",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
               "fallback": ""
              },
              "|{item.clipStyle}"
@@ -22072,6 +23568,39 @@
                 "else": ""
                },
                "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
               }
              ]
             }
@@ -22218,7 +23747,25 @@
           {
            "op": "lookup",
            "table": "fsVoiceEN@g",
-           "key": "{item.mGender}|{values.fsGender}|{values.fsAge}",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|{values.fsGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
            "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
           },
           ", warm seller tone, no long pauses; she says exactly: \"",
@@ -22595,6 +24142,39 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mAge}",
+              "else": ""
+             },
+             "b": "{values.fsAge}"
+            }
+           ]
           }
          ]
         }
@@ -23131,11 +24711,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "mirror"
                         },
@@ -23154,11 +24757,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "walk"
                         },
@@ -23177,11 +24803,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "spin"
                         },
@@ -23200,11 +24849,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "lookbook"
                         },
@@ -23223,11 +24895,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "minimal"
                         },
@@ -23246,11 +24941,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "live"
                         },
@@ -23269,11 +24987,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "hanger"
                         },
@@ -23292,11 +25033,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "street"
                         },
@@ -23315,11 +25079,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "unbox"
                         },
@@ -23338,11 +25125,34 @@
                           "op": "cond",
                           "when": {
                            "op": "eq",
-                           "a": "{item.own}",
-                           "b": "true"
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           },
+                           "b": "random"
                           },
-                          "then": "{item.clipStyle}",
-                          "else": "{values.fsClipStyle}"
+                          "then": {
+                           "op": "lookup",
+                           "table": "fsRandStyle",
+                           "key": "{item.id}",
+                           "fallback": "walk"
+                          },
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          }
                          },
                          "b": "breeze"
                         },
@@ -24071,6 +25881,12 @@
              "contained": true,
              "className": "!min-h-[48px] @[420px]:!min-h-0",
              "options": [
+              {
+               "value": "random",
+               "label": "สุ่มสไตล์",
+               "desc": "แต่ละชุดได้สไตล์ไม่ซ้ำกัน หลากหลายขึ้น",
+               "icon": "shuffle"
+              },
               {
                "value": "mirror",
                "label": "เซลฟี่หน้ากระจก",
@@ -27301,7 +29117,7 @@
             {
              "el": "grid-select",
              "field": "fsAge",
-             "cols": 5,
+             "cols": 4,
              "mobile": {
               "cols": 3
              },
@@ -27329,6 +29145,14 @@
               {
                "value": "50s",
                "label": "50+"
+              },
+              {
+               "value": "kid",
+               "label": "เด็กเล็ก 5-10"
+              },
+              {
+               "value": "teen",
+               "label": "เด็กโต 10-15"
               }
              ],
              "when": {
@@ -27340,7 +29164,7 @@
             {
              "el": "grid-select",
              "field": "fsAge",
-             "cols": 5,
+             "cols": 4,
              "mobile": {
               "cols": 3
              },
@@ -27368,6 +29192,14 @@
               {
                "value": "50s",
                "label": "50+"
+              },
+              {
+               "value": "kid",
+               "label": "เด็กเล็ก 5-10"
+              },
+              {
+               "value": "teen",
+               "label": "เด็กโต 10-15"
               }
              ],
              "when": {
@@ -27384,9 +29216,19 @@
              "value": "เด็ก = ล็อกไม่เห็นหน้าทุกคลิป ทุกชุด · ท่าทางและชุดสมวัย",
              "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
              "when": {
-              "op": "eq",
-              "a": "{values.fsAge}",
-              "b": "kid"
+              "op": "or",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{values.fsAge}",
+                "b": "kid"
+               },
+               {
+                "op": "eq",
+                "a": "{values.fsAge}",
+                "b": "teen"
+               }
+              ]
              }
             }
            ]
@@ -27498,9 +29340,19 @@
              "when": {
               "op": "not",
               "a": {
-               "op": "eq",
-               "a": "{values.fsAge}",
-               "b": "kid"
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{values.fsAge}",
+                 "b": "kid"
+                },
+                {
+                 "op": "eq",
+                 "a": "{values.fsAge}",
+                 "b": "teen"
+                }
+               ]
               }
              }
             },
@@ -27509,9 +29361,19 @@
              "value": "🔒 นางแบบเด็ก — ล็อกไม่เห็นหน้า (ครอปตั้งแต่คอลงไป หรือหันหลัง)",
              "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
              "when": {
-              "op": "eq",
-              "a": "{values.fsAge}",
-              "b": "kid"
+              "op": "or",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{values.fsAge}",
+                "b": "kid"
+               },
+               {
+                "op": "eq",
+                "a": "{values.fsAge}",
+                "b": "teen"
+               }
+              ]
              }
             }
            ]
@@ -29076,11 +30938,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "mirror"
                       },
@@ -29099,11 +30984,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "walk"
                       },
@@ -29122,11 +31030,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "spin"
                       },
@@ -29145,11 +31076,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "lookbook"
                       },
@@ -29168,11 +31122,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "minimal"
                       },
@@ -29191,11 +31168,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "live"
                       },
@@ -29214,11 +31214,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "hanger"
                       },
@@ -29237,11 +31260,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "street"
                       },
@@ -29260,11 +31306,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "unbox"
                       },
@@ -29283,11 +31352,34 @@
                         "op": "cond",
                         "when": {
                          "op": "eq",
-                         "a": "{item.own}",
-                         "b": "true"
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         },
+                         "b": "random"
                         },
-                        "then": "{item.clipStyle}",
-                        "else": "{values.fsClipStyle}"
+                        "then": {
+                         "op": "lookup",
+                         "table": "fsRandStyle",
+                         "key": "{item.id}",
+                         "fallback": "walk"
+                        },
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": "{item.own}",
+                          "b": "true"
+                         },
+                         "then": "{item.clipStyle}",
+                         "else": "{values.fsClipStyle}"
+                        }
                        },
                        "b": "breeze"
                       },
@@ -31543,6 +33635,12 @@
                "contained": true,
                "className": "!min-h-[48px] @[420px]:!min-h-0",
                "options": [
+                {
+                 "value": "random",
+                 "label": "สุ่มสไตล์",
+                 "desc": "แต่ละชุดได้สไตล์ไม่ซ้ำกัน หลากหลายขึ้น",
+                 "icon": "shuffle"
+                },
                 {
                  "value": "mirror",
                  "label": "เซลฟี่หน้ากระจก",
@@ -33833,6 +35931,62 @@
                ]
               },
               {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "ช่วงวัยของชุดนี้",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "mAge",
+                 "cols": 4,
+                 "mobile": {
+                  "cols": 3
+                 },
+                 "contained": true,
+                 "className": "!min-h-[48px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "ตามหน้าตั้งค่า"
+                  },
+                  {
+                   "value": "20s",
+                   "label": "20+"
+                  },
+                  {
+                   "value": "30s",
+                   "label": "30+"
+                  },
+                  {
+                   "value": "40s",
+                   "label": "40+"
+                  },
+                  {
+                   "value": "50s",
+                   "label": "50+"
+                  },
+                  {
+                   "value": "kid",
+                   "label": "เด็กเล็ก 5-10"
+                  },
+                  {
+                   "value": "teen",
+                   "label": "เด็กโต 10-15"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "ต่างจากวัยนางแบบหลัก = คนใหม่ของชุดนี้ · อัปรูปนางแบบของชุดนี้ได้ ไม่อัป = AI คิดหน้าให้ตามวัย · เด็ก = ล็อกไม่เห็นหน้า",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+                }
+               ]
+              },
+              {
                "el": "text",
                "value": "ชุดผู้ชาย/ผู้หญิงปนกันได้ — อัปรูป หรือพิมพ์ลักษณะก็ได้ · ไม่อัป ไม่พิมพ์ + เพศตรงกับคนหลัก = ใช้คนหลัก · พิมพ์ลักษณะ/เพศไม่ตรง = AI คิดหน้าให้ตามนั้น (อาจต่างกันแต่ละคลิป)",
                "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
@@ -33954,20 +36108,88 @@
                  "when": {
                   "op": "not",
                   "a": {
-                   "op": "eq",
-                   "a": "{values.fsAge}",
-                   "b": "kid"
+                   "op": "or",
+                   "list": [
+                    {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.mAge}",
+                        "b": ""
+                       }
+                      },
+                      "then": "{item.mAge}",
+                      "else": "{values.fsAge}"
+                     },
+                     "b": "kid"
+                    },
+                    {
+                     "op": "eq",
+                     "a": {
+                      "op": "cond",
+                      "when": {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.mAge}",
+                        "b": ""
+                       }
+                      },
+                      "then": "{item.mAge}",
+                      "else": "{values.fsAge}"
+                     },
+                     "b": "teen"
+                    }
+                   ]
                   }
                  }
                 },
                 {
                  "el": "text",
-                 "value": "🔒 ตั้งนางแบบเด็กไว้ที่หน้าตั้งค่า — ล็อกไม่เห็นหน้าทุกชุด",
+                 "value": "🔒 นางแบบเด็ก — ล็อกไม่เห็นหน้าในคลิปของชุดนี้",
                  "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
                  "when": {
-                  "op": "eq",
-                  "a": "{values.fsAge}",
-                  "b": "kid"
+                  "op": "or",
+                  "list": [
+                   {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.mAge}",
+                       "b": ""
+                      }
+                     },
+                     "then": "{item.mAge}",
+                     "else": "{values.fsAge}"
+                    },
+                    "b": "kid"
+                   },
+                   {
+                    "op": "eq",
+                    "a": {
+                     "op": "cond",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.mAge}",
+                       "b": ""
+                      }
+                     },
+                     "then": "{item.mAge}",
+                     "else": "{values.fsAge}"
+                    },
+                    "b": "teen"
+                   }
+                  ]
                  }
                 }
                ]
@@ -54844,14 +57066,19 @@
    "30s|tom": "Thai tomboy woman with a short boyish haircut in her 30s",
    "40s|tom": "Thai tomboy woman with a short boyish haircut in her 40s",
    "50s|tom": "Thai tomboy woman with a short boyish haircut in her 50s",
-   "kid|tom": "Thai child about 7 years old (child model, age-appropriate modest kids' styling)"
+   "kid|tom": "Thai child about 7 years old (child model, age-appropriate modest kids' styling)",
+   "teen|female": "Thai girl about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
+   "teen|male": "Thai boy about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
+   "teen|trans": "Thai child about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
+   "teen|tom": "Thai child about 12 years old (pre-teen child model, age-appropriate modest kids' styling)"
   },
   "fsAgeTH": {
    "20s": "อายุราว 20+ ปี",
    "30s": "อายุราว 30+ ปี",
    "40s": "อายุราว 40+ ปี",
    "50s": "อายุราว 50+ ปี",
-   "kid": "นางแบบเด็กอายุ 5-10 ปี — ท่าทางและชุดสมวัย บทพูดสั้น ง่าย สดใสแบบเด็ก · ไม่เห็นหน้าทุกฉาก"
+   "kid": "นางแบบเด็กเล็กอายุ 5-10 ปี — ท่าทางและชุดสมวัย บทพูดสั้น ง่าย สดใสแบบเด็ก · ไม่เห็นหน้าทุกฉาก",
+   "teen": "นางแบบเด็กโตอายุ 10-15 ปี — ท่าทางและชุดสมวัย บทพูดสั้น สดใสแบบเด็กโต · ไม่เห็นหน้าทุกฉาก"
   },
   "fsSecEff": {
    "|10|": "10",
@@ -55182,7 +57409,32 @@
    "tom|tom|30s": "a natural casual low-pitched Thai voice of a tomboy woman",
    "tom|tom|40s": "a natural casual low-pitched Thai voice of a tomboy woman",
    "tom|tom|50s": "a natural casual low-pitched Thai voice of a tomboy woman",
-   "tom|tom|kid": "a natural young CHILD's Thai voice (never an adult voice)"
+   "tom|tom|kid": "a natural young CHILD's Thai voice (never an adult voice)",
+   "||teen": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "|female|teen": "a natural pre-teen GIRL's Thai voice (never an adult voice)",
+   "|male|teen": "a natural pre-teen BOY's Thai voice (never an adult voice)",
+   "|trans|teen": "a natural pre-teen CHILD's Thai voice (never an adult voice)",
+   "|tom|teen": "a natural pre-teen CHILD's Thai voice (never an adult voice)",
+   "female||teen": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|female|teen": "a natural pre-teen GIRL's Thai voice (never an adult voice)",
+   "female|male|teen": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|trans|teen": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "female|tom|teen": "a natural young adult FEMALE Thai voice (never a male voice)",
+   "male||teen": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|female|teen": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|male|teen": "a natural pre-teen BOY's Thai voice (never an adult voice)",
+   "male|trans|teen": "a natural young adult MALE Thai voice (never a female voice)",
+   "male|tom|teen": "a natural young adult MALE Thai voice (never a female voice)",
+   "trans||teen": "a natural soft feminine Thai voice of a trans woman",
+   "trans|female|teen": "a natural soft feminine Thai voice of a trans woman",
+   "trans|male|teen": "a natural soft feminine Thai voice of a trans woman",
+   "trans|trans|teen": "a natural pre-teen CHILD's Thai voice (never an adult voice)",
+   "trans|tom|teen": "a natural soft feminine Thai voice of a trans woman",
+   "tom||teen": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|female|teen": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|male|teen": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|trans|teen": "a natural casual low-pitched Thai voice of a tomboy woman",
+   "tom|tom|teen": "a natural pre-teen CHILD's Thai voice (never an adult voice)"
   },
   "fsVoicePlan@g": {
    "|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
@@ -55253,7 +57505,415 @@
    "hide|hide|30s": "hide",
    "hide|hide|40s": "hide",
    "hide|hide|50s": "hide",
-   "hide|hide|kid": "hide"
+   "hide|hide|kid": "hide",
+   "||teen": "hide",
+   "|hide|teen": "hide",
+   "show||teen": "hide",
+   "show|hide|teen": "hide",
+   "hide||teen": "hide",
+   "hide|hide|teen": "hide"
+  },
+  "fsRandStyle": {
+   "pd_1": "unbox",
+   "pd_2": "lookbook",
+   "pd_3": "hanger",
+   "pd_4": "minimal",
+   "pd_5": "walk",
+   "pd_6": "street",
+   "pd_7": "breeze",
+   "pd_8": "live",
+   "pd_9": "mirror",
+   "pd_10": "spin",
+   "pd_11": "unbox",
+   "pd_12": "hanger",
+   "pd_13": "minimal",
+   "pd_14": "walk",
+   "pd_15": "live",
+   "pd_16": "lookbook",
+   "pd_17": "spin",
+   "pd_18": "breeze",
+   "pd_19": "mirror",
+   "pd_20": "street",
+   "pd_21": "walk",
+   "pd_22": "lookbook",
+   "pd_23": "spin",
+   "pd_24": "breeze",
+   "pd_25": "live",
+   "pd_26": "mirror",
+   "pd_27": "unbox",
+   "pd_28": "street",
+   "pd_29": "minimal",
+   "pd_30": "hanger",
+   "pd_31": "minimal",
+   "pd_32": "spin",
+   "pd_33": "lookbook",
+   "pd_34": "hanger",
+   "pd_35": "walk",
+   "pd_36": "street",
+   "pd_37": "unbox",
+   "pd_38": "breeze",
+   "pd_39": "mirror",
+   "pd_40": "live",
+   "pd_41": "street",
+   "pd_42": "hanger",
+   "pd_43": "unbox",
+   "pd_44": "live",
+   "pd_45": "breeze",
+   "pd_46": "mirror",
+   "pd_47": "minimal",
+   "pd_48": "spin",
+   "pd_49": "walk",
+   "pd_50": "lookbook",
+   "pd_51": "hanger",
+   "pd_52": "lookbook",
+   "pd_53": "unbox",
+   "pd_54": "minimal",
+   "pd_55": "walk",
+   "pd_56": "street",
+   "pd_57": "spin",
+   "pd_58": "live",
+   "pd_59": "mirror",
+   "pd_60": "breeze",
+   "pd_61": "minimal",
+   "pd_62": "street",
+   "pd_63": "breeze",
+   "pd_64": "unbox",
+   "pd_65": "walk",
+   "pd_66": "lookbook",
+   "pd_67": "mirror",
+   "pd_68": "spin",
+   "pd_69": "live",
+   "pd_70": "hanger",
+   "pd_71": "minimal",
+   "pd_72": "mirror",
+   "pd_73": "lookbook",
+   "pd_74": "hanger",
+   "pd_75": "walk",
+   "pd_76": "unbox",
+   "pd_77": "spin",
+   "pd_78": "breeze",
+   "pd_79": "street",
+   "pd_80": "live",
+   "pd_81": "breeze",
+   "pd_82": "spin",
+   "pd_83": "mirror",
+   "pd_84": "street",
+   "pd_85": "live",
+   "pd_86": "hanger",
+   "pd_87": "minimal",
+   "pd_88": "walk",
+   "pd_89": "unbox",
+   "pd_90": "lookbook",
+   "pd_91": "live",
+   "pd_92": "street",
+   "pd_93": "unbox",
+   "pd_94": "minimal",
+   "pd_95": "lookbook",
+   "pd_96": "spin",
+   "pd_97": "walk",
+   "pd_98": "breeze",
+   "pd_99": "hanger",
+   "pd_100": "mirror",
+   "pd_101": "minimal",
+   "pd_102": "hanger",
+   "pd_103": "spin",
+   "pd_104": "walk",
+   "pd_105": "lookbook",
+   "pd_106": "mirror",
+   "pd_107": "breeze",
+   "pd_108": "street",
+   "pd_109": "live",
+   "pd_110": "unbox",
+   "pd_111": "live",
+   "pd_112": "spin",
+   "pd_113": "hanger",
+   "pd_114": "unbox",
+   "pd_115": "breeze",
+   "pd_116": "minimal",
+   "pd_117": "street",
+   "pd_118": "lookbook",
+   "pd_119": "walk",
+   "pd_120": "mirror",
+   "pd_121": "hanger",
+   "pd_122": "live",
+   "pd_123": "breeze",
+   "pd_124": "street",
+   "pd_125": "spin",
+   "pd_126": "walk",
+   "pd_127": "mirror",
+   "pd_128": "unbox",
+   "pd_129": "lookbook",
+   "pd_130": "minimal",
+   "pd_131": "lookbook",
+   "pd_132": "live",
+   "pd_133": "unbox",
+   "pd_134": "hanger",
+   "pd_135": "spin",
+   "pd_136": "walk",
+   "pd_137": "mirror",
+   "pd_138": "minimal",
+   "pd_139": "street",
+   "pd_140": "breeze",
+   "pd_141": "live",
+   "pd_142": "hanger",
+   "pd_143": "minimal",
+   "pd_144": "breeze",
+   "pd_145": "mirror",
+   "pd_146": "spin",
+   "pd_147": "street",
+   "pd_148": "lookbook",
+   "pd_149": "walk",
+   "pd_150": "unbox",
+   "pd_151": "walk",
+   "pd_152": "unbox",
+   "pd_153": "live",
+   "pd_154": "minimal",
+   "pd_155": "mirror",
+   "pd_156": "lookbook",
+   "pd_157": "hanger",
+   "pd_158": "spin",
+   "pd_159": "breeze",
+   "pd_160": "street",
+   "pd_161": "mirror",
+   "pd_162": "hanger",
+   "pd_163": "unbox",
+   "pd_164": "spin",
+   "pd_165": "breeze",
+   "pd_166": "street",
+   "pd_167": "minimal",
+   "pd_168": "walk",
+   "pd_169": "lookbook",
+   "pd_170": "live",
+   "pd_171": "walk",
+   "pd_172": "mirror",
+   "pd_173": "lookbook",
+   "pd_174": "minimal",
+   "pd_175": "breeze",
+   "pd_176": "hanger",
+   "pd_177": "unbox",
+   "pd_178": "street",
+   "pd_179": "spin",
+   "pd_180": "live",
+   "pd_181": "breeze",
+   "pd_182": "live",
+   "pd_183": "mirror",
+   "pd_184": "street",
+   "pd_185": "minimal",
+   "pd_186": "unbox",
+   "pd_187": "hanger",
+   "pd_188": "walk",
+   "pd_189": "spin",
+   "pd_190": "lookbook",
+   "pd_191": "mirror",
+   "pd_192": "live",
+   "pd_193": "lookbook",
+   "pd_194": "unbox",
+   "pd_195": "walk",
+   "pd_196": "hanger",
+   "pd_197": "minimal",
+   "pd_198": "street",
+   "pd_199": "breeze",
+   "pd_200": "spin",
+   "pd_201": "unbox",
+   "pd_202": "walk",
+   "pd_203": "breeze",
+   "pd_204": "lookbook",
+   "pd_205": "street",
+   "pd_206": "live",
+   "pd_207": "spin",
+   "pd_208": "hanger",
+   "pd_209": "mirror",
+   "pd_210": "minimal",
+   "pd_211": "lookbook",
+   "pd_212": "unbox",
+   "pd_213": "minimal",
+   "pd_214": "spin",
+   "pd_215": "breeze",
+   "pd_216": "street",
+   "pd_217": "walk",
+   "pd_218": "hanger",
+   "pd_219": "live",
+   "pd_220": "mirror",
+   "pd_221": "spin",
+   "pd_222": "minimal",
+   "pd_223": "live",
+   "pd_224": "street",
+   "pd_225": "lookbook",
+   "pd_226": "mirror",
+   "pd_227": "hanger",
+   "pd_228": "walk",
+   "pd_229": "breeze",
+   "pd_230": "unbox",
+   "pd_231": "live",
+   "pd_232": "hanger",
+   "pd_233": "street",
+   "pd_234": "unbox",
+   "pd_235": "spin",
+   "pd_236": "mirror",
+   "pd_237": "minimal",
+   "pd_238": "walk",
+   "pd_239": "breeze",
+   "pd_240": "lookbook",
+   "pd_241": "mirror",
+   "pd_242": "street",
+   "pd_243": "minimal",
+   "pd_244": "live",
+   "pd_245": "walk",
+   "pd_246": "spin",
+   "pd_247": "unbox",
+   "pd_248": "breeze",
+   "pd_249": "hanger",
+   "pd_250": "lookbook",
+   "pd_251": "spin",
+   "pd_252": "breeze",
+   "pd_253": "lookbook",
+   "pd_254": "hanger",
+   "pd_255": "mirror",
+   "pd_256": "walk",
+   "pd_257": "live",
+   "pd_258": "unbox",
+   "pd_259": "street",
+   "pd_260": "minimal",
+   "pd_261": "walk",
+   "pd_262": "hanger",
+   "pd_263": "lookbook",
+   "pd_264": "street",
+   "pd_265": "mirror",
+   "pd_266": "spin",
+   "pd_267": "breeze",
+   "pd_268": "live",
+   "pd_269": "minimal",
+   "pd_270": "unbox",
+   "pd_271": "live",
+   "pd_272": "walk",
+   "pd_273": "spin",
+   "pd_274": "street",
+   "pd_275": "unbox",
+   "pd_276": "mirror",
+   "pd_277": "lookbook",
+   "pd_278": "hanger",
+   "pd_279": "breeze",
+   "pd_280": "minimal",
+   "pd_281": "mirror",
+   "pd_282": "breeze",
+   "pd_283": "hanger",
+   "pd_284": "spin",
+   "pd_285": "lookbook",
+   "pd_286": "minimal",
+   "pd_287": "walk",
+   "pd_288": "live",
+   "pd_289": "street",
+   "pd_290": "unbox",
+   "pd_291": "walk",
+   "pd_292": "hanger",
+   "pd_293": "street",
+   "pd_294": "live",
+   "pd_295": "unbox",
+   "pd_296": "minimal",
+   "pd_297": "mirror",
+   "pd_298": "spin",
+   "pd_299": "lookbook",
+   "pd_300": "breeze",
+   "pd_301": "street",
+   "pd_302": "spin",
+   "pd_303": "breeze",
+   "pd_304": "lookbook",
+   "pd_305": "minimal",
+   "pd_306": "mirror",
+   "pd_307": "hanger",
+   "pd_308": "live",
+   "pd_309": "walk",
+   "pd_310": "unbox",
+   "pd_311": "street",
+   "pd_312": "lookbook",
+   "pd_313": "mirror",
+   "pd_314": "minimal",
+   "pd_315": "breeze",
+   "pd_316": "live",
+   "pd_317": "hanger",
+   "pd_318": "walk",
+   "pd_319": "unbox",
+   "pd_320": "spin",
+   "pd_321": "minimal",
+   "pd_322": "hanger",
+   "pd_323": "street",
+   "pd_324": "lookbook",
+   "pd_325": "live",
+   "pd_326": "mirror",
+   "pd_327": "unbox",
+   "pd_328": "walk",
+   "pd_329": "breeze",
+   "pd_330": "spin",
+   "pd_331": "minimal",
+   "pd_332": "walk",
+   "pd_333": "unbox",
+   "pd_334": "hanger",
+   "pd_335": "street",
+   "pd_336": "live",
+   "pd_337": "breeze",
+   "pd_338": "spin",
+   "pd_339": "lookbook",
+   "pd_340": "mirror",
+   "pd_341": "live",
+   "pd_342": "lookbook",
+   "pd_343": "walk",
+   "pd_344": "street",
+   "pd_345": "unbox",
+   "pd_346": "breeze",
+   "pd_347": "minimal",
+   "pd_348": "spin",
+   "pd_349": "hanger",
+   "pd_350": "mirror",
+   "pd_351": "walk",
+   "pd_352": "breeze",
+   "pd_353": "live",
+   "pd_354": "hanger",
+   "pd_355": "street",
+   "pd_356": "unbox",
+   "pd_357": "mirror",
+   "pd_358": "spin",
+   "pd_359": "lookbook",
+   "pd_360": "minimal",
+   "pd_361": "mirror",
+   "pd_362": "unbox",
+   "pd_363": "street",
+   "pd_364": "lookbook",
+   "pd_365": "breeze",
+   "pd_366": "walk",
+   "pd_367": "hanger",
+   "pd_368": "spin",
+   "pd_369": "minimal",
+   "pd_370": "live",
+   "pd_371": "walk",
+   "pd_372": "live",
+   "pd_373": "spin",
+   "pd_374": "minimal",
+   "pd_375": "street",
+   "pd_376": "unbox",
+   "pd_377": "lookbook",
+   "pd_378": "hanger",
+   "pd_379": "mirror",
+   "pd_380": "breeze",
+   "pd_381": "live",
+   "pd_382": "breeze",
+   "pd_383": "street",
+   "pd_384": "spin",
+   "pd_385": "mirror",
+   "pd_386": "walk",
+   "pd_387": "hanger",
+   "pd_388": "minimal",
+   "pd_389": "lookbook",
+   "pd_390": "unbox",
+   "pd_391": "hanger",
+   "pd_392": "breeze",
+   "pd_393": "mirror",
+   "pd_394": "spin",
+   "pd_395": "minimal",
+   "pd_396": "walk",
+   "pd_397": "live",
+   "pd_398": "street",
+   "pd_399": "lookbook",
+   "pd_400": "unbox"
   }
  },
  "seed": {
