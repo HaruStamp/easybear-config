@@ -388,7 +388,8 @@
     "mDesc",
     "mFace",
     "own",
-    "mAge"
+    "mAge",
+    "aGender"
    ],
    "slots": [
     "board",
@@ -490,7 +491,7 @@
         "|{values.svSec}|{values.svRes}"
        ]
       },
-      "fallback": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+      "fallback": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
      }
     ]
    },
@@ -8093,7 +8094,8 @@
       },
       "then": "{parent.fields.mAge}",
       "else": ""
-     }
+     },
+     "aGender": "{item.fields.gender}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -8849,6 +8851,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -9099,6 +9122,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -10019,6 +10063,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -10269,6 +10334,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -11189,6 +11275,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -11439,6 +11546,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -12359,6 +12487,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -12609,6 +12758,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -13529,6 +13699,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -13779,6 +13970,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -14699,6 +14911,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -14949,6 +15182,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -15868,6 +16122,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -16045,7 +16320,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -16437,6 +16732,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -17409,6 +17725,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -17586,7 +17923,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -17978,6 +18335,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -18950,6 +19328,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -19127,7 +19526,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -19519,6 +19938,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -20491,6 +20931,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -20668,7 +21129,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -21060,6 +21541,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -22032,6 +22534,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -22209,7 +22732,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -22601,6 +23144,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -23573,6 +24137,27 @@
                "op": "or",
                "list": [
                 {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
                  "op": "eq",
                  "a": {
                   "op": "cond",
@@ -23750,7 +24335,27 @@
            "key": {
             "op": "concat",
             "parts": [
-             "{item.mGender}|{values.fsGender}|",
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
              {
               "op": "cond",
               "when": {
@@ -24142,6 +24747,27 @@
             "else": ""
            },
            "b": ""
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{values.fsGender}",
+              "b": ""
+             }
+            },
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.aGender}",
+              "b": "male"
+             }
+            }
+           ]
           },
           {
            "op": "or",
@@ -29070,13 +29696,19 @@
             {
              "el": "grid-select",
              "field": "fsGender",
-             "cols": 4,
+             "cols": 5,
              "mobile": {
-              "cols": 2
+              "cols": 3
              },
              "contained": true,
              "className": "!min-h-[48px] @[420px]:!min-h-0",
              "options": [
+              {
+               "value": "",
+               "label": "อัตโนมัติ",
+               "desc": "ตามชุด · ชุดผู้หญิงใช้นางแบบหลัก ชุดผู้ชายใช้นายแบบคนใหม่",
+               "icon": "auto_awesome"
+              },
               {
                "value": "female",
                "label": "ผู้หญิง",
@@ -57070,7 +57702,14 @@
    "teen|female": "Thai girl about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
    "teen|male": "Thai boy about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
    "teen|trans": "Thai child about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
-   "teen|tom": "Thai child about 12 years old (pre-teen child model, age-appropriate modest kids' styling)"
+   "teen|tom": "Thai child about 12 years old (pre-teen child model, age-appropriate modest kids' styling)",
+   "|": "Thai woman in her 20s",
+   "20s|": "Thai woman in her early 20s",
+   "30s|": "Thai woman in her 30s",
+   "40s|": "Thai woman in her 40s",
+   "50s|": "Thai woman in her 50s",
+   "kid|": "Thai girl about 7 years old (child model, age-appropriate modest kids' styling)",
+   "teen|": "Thai girl about 12 years old (pre-teen child model, age-appropriate modest kids' styling)"
   },
   "fsAgeTH": {
    "20s": "อายุราว 20+ ปี",
@@ -57119,42 +57758,42 @@
    "30|30|360p": "10"
   },
   "fsOut@sec": {
-   "|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "10|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "20|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
-   "30|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
+   "|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "10|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s10th\",\"s10en\",\"cam10\",\"ov10\",\"vo10\"}\nThis clip is 20 seconds = exactly 10 scenes of 2 seconds (s1..s10). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "20|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|10|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|20|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|720p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s15th\",\"s15en\",\"cam15\",\"ov15\",\"vo15\"}\nThis clip is 30 seconds = exactly 15 scenes of 2 seconds (s1..s15). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below).",
+   "30|30|360p": "Output: a pure JSON array only (no markdown, no text outside JSON) · number of objects = number of clips requested (1 clip = array with 1 object). Each object:\n{\"productName\":\"short catchy Thai clip title\",\"category\":\"clip style in Thai\",\"palette\":\"lighting and mood in English 3-6 words — neutral true-white daylight, never warm, golden or yellow\",\"synopsis\":\"1-2 Thai sentences\",\"gender\":\"female or male\",\"model\":\"ENGLISH one line, max 160 characters: the model's look — gender, age, face, hair, skin tone, body shape (copy it from the model photo if one is attached)\",\"outfit\":\"ENGLISH max 220 characters: the garment exactly as in the product photos — type, colour, fabric, pattern, cut, length, neckline, details — plus the extra set pieces if any, plus simple matching shoes that do not hide it\",\"caption\":\"Thai TikTok/Facebook caption: ONE short line naming the product, max 80 characters, no emoji\",\"hashtags\":\"5-7 hashtags, Thai and English mixed, space separated, no brand or shop names\",\"s1th\":\"...\",\"s1en\":\"...\",\"cam1\":\"...\",\"ov1\":\"\",\"vo1\":\"...\", … the same 5 keys for every scene up to \"s5th\",\"s5en\",\"cam5\",\"ov5\",\"vo5\"}\nThis clip is 10 seconds = exactly 5 scenes of 2 seconds (s1..s5). Every s#th / s#en / cam# / vo# must be filled. sNth = Thai visual description (pose/move + which part of the outfit is shown, 1 sentence) · sNen = the same in English for the video model (pose, move, expression; max 140 characters; never the words music, song or beat) · camN = English camera framing in 3-8 words (e.g. \"full body, chest height\", \"medium shot on the neckline\") · ovN = on-screen Thai text ONLY when allowed below, otherwise empty string · voN = the Thai words the model says in scene N (rules below)."
   },
   "lenLabel@sec": {
    "|10|": "10 วินาที",
@@ -57437,7 +58076,7 @@
    "tom|tom|teen": "a natural pre-teen CHILD's Thai voice (never an adult voice)"
   },
   "fsVoicePlan@g": {
-   "|": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
+   "|": "เพศตามชุด: ชุดผู้หญิง = นางแบบหลัก ลงท้าย ค่ะ · ชุดผู้ชาย = นายแบบชายคนใหม่ ลงท้าย ครับ (ไม่เกิน 2 ครั้ง) · ตอบ gender ให้ตรง",
    "|female": "นางแบบเป็นผู้หญิง — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\"",
    "|male": "นายแบบเป็นผู้ชาย — คำลงท้ายใช้ ครับ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ค่ะ/คะ · แทนตัวเองว่า \"เรา\"",
    "|trans": "นางแบบเป็นสาวสอง (LGBTQ+) — คำลงท้ายใช้ ค่ะ/คะ เท่านั้น (ไม่เกิน 2 ครั้งต่อคลิป) ห้ามใช้ ครับ · แทนตัวเองว่า \"เรา\" · มั่นใจ เป็นธรรมชาติ ไม่ล้อเลียน",
