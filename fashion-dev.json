@@ -27656,7 +27656,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "ไม่กด = AI คิดหน้าให้ทุกคลิป (หน้าอาจไม่เหมือนกัน)",
+                   "value": "ต้องกดวาด (หรืออัปรูปนางแบบ) ก่อน ถึงจะเริ่มผลิตได้",
                    "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90",
                    "when": {
                     "op": "eq",
@@ -28455,6 +28455,24 @@
          }
         },
         {
+         "el": "text",
+         "value": "⚠️ ยังไม่มีนางแบบ — กด \"ให้หมีวาดนางแบบ\" หรืออัปรูปนางแบบของร้านที่ส่วนนางแบบด้านบนก่อน ถึงจะเริ่มผลิตได้ (กันหมีเอาคนในรูปชุดมาเป็นนางแบบ)",
+         "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-90 !text-[#d6336c]",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
+           },
+           "b": 0
+          }
+         }
+        },
+        {
          "el": "run-button",
          "label": "เริ่มแบบออโต้ — ผลิตรวดเดียวจบ",
          "to": "",
@@ -28466,15 +28484,19 @@
           "b": "auto"
          },
          "disabledWhen": {
-          "op": "eq",
+          "op": "not",
           "a": {
-           "op": "count",
-           "from": "products",
-           "where": "enabled=true"
-          },
-          "b": 0
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
+           },
+           "b": 0
+          }
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน"
+         "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
         },
         {
          "el": "gen-phase",
@@ -28503,15 +28525,19 @@
          },
          "className": "w-full justify-center !h-16 !rounded-2xl !text-[18px] @[640px]:!text-[17px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white !min-h-[48px] @[420px]:!min-h-0",
          "disabledWhen": {
-          "op": "eq",
+          "op": "not",
           "a": {
-           "op": "count",
-           "from": "products",
-           "where": "enabled=true"
-          },
-          "b": 0
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
+           },
+           "b": 0
+          }
          },
-         "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน",
+         "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน",
          "when": {
           "op": "eq",
           "a": "{values.mode}",
@@ -37368,15 +37394,19 @@
                },
                "className": "justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold border border-[var(--ev-accent)]/40 !bg-[var(--ev-surface)] !text-[var(--ev-accent)] px-4 shrink-0 whitespace-nowrap w-full",
                "disabledWhen": {
-                "op": "eq",
+                "op": "not",
                 "a": {
-                 "op": "count",
-                 "from": "products",
-                 "where": "enabled=true"
-                },
-                "b": 0
+                 "op": "gt",
+                 "a": {
+                  "op": "count",
+                  "from": "characters",
+                  "where": "id=model",
+                  "slot": "face"
+                 },
+                 "b": 0
+                }
                },
-               "reason": "เพิ่ม/ติ๊กใช้งานอย่างน้อย 1 ชุดก่อน"
+               "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
               },
               {
                "el": "run-button",
@@ -37645,7 +37675,21 @@
                  }
                 ]
                },
-               "className": "justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap w-full"
+               "className": "justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap w-full",
+               "disabledWhen": {
+                "op": "not",
+                "a": {
+                 "op": "gt",
+                 "a": {
+                  "op": "count",
+                  "from": "characters",
+                  "where": "id=model",
+                  "slot": "face"
+                 },
+                 "b": 0
+                }
+               },
+               "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
               },
               {
                "el": "gen-phase",
@@ -37767,7 +37811,21 @@
                  }
                 ]
                },
-               "className": "justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap w-full"
+               "className": "justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white px-4 shrink-0 whitespace-nowrap w-full",
+               "disabledWhen": {
+                "op": "not",
+                "a": {
+                 "op": "gt",
+                 "a": {
+                  "op": "count",
+                  "from": "characters",
+                  "where": "id=model",
+                  "slot": "face"
+                 },
+                 "b": 0
+                }
+               },
+               "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
               },
               {
                "el": "gen-phase",
@@ -50166,7 +50224,21 @@
                  "label": "คิดบทใหม่",
                  "icon": "psychology",
                  "variant": "solid",
-                 "className": "mt-1"
+                 "className": "mt-1",
+                 "disabledWhen": {
+                  "op": "not",
+                  "a": {
+                   "op": "gt",
+                   "a": {
+                    "op": "count",
+                    "from": "characters",
+                    "where": "id=model",
+                    "slot": "face"
+                   },
+                   "b": 0
+                  }
+                 },
+                 "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
                 }
                ]
               }
@@ -52693,7 +52765,21 @@
                  "label": "คิดบทใหม่",
                  "icon": "psychology",
                  "variant": "solid",
-                 "className": "mt-1"
+                 "className": "mt-1",
+                 "disabledWhen": {
+                  "op": "not",
+                  "a": {
+                   "op": "gt",
+                   "a": {
+                    "op": "count",
+                    "from": "characters",
+                    "where": "id=model",
+                    "slot": "face"
+                   },
+                   "b": 0
+                  }
+                 },
+                 "reason": "กดให้หมีวาดนางแบบ หรืออัปรูปนางแบบของร้านก่อน"
                 }
                ]
               }
