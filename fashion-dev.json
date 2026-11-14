@@ -390,7 +390,8 @@
     "mFace",
     "own",
     "mAge",
-    "aGender"
+    "aGender",
+    "cv"
    ],
    "slots": [
     "board",
@@ -57515,7 +57516,85 @@
                     }
                    }
                   ]
+                 },
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "and",
+                   "list": [
+                    {
+                     "op": "not",
+                     "a": {
+                      "op": "eq",
+                      "a": "{item.slots.cover}",
+                      "b": ""
+                     }
+                    },
+                    {
+                     "op": "not",
+                     "a": {
+                      "op": "eq",
+                      "a": "{item.cv}",
+                      "b": "video"
+                     }
+                    }
+                   ]
+                  }
                  }
+                },
+                {
+                 "el": "media-slot",
+                 "src": "{item.slots.cover}",
+                 "aspect": "9:16",
+                 "style": {
+                  "borderRadius": "18px"
+                 },
+                 "className": "ring-1 ring-[var(--ev-border)]",
+                 "when": {
+                  "op": "and",
+                  "list": [
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.cover}",
+                     "b": ""
+                    }
+                   },
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "video"
+                    }
+                   }
+                  ]
+                 },
+                 "lightboxActions": [
+                  {
+                   "el": "row",
+                   "className": "w-full !grid grid-flow-col auto-cols-fr gap-2 !items-stretch",
+                   "card": [
+                    {
+                     "el": "retry-button",
+                     "op": "mnCover",
+                     "label": "สร้างปกใหม่",
+                     "icon": "refresh",
+                     "variant": "ghost",
+                     "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/90 !text-[#17253a]"
+                    },
+                    {
+                     "el": "download-button",
+                     "to": "{item.slots.cover}",
+                     "label": "ดาวน์โหลดปก",
+                     "icon": "download",
+                     "variant": "solid",
+                     "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white"
+                    }
+                   ]
+                  }
+                 ]
                 },
                 {
                  "el": "row",
@@ -57604,6 +57683,157 @@
                   "b": "true"
                  },
                  "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0 !min-h-[48px] @[420px]:!min-h-0"
+                },
+                {
+                 "el": "row",
+                 "className": "absolute top-2 right-12 z-30 gap-0.5 p-0.5 rounded-lg bg-black/55 backdrop-blur-sm",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.slots.cover}",
+                   "b": ""
+                  }
+                 },
+                 "card": [
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "video",
+                   "label": "ดูวิดีโอ",
+                   "iconOnly": true,
+                   "icon": "movie",
+                   "variant": "ghost",
+                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-white !text-[#17253a] shadow-sm",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "and",
+                     "list": [
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.cover}",
+                        "b": ""
+                       }
+                      },
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.cv}",
+                        "b": "video"
+                       }
+                      }
+                     ]
+                    }
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "video",
+                   "label": "ดูวิดีโอ",
+                   "iconOnly": true,
+                   "icon": "movie",
+                   "variant": "ghost",
+                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-transparent !text-white hover:!bg-white/20",
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.cv}",
+                       "b": "video"
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "cover",
+                   "label": "ดูปก",
+                   "iconOnly": true,
+                   "icon": "imagesmode",
+                   "variant": "ghost",
+                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-white !text-[#17253a] shadow-sm",
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.cv}",
+                       "b": "video"
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "cover",
+                   "label": "ดูปก",
+                   "iconOnly": true,
+                   "icon": "imagesmode",
+                   "variant": "ghost",
+                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-transparent !text-white hover:!bg-white/20",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "and",
+                     "list": [
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.slots.cover}",
+                        "b": ""
+                       }
+                      },
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.cv}",
+                        "b": "video"
+                       }
+                      }
+                     ]
+                    }
+                   }
+                  }
+                 ]
                 }
                ]
               },
@@ -57626,6 +57856,82 @@
                    "variant": "outline-accent",
                    "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2",
                    "when": "item.slots.cover="
+                  },
+                  {
+                   "el": "download-button",
+                   "to": "{item.slots.cover}",
+                   "label": "โหลดปก",
+                   "icon": "download",
+                   "variant": "solid",
+                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white",
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.cv}",
+                       "b": "video"
+                      }
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "cover",
+                   "label": "ดูปก",
+                   "icon": "imagesmode",
+                   "variant": "outline-accent",
+                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2",
+                   "when": {
+                    "op": "and",
+                    "list": [
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     },
+                     {
+                      "op": "not",
+                      "a": {
+                       "op": "and",
+                       "list": [
+                        {
+                         "op": "not",
+                         "a": {
+                          "op": "eq",
+                          "a": "{item.slots.cover}",
+                          "b": ""
+                         }
+                        },
+                        {
+                         "op": "not",
+                         "a": {
+                          "op": "eq",
+                          "a": "{item.cv}",
+                          "b": "video"
+                         }
+                        }
+                       ]
+                      }
+                     }
+                    ]
+                   }
                   },
                   {
                    "el": "text",
@@ -57679,72 +57985,6 @@
                      "variant": "solid"
                     }
                    ]
-                  }
-                 ]
-                },
-                {
-                 "el": "row",
-                 "className": "gap-2 items-center mt-0.5",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
-                 "when": "item.slots.cover!=",
-                 "card": [
-                  {
-                   "el": "box",
-                   "className": "w-[40px] shrink-0 overflow-hidden rounded-[10px]",
-                   "card": [
-                    {
-                     "el": "media-slot",
-                     "src": "{item.slots.cover}",
-                     "aspect": "9:16",
-                     "style": {
-                      "borderRadius": "10px"
-                     },
-                     "className": "ring-1 ring-[var(--ev-border)] w-full",
-                     "lightboxActions": [
-                      {
-                       "el": "row",
-                       "className": "w-full !grid grid-flow-col auto-cols-fr gap-2 !items-stretch",
-                       "card": [
-                        {
-                         "el": "retry-button",
-                         "op": "mnCover",
-                         "label": "สร้างปกใหม่",
-                         "icon": "refresh",
-                         "variant": "ghost",
-                         "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/90 !text-[#17253a]"
-                        },
-                        {
-                         "el": "download-button",
-                         "to": "{item.slots.cover}",
-                         "label": "ดาวน์โหลดปก",
-                         "icon": "download",
-                         "variant": "solid",
-                         "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white"
-                        }
-                       ]
-                      }
-                     ]
-                    }
-                   ]
-                  },
-                  {
-                   "el": "download-button",
-                   "to": "{item.slots.cover}",
-                   "label": "ดาวน์โหลดปก",
-                   "icon": "download",
-                   "variant": "solid",
-                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2"
-                  },
-                  {
-                   "el": "retry-button",
-                   "op": "mnCover",
-                   "label": "สร้างปกใหม่",
-                   "iconOnly": true,
-                   "icon": "refresh",
-                   "variant": "ghost",
-                   "className": "!h-10 !w-10 !rounded-xl shrink-0 justify-center border border-[var(--ev-border)]"
                   }
                  ]
                 }
