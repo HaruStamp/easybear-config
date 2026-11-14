@@ -57080,175 +57080,165 @@
         },
         {
          "el": "box",
-         "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+         "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl px-3 py-2.5 @[640px]:px-4 flex flex-col gap-1.5",
          "card": [
           {
            "el": "row",
-           "className": "items-center gap-2 px-0.5",
-           "style": {
-            "flexWrap": "nowrap"
-           },
+           "className": "items-center gap-2 gap-y-2.5 flex-wrap",
            "card": [
             {
-             "el": "box",
-             "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+             "el": "row",
+             "className": "items-center gap-2 min-w-0 flex-1",
+             "style": {
+              "flexWrap": "nowrap"
+             },
              "card": [
               {
                "el": "icon",
                "icon": "imagesmode",
-               "textSize": "text-[19px]",
-               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
-              }
-             ]
-            },
-            {
-             "el": "box",
-             "className": "flex flex-col gap-0.5 min-w-0 flex-1",
-             "card": [
-              {
-               "el": "text",
-               "value": "ปกคลิป",
-               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+               "textSize": "text-[20px]",
+               "className": "!text-[var(--ev-accent)] leading-none shrink-0"
               },
               {
                "el": "text",
-               "value": "ภาพหน้าปก 9:16 จากคลิปจริง — นางแบบ ชุด ฉากเดียวกัน",
-               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 leading-snug"
+               "value": "ปกคลิป",
+               "className": "!text-[16px] @[640px]:!text-[15px] font-black !text-[var(--ev-text)] leading-tight whitespace-nowrap"
+              },
+              {
+               "el": "text",
+               "value": {
+                "op": "concat",
+                "parts": [
+                 {
+                  "op": "count",
+                  "from": "tasks",
+                  "slot": "cover"
+                 },
+                 "/",
+                 {
+                  "op": "count",
+                  "from": "tasks",
+                  "slot": "video"
+                 }
+                ]
+               },
+               "className": "!text-[12px] font-bold px-2 py-0.5 rounded-full bg-[var(--ev-surface2)] opacity-80 whitespace-nowrap tabular-nums shrink-0"
               }
              ]
             },
             {
-             "el": "text",
-             "value": {
+             "el": "segmented",
+             "field": "fsCoverText",
+             "variant": "accent",
+             "className": "shrink-0",
+             "options": [
+              {
+               "value": "",
+               "label": "มีหัวข้อ",
+               "icon": "title"
+              },
+              {
+               "value": "none",
+               "label": "ภาพล้วน",
+               "icon": "image"
+              }
+             ]
+            },
+            {
+             "el": "gen-phase",
+             "ops": [
+              "mnCover"
+             ],
+             "icon": "auto_awesome",
+             "variant": "solid",
+             "label": {
               "op": "concat",
               "parts": [
+               "สร้างปก · ",
                {
-                "op": "count",
-                "from": "tasks",
-                "slot": "cover"
-               },
-               "/",
-               {
+                "op": "sub",
+                "a": {
+                 "op": "count",
+                 "from": "tasks",
+                 "slot": "video"
+                },
+                "b": {
+                 "op": "count",
+                 "from": "tasks",
+                 "slot": "cover"
+                }
+               }
+              ]
+             },
+             "className": "justify-center !h-10 !rounded-xl !text-[14px] font-bold !px-4 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white shrink-0 w-full @[520px]:w-auto",
+             "when": {
+              "op": "gt",
+              "a": {
+               "op": "sub",
+               "a": {
                 "op": "count",
                 "from": "tasks",
                 "slot": "video"
                },
-               " ปก"
-              ]
-             },
-             "className": "!text-[12.5px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80 whitespace-nowrap tabular-nums shrink-0"
-            }
-           ]
-          },
-          {
-           "el": "grid-select",
-           "field": "fsCoverText",
-           "cols": 2,
-           "mobile": {
-            "cols": 2
-           },
-           "contained": true,
-           "className": "!min-h-[48px] @[420px]:!min-h-0",
-           "options": [
-            {
-             "value": "",
-             "label": "มีหัวข้อบนปก",
-             "desc": "ชื่อคลิปภาษาไทยตัวใหญ่ด้านบน",
-             "icon": "title"
-            },
-            {
-             "value": "none",
-             "label": "ภาพล้วน",
-             "desc": "ไม่มีตัวหนังสือ ใส่เองตอนโพสต์",
-             "icon": "image"
-            }
-           ]
-          },
-          {
-           "el": "text",
-           "value": "ตัวหนังสือไทยบนปก AI เป็นคนเขียน อาจสะกดเพี้ยนบางคำ — อยากได้เป๊ะ เลือก \"ภาพล้วน\"",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
-           "when": {
-            "op": "eq",
-            "a": "{values.fsCoverText}",
-            "b": ""
-           }
-          },
-          {
-           "el": "gen-phase",
-           "ops": [
-            "mnCover"
-           ],
-           "icon": "auto_awesome",
-           "variant": "solid",
-           "label": {
-            "op": "concat",
-            "parts": [
-             "สร้างปกทุกคลิป · ",
-             {
-              "op": "sub",
-              "a": {
-               "op": "count",
-               "from": "tasks",
-               "slot": "video"
+               "b": {
+                "op": "count",
+                "from": "tasks",
+                "slot": "cover"
+               }
               },
-              "b": {
-               "op": "count",
-               "from": "tasks",
-               "slot": "cover"
-              }
-             },
-             " ปก"
-            ]
-           },
-           "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] @[640px]:!text-[16px] font-bold transition-all hover:-translate-y-0.5 active:translate-y-0 !min-h-[48px] @[420px]:!min-h-0 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white",
-           "when": {
-            "op": "gt",
-            "a": {
-             "op": "sub",
-             "a": {
-              "op": "count",
-              "from": "tasks",
-              "slot": "video"
-             },
-             "b": {
-              "op": "count",
-              "from": "tasks",
-              "slot": "cover"
+              "b": 0
              }
             },
-            "b": 0
-           }
-          },
-          {
-           "el": "text",
-           "value": "ปกครบทุกคลิปแล้ว — กดที่รูปปกใต้คลิปเพื่อดูใหญ่ / ดาวน์โหลด",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-75",
-           "when": {
-            "op": "not",
-            "a": {
-             "op": "gt",
-             "a": {
-              "op": "sub",
+            {
+             "el": "text",
+             "value": "✓ ครบแล้ว",
+             "className": "!text-[13px] font-bold !text-green-600 shrink-0 whitespace-nowrap",
+             "when": {
+              "op": "not",
               "a": {
-               "op": "count",
-               "from": "tasks",
-               "slot": "video"
-              },
-              "b": {
-               "op": "count",
-               "from": "tasks",
-               "slot": "cover"
+               "op": "gt",
+               "a": {
+                "op": "sub",
+                "a": {
+                 "op": "count",
+                 "from": "tasks",
+                 "slot": "video"
+                },
+                "b": {
+                 "op": "count",
+                 "from": "tasks",
+                 "slot": "cover"
+                }
+               },
+               "b": 0
               }
-             },
-             "b": 0
+             }
             }
-           }
+           ]
           },
           {
            "el": "text",
-           "value": "1 ปก = เครดิตภาพ 1 ใบ · ปกไม่สร้างเองตอนผลิต กดเมื่ออยากได้",
-           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+           "value": {
+            "op": "concat",
+            "parts": [
+             "1 ปก = เครดิตภาพ 1 ใบ · สร้างจากภาพในคลิป",
+             {
+              "op": "block",
+              "sep": "",
+              "parts": [
+               {
+                "when": {
+                 "op": "eq",
+                 "a": "{values.fsCoverText}",
+                 "b": ""
+                },
+                "value": " · หัวข้อไทย AI เขียน อาจสะกดเพี้ยน"
+               }
+              ]
+             }
+            ]
+           },
+           "className": "!text-[12px] opacity-50 px-0.5 leading-snug"
           }
          ],
          "when": {
