@@ -25526,7 +25526,8 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างปก",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ปกเสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "where": "slots.video!="
   }
  ],
  "stages": [
@@ -57065,41 +57066,189 @@
              ]
             }
            ]
+          }
+         ],
+         "when": {
+          "op": "gt",
+          "a": {
+           "op": "count",
+           "from": "tasks",
+           "slot": "video"
           },
+          "b": 0
+         }
+        },
+        {
+         "el": "box",
+         "className": "bg-[var(--ev-surface)] border border-[var(--ev-border)] rounded-2xl p-3 @[420px]:p-4 @[640px]:p-5 flex flex-col gap-3",
+         "card": [
           {
-           "el": "box",
-           "className": "flex flex-col gap-1.5",
+           "el": "row",
+           "className": "items-center gap-2 px-0.5",
+           "style": {
+            "flexWrap": "nowrap"
+           },
            "card": [
             {
-             "el": "text",
-             "value": "ปกคลิป (กดสร้างทีละคลิป · ใช้เครดิตภาพ 1 ใบต่อปก)",
-             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
-            },
-            {
-             "el": "grid-select",
-             "field": "fsCoverText",
-             "cols": 2,
-             "mobile": {
-              "cols": 2
-             },
-             "contained": true,
-             "className": "!min-h-[48px] @[420px]:!min-h-0",
-             "options": [
+             "el": "box",
+             "className": "w-[34px] h-[34px] rounded-xl bg-[color-mix(in_srgb,var(--ev-accent)_12%,transparent)] flex items-center justify-center shrink-0",
+             "card": [
               {
-               "value": "",
-               "label": "มีหัวข้อบนปก",
-               "desc": "ชื่อคลิปภาษาไทย (AI เขียน อาจสะกดเพี้ยนบางคำ)",
-               "icon": "title"
-              },
-              {
-               "value": "none",
-               "label": "ไม่มีตัวหนังสือ",
-               "desc": "ภาพล้วน ใส่ข้อความเองตอนโพสต์",
-               "icon": "image"
+               "el": "icon",
+               "icon": "imagesmode",
+               "textSize": "text-[19px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-0.5 min-w-0 flex-1",
+             "card": [
+              {
+               "el": "text",
+               "value": "ปกคลิป",
+               "className": "!text-[18px] @[640px]:!text-[17px] font-black !text-[var(--ev-text)] leading-tight"
+              },
+              {
+               "el": "text",
+               "value": "ภาพหน้าปก 9:16 จากคลิปจริง — นางแบบ ชุด ฉากเดียวกัน",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 leading-snug"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": {
+              "op": "concat",
+              "parts": [
+               {
+                "op": "count",
+                "from": "tasks",
+                "slot": "cover"
+               },
+               "/",
+               {
+                "op": "count",
+                "from": "tasks",
+                "slot": "video"
+               },
+               " ปก"
+              ]
+             },
+             "className": "!text-[12.5px] font-bold px-2.5 py-1 rounded-full bg-[var(--ev-surface2)] opacity-80 whitespace-nowrap tabular-nums shrink-0"
             }
            ]
+          },
+          {
+           "el": "grid-select",
+           "field": "fsCoverText",
+           "cols": 2,
+           "mobile": {
+            "cols": 2
+           },
+           "contained": true,
+           "className": "!min-h-[48px] @[420px]:!min-h-0",
+           "options": [
+            {
+             "value": "",
+             "label": "มีหัวข้อบนปก",
+             "desc": "ชื่อคลิปภาษาไทยตัวใหญ่ด้านบน",
+             "icon": "title"
+            },
+            {
+             "value": "none",
+             "label": "ภาพล้วน",
+             "desc": "ไม่มีตัวหนังสือ ใส่เองตอนโพสต์",
+             "icon": "image"
+            }
+           ]
+          },
+          {
+           "el": "text",
+           "value": "ตัวหนังสือไทยบนปก AI เป็นคนเขียน อาจสะกดเพี้ยนบางคำ — อยากได้เป๊ะ เลือก \"ภาพล้วน\"",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+           "when": {
+            "op": "eq",
+            "a": "{values.fsCoverText}",
+            "b": ""
+           }
+          },
+          {
+           "el": "gen-phase",
+           "ops": [
+            "mnCover"
+           ],
+           "icon": "auto_awesome",
+           "variant": "solid",
+           "label": {
+            "op": "concat",
+            "parts": [
+             "สร้างปกทุกคลิป · ",
+             {
+              "op": "sub",
+              "a": {
+               "op": "count",
+               "from": "tasks",
+               "slot": "video"
+              },
+              "b": {
+               "op": "count",
+               "from": "tasks",
+               "slot": "cover"
+              }
+             },
+             " ปก"
+            ]
+           },
+           "className": "w-full justify-center !h-14 !rounded-2xl !text-[17px] @[640px]:!text-[16px] font-bold transition-all hover:-translate-y-0.5 active:translate-y-0 !min-h-[48px] @[420px]:!min-h-0 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white",
+           "when": {
+            "op": "gt",
+            "a": {
+             "op": "sub",
+             "a": {
+              "op": "count",
+              "from": "tasks",
+              "slot": "video"
+             },
+             "b": {
+              "op": "count",
+              "from": "tasks",
+              "slot": "cover"
+             }
+            },
+            "b": 0
+           }
+          },
+          {
+           "el": "text",
+           "value": "ปกครบทุกคลิปแล้ว — กดที่รูปปกใต้คลิปเพื่อดูใหญ่ / ดาวน์โหลด",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug !opacity-75",
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "gt",
+             "a": {
+              "op": "sub",
+              "a": {
+               "op": "count",
+               "from": "tasks",
+               "slot": "video"
+              },
+              "b": {
+               "op": "count",
+               "from": "tasks",
+               "slot": "cover"
+              }
+             },
+             "b": 0
+            }
+           }
+          },
+          {
+           "el": "text",
+           "value": "1 ปก = เครดิตภาพ 1 ใบ · ปกไม่สร้างเองตอนผลิต กดเมื่ออยากได้",
+           "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
           }
          ],
          "when": {
@@ -57493,54 +57642,96 @@
                 },
                 {
                  "el": "box",
-                 "className": "flex flex-col gap-1.5 mt-1.5",
+                 "className": "flex flex-col gap-1.5 mt-1 pt-2.5 border-t border-[var(--ev-border)]",
                  "card": [
                   {
                    "el": "gen-button",
                    "op": "mnCover",
                    "label": "สร้างปก",
-                   "icon": "image",
-                   "variant": "solid",
-                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold",
+                   "icon": "add_photo_alternate",
+                   "variant": "outline-accent",
+                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold w-full",
                    "when": "item.slots.cover="
                   },
                   {
-                   "el": "box",
-                   "className": "flex gap-2 items-end",
+                   "el": "row",
+                   "className": "gap-2.5 items-center",
+                   "style": {
+                    "flexWrap": "nowrap"
+                   },
+                   "when": "item.slots.cover!=",
                    "card": [
                     {
                      "el": "media-slot",
                      "src": "{item.slots.cover}",
                      "aspect": "9:16",
                      "style": {
-                      "borderRadius": "14px"
+                      "borderRadius": "12px"
                      },
-                     "className": "ring-1 ring-[var(--ev-border)] w-[88px] shrink-0"
+                     "className": "ring-1 ring-[var(--ev-border)] w-[64px] @[420px]:w-[72px] shrink-0",
+                     "lightboxActions": [
+                      {
+                       "el": "row",
+                       "className": "w-full !grid grid-flow-col auto-cols-fr gap-2 !items-stretch",
+                       "card": [
+                        {
+                         "el": "retry-button",
+                         "op": "mnCover",
+                         "label": "สร้างปกใหม่",
+                         "icon": "refresh",
+                         "variant": "ghost",
+                         "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-white/90 !text-[#17253a]"
+                        },
+                        {
+                         "el": "download-button",
+                         "to": "{item.slots.cover}",
+                         "label": "ดาวน์โหลดปก",
+                         "icon": "download",
+                         "variant": "solid",
+                         "className": "!w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white"
+                        }
+                       ]
+                      }
+                     ]
                     },
                     {
                      "el": "box",
-                     "className": "flex-1 min-w-0 flex flex-col gap-1.5 justify-end",
+                     "className": "flex flex-col gap-1.5 flex-1 min-w-0",
                      "card": [
                       {
-                       "el": "download-button",
-                       "to": "{item.slots.cover}",
-                       "label": "ดาวน์โหลดปก",
-                       "icon": "download",
-                       "variant": "solid",
-                       "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold"
+                       "el": "text",
+                       "value": "ปกพร้อมแล้ว",
+                       "className": "!text-[12.5px] font-bold opacity-70 flex items-center gap-1"
                       },
                       {
-                       "el": "retry-button",
-                       "op": "mnCover",
-                       "label": "สร้างปกใหม่",
-                       "icon": "refresh",
-                       "variant": "ghost",
-                       "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold"
+                       "el": "row",
+                       "className": "gap-1.5",
+                       "style": {
+                        "flexWrap": "nowrap"
+                       },
+                       "card": [
+                        {
+                         "el": "download-button",
+                         "to": "{item.slots.cover}",
+                         "label": "ดาวน์โหลด",
+                         "icon": "download",
+                         "variant": "solid",
+                         "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2"
+                        },
+                        {
+                         "el": "retry-button",
+                         "op": "mnCover",
+                         "label": "สร้างปกใหม่",
+                         "iconOnly": true,
+                         "icon": "refresh",
+                         "variant": "ghost",
+                         "className": "!h-10 !w-10 !rounded-xl shrink-0 justify-center border border-[var(--ev-border)]"
+                        }
+                       ]
                       }
                      ]
                     }
-                   ],
-                   "when": "item.slots.cover!="
+                   ]
                   }
                  ]
                 }
