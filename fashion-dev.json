@@ -92,7 +92,8 @@
   "fsPetDesc": "",
   "fsPetSrc": "",
   "fsPetKind": "",
-  "fsCoverText": ""
+  "fsCoverText": "",
+  "fsCoverCustom": ""
  },
  "collections": {
   "control": {
@@ -25501,16 +25502,31 @@
          "a": "{values.fsCoverText}",
          "b": ""
         },
-        "value": {
-         "op": "concat",
-         "parts": [
-          "LOOK: bright OOTD cover — background = the same place as image 1, brighter, warm golden sunlight flare, soft sparkles and glints. HEADLINE: huge bold 3D Thai title across the top third, 2-3 lines, spelled exactly: \"",
-          "{item.productName}",
-          "\" — chunky rounded Thai display font, white with a thick orange-gold outline and drop shadow, the last word in a fiery orange-red gradient. Add 2 small white rounded sticker labels with very short Thai phrases taken ONLY from this caption: \"",
-          "{item.caption}",
-          "\", plus one hand-drawn orange arrow pointing at the outfit. Premium, clean, high contrast."
-         ]
-        }
+        "value": "LOOK: cute sparkly girly cover — soft pastel pink, cream and lilac palette, dreamy bokeh light, tiny glitter sparkles, little hearts and satin ribbon bows as light accents, airy and clean (not cluttered). Headline: big cute rounded Thai title in the top area, white letters with a soft pastel-pink outline and gentle glow; 2 small pastel cloud-shaped sticker labels; a few twinkle stars. Sweet, polished, girly."
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "minicute"
+        },
+        "value": "LOOK: minimal-cute cover — clean warm off-white / soft beige background (the same place, softened and brighter) with lots of white space, a few tiny hand-drawn doodles (stars, hearts, small squiggles) in one soft accent colour. Headline: neat rounded Thai title, dark cocoa colour with a small pastel highlight bar behind one word; at most 2 small minimal labels. Calm, cute, premium."
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "korea"
+        },
+        "value": "LOOK: Korean pastel lookbook cover — soft milky pastel background (peach, baby blue or mint), gentle film grain, polaroid frame or rounded photo card behind the person, small washi-tape and star stickers. Headline: clean modern rounded Thai title in a soft colour block; 2 tiny pastel tags. Soft, trendy, aesthetic."
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "ootd"
+        },
+        "value": "LOOK: bright OOTD cover — the same place as image 1, brighter, warm golden sunlight flare, soft sparkles and glints. Headline: huge bold 3D Thai title across the top third, white with a thick orange-gold outline and drop shadow, the last word in a fiery orange-red gradient; 2 small white sticker labels and one hand-drawn orange arrow pointing at the outfit."
        },
        {
         "when": {
@@ -25518,14 +25534,20 @@
          "a": "{values.fsCoverText}",
          "b": "sticker"
         },
+        "value": "LOOK: bold Y2K streetwear sticker collage — spray-paint graffiti splashes, checkerboard corners, neon lime + electric blue palette, lime flames, sparkle stars, retro cassette-tape stickers. Headline: huge bold Thai title in neon lime and electric blue with thick black outline; 4-5 small black/white/lime sticker labels around the person. Energetic but every label readable."
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "custom"
+        },
         "value": {
          "op": "concat",
          "parts": [
-          "LOOK: bold Y2K streetwear sticker collage — spray-paint graffiti splashes and drips, checkerboard corners, neon lime + electric blue palette, lime flames, sparkle stars, torn paper and retro cassette-tape stickers. HEADLINE: huge bold Thai title at the top, neon lime and electric blue letters with thick black outline, spelled exactly: \"",
-          "{item.productName}",
-          "\". Around the person place 4-5 small Thai sticker labels (black, white and lime rounded tags, bold font) with short selling points taken ONLY from this caption: \"",
-          "{item.caption}",
-          "\". Energetic and maximalist but every label readable."
+          "LOOK — follow the shop's own style request exactly: \"",
+          "{values.fsCoverCustom}",
+          "\". Keep it tidy and readable; big Thai headline at the top unless the request says otherwise."
          ]
         }
        },
@@ -25552,10 +25574,38 @@
           "b": "none"
          }
         },
-        "value": "\nRULES: Thai text spelled exactly, never mirrored; never invent prices, discounts, COD, free shipping or stock claims; keep every text off the face and the outfit; no watermark."
+        "value": {
+         "op": "concat",
+         "parts": [
+          " HEADLINE text, spelled exactly: \"",
+          "{item.productName}",
+          "\". Small sticker labels (if the style uses them) carry only very short Thai phrases taken ONLY from this caption: \"",
+          "{item.caption}",
+          "\"."
+         ]
+        }
        }
       ]
-     }
+     },
+     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsCoverText}",
+          "b": "none"
+         }
+        },
+        "value": "Thai text spelled exactly, never mirrored; never invent prices, discounts, COD, free shipping or stock claims; keep every text off the face and the outfit; "
+       }
+      ]
+     },
+     "no watermark."
     ]
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างปก",
@@ -57445,50 +57495,99 @@
            "className": "items-center gap-2 gap-y-2 flex-wrap",
            "card": [
             {
-             "el": "segmented",
-             "field": "fsCoverText",
-             "variant": "accent",
-             "className": "shrink-0",
-             "options": [
+             "el": "box",
+             "className": "flex flex-col gap-1.5 w-full",
+             "card": [
               {
-               "value": "",
-               "label": "OOTD หัวข้อใหญ่",
-               "icon": "wb_sunny"
+               "el": "text",
+               "value": "สไตล์ปก",
+               "className": "!text-[12.5px] font-black !text-[var(--ev-text)] !opacity-70 px-0.5"
               },
               {
-               "value": "sticker",
-               "label": "สติกเกอร์สตรีท",
-               "icon": "auto_awesome_motion"
+               "el": "grid-select",
+               "field": "fsCoverText",
+               "cols": 4,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "horizontal": true,
+               "className": "!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "น่ารักฟรุ้งฟริ้ง",
+                 "desc": "พาสเทล ประกาย โบว์",
+                 "icon": "favorite"
+                },
+                {
+                 "value": "minicute",
+                 "label": "มินิมอลน่ารัก",
+                 "desc": "สะอาด ดูแพง",
+                 "icon": "spa"
+                },
+                {
+                 "value": "korea",
+                 "label": "เกาหลีพาสเทล",
+                 "desc": "โพลารอยด์ ละมุน",
+                 "icon": "photo_camera"
+                },
+                {
+                 "value": "ootd",
+                 "label": "OOTD แดดทอง",
+                 "desc": "หัวข้อ 3D",
+                 "icon": "wb_sunny"
+                },
+                {
+                 "value": "sticker",
+                 "label": "สตรีทจัดเต็ม",
+                 "desc": "กราฟฟิตี้ นีออน",
+                 "icon": "auto_awesome_motion"
+                },
+                {
+                 "value": "none",
+                 "label": "ภาพล้วน",
+                 "desc": "ไม่มีตัวหนังสือ",
+                 "icon": "image"
+                },
+                {
+                 "value": "custom",
+                 "label": "กำหนดเอง",
+                 "desc": "พิมพ์สไตล์ที่อยากได้",
+                 "icon": "edit"
+                }
+               ]
               },
               {
-               "value": "none",
-               "label": "ภาพล้วน",
-               "icon": "image"
+               "el": "textarea",
+               "field": "fsCoverCustom",
+               "placeholder": "เช่น โทนชมพูพาสเทล มีโบว์กับหัวใจ ตัวหนังสือสีขาวน่ารัก ไม่รก",
+               "className": "!p-3 !rounded-xl !text-[15px] !leading-relaxed !min-h-[56px]",
+               "when": {
+                "op": "eq",
+                "a": "{values.fsCoverText}",
+                "b": "custom"
+               }
+              },
+              {
+               "el": "text",
+               "value": "ตัวหนังสือไทยบนปก AI เป็นคนเขียน อาจสะกดเพี้ยนบางคำ",
+               "className": "!text-[11.5px] opacity-45 px-0.5",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{values.fsCoverText}",
+                 "b": "none"
+                }
+               }
               }
              ]
             },
             {
-             "el": "text",
-             "value": "ตัวหนังสือไทย AI เขียน อาจสะกดเพี้ยน",
-             "className": "!text-[11.5px] opacity-45 flex-1 min-w-[120px] leading-snug",
-             "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{values.fsCoverText}",
-               "b": "none"
-              }
-             }
-            },
-            {
              "el": "box",
              "className": "flex-1",
-             "card": [],
-             "when": {
-              "op": "eq",
-              "a": "{values.fsCoverText}",
-              "b": "none"
-             }
+             "card": []
             },
             {
              "el": "gen-phase",
