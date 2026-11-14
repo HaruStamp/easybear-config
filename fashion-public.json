@@ -93,7 +93,8 @@
   "fsPetSrc": "",
   "fsPetKind": "",
   "fsCoverText": "",
-  "fsCoverCustom": ""
+  "fsCoverCustom": "",
+  "__coverModal": ""
  },
  "collections": {
   "control": {
@@ -60398,112 +60399,106 @@
            ]
           },
           {
-           "el": "box",
-           "className": "flex flex-col gap-1.5",
+           "el": "row",
+           "className": "items-center gap-3 gap-y-2 flex-wrap",
            "card": [
             {
-             "el": "row",
-             "className": "items-baseline justify-between gap-2 px-0.5",
-             "style": {
-              "flexWrap": "nowrap"
-             },
+             "el": "box",
+             "className": "flex flex-col gap-1.5 flex-1 min-w-[160px]",
              "card": [
               {
-               "el": "text",
-               "value": {
-                "op": "concat",
-                "parts": [
-                 {
-                  "op": "count",
-                  "from": "tasks",
-                  "slot": "cover"
-                 },
-                 " / ",
-                 {
-                  "op": "count",
-                  "from": "tasks",
-                  "slot": "video"
-                 },
-                 " ปก"
-                ]
+               "el": "row",
+               "className": "items-baseline justify-between gap-2 px-0.5",
+               "style": {
+                "flexWrap": "nowrap"
                },
-               "className": "!text-[13px] font-bold !text-[var(--ev-text)] !opacity-80 tabular-nums"
-              },
-              {
-               "el": "text",
-               "value": {
-                "op": "concat",
-                "parts": [
-                 {
-                  "op": "round",
-                  "a": {
-                   "op": "mul",
-                   "a": {
-                    "op": "div",
+               "card": [
+                {
+                 "el": "text",
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "count",
+                    "from": "tasks",
+                    "slot": "cover"
+                   },
+                   " / ",
+                   {
+                    "op": "count",
+                    "from": "tasks",
+                    "slot": "video"
+                   },
+                   " ปก"
+                  ]
+                 },
+                 "className": "!text-[13px] font-bold !text-[var(--ev-text)] !opacity-80 tabular-nums"
+                },
+                {
+                 "el": "text",
+                 "value": {
+                  "op": "concat",
+                  "parts": [
+                   {
+                    "op": "round",
                     "a": {
-                     "op": "count",
-                     "from": "tasks",
-                     "slot": "cover"
-                    },
-                    "b": {
-                     "op": "max",
+                     "op": "mul",
                      "a": {
-                      "op": "count",
-                      "from": "tasks",
-                      "slot": "video"
+                      "op": "div",
+                      "a": {
+                       "op": "count",
+                       "from": "tasks",
+                       "slot": "cover"
+                      },
+                      "b": {
+                       "op": "max",
+                       "a": {
+                        "op": "count",
+                        "from": "tasks",
+                        "slot": "video"
+                       },
+                       "b": 1
+                      }
                      },
-                     "b": 1
+                     "b": 100
                     }
                    },
-                   "b": 100
+                   "%"
+                  ]
+                 },
+                 "className": "!text-[12.5px] font-black !text-[var(--ev-accent)] !opacity-100 tabular-nums"
+                }
+               ]
+              },
+              {
+               "el": "progress-bar",
+               "value": {
+                "op": "round",
+                "a": {
+                 "op": "mul",
+                 "a": {
+                  "op": "div",
+                  "a": {
+                   "op": "count",
+                   "from": "tasks",
+                   "slot": "cover"
+                  },
+                  "b": {
+                   "op": "max",
+                   "a": {
+                    "op": "count",
+                    "from": "tasks",
+                    "slot": "video"
+                   },
+                   "b": 1
                   }
                  },
-                 "%"
-                ]
-               },
-               "className": "!text-[12.5px] font-black !text-[var(--ev-accent)] !opacity-100 tabular-nums"
-              }
-             ]
-            },
-            {
-             "el": "progress-bar",
-             "value": {
-              "op": "round",
-              "a": {
-               "op": "mul",
-               "a": {
-                "op": "div",
-                "a": {
-                 "op": "count",
-                 "from": "tasks",
-                 "slot": "cover"
-                },
-                "b": {
-                 "op": "max",
-                 "a": {
-                  "op": "count",
-                  "from": "tasks",
-                  "slot": "video"
-                 },
-                 "b": 1
+                 "b": 100
                 }
                },
-               "b": 100
+               "className": "!h-2.5 w-full"
               }
-             },
-             "className": "!h-2.5 w-full"
-            }
-           ]
-          },
-          {
-           "el": "row",
-           "className": "items-center gap-2 gap-y-2 flex-wrap",
-           "card": [
-            {
-             "el": "input",
-             "field": "fsCoverCustom",
-             "placeholder": "สไตล์ที่อยากได้เอง (ไม่บังคับ) เช่น ชมพูพาสเทล มีโบว์ ไม่รก",
-             "className": "flex-1 min-w-[180px] !h-10 !px-3 !rounded-xl !text-[14px]"
+             ]
             },
             {
              "el": "gen-button",
@@ -60549,13 +60544,12 @@
                ]
               },
               {
-               "label": "กำหนดเอง",
-               "desc": "ตามที่พิมพ์ไว้ในการ์ดปกคลิป",
+               "label": "กำหนดสไตล์เอง",
+               "desc": "พิมพ์สไตล์ปกที่ต้องการ แล้วกดตกลง",
                "icon": "edit",
-               "ops": [
-                "mnCover_custom"
-               ],
-               "when": "fsCoverCustom!="
+               "action": "set",
+               "to": "__coverModal",
+               "value": "1"
               }
              ],
              "icon": "auto_awesome",
@@ -60615,6 +60609,84 @@
                }
               ]
              }
+            }
+           ]
+          },
+          {
+           "el": "modal",
+           "field": "__coverModal",
+           "label": "กำหนดสไตล์ปกเอง",
+           "when": {
+            "op": "eq",
+            "a": "{values.__coverModal}",
+            "b": "1"
+           },
+           "card": [
+            {
+             "el": "text",
+             "value": "พิมพ์สไตล์ที่อยากได้ เช่น โทนสี บรรยากาศ ของตกแต่ง ฟอนต์ — AI จะทำปกตามนี้ทุกคลิปที่ยังไม่มีปก",
+             "className": "!text-[13px] opacity-60 leading-snug"
+            },
+            {
+             "el": "textarea",
+             "field": "fsCoverCustom",
+             "placeholder": "เช่น โทนชมพูพาสเทล มีโบว์กับหัวใจเล็ก ๆ ตัวหนังสือสีขาวน่ารัก ไม่รก",
+             "className": "!p-3 !rounded-xl !text-[15px] !leading-relaxed !min-h-[96px]"
+            },
+            {
+             "el": "row",
+             "className": "gap-2 justify-end",
+             "style": {
+              "flexWrap": "nowrap"
+             },
+             "card": [
+              {
+               "el": "button",
+               "action": "set",
+               "to": "__coverModal",
+               "value": "",
+               "label": "ยกเลิก",
+               "variant": "ghost",
+               "className": "justify-center !h-10 !rounded-xl !text-[14px] font-bold !px-4 border border-[var(--ev-border)]"
+              },
+              {
+               "el": "gen-phase",
+               "ops": [
+                "mnCover_custom"
+               ],
+               "pageKey": "__coverModal",
+               "to": "",
+               "icon": "auto_awesome",
+               "variant": "solid",
+               "label": {
+                "op": "concat",
+                "parts": [
+                 "ตกลง สร้างปก ",
+                 {
+                  "op": "sub",
+                  "a": {
+                   "op": "count",
+                   "from": "tasks",
+                   "slot": "video"
+                  },
+                  "b": {
+                   "op": "count",
+                   "from": "tasks",
+                   "slot": "cover"
+                  }
+                 },
+                 " ใบ"
+                ]
+               },
+               "disabledWhen": {
+                "op": "eq",
+                "a": "{values.fsCoverCustom}",
+                "b": ""
+               },
+               "reason": "พิมพ์สไตล์ที่ต้องการก่อน",
+               "className": "justify-center !h-10 !rounded-xl !text-[14px] font-bold !px-4 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white"
+              }
+             ]
             }
            ]
           }
