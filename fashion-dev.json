@@ -91,7 +91,8 @@
   "fsPet": "",
   "fsPetDesc": "",
   "fsPetSrc": "",
-  "fsPetKind": ""
+  "fsPetKind": "",
+  "fsCoverText": ""
  },
  "collections": {
   "control": {
@@ -403,7 +404,8 @@
     "board5",
     "video5",
     "board6",
-    "video6"
+    "video6",
+    "cover"
    ],
    "idPrefix": "t"
   },
@@ -25409,6 +25411,122 @@
     "then": "{item.slots.board}"
    },
    "timeoutMs": 300000
+  },
+  {
+   "id": "mnCover",
+   "type": "image",
+   "over": "tasks",
+   "out": "cover",
+   "model": "🍌 Nano Banana 2.1",
+   "aspectRatio": "9:16",
+   "refs": {
+    "op": "lookupRefs",
+    "from": "tasks",
+    "by": "{item.id}",
+    "slot": "board",
+    "also": [
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image"
+     }
+    ]
+   },
+   "prompt": {
+    "op": "concat",
+    "parts": [
+     "Scroll-stopping vertical 9:16 COVER photo (thumbnail) for a Thai fashion review clip. Attached image 1 = a frame of this clip: keep the SAME model, the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given) and the SAME place and light. New eye-catching pose, whole outfit clearly visible, clean uncluttered composition, magazine-cover feel, real photo look — NOT CGI.\n",
+     {
+      "op": "lookup",
+      "table": "fsFaceEN",
+      "key": {
+       "op": "concat",
+       "parts": [
+        {
+         "op": "lookup",
+         "table": "fsFaceEff",
+         "key": {
+          "op": "concat",
+          "parts": [
+           "{item.mFace}|{values.fsFace}|",
+           {
+            "op": "cond",
+            "when": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.mAge}",
+              "b": ""
+             }
+            },
+            "then": "{item.mAge}",
+            "else": "{values.fsAge}"
+           }
+          ]
+         },
+         "fallback": ""
+        },
+        {
+         "op": "lookup",
+         "table": "fsKidTag",
+         "key": {
+          "op": "cond",
+          "when": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.mAge}",
+            "b": ""
+           }
+          },
+          "then": "{item.mAge}",
+          "else": "{values.fsAge}"
+         },
+         "fallback": ""
+        },
+        "|{item.clipStyle}"
+       ]
+      },
+      "fallback": ""
+     },
+     "\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsCoverText}",
+          "b": "none"
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "TEXT: one big bold Thai headline in the top third, spelled exactly: \"",
+          "{item.productName}",
+          "\" — modern rounded Thai font, white with a soft dark shadow, fully readable, nothing else written, keep it off the face and outfit."
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "none"
+        },
+        "value": "NO text, letters, logos or watermarks anywhere."
+       }
+      ]
+     }
+    ]
+   },
+   "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างปก",
+   "logDone": "[{item.productName} คลิป {item.clipIndex}] ปกเสร็จแล้ว",
+   "timeoutMs": 180000
   }
  ],
  "stages": [
@@ -56947,6 +57065,41 @@
              ]
             }
            ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "el": "text",
+             "value": "ปกคลิป (กดสร้างทีละคลิป · ใช้เครดิตภาพ 1 ใบต่อปก)",
+             "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+            },
+            {
+             "el": "grid-select",
+             "field": "fsCoverText",
+             "cols": 2,
+             "mobile": {
+              "cols": 2
+             },
+             "contained": true,
+             "className": "!min-h-[48px] @[420px]:!min-h-0",
+             "options": [
+              {
+               "value": "",
+               "label": "มีหัวข้อบนปก",
+               "desc": "ชื่อคลิปภาษาไทย (AI เขียน อาจสะกดเพี้ยนบางคำ)",
+               "icon": "title"
+              },
+              {
+               "value": "none",
+               "label": "ไม่มีตัวหนังสือ",
+               "desc": "ภาพล้วน ใส่ข้อความเองตอนโพสต์",
+               "icon": "image"
+              }
+             ]
+            }
+           ]
           }
          ],
          "when": {
@@ -57337,6 +57490,59 @@
                  "label": "คัดลอกแคปชัน",
                  "when": "item.caption!=",
                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold"
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5 mt-1.5",
+                 "card": [
+                  {
+                   "el": "gen-button",
+                   "op": "mnCover",
+                   "label": "สร้างปก",
+                   "icon": "image",
+                   "variant": "solid",
+                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold",
+                   "when": "item.slots.cover="
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex gap-2 items-end",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.cover}",
+                     "aspect": "9:16",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)] w-[88px] shrink-0"
+                    },
+                    {
+                     "el": "box",
+                     "className": "flex-1 min-w-0 flex flex-col gap-1.5 justify-end",
+                     "card": [
+                      {
+                       "el": "download-button",
+                       "to": "{item.slots.cover}",
+                       "label": "ดาวน์โหลดปก",
+                       "icon": "download",
+                       "variant": "solid",
+                       "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold"
+                      },
+                      {
+                       "el": "retry-button",
+                       "op": "mnCover",
+                       "label": "สร้างปกใหม่",
+                       "icon": "refresh",
+                       "variant": "ghost",
+                       "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold"
+                      }
+                     ]
+                    }
+                   ],
+                   "when": "item.slots.cover!="
+                  }
+                 ]
                 }
                ]
               }
@@ -57835,7 +58041,8 @@
    "mnVideo5": "กำลังสร้างวิดีโอ",
    "mnBoard6": "กำลังวาดสตอรีบอร์ด",
    "mnVideo6": "กำลังสร้างวิดีโอ",
-   "fsModel": "กำลังวาดนางแบบ"
+   "fsModel": "กำลังวาดนางแบบ",
+   "mnCover": "กำลังสร้างปก"
   },
   "sceneEN": {
    "10|1": "Scene 1 (0-2s)",
@@ -57931,7 +58138,8 @@
    "mnVideo5": "movie",
    "mnBoard6": "image",
    "mnVideo6": "movie",
-   "fsModel": "face"
+   "fsModel": "face",
+   "mnCover": "image"
   },
   "fsStylePlan": {
    "mirror": "MIRROR SELFIE — ONE continuous take for the whole clip, no cuts. The model stands in front of a full-length mirror holding a smartphone; we see her reflection head-to-toe, like a real seller's OOTD video. Moves stay small and natural: shift weight, turn the body left and right (max ~45°) to show the side silhouette, smooth the fabric, touch a detail, hand on hip, one small step back. She talks to the reflection the whole time. camN = only small framing drift, never a new angle. If the chosen place has no mirror, put a full-length standing mirror in it.",
