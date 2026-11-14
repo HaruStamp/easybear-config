@@ -25436,7 +25436,7 @@
    "prompt": {
     "op": "concat",
     "parts": [
-     "Scroll-stopping vertical 9:16 COVER photo (thumbnail) for a Thai fashion review clip. Attached image 1 = a frame of this clip: keep the SAME model, the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given) and the SAME place and light. New eye-catching pose, whole outfit clearly visible, clean uncluttered composition, magazine-cover feel, real photo look — NOT CGI.\n",
+     "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -25497,19 +25497,35 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{values.fsCoverText}",
-          "b": "none"
-         }
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": ""
         },
         "value": {
          "op": "concat",
          "parts": [
-          "TEXT: one big bold Thai headline in the top third, spelled exactly: \"",
+          "LOOK: bright OOTD cover — background = the same place as image 1, brighter, warm golden sunlight flare, soft sparkles and glints. HEADLINE: huge bold 3D Thai title across the top third, 2-3 lines, spelled exactly: \"",
           "{item.productName}",
-          "\" — modern rounded Thai font, white with a soft dark shadow, fully readable, nothing else written, keep it off the face and outfit."
+          "\" — chunky rounded Thai display font, white with a thick orange-gold outline and drop shadow, the last word in a fiery orange-red gradient. Add 2 small white rounded sticker labels with very short Thai phrases taken ONLY from this caption: \"",
+          "{item.caption}",
+          "\", plus one hand-drawn orange arrow pointing at the outfit. Premium, clean, high contrast."
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{values.fsCoverText}",
+         "b": "sticker"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "LOOK: bold Y2K streetwear sticker collage — spray-paint graffiti splashes and drips, checkerboard corners, neon lime + electric blue palette, lime flames, sparkle stars, torn paper and retro cassette-tape stickers. HEADLINE: huge bold Thai title at the top, neon lime and electric blue letters with thick black outline, spelled exactly: \"",
+          "{item.productName}",
+          "\". Around the person place 4-5 small Thai sticker labels (black, white and lime rounded tags, bold font) with short selling points taken ONLY from this caption: \"",
+          "{item.caption}",
+          "\". Energetic and maximalist but every label readable."
          ]
         }
        },
@@ -25519,7 +25535,24 @@
          "a": "{values.fsCoverText}",
          "b": "none"
         },
-        "value": "NO text, letters, logos or watermarks anywhere."
+        "value": "LOOK: clean editorial cover — the same place as image 1, brighter and polished. NO text, letters, logos or watermarks anywhere."
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsCoverText}",
+          "b": "none"
+         }
+        },
+        "value": "\nRULES: Thai text spelled exactly, never mirrored; never invent prices, discounts, COD, free shipping or stock claims; keep every text off the face and the outfit; no watermark."
        }
       ]
      }
@@ -57419,8 +57452,13 @@
              "options": [
               {
                "value": "",
-               "label": "มีหัวข้อ",
-               "icon": "title"
+               "label": "OOTD หัวข้อใหญ่",
+               "icon": "wb_sunny"
+              },
+              {
+               "value": "sticker",
+               "label": "สติกเกอร์สตรีท",
+               "icon": "auto_awesome_motion"
               },
               {
                "value": "none",
@@ -57431,12 +57469,15 @@
             },
             {
              "el": "text",
-             "value": "หัวข้อไทย AI เขียน อาจสะกดเพี้ยน",
+             "value": "ตัวหนังสือไทย AI เขียน อาจสะกดเพี้ยน",
              "className": "!text-[11.5px] opacity-45 flex-1 min-w-[120px] leading-snug",
              "when": {
-              "op": "eq",
-              "a": "{values.fsCoverText}",
-              "b": ""
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.fsCoverText}",
+               "b": "none"
+              }
              }
             },
             {
@@ -57444,12 +57485,9 @@
              "className": "flex-1",
              "card": [],
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{values.fsCoverText}",
-               "b": ""
-              }
+              "op": "eq",
+              "a": "{values.fsCoverText}",
+              "b": "none"
              }
             },
             {
