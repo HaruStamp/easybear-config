@@ -57518,28 +57518,25 @@
                   ]
                  },
                  "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "and",
-                   "list": [
-                    {
-                     "op": "not",
-                     "a": {
-                      "op": "eq",
-                      "a": "{item.slots.cover}",
-                      "b": ""
-                     }
-                    },
-                    {
-                     "op": "not",
-                     "a": {
-                      "op": "eq",
-                      "a": "{item.cv}",
-                      "b": "video"
-                     }
+                  "op": "and",
+                  "list": [
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "cover"
                     }
-                   ]
-                  }
+                   },
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "caption"
+                    }
+                   }
+                  ]
                  }
                 },
                 {
@@ -57554,19 +57551,16 @@
                   "op": "and",
                   "list": [
                    {
-                    "op": "not",
-                    "a": {
-                     "op": "eq",
-                     "a": "{item.slots.cover}",
-                     "b": ""
-                    }
+                    "op": "eq",
+                    "a": "{item.cv}",
+                    "b": "cover"
                    },
                    {
                     "op": "not",
                     "a": {
                      "op": "eq",
-                     "a": "{item.cv}",
-                     "b": "video"
+                     "a": "{item.slots.cover}",
+                     "b": ""
                     }
                    }
                   ]
@@ -57595,6 +57589,162 @@
                    ]
                   }
                  ]
+                },
+                {
+                 "el": "row",
+                 "className": "absolute bottom-2 left-2 right-2 z-20 gap-1.5",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "when": {
+                  "op": "and",
+                  "list": [
+                   {
+                    "op": "eq",
+                    "a": "{item.cv}",
+                    "b": "cover"
+                   },
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.slots.cover}",
+                     "b": ""
+                    }
+                   }
+                  ]
+                 },
+                 "card": [
+                  {
+                   "el": "download-button",
+                   "to": "{item.slots.cover}",
+                   "label": "โหลดปก",
+                   "icon": "download",
+                   "variant": "solid",
+                   "className": "flex-1 min-w-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !px-2 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white shadow-md"
+                  },
+                  {
+                   "el": "retry-button",
+                   "op": "mnCover",
+                   "label": "สร้างปกใหม่",
+                   "iconOnly": true,
+                   "icon": "refresh",
+                   "variant": "ghost",
+                   "className": "!h-10 !w-10 !rounded-xl shrink-0 justify-center !bg-white/90 !text-[#17253a] !border-0 shadow-md"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "w-full aspect-[9/16] rounded-[18px] ring-1 ring-[var(--ev-border)] overflow-hidden bg-[var(--ev-surface)] flex flex-col items-center justify-center gap-1.5 p-3 !ring-dashed border border-dashed border-[var(--ev-border)] !ring-0",
+                 "card": [
+                  {
+                   "el": "icon",
+                   "icon": "add_photo_alternate",
+                   "textSize": "text-[34px]",
+                   "className": "!text-[var(--ev-accent)] opacity-80 leading-none"
+                  },
+                  {
+                   "el": "text",
+                   "value": "ยังไม่มีปก",
+                   "className": "!text-[14px] font-black !text-[var(--ev-text)] !opacity-90"
+                  },
+                  {
+                   "el": "text",
+                   "value": "ภาพหน้าปก 9:16 จากคลิปนี้ — นางแบบ ชุด ฉากเดียวกัน",
+                   "className": "!text-[12px] opacity-55 text-center leading-snug px-2"
+                  },
+                  {
+                   "el": "gen-button",
+                   "op": "mnCover",
+                   "label": "สร้างปก",
+                   "icon": "auto_awesome",
+                   "variant": "solid",
+                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !px-5 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white mt-1"
+                  },
+                  {
+                   "el": "text",
+                   "value": "ใช้เครดิตภาพ 1 ใบ",
+                   "className": "!text-[11px] opacity-45"
+                  }
+                 ],
+                 "when": {
+                  "op": "and",
+                  "list": [
+                   {
+                    "op": "eq",
+                    "a": "{item.cv}",
+                    "b": "cover"
+                   },
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "not",
+                     "a": {
+                      "op": "eq",
+                      "a": "{item.slots.cover}",
+                      "b": ""
+                     }
+                    }
+                   }
+                  ]
+                 }
+                },
+                {
+                 "el": "box",
+                 "className": "w-full aspect-[9/16] rounded-[18px] ring-1 ring-[var(--ev-border)] overflow-hidden bg-[var(--ev-surface)] p-3 flex flex-col gap-2.5",
+                 "card": [
+                  {
+                   "el": "row",
+                   "className": "items-center gap-1.5 shrink-0",
+                   "style": {
+                    "flexWrap": "nowrap"
+                   },
+                   "card": [
+                    {
+                     "el": "icon",
+                     "icon": "chat",
+                     "textSize": "text-[17px]",
+                     "className": "!text-[var(--ev-accent)] leading-none"
+                    },
+                    {
+                     "el": "text",
+                     "value": "แคปชัน",
+                     "className": "!text-[13px] font-black !text-[var(--ev-text)] !opacity-85"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex-1 min-h-0 overflow-y-auto flex flex-col gap-2 pr-0.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "{item.caption}",
+                     "className": "!text-[14px] @[640px]:!text-[13.5px] !text-[var(--ev-text)] !opacity-90 leading-relaxed whitespace-pre-line"
+                    },
+                    {
+                     "el": "text",
+                     "value": "{item.hashtags}",
+                     "className": "!text-[13px] !text-[var(--ev-accent)] !opacity-100 font-bold leading-relaxed",
+                     "when": "item.hashtags!="
+                    }
+                   ]
+                  },
+                  {
+                   "el": "copy-button",
+                   "value": "{item.caption}\n\n{item.hashtags}",
+                   "label": "คัดลอกแคปชัน",
+                   "className": "w-full shrink-0 justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white",
+                   "icon": "content_copy",
+                   "variant": "solid"
+                  }
+                 ],
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.cv}",
+                  "b": "caption"
+                 }
                 },
                 {
                  "el": "row",
@@ -57651,7 +57801,28 @@
                     "b": ""
                    }
                   }
-                 ]
+                 ],
+                 "when": {
+                  "op": "and",
+                  "list": [
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "cover"
+                    }
+                   },
+                   {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "caption"
+                    }
+                   }
+                  ]
+                 }
                 },
                 {
                  "el": "button",
@@ -57683,157 +57854,6 @@
                   "b": "true"
                  },
                  "className": "!absolute top-2 right-2 z-30 !w-9 !h-9 !p-0 !rounded-lg !bg-[var(--ev-accent)] !text-white justify-center !gap-0 !border-0 !min-h-[48px] @[420px]:!min-h-0"
-                },
-                {
-                 "el": "row",
-                 "className": "absolute top-2 right-12 z-30 gap-0.5 p-0.5 rounded-lg bg-black/55 backdrop-blur-sm",
-                 "style": {
-                  "flexWrap": "nowrap"
-                 },
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.slots.cover}",
-                   "b": ""
-                  }
-                 },
-                 "card": [
-                  {
-                   "el": "button",
-                   "action": "setField",
-                   "to": "cv",
-                   "value": "video",
-                   "label": "ดูวิดีโอ",
-                   "iconOnly": true,
-                   "icon": "movie",
-                   "variant": "ghost",
-                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-white !text-[#17253a] shadow-sm",
-                   "when": {
-                    "op": "not",
-                    "a": {
-                     "op": "and",
-                     "list": [
-                      {
-                       "op": "not",
-                       "a": {
-                        "op": "eq",
-                        "a": "{item.slots.cover}",
-                        "b": ""
-                       }
-                      },
-                      {
-                       "op": "not",
-                       "a": {
-                        "op": "eq",
-                        "a": "{item.cv}",
-                        "b": "video"
-                       }
-                      }
-                     ]
-                    }
-                   }
-                  },
-                  {
-                   "el": "button",
-                   "action": "setField",
-                   "to": "cv",
-                   "value": "video",
-                   "label": "ดูวิดีโอ",
-                   "iconOnly": true,
-                   "icon": "movie",
-                   "variant": "ghost",
-                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-transparent !text-white hover:!bg-white/20",
-                   "when": {
-                    "op": "and",
-                    "list": [
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.slots.cover}",
-                       "b": ""
-                      }
-                     },
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.cv}",
-                       "b": "video"
-                      }
-                     }
-                    ]
-                   }
-                  },
-                  {
-                   "el": "button",
-                   "action": "setField",
-                   "to": "cv",
-                   "value": "cover",
-                   "label": "ดูปก",
-                   "iconOnly": true,
-                   "icon": "imagesmode",
-                   "variant": "ghost",
-                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-white !text-[#17253a] shadow-sm",
-                   "when": {
-                    "op": "and",
-                    "list": [
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.slots.cover}",
-                       "b": ""
-                      }
-                     },
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.cv}",
-                       "b": "video"
-                      }
-                     }
-                    ]
-                   }
-                  },
-                  {
-                   "el": "button",
-                   "action": "setField",
-                   "to": "cv",
-                   "value": "cover",
-                   "label": "ดูปก",
-                   "iconOnly": true,
-                   "icon": "imagesmode",
-                   "variant": "ghost",
-                   "className": "!w-8 !h-8 !p-0 !rounded-md justify-center !gap-0 !border-0 !min-h-0 transition !bg-transparent !text-white hover:!bg-white/20",
-                   "when": {
-                    "op": "not",
-                    "a": {
-                     "op": "and",
-                     "list": [
-                      {
-                       "op": "not",
-                       "a": {
-                        "op": "eq",
-                        "a": "{item.slots.cover}",
-                        "b": ""
-                       }
-                      },
-                      {
-                       "op": "not",
-                       "a": {
-                        "op": "eq",
-                        "a": "{item.cv}",
-                        "b": "video"
-                       }
-                      }
-                     ]
-                    }
-                   }
-                  }
-                 ]
                 }
                ]
               },
@@ -57842,28 +57862,21 @@
                "className": "flex flex-col gap-2 pt-2",
                "card": [
                 {
-                 "el": "group",
-                 "collapsible": true,
-                 "className": "!border-0 !p-0 !gap-2 !rounded-none !bg-transparent",
-                 "headClass": "w-full",
-                 "chevClass": "-ml-9 w-7 flex items-center justify-center pointer-events-none !text-[var(--ev-text)] opacity-60 transition-transform",
-                 "head": [
+                 "el": "row",
+                 "className": "gap-0.5 p-0.5 rounded-xl bg-[var(--ev-surface2)] border border-[var(--ev-border)]",
+                 "style": {
+                  "flexWrap": "nowrap"
+                 },
+                 "card": [
                   {
-                   "el": "gen-button",
-                   "op": "mnCover",
-                   "label": "สร้างปก",
-                   "icon": "add_photo_alternate",
-                   "variant": "outline-accent",
-                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2",
-                   "when": "item.slots.cover="
-                  },
-                  {
-                   "el": "download-button",
-                   "to": "{item.slots.cover}",
-                   "label": "โหลดปก",
-                   "icon": "download",
-                   "variant": "solid",
-                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2 !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white",
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "video",
+                   "label": "วิดีโอ",
+                   "icon": "movie",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-[var(--ev-surface)] !text-[var(--ev-accent)] shadow-sm",
                    "when": {
                     "op": "and",
                     "list": [
@@ -57871,8 +57884,8 @@
                       "op": "not",
                       "a": {
                        "op": "eq",
-                       "a": "{item.slots.cover}",
-                       "b": ""
+                       "a": "{item.cv}",
+                       "b": "cover"
                       }
                      },
                      {
@@ -57880,7 +57893,7 @@
                       "a": {
                        "op": "eq",
                        "a": "{item.cv}",
-                       "b": "video"
+                       "b": "caption"
                       }
                      }
                     ]
@@ -57890,101 +57903,101 @@
                    "el": "button",
                    "action": "setField",
                    "to": "cv",
-                   "value": "cover",
-                   "label": "ดูปก",
-                   "icon": "imagesmode",
-                   "variant": "outline-accent",
-                   "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold flex-1 min-w-0 !px-2",
+                   "value": "video",
+                   "label": "วิดีโอ",
+                   "icon": "movie",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-transparent !text-[var(--ev-text)] opacity-60 hover:opacity-100",
                    "when": {
-                    "op": "and",
-                    "list": [
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "eq",
-                       "a": "{item.slots.cover}",
-                       "b": ""
+                    "op": "not",
+                    "a": {
+                     "op": "and",
+                     "list": [
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.cv}",
+                        "b": "cover"
+                       }
+                      },
+                      {
+                       "op": "not",
+                       "a": {
+                        "op": "eq",
+                        "a": "{item.cv}",
+                        "b": "caption"
+                       }
                       }
-                     },
-                     {
-                      "op": "not",
-                      "a": {
-                       "op": "and",
-                       "list": [
-                        {
-                         "op": "not",
-                         "a": {
-                          "op": "eq",
-                          "a": "{item.slots.cover}",
-                          "b": ""
-                         }
-                        },
-                        {
-                         "op": "not",
-                         "a": {
-                          "op": "eq",
-                          "a": "{item.cv}",
-                          "b": "video"
-                         }
-                        }
-                       ]
-                      }
-                     }
-                    ]
+                     ]
+                    }
                    }
                   },
                   {
-                   "el": "text",
-                   "value": "ดูแคปชัน",
-                   "className": "flex-1 min-w-0 h-10 rounded-xl border border-[var(--ev-border)] bg-[var(--ev-surface)] flex items-center justify-center gap-1.5 !text-[13.5px] font-bold !text-[var(--ev-text)] !opacity-100 hover:bg-[var(--ev-surface2)] transition select-none whitespace-nowrap px-2 !pr-8",
-                   "icon": "chat"
-                  }
-                 ],
-                 "card": [
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "cover",
+                   "label": "ปก",
+                   "icon": "imagesmode",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-[var(--ev-surface)] !text-[var(--ev-accent)] shadow-sm",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.cv}",
+                    "b": "cover"
+                   }
+                  },
                   {
-                   "el": "box",
-                   "className": "rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-surface)] p-3 flex flex-col gap-2 shadow-sm",
-                   "card": [
-                    {
-                     "el": "row",
-                     "className": "items-center gap-1.5",
-                     "style": {
-                      "flexWrap": "nowrap"
-                     },
-                     "card": [
-                      {
-                       "el": "icon",
-                       "icon": "chat",
-                       "textSize": "text-[16px]",
-                       "className": "!text-[var(--ev-accent)] leading-none"
-                      },
-                      {
-                       "el": "text",
-                       "value": "แคปชัน",
-                       "className": "!text-[12.5px] font-black !text-[var(--ev-text)] !opacity-80 tracking-wide"
-                      }
-                     ]
-                    },
-                    {
-                     "el": "text",
-                     "value": "{item.caption}",
-                     "className": "!text-[14px] @[640px]:!text-[13.5px] !text-[var(--ev-text)] !opacity-90 leading-relaxed whitespace-pre-line"
-                    },
-                    {
-                     "el": "text",
-                     "value": "{item.hashtags}",
-                     "className": "!text-[13px] !text-[var(--ev-accent)] !opacity-100 font-bold leading-relaxed",
-                     "when": "item.hashtags!="
-                    },
-                    {
-                     "el": "copy-button",
-                     "value": "{item.caption}\n\n{item.hashtags}",
-                     "label": "คัดลอกแคปชัน",
-                     "className": "w-full justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#e64980] !to-[#d6336c] !text-white mt-1",
-                     "icon": "content_copy",
-                     "variant": "solid"
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "cover",
+                   "label": "ปก",
+                   "icon": "imagesmode",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-transparent !text-[var(--ev-text)] opacity-60 hover:opacity-100",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "cover"
                     }
-                   ]
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "caption",
+                   "label": "แคปชัน",
+                   "icon": "chat",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-[var(--ev-surface)] !text-[var(--ev-accent)] shadow-sm",
+                   "when": {
+                    "op": "eq",
+                    "a": "{item.cv}",
+                    "b": "caption"
+                   }
+                  },
+                  {
+                   "el": "button",
+                   "action": "setField",
+                   "to": "cv",
+                   "value": "caption",
+                   "label": "แคปชัน",
+                   "icon": "chat",
+                   "variant": "ghost",
+                   "className": "flex-1 min-w-0 justify-center !h-9 !rounded-lg !text-[12.5px] font-bold !px-1 !gap-1 !border-0 !min-h-0 transition !bg-transparent !text-[var(--ev-text)] opacity-60 hover:opacity-100",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.cv}",
+                     "b": "caption"
+                    }
+                   }
                   }
                  ]
                 }
