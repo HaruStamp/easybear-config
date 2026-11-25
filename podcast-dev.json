@@ -1916,7 +1916,7 @@
         "parts": [
          {
           "when": "values.svLang=English",
-          "value": "🔴 บทพูดภาษาอังกฤษ (ผู้ใช้เลือก English · กฎนี้มาก่อนกฎจังหวะพูดและภาษาพูดไทยข้างบน): vo ทุกฉากเป็นภาษาอังกฤษพูดธรรมชาติแบบคุยกับเพื่อน ไม่มีคำลงท้ายไทย · ความยาวนับเป็นคำอังกฤษ ไม่ใช่ตัวอักษรไทย — ฉากละ 4-5 คำ (จังหวะช้า 3-4 · รัว 5-6) · ฉากสุดท้ายของทุกช่วง 10 วินาที 2-3 คำ และจบประโยค · hostVoiceEN/guestVoiceEN ห้ามระบุเชื้อชาติหรือภาษา (ห้ามคำว่า Thai) · hook เป็นภาษาอังกฤษ\n"
+          "value": "🔴 บทพูดภาษาอังกฤษ (ผู้ใช้เลือก English · กฎนี้มาก่อนกฎจังหวะพูดและภาษาพูดไทยข้างบน): vo ทุกฉากเป็นภาษาอังกฤษพูดธรรมชาติแบบคุยกับเพื่อน ไม่มีคำลงท้ายไทย · ความยาวนับเป็นคำอังกฤษ ไม่ใช่ตัวอักษรไทย — ฉากละ 4-5 คำ (จังหวะช้า 3-4 · รัว 5-6) · ฉากสุดท้ายของทุกช่วง 10 วินาที 2-3 คำ และจบประโยค · hostVoiceEN/guestVoiceEN ห้ามระบุเชื้อชาติหรือภาษา (ห้ามคำว่า Thai) · hook เป็นภาษาอังกฤษ · ov ทุกช่อง (ข้อความบนจอ) · productName · synopsis · caption · coverTitle เป็นภาษาอังกฤษ (ชนะคำว่า ไทย/ตัวอักษรไทย ในรูปแบบคำตอบ · coverTitle ≤ 4 คำ) · hashtags อังกฤษล้วน\n"
          }
         ]
        }
@@ -9470,15 +9470,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -11005,15 +11080,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -12540,15 +12690,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -14075,15 +14300,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -15610,15 +15910,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -17140,15 +17515,90 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "ใช้ข้อความที่บทให้ของช่องนั้นเท่านั้น (ช่องไหนไม่มี = ภาพล้วน ห้ามแต่งเอง) บรรทัดเดียว ฟอนต์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) ไม่ทับจุดที่กำลังทำ"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องตอนเปิด",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ {values.svText} (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+         "value": {
+          "op": "concat",
+          "parts": [
+           "พิมพ์ทับลงบนภาพถ่ายในช่องแรกเท่านั้น ตามข้อความที่บทให้ (หัวเรื่อง) · **จัดวางให้เด่น: กว้างราว 70% ของช่อง สูงราว 12% ของช่อง 1-2 บรรทัด จัดชิดซ้าย วางที่ครึ่งบนของช่อง เว้นขอบซ้าย/บนราว 7% ของช่อง** · กรอบช่องแรกคือขอบเขต ห้ามยืดข้ามเส้นคั่นไปช่องอื่น ห้ามทำแถบสีคาดเต็มความกว้างหรือพื้นที่ว่างเหนือช่อง · วางบนส่วนที่ว่างของภาพ ไม่ทับจุดที่กำลังทำ · สไตล์ ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " (ไม่ระบุสี = หัวข้อตัวอักษรสีเข้มที่เข้ากับโทนสีของคลิป) · ช่องอื่นภาพล้วน"
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -18346,11 +18796,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -19753,11 +20281,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -19801,7 +20407,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov26}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov26}\""
+          ]
+         }
         }
        ]
       },
@@ -19841,7 +20459,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov27}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov27}\""
+          ]
+         }
         }
        ]
       },
@@ -19881,7 +20511,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov28}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov28}\""
+          ]
+         }
         }
        ]
       },
@@ -19921,7 +20563,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov29}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov29}\""
+          ]
+         }
         }
        ]
       },
@@ -19961,7 +20615,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov30}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov30}\""
+          ]
+         }
         }
        ]
       },
@@ -22909,11 +23575,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -24316,11 +25060,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -24364,7 +25186,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov21}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov21}\""
+          ]
+         }
         }
        ]
       },
@@ -24404,7 +25238,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov22}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov22}\""
+          ]
+         }
         }
        ]
       },
@@ -24444,7 +25290,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov23}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov23}\""
+          ]
+         }
         }
        ]
       },
@@ -24484,7 +25342,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov24}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov24}\""
+          ]
+         }
         }
        ]
       },
@@ -24524,7 +25394,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov25}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov25}\""
+          ]
+         }
         }
        ]
       },
@@ -27472,11 +28354,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -28879,11 +29839,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -28927,7 +29965,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov16}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov16}\""
+          ]
+         }
         }
        ]
       },
@@ -28967,7 +30017,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov17}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov17}\""
+          ]
+         }
         }
        ]
       },
@@ -29007,7 +30069,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov18}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov18}\""
+          ]
+         }
         }
        ]
       },
@@ -29047,7 +30121,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov19}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov19}\""
+          ]
+         }
         }
        ]
       },
@@ -29087,7 +30173,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov20}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov20}\""
+          ]
+         }
         }
        ]
       },
@@ -32035,11 +33133,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -33442,11 +34618,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -33490,7 +34744,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov11}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov11}\""
+          ]
+         }
         }
        ]
       },
@@ -33530,7 +34796,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov12}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov12}\""
+          ]
+         }
         }
        ]
       },
@@ -33570,7 +34848,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov13}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov13}\""
+          ]
+         }
         }
        ]
       },
@@ -33610,7 +34900,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov14}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov14}\""
+          ]
+         }
         }
        ]
       },
@@ -33650,7 +34952,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov15}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov15}\""
+          ]
+         }
         }
        ]
       },
@@ -36598,11 +37912,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -38005,11 +39397,89 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work.\n\nTITLE (same as earlier parts, whole time): \"{item.ov1}\""
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -38053,7 +39523,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov6}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov6}\""
+          ]
+         }
         }
        ]
       },
@@ -38093,7 +39575,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov7}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov7}\""
+          ]
+         }
         }
        ]
       },
@@ -38133,7 +39627,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov8}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov8}\""
+          ]
+         }
         }
        ]
       },
@@ -38173,7 +39679,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov9}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov9}\""
+          ]
+         }
         }
        ]
       },
@@ -38213,7 +39731,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov10}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov10}\""
+          ]
+         }
         }
        ]
       },
@@ -41158,7 +42688,46 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work."
+          ]
+         }
         },
         {
          "when": {
@@ -41182,7 +42751,46 @@
            }
           ]
          },
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -42568,7 +44176,46 @@
        "parts": [
         {
          "when": "values.svTextOn=หัวเรื่องค้างทั้งคลิป",
-         "value": "\n\nON-SCREEN TEXT: exactly ONE fixed Thai title overlay, one line only — no second line, no extra or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: exactly ONE fixed ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " title overlay, one line only — no second line, no extra or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, same wording, size and position in every single frame from first to last, upper area, never covering the work."
+          ]
+         }
         },
         {
          "when": {
@@ -42592,7 +44239,46 @@
            }
           ]
          },
-         "value": "\n\nON-SCREEN TEXT: only the quoted Thai overlays below may appear, each on one line only — no second line or invented words — style {values.svText} — follow that style exactly accurate Thai glyphs, not covering the work; never render directions or labels."
+         "value": {
+          "op": "concat",
+          "parts": [
+           "\n\nON-SCREEN TEXT: only the quoted ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlays below may appear, each on one line only — no second line or invented words — style ",
+           {
+            "op": "block",
+            "sep": "",
+            "parts": [
+             {
+              "when": "values.svLang=English",
+              "value": {
+               "op": "lookup",
+               "table": "svTextEN",
+               "key": "{values.svText}",
+               "fallback": ""
+              }
+             },
+             {
+              "when": "values.svLang!=English",
+              "value": "{values.svText}"
+             }
+            ]
+           },
+           " — follow that style exactly accurate ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " glyphs, not covering the work; never render directions or labels."
+          ]
+         }
         },
         {
          "when": "values.svTextOn=ไม่มีข้อความ",
@@ -42636,7 +44322,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov1}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov1}\""
+          ]
+         }
         }
        ]
       },
@@ -42676,7 +44374,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov2}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov2}\""
+          ]
+         }
         }
        ]
       },
@@ -42716,7 +44426,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov3}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov3}\""
+          ]
+         }
         }
        ]
       },
@@ -42756,7 +44478,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov4}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov4}\""
+          ]
+         }
         }
        ]
       },
@@ -42796,7 +44530,19 @@
        "parts": [
         {
          "when": "values.svTextOn=ซับไตเติ้ลรายฉาก",
-         "value": " Thai overlay: \"{item.ov5}\""
+         "value": {
+          "op": "concat",
+          "parts": [
+           " ",
+           {
+            "op": "lookup",
+            "table": "langEN",
+            "key": "{values.svLang}",
+            "fallback": "Thai"
+           },
+           " overlay: \"{item.ov5}\""
+          ]
+         }
         }
        ]
       },
@@ -103191,6 +104937,14 @@
   "spTH": {
    "host": "พิธีกร",
    "guest": "แขก"
+  },
+  "svTextEN": {
+   "bold dark Thai text on a white rounded card, even padding, soft shadow": "bold dark text on a white rounded card, even padding, soft shadow",
+   "very bold Thai text, white, thin dark outline, one key word in bright yellow": "very bold text, white, thin dark outline, one key word in bright yellow",
+   "bold dark Thai text, bright hand-drawn highlighter stroke behind the key word": "bold dark text, bright hand-drawn highlighter stroke behind the key word",
+   "bold Thai sans-serif, white fill, thick dark outline, soft shadow": "bold sans-serif, white fill, thick dark outline, soft shadow",
+   "thin clean Thai sans-serif, wide letter spacing, white, clear dark shadow": "thin clean sans-serif, wide letter spacing, white, clear dark shadow",
+   "cute rounded Thai handwritten letters, soft curvy strokes, white, soft shadow": "cute rounded handwritten letters, soft curvy strokes, white, soft shadow"
   }
  },
  "seed": {
