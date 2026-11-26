@@ -92,6 +92,7 @@
   "fsPetDesc": "",
   "fsAngle": "",
   "fsHandSide": "",
+  "fsFocusPart": "",
   "fsPetSrc": "",
   "fsPetKind": "",
   "fsCoverText": "",
@@ -163,6 +164,7 @@
     "petDesc",
     "angle",
     "handSide",
+    "focusPart",
     "petSrc",
     "petKind",
     "sec",
@@ -183,6 +185,8 @@
     "openRef",
     "endRef",
     "pet",
+    "image6",
+    "image7",
     "mface"
    ],
    "idPrefix": "pd",
@@ -196,6 +200,7 @@
     "petDesc": "",
     "angle": "",
     "handSide": "",
+    "focusPart": "",
     "petSrc": "",
     "petKind": "",
     "sec": "",
@@ -396,6 +401,7 @@
     "petKind",
     "angle",
     "handSide",
+    "focusPart",
     "sec",
     "mGender",
     "mDesc",
@@ -715,13 +721,61 @@
            "op": "not",
            "a": {
             "op": "eq",
+            "a": "{item.slots.image5}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.slots.image6}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.slots.image7}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
             "a": "{item.itemName2}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.itemName3}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.itemName4}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.itemName5}",
             "b": ""
            }
           }
          ]
         },
-        "value": "ชุดเซ็ต (ใส่คู่กันทุกฉาก ตามรูปเพิ่ม): {item.itemName2} {item.itemName3}\n"
+        "value": "ชุดเซ็ต/เครื่องประดับที่ผู้ใช้ใส่ (ใส่คู่กันทุกฉาก ตามรูปเพิ่ม · นอกจากนี้ห้ามเพิ่มของเอง): {item.itemName2} {item.itemName3} {item.itemName4} {item.itemName5}\n"
        }
       ]
      },
@@ -1981,6 +2035,152 @@
          "a": {
           "op": "cond",
           "when": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.own}",
+                  "b": "true"
+                 },
+                 "then": "{item.mAge}",
+                 "else": ""
+                },
+                "b": ""
+               }
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               },
+               "then": "{item.mAge}",
+               "else": ""
+              },
+              "else": "{values.fsAge}"
+             },
+             "b": "kid"
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.own}",
+                  "b": "true"
+                 },
+                 "then": "{item.mAge}",
+                 "else": ""
+                },
+                "b": ""
+               }
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               },
+               "then": "{item.mAge}",
+               "else": ""
+              },
+              "else": "{values.fsAge}"
+             },
+             "b": "teen"
+            }
+           ]
+          },
+          "then": "mirror",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.clipStyle}",
+             "else": "{values.fsClipStyle}"
+            },
+            "b": "random"
+           },
+           "then": {
+            "op": "lookup",
+            "table": "fsRandStyle",
+            "key": "{item.id}",
+            "fallback": "walk"
+           },
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.clipStyle}",
+            "else": "{values.fsClipStyle}"
+           }
+          }
+         },
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nจุดโคลสอัป: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusTH",
+           "key": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.focusPart}",
+            "else": "{values.fsFocusPart}"
+           },
+           "fallback": "จุดที่สวมสินค้าตามรูปสินค้า"
+          },
+          " · ไม่เห็นหน้าเต็ม · สินค้าตรงรูปเป๊ะ · voN = เสียงบรรยายนอกจอ"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
            "op": "eq",
            "a": "{item.own}",
            "b": "true"
@@ -2149,6 +2349,8 @@
     },
     "{item.slots.image4}",
     "{item.slots.image5}",
+    "{item.slots.image6}",
+    "{item.slots.image7}",
     {
      "op": "cond",
      "when": {
@@ -9455,6 +9657,16 @@
       "then": "{parent.fields.handSide}",
       "else": "{values.fsHandSide}"
      },
+     "focusPart": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.focusPart}",
+      "else": "{values.fsFocusPart}"
+     },
      "mGender": {
       "op": "cond",
       "when": {
@@ -9673,6 +9885,26 @@
           ".\n"
          ]
         }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
@@ -10473,10 +10705,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -10690,6 +10945,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -10783,16 +11058,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -10979,6 +11244,26 @@
           ".\n"
          ]
         }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
@@ -11779,10 +12064,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -11996,6 +12304,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -12089,16 +12417,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -12285,6 +12603,26 @@
           ".\n"
          ]
         }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
@@ -13085,10 +13423,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -13302,6 +13663,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -13395,16 +13776,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -13591,6 +13962,26 @@
           ".\n"
          ]
         }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
@@ -14391,10 +14782,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -14608,6 +15022,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -14701,16 +15135,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      },
      {
       "from": "tasks",
@@ -14897,1308 +15321,22 @@
           ".\n"
          ]
         }
-       }
-      ]
-     },
-     "LOOK: ",
-     "authentic Thai online clothing-shop video, real smartphone/camera footage, natural daylight with neutral true-white balance (NOT yellow, NOT warm cast, NOT hazy, NOT washed-out), real skin texture, fresh vivid but natural colours — NOT AI-looking, NOT CGI, NOT plastic skin, NOT glossy magazine retouch",
-     ". Lighting/mood: {item.palette}.\nSETTING: ",
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "eq",
-           "a": "{item.clipStyle}",
-           "b": "minimal"
-          },
-          {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.scene}",
-            "b": "custom"
-           }
-          }
-         ]
-        },
-        "value": "a clean one-colour minimal set matched to the outfit"
        },
-       {
-        "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "eq",
-           "a": "{item.scene}",
-           "b": ""
-          },
-          {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.clipStyle}",
-            "b": "minimal"
-           }
-          }
-         ]
-        },
-        "value": "a place that suits the outfit (as planned)"
-       },
-       {
-        "when": {
-         "op": "eq",
-         "a": "{item.scene}",
-         "b": "custom"
-        },
-        "value": "{item.sceneCustom}"
-       },
-       {
-        "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.scene}",
-            "b": ""
-           }
-          },
-          {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.scene}",
-            "b": "custom"
-           }
-          },
-          {
-           "op": "not",
-           "a": {
-            "op": "eq",
-            "a": "{item.clipStyle}",
-            "b": "minimal"
-           }
-          }
-         ]
-        },
-        "value": {
-         "op": "lookup",
-         "table": "fsSceneEN",
-         "key": "{item.scene}",
-         "fallback": ""
-        }
-       }
-      ]
-     },
-     ".\nMODEL: {item.modelEN}",
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{values.fsShape}",
-          "b": ""
-         }
-        },
-        "value": {
-         "op": "concat",
-         "parts": [
-          " Body: ",
-          {
-           "op": "lookup",
-           "table": "fsShapeEN",
-           "key": "{values.fsShape}",
-           "fallback": ""
-          },
-          ", never slimmer."
-         ]
-        }
-       }
-      ]
-     },
-     "\nOUTFIT: {item.outfitEN}\n",
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.pet}",
-          "b": ""
-         }
-        },
-        "value": {
-         "op": "concat",
-         "parts": [
-          "PET: ",
-          {
-           "op": "lookup",
-           "table": "fsPetEN",
-           "key": "{item.pet}",
-           "fallback": ""
-          },
-          {
-           "op": "block",
-           "sep": "",
-           "parts": [
-            {
-             "when": {
-              "op": "or",
-              "list": [
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวส้ม"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวขาวดำ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวดำ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวเปอร์เซียขาว"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวสก็อตติชโฟลด์"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมววิเชียรมาศ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวบริติชช็อตแฮร์"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แมวเมนคูน"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาปอมเมอเรเนียน"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาชิวาวา"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาชิสุ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาคอร์กี้"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาชิบะ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาเฟรนช์บูลด็อก"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "ลูกหมาโกลเด้น"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "หมาพุดเดิ้ล"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "กระต่ายขาว"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "กระต่ายหูตก"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "กระต่ายน้ำตาล"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "กระต่ายแคระ"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "กระต่ายไลอ้อนเฮด"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แฮมสเตอร์สีทอง"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "แฮมสเตอร์ขาว"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "นกค็อกคาเทล"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "นกเลิฟเบิร์ด"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "นกหงส์หยก"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "นกแก้วซันคอนัวร์"
-               },
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": "นกแก้วมาคอว์"
-               }
-              ]
-             },
-             "value": {
-              "op": "concat",
-              "parts": [
-               " (",
-               {
-                "op": "lookup",
-                "table": "fsPetDescEN",
-                "key": "{item.petDesc}",
-                "fallback": ""
-               },
-               ")"
-              ]
-             }
-            },
-            {
-             "when": {
-              "op": "and",
-              "list": [
-               {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.petDesc}",
-                 "b": ""
-                }
-               },
-               {
-                "op": "not",
-                "a": {
-                 "op": "or",
-                 "list": [
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวส้ม"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวขาวดำ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวดำ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวเปอร์เซียขาว"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวสก็อตติชโฟลด์"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมววิเชียรมาศ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวบริติชช็อตแฮร์"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แมวเมนคูน"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาปอมเมอเรเนียน"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาชิวาวา"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาชิสุ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาคอร์กี้"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาชิบะ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาเฟรนช์บูลด็อก"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "ลูกหมาโกลเด้น"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "หมาพุดเดิ้ล"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "กระต่ายขาว"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "กระต่ายหูตก"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "กระต่ายน้ำตาล"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "กระต่ายแคระ"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "กระต่ายไลอ้อนเฮด"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แฮมสเตอร์สีทอง"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "แฮมสเตอร์ขาว"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "นกค็อกคาเทล"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "นกเลิฟเบิร์ด"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "นกหงส์หยก"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "นกแก้วซันคอนัวร์"
-                  },
-                  {
-                   "op": "eq",
-                   "a": "{item.petDesc}",
-                   "b": "นกแก้วมาคอว์"
-                  }
-                 ]
-                }
-               }
-              ]
-             },
-             "value": " ({item.petDesc})"
-            },
-            {
-             "when": {
-              "op": "and",
-              "list": [
-               {
-                "op": "eq",
-                "a": "{item.petDesc}",
-                "b": ""
-               },
-               {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.petKind}",
-                 "b": ""
-                }
-               },
-               {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.petKind}",
-                 "b": "other"
-                }
-               }
-              ]
-             },
-             "value": {
-              "op": "concat",
-              "parts": [
-               " (",
-               {
-                "op": "lookup",
-                "table": "fsPetKindEN",
-                "key": "{item.petKind}",
-                "fallback": ""
-               },
-               ")"
-              ]
-             }
-            }
-           ]
-          },
-          "; same animal as the pet photo.\n"
-         ]
-        }
-       }
-      ]
-     },
-     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "or",
-         "list": [
-          {
-           "op": "and",
-           "list": [
-            {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            {
-             "op": "refsFilled",
-             "key": "prod",
-             "from": "products",
-             "slot": "mface"
-            }
-           ]
-          },
-          {
-           "op": "and",
-           "list": [
-            {
-             "op": "not",
-             "a": {
-              "op": "and",
-              "list": [
-               {
-                "op": "eq",
-                "a": "{item.own}",
-                "b": "true"
-               },
-               {
-                "op": "refsFilled",
-                "key": "prod",
-                "from": "products",
-                "slot": "mface"
-               }
-              ]
-             }
-            },
-            {
-             "op": "gt",
-             "a": {
-              "op": "count",
-              "from": "characters",
-              "where": "id=model",
-              "slot": "face"
-             },
-             "b": 0
-            },
-            {
-             "op": "and",
-             "list": [
-              {
-               "op": "or",
-               "list": [
-                {
-                 "op": "eq",
-                 "a": {
-                  "op": "cond",
-                  "when": {
-                   "op": "eq",
-                   "a": "{item.own}",
-                   "b": "true"
-                  },
-                  "then": "{item.mGender}",
-                  "else": ""
-                 },
-                 "b": ""
-                },
-                {
-                 "op": "eq",
-                 "a": {
-                  "op": "cond",
-                  "when": {
-                   "op": "eq",
-                   "a": "{item.own}",
-                   "b": "true"
-                  },
-                  "then": "{item.mGender}",
-                  "else": ""
-                 },
-                 "b": "{values.fsGender}"
-                }
-               ]
-              },
-              {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
-                },
-                "then": "{item.mDesc}",
-                "else": ""
-               },
-               "b": ""
-              },
-              {
-               "op": "or",
-               "list": [
-                {
-                 "op": "not",
-                 "a": {
-                  "op": "eq",
-                  "a": "{values.fsGender}",
-                  "b": ""
-                 }
-                },
-                {
-                 "op": "not",
-                 "a": {
-                  "op": "eq",
-                  "a": "{item.aGender}",
-                  "b": "male"
-                 }
-                }
-               ]
-              },
-              {
-               "op": "or",
-               "list": [
-                {
-                 "op": "eq",
-                 "a": {
-                  "op": "cond",
-                  "when": {
-                   "op": "eq",
-                   "a": "{item.own}",
-                   "b": "true"
-                  },
-                  "then": "{item.mAge}",
-                  "else": ""
-                 },
-                 "b": ""
-                },
-                {
-                 "op": "eq",
-                 "a": {
-                  "op": "cond",
-                  "when": {
-                   "op": "eq",
-                   "a": "{item.own}",
-                   "b": "true"
-                  },
-                  "then": "{item.mAge}",
-                  "else": ""
-                 },
-                 "b": "{values.fsAge}"
-                }
-               ]
-              }
-             ]
-            }
-           ]
-          }
-         ]
-        },
-        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image"
-        },
-        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image2"
-        },
-        "value": "Back photo = back of the outfit; match it when the back shows.\n"
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "and",
-         "list": [
-          {
-           "op": "eq",
-           "a": "{item.scene}",
-           "b": "custom"
-          },
-          {
-           "op": "or",
-           "list": [
-            {
-             "op": "and",
-             "list": [
-              {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              {
-               "op": "refsFilled",
-               "key": "prod",
-               "from": "products",
-               "slot": "room1"
-              }
-             ]
-            },
-            {
-             "op": "and",
-             "list": [
-              {
-               "op": "not",
-               "a": {
-                "op": "eq",
-                "a": "{item.own}",
-                "b": "true"
-               }
-              },
-              {
-               "op": "gt",
-               "a": {
-                "op": "count",
-                "from": "characters",
-                "where": "id=place",
-                "slot": "face"
-               },
-               "b": 0
-              }
-             ]
-            }
-           ]
-          }
-         ]
-        },
-        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
-        },
-        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
-       }
-      ]
-     },
-     "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
-    ]
-   },
-   "refs": {
-    "op": "lookupRefs",
-    "from": "products",
-    "by": {
-     "op": "cond",
-     "when": {
-      "op": "or",
-      "list": [
-       {
-        "op": "eq",
-        "a": "{item.clipStyle}",
-        "b": "hands"
-       }
-      ]
-     },
-     "then": "",
-     "else": {
-      "op": "cond",
-      "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
-      },
-      "then": "{item.refs.prod}",
-      "else": ""
-     }
-    },
-    "slot": "mface",
-    "also": [
-     {
-      "from": "characters",
-      "by": "model",
-      "slot": "face",
-      "when": {
-       "op": "and",
-       "list": [
-        {
-         "op": "not",
-         "a": {
-          "op": "or",
-          "list": [
-           {
-            "op": "eq",
-            "a": "{item.clipStyle}",
-            "b": "hands"
-           }
-          ]
-         }
-        },
-        {
-         "op": "and",
-         "list": [
-          {
-           "op": "not",
-           "a": {
-            "op": "and",
-            "list": [
-             {
-              "op": "eq",
-              "a": "{item.own}",
-              "b": "true"
-             },
-             {
-              "op": "refsFilled",
-              "key": "prod",
-              "from": "products",
-              "slot": "mface"
-             }
-            ]
-           }
-          },
-          {
-           "op": "gt",
-           "a": {
-            "op": "count",
-            "from": "characters",
-            "where": "id=model",
-            "slot": "face"
-           },
-           "b": 0
-          },
-          {
-           "op": "and",
-           "list": [
-            {
-             "op": "or",
-             "list": [
-              {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
-                },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": ""
-              },
-              {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
-                },
-                "then": "{item.mGender}",
-                "else": ""
-               },
-               "b": "{values.fsGender}"
-              }
-             ]
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mDesc}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "or",
-             "list": [
-              {
-               "op": "not",
-               "a": {
-                "op": "eq",
-                "a": "{values.fsGender}",
-                "b": ""
-               }
-              },
-              {
-               "op": "not",
-               "a": {
-                "op": "eq",
-                "a": "{item.aGender}",
-                "b": "male"
-               }
-              }
-             ]
-            },
-            {
-             "op": "or",
-             "list": [
-              {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
-                },
-                "then": "{item.mAge}",
-                "else": ""
-               },
-               "b": ""
-              },
-              {
-               "op": "eq",
-               "a": {
-                "op": "cond",
-                "when": {
-                 "op": "eq",
-                 "a": "{item.own}",
-                 "b": "true"
-                },
-                "then": "{item.mAge}",
-                "else": ""
-               },
-               "b": "{values.fsAge}"
-              }
-             ]
-            }
-           ]
-          }
-         ]
-        }
-       ]
-      }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image2"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image3"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "pet",
-      "when": {
-       "op": "and",
-       "list": [
-        {
-         "op": "eq",
-         "a": "{item.own}",
-         "b": "true"
-        },
-        {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.pet}",
-          "b": ""
-         }
-        }
-       ]
-      }
-     },
-     {
-      "from": "characters",
-      "by": "pet",
-      "slot": "face",
-      "when": {
-       "op": "and",
-       "list": [
-        {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.own}",
-          "b": "true"
-         }
-        },
-        {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.pet}",
-          "b": ""
-         }
-        }
-       ]
-      }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "room1",
-      "when": {
-       "op": "and",
-       "list": [
-        {
-         "op": "eq",
-         "a": "{item.own}",
-         "b": "true"
-        },
-        {
-         "op": "eq",
-         "a": "{item.scene}",
-         "b": "custom"
-        }
-       ]
-      }
-     },
-     {
-      "from": "characters",
-      "by": "place",
-      "slot": "face",
-      "when": {
-       "op": "and",
-       "list": [
-        {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.own}",
-          "b": "true"
-         }
-        },
-        {
-         "op": "eq",
-         "a": "{item.scene}",
-         "b": "custom"
-        }
-       ]
-      }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
-     },
-     {
-      "from": "tasks",
-      "by": "{item.id}",
-      "slot": "board"
-     }
-    ]
-   },
-   "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดภาพเปิดคลิป",
-   "logDone": "[{item.productName} คลิป {item.clipIndex}] ภาพเปิดคลิปเสร็จแล้ว",
-   "when": {
-    "op": "eq",
-    "a": "1",
-    "b": "0"
-   },
-   "where": "s6en!=",
-   "timeoutMs": 180000
-  },
-  {
-   "id": "mnBoard",
-   "type": "image",
-   "over": "tasks",
-   "out": "board",
-   "model": "{values.imageModel}",
-   "aspectRatio": "9:16",
-   "prompt": {
-    "op": "concat",
-    "parts": [
-     "ONE single full-bleed vertical 9:16 photo — NOT a grid, NOT panels, NOT a collage. Opening frame / look reference of the fashion video \"{item.productName}\": ",
-     {
-      "op": "lookup",
-      "table": "fsStyleBoard",
-      "key": "{item.clipStyle}",
-      "fallback": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance"
-     },
-     ". Moment: {item.s1en}\n",
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
-       {
-        "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": {
-           "op": "lookup",
-           "table": "fsFaceEN",
-           "key": {
-            "op": "concat",
-            "parts": [
-             {
-              "op": "lookup",
-              "table": "fsFaceEff",
-              "key": {
-               "op": "concat",
-               "parts": [
-                "{item.mFace}|{values.fsFace}|",
-                {
-                 "op": "cond",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.mAge}",
-                   "b": ""
-                  }
-                 },
-                 "then": "{item.mAge}",
-                 "else": "{values.fsAge}"
-                }
-               ]
-              },
-              "fallback": ""
-             },
-             {
-              "op": "lookup",
-              "table": "fsKidTag",
-              "key": {
-               "op": "cond",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.mAge}",
-                 "b": ""
-                }
-               },
-               "then": "{item.mAge}",
-               "else": "{values.fsAge}"
-              },
-              "fallback": ""
-             },
-             "|{item.clipStyle}"
-            ]
-           },
-           "fallback": ""
-          },
-          "b": ""
-         }
-        },
-        "value": {
-         "op": "concat",
-         "parts": [
-          {
-           "op": "lookup",
-           "table": "fsFaceEN",
-           "key": {
-            "op": "concat",
-            "parts": [
-             {
-              "op": "lookup",
-              "table": "fsFaceEff",
-              "key": {
-               "op": "concat",
-               "parts": [
-                "{item.mFace}|{values.fsFace}|",
-                {
-                 "op": "cond",
-                 "when": {
-                  "op": "not",
-                  "a": {
-                   "op": "eq",
-                   "a": "{item.mAge}",
-                   "b": ""
-                  }
-                 },
-                 "then": "{item.mAge}",
-                 "else": "{values.fsAge}"
-                }
-               ]
-              },
-              "fallback": ""
-             },
-             {
-              "op": "lookup",
-              "table": "fsKidTag",
-              "key": {
-               "op": "cond",
-               "when": {
-                "op": "not",
-                "a": {
-                 "op": "eq",
-                 "a": "{item.mAge}",
-                 "b": ""
-                }
-               },
-               "then": "{item.mAge}",
-               "else": "{values.fsAge}"
-              },
-              "fallback": ""
-             },
-             "|{item.clipStyle}"
-            ]
-           },
-           "fallback": ""
-          },
-          "\n"
-         ]
-        }
-       }
-      ]
-     },
-     {
-      "op": "block",
-      "sep": "",
-      "parts": [
        {
         "when": {
          "op": "eq",
          "a": "{item.clipStyle}",
-         "b": "hands"
+         "b": "focus"
         },
         "value": {
          "op": "concat",
          "parts": [
-          "HANDS: ",
+          "FOCUS: ",
           {
            "op": "lookup",
-           "table": "fsHandEN",
-           "key": "{item.handSide}",
-           "fallback": "the hand(s) enter from whichever side suits each shot"
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -17003,10 +16141,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -17220,6 +16381,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -17315,6 +16496,1248 @@
       }
      },
      {
+      "from": "tasks",
+      "by": "{item.id}",
+      "slot": "board"
+     }
+    ]
+   },
+   "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดภาพเปิดคลิป",
+   "logDone": "[{item.productName} คลิป {item.clipIndex}] ภาพเปิดคลิปเสร็จแล้ว",
+   "when": {
+    "op": "eq",
+    "a": "1",
+    "b": "0"
+   },
+   "where": "s6en!=",
+   "timeoutMs": 180000
+  },
+  {
+   "id": "mnBoard",
+   "type": "image",
+   "over": "tasks",
+   "out": "board",
+   "model": "{values.imageModel}",
+   "aspectRatio": "9:16",
+   "prompt": {
+    "op": "concat",
+    "parts": [
+     "ONE single full-bleed vertical 9:16 photo — NOT a grid, NOT panels, NOT a collage. Opening frame / look reference of the fashion video \"{item.productName}\": ",
+     {
+      "op": "lookup",
+      "table": "fsStyleBoard",
+      "key": "{item.clipStyle}",
+      "fallback": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance"
+     },
+     ". Moment: {item.s1en}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
+              "fallback": ""
+             },
+             {
+              "op": "lookup",
+              "table": "fsKidTag",
+              "key": {
+               "op": "cond",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.mAge}",
+                 "b": ""
+                }
+               },
+               "then": "{item.mAge}",
+               "else": "{values.fsAge}"
+              },
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
+           "fallback": ""
+          },
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          {
+           "op": "lookup",
+           "table": "fsFaceEN",
+           "key": {
+            "op": "concat",
+            "parts": [
+             {
+              "op": "lookup",
+              "table": "fsFaceEff",
+              "key": {
+               "op": "concat",
+               "parts": [
+                "{item.mFace}|{values.fsFace}|",
+                {
+                 "op": "cond",
+                 "when": {
+                  "op": "not",
+                  "a": {
+                   "op": "eq",
+                   "a": "{item.mAge}",
+                   "b": ""
+                  }
+                 },
+                 "then": "{item.mAge}",
+                 "else": "{values.fsAge}"
+                }
+               ]
+              },
+              "fallback": ""
+             },
+             {
+              "op": "lookup",
+              "table": "fsKidTag",
+              "key": {
+               "op": "cond",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.mAge}",
+                 "b": ""
+                }
+               },
+               "then": "{item.mAge}",
+               "else": "{values.fsAge}"
+              },
+              "fallback": ""
+             },
+             "|{item.clipStyle}"
+            ]
+           },
+           "fallback": ""
+          },
+          "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     "LOOK: ",
+     "authentic Thai online clothing-shop video, real smartphone/camera footage, natural daylight with neutral true-white balance (NOT yellow, NOT warm cast, NOT hazy, NOT washed-out), real skin texture, fresh vivid but natural colours — NOT AI-looking, NOT CGI, NOT plastic skin, NOT glossy magazine retouch",
+     ". Lighting/mood: {item.palette}.\nSETTING: ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "minimal"
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.scene}",
+            "b": "custom"
+           }
+          }
+         ]
+        },
+        "value": "a clean one-colour minimal set matched to the outfit"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.scene}",
+           "b": ""
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "minimal"
+           }
+          }
+         ]
+        },
+        "value": "a place that suits the outfit (as planned)"
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.scene}",
+         "b": "custom"
+        },
+        "value": "{item.sceneCustom}"
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.scene}",
+            "b": ""
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.scene}",
+            "b": "custom"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "minimal"
+           }
+          }
+         ]
+        },
+        "value": {
+         "op": "lookup",
+         "table": "fsSceneEN",
+         "key": "{item.scene}",
+         "fallback": ""
+        }
+       }
+      ]
+     },
+     ".\nMODEL: {item.modelEN}",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{values.fsShape}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          " Body: ",
+          {
+           "op": "lookup",
+           "table": "fsShapeEN",
+           "key": "{values.fsShape}",
+           "fallback": ""
+          },
+          ", never slimmer."
+         ]
+        }
+       }
+      ]
+     },
+     "\nOUTFIT: {item.outfitEN}\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "PET: ",
+          {
+           "op": "lookup",
+           "table": "fsPetEN",
+           "key": "{item.pet}",
+           "fallback": ""
+          },
+          {
+           "op": "block",
+           "sep": "",
+           "parts": [
+            {
+             "when": {
+              "op": "or",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวส้ม"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวขาวดำ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวดำ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวเปอร์เซียขาว"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวสก็อตติชโฟลด์"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมววิเชียรมาศ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวบริติชช็อตแฮร์"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แมวเมนคูน"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาปอมเมอเรเนียน"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาชิวาวา"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาชิสุ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาคอร์กี้"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาชิบะ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาเฟรนช์บูลด็อก"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "ลูกหมาโกลเด้น"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "หมาพุดเดิ้ล"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "กระต่ายขาว"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "กระต่ายหูตก"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "กระต่ายน้ำตาล"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "กระต่ายแคระ"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "กระต่ายไลอ้อนเฮด"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แฮมสเตอร์สีทอง"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "แฮมสเตอร์ขาว"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "นกค็อกคาเทล"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "นกเลิฟเบิร์ด"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "นกหงส์หยก"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "นกแก้วซันคอนัวร์"
+               },
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": "นกแก้วมาคอว์"
+               }
+              ]
+             },
+             "value": {
+              "op": "concat",
+              "parts": [
+               " (",
+               {
+                "op": "lookup",
+                "table": "fsPetDescEN",
+                "key": "{item.petDesc}",
+                "fallback": ""
+               },
+               ")"
+              ]
+             }
+            },
+            {
+             "when": {
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.petDesc}",
+                 "b": ""
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "or",
+                 "list": [
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวส้ม"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวขาวดำ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวดำ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวเปอร์เซียขาว"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวสก็อตติชโฟลด์"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมววิเชียรมาศ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวบริติชช็อตแฮร์"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แมวเมนคูน"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาปอมเมอเรเนียน"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาชิวาวา"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาชิสุ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาคอร์กี้"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาชิบะ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาเฟรนช์บูลด็อก"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "ลูกหมาโกลเด้น"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "หมาพุดเดิ้ล"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "กระต่ายขาว"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "กระต่ายหูตก"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "กระต่ายน้ำตาล"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "กระต่ายแคระ"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "กระต่ายไลอ้อนเฮด"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แฮมสเตอร์สีทอง"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "แฮมสเตอร์ขาว"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "นกค็อกคาเทล"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "นกเลิฟเบิร์ด"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "นกหงส์หยก"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "นกแก้วซันคอนัวร์"
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.petDesc}",
+                   "b": "นกแก้วมาคอว์"
+                  }
+                 ]
+                }
+               }
+              ]
+             },
+             "value": " ({item.petDesc})"
+            },
+            {
+             "when": {
+              "op": "and",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.petDesc}",
+                "b": ""
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.petKind}",
+                 "b": ""
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.petKind}",
+                 "b": "other"
+                }
+               }
+              ]
+             },
+             "value": {
+              "op": "concat",
+              "parts": [
+               " (",
+               {
+                "op": "lookup",
+                "table": "fsPetKindEN",
+                "key": "{item.petKind}",
+                "fallback": ""
+               },
+               ")"
+              ]
+             }
+            }
+           ]
+          },
+          "; same animal as the pet photo.\n"
+         ]
+        }
+       }
+      ]
+     },
+     "Refs (if attached): model, garment front/back/detail, pet, place, set pieces.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            {
+             "op": "refsFilled",
+             "key": "prod",
+             "from": "products",
+             "slot": "mface"
+            }
+           ]
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "and",
+              "list": [
+               {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               },
+               {
+                "op": "refsFilled",
+                "key": "prod",
+                "from": "products",
+                "slot": "mface"
+               }
+              ]
+             }
+            },
+            {
+             "op": "gt",
+             "a": {
+              "op": "count",
+              "from": "characters",
+              "where": "id=model",
+              "slot": "face"
+             },
+             "b": 0
+            },
+            {
+             "op": "and",
+             "list": [
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mGender}",
+                  "else": ""
+                 },
+                 "b": "{values.fsGender}"
+                }
+               ]
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mDesc}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{values.fsGender}",
+                  "b": ""
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.aGender}",
+                  "b": "male"
+                 }
+                }
+               ]
+              },
+              {
+               "op": "or",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": ""
+                },
+                {
+                 "op": "eq",
+                 "a": {
+                  "op": "cond",
+                  "when": {
+                   "op": "eq",
+                   "a": "{item.own}",
+                   "b": "true"
+                  },
+                  "then": "{item.mAge}",
+                  "else": ""
+                 },
+                 "b": "{values.fsAge}"
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        "value": "MODEL LOCK: same person as the model photo in every frame — face, hair, skin, body size (never slimmer); ignore her base outfit.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image"
+        },
+        "value": "GARMENT LOCK: garment photos = the exact product: same fabric, pattern, colour, cut, length, neckline, details; never redesign, simplify or recolour.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image2"
+        },
+        "value": "Back photo = back of the outfit; match it when the back shows.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.scene}",
+           "b": "custom"
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              {
+               "op": "refsFilled",
+               "key": "prod",
+               "from": "products",
+               "slot": "room1"
+              }
+             ]
+            },
+            {
+             "op": "and",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               }
+              },
+              {
+               "op": "gt",
+               "a": {
+                "op": "count",
+                "from": "characters",
+                "where": "id=place",
+                "slot": "face"
+               },
+               "b": 0
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        "value": "LOCATION LOCK: the place photo is the real location — keep its layout and light.\n"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
+        },
+        "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
+       }
+      ]
+     },
+     "Only this one model — no other people. No text, no logos, no watermark, no phone-screen or camera-app interface."
+    ]
+   },
+   "refs": {
+    "op": "lookupRefs",
+    "from": "products",
+    "by": {
+     "op": "cond",
+     "when": {
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
+     },
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
+    },
+    "slot": "mface",
+    "also": [
+     {
+      "from": "characters",
+      "by": "model",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
+           },
+           "b": 0
+          },
+          {
+           "op": "and",
+           "list": [
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{item.own}",
+               "b": "true"
+              },
+              "then": "{item.mDesc}",
+              "else": ""
+             },
+             "b": ""
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image2"
+     },
+     {
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image4"
@@ -17323,6 +17746,113 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image3"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "pet",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        }
+       ]
+      }
+     },
+     {
+      "from": "characters",
+      "by": "pet",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.own}",
+          "b": "true"
+         }
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.pet}",
+          "b": ""
+         }
+        }
+       ]
+      }
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "room1",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        },
+        {
+         "op": "eq",
+         "a": "{item.scene}",
+         "b": "custom"
+        }
+       ]
+      }
+     },
+     {
+      "from": "characters",
+      "by": "place",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.own}",
+          "b": "true"
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.scene}",
+         "b": "custom"
+        }
+       ]
+      }
      }
     ]
    },
@@ -17644,6 +18174,26 @@
           ".\n"
          ]
         }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
+          },
+          ".\n"
+         ]
+        }
        }
       ]
      },
@@ -18317,10 +18867,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -18358,6 +18931,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -18438,6 +19016,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -18974,6 +19557,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -19067,16 +19670,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -19466,6 +20059,26 @@
            "table": "fsHandEN",
            "key": "{item.handSide}",
            "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -20143,10 +20756,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -20184,6 +20820,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -20264,6 +20905,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -20800,6 +21446,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -20893,16 +21559,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -21292,6 +21948,26 @@
            "table": "fsHandEN",
            "key": "{item.handSide}",
            "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -21969,10 +22645,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -22010,6 +22709,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -22090,6 +22794,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -22626,6 +23335,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -22719,16 +23448,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -23118,6 +23837,26 @@
            "table": "fsHandEN",
            "key": "{item.handSide}",
            "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -23795,10 +24534,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -23836,6 +24598,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -23916,6 +24683,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -24452,6 +25224,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -24545,16 +25337,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -24944,6 +25726,26 @@
            "table": "fsHandEN",
            "key": "{item.handSide}",
            "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -25621,10 +26423,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -25662,6 +26487,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -25742,6 +26572,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -26278,6 +27113,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -26371,16 +27226,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -26770,6 +27615,26 @@
            "table": "fsHandEN",
            "key": "{item.handSide}",
            "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "focus"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "FOCUS: ",
+          {
+           "op": "lookup",
+           "table": "fsFocusEN",
+           "key": "{item.focusPart}",
+           "fallback": "the body part wearing this product (see product photos)"
           },
           ".\n"
          ]
@@ -27447,10 +28312,33 @@
       "parts": [
        {
         "when": {
-         "op": "refsFilled",
-         "key": "prod",
-         "from": "products",
-         "slot": "image4"
+         "op": "or",
+         "list": [
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image4"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image5"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image6"
+          },
+          {
+           "op": "refsFilled",
+           "key": "prod",
+           "from": "products",
+           "slot": "image7"
+          }
+         ]
         },
         "value": "SET LOCK: extra set-piece photos are worn with the garment, as photographed.\n"
        }
@@ -27488,6 +28376,11 @@
               "op": "eq",
               "a": "{item.clipStyle}",
               "b": "hands"
+             },
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "focus"
              }
             ]
            }
@@ -27568,6 +28461,11 @@
              "op": "eq",
              "a": "{item.clipStyle}",
              "b": "hands"
+            },
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "focus"
             }
            ]
           }
@@ -28104,6 +29002,26 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
       "slot": "image3"
      },
      {
@@ -28197,16 +29115,6 @@
         }
        ]
       }
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image4"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
-      "slot": "image5"
      }
     ]
    },
@@ -28310,6 +29218,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -28485,7 +29413,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -28528,6 +29456,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -28703,7 +29651,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -28745,6 +29693,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -28920,7 +29888,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -28962,6 +29930,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -29137,7 +30125,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -29179,6 +30167,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -29354,7 +30362,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -29396,6 +30404,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -29571,7 +30599,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -29613,6 +30641,26 @@
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image4"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image5"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image6"
+     },
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image7"
      }
     ]
    },
@@ -29788,7 +30836,7 @@
        }
       ]
      },
-     "\nRULES: show ONLY the garments and shoes seen in image 1/2 — never add bags, jewellery, hats or other props to the person, never change the shoes; ",
+     "\nRULES: show ONLY the garments, shoes and the set pieces / accessories seen in the attached images (worn as photographed) — never add any other bags, jewellery, hats or props to the person, never change the shoes; ",
      {
       "op": "block",
       "sep": "",
@@ -31542,6 +32590,131 @@
                       "parts": [
                        {
                         "when": {
+                         "op": "eq",
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "cond",
+                              "when": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": {
+                                 "op": "cond",
+                                 "when": {
+                                  "op": "eq",
+                                  "a": "{item.own}",
+                                  "b": "true"
+                                 },
+                                 "then": "{item.mAge}",
+                                 "else": ""
+                                },
+                                "b": ""
+                               }
+                              },
+                              "then": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "else": "{values.fsAge}"
+                             },
+                             "b": "kid"
+                            },
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "cond",
+                              "when": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": {
+                                 "op": "cond",
+                                 "when": {
+                                  "op": "eq",
+                                  "a": "{item.own}",
+                                  "b": "true"
+                                 },
+                                 "then": "{item.mAge}",
+                                 "else": ""
+                                },
+                                "b": ""
+                               }
+                              },
+                              "then": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "else": "{values.fsAge}"
+                             },
+                             "b": "teen"
+                            }
+                           ]
+                          },
+                          "then": "mirror",
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.clipStyle}",
+                             "else": "{values.fsClipStyle}"
+                            },
+                            "b": "random"
+                           },
+                           "then": {
+                            "op": "lookup",
+                            "table": "fsRandStyle",
+                            "key": "{item.id}",
+                            "fallback": "walk"
+                           },
+                           "else": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           }
+                          }
+                         },
+                         "b": "focus"
+                        },
+                        "value": "โคลสอัปจุดที่ใส่"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
                          "op": "not",
                          "a": {
                           "op": "eq",
@@ -32328,6 +33501,12 @@
                "label": "มือยื่นถือไม้แขวน",
                "desc": "เห็นแค่มือยื่นจากขอบจอ ถือไม้แขวนชุดเซ็ต ไม่มีหน้านางแบบ เสียงบรรยาย · เหมาะร้านที่ไม่ใช้นางแบบ",
                "icon": "back_hand"
+              },
+              {
+               "value": "focus",
+               "label": "โคลสอัปจุดที่ใส่",
+               "desc": "กล้องใกล้เฉพาะจุดที่ใส่สินค้า เท้า มือ หู คอ ไม่เห็นหน้าเต็ม เสียงบรรยาย · เหมาะรองเท้า แหวน ต่างหู สร้อย",
+               "icon": "center_focus_strong"
               }
              ]
             },
@@ -32382,6 +33561,64 @@
               "op": "eq",
               "a": "{values.fsClipStyle}",
               "b": "hands"
+             }
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 pl-3 border-l-2 border-[var(--ev-accent)]/40",
+             "card": [
+              {
+               "el": "text",
+               "value": "จุดที่ใส่สินค้า",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "fsFocusPart",
+               "cols": 3,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "feet",
+                 "label": "เท้า / รองเท้า",
+                 "icon": "footprint"
+                },
+                {
+                 "value": "hand",
+                 "label": "มือ / แหวน / กำไล",
+                 "icon": "back_hand"
+                },
+                {
+                 "value": "ear",
+                 "label": "หู / ต่างหู",
+                 "icon": "hearing"
+                },
+                {
+                 "value": "neck",
+                 "label": "คอ / สร้อย",
+                 "icon": "diamond"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "กล้องโคลสอัปเฉพาะจุดนั้น ไม่เห็นหน้าเต็ม · ใส่รูปสินค้าให้ชัด สินค้าในคลิปจะตรงตามรูป · เสียงเป็นเสียงบรรยาย",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+              }
+             ],
+             "when": {
+              "op": "eq",
+              "a": "{values.fsClipStyle}",
+              "b": "focus"
              }
             },
             {
@@ -37496,6 +38733,7 @@
             "petDesc": "",
             "angle": "",
             "handSide": "",
+            "focusPart": "",
             "petSrc": "",
             "petKind": "",
             "sec": "",
@@ -39075,6 +40313,131 @@
                     "parts": [
                      {
                       "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "or",
+                         "list": [
+                          {
+                           "op": "eq",
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "b": ""
+                             }
+                            },
+                            "then": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.mAge}",
+                             "else": ""
+                            },
+                            "else": "{values.fsAge}"
+                           },
+                           "b": "kid"
+                          },
+                          {
+                           "op": "eq",
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "b": ""
+                             }
+                            },
+                            "then": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.mAge}",
+                             "else": ""
+                            },
+                            "else": "{values.fsAge}"
+                           },
+                           "b": "teen"
+                          }
+                         ]
+                        },
+                        "then": "mirror",
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          },
+                          "b": "random"
+                         },
+                         "then": {
+                          "op": "lookup",
+                          "table": "fsRandStyle",
+                          "key": "{item.id}",
+                          "fallback": "walk"
+                         },
+                         "else": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         }
+                        }
+                       },
+                       "b": "focus"
+                      },
+                      "value": "โคลสอัปจุดที่ใส่"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
                        "op": "not",
                        "a": {
                         "op": "eq",
@@ -39754,6 +41117,7 @@
           "petDesc": "",
           "angle": "",
           "handSide": "",
+          "focusPart": "",
           "petSrc": "",
           "petKind": "",
           "sec": "",
@@ -40161,6 +41525,16 @@
                    "op": "eq",
                    "a": "{item.slots.image5}",
                    "b": ""
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.slots.image6}",
+                   "b": ""
+                  },
+                  {
+                   "op": "eq",
+                   "a": "{item.slots.image7}",
+                   "b": ""
                   }
                  ]
                 },
@@ -40199,6 +41573,22 @@
                    "a": {
                     "op": "eq",
                     "a": "{item.slots.image5}",
+                    "b": ""
+                   }
+                  },
+                  {
+                   "op": "not",
+                   "a": {
+                    "op": "eq",
+                    "a": "{item.slots.image6}",
+                    "b": ""
+                   }
+                  },
+                  {
+                   "op": "not",
+                   "a": {
+                    "op": "eq",
+                    "a": "{item.slots.image7}",
                     "b": ""
                    }
                   }
@@ -40276,6 +41666,40 @@
                         }
                        },
                        "value": "ชิ้นที่ 3 "
+                      }
+                     ]
+                    },
+                    {
+                     "op": "block",
+                     "sep": "",
+                     "parts": [
+                      {
+                       "when": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.image6}",
+                         "b": ""
+                        }
+                       },
+                       "value": "ชิ้นที่ 4 "
+                      }
+                     ]
+                    },
+                    {
+                     "op": "block",
+                     "sep": "",
+                     "parts": [
+                      {
+                       "when": {
+                        "op": "not",
+                        "a": {
+                         "op": "eq",
+                         "a": "{item.slots.image7}",
+                         "b": ""
+                        }
+                       },
+                       "value": "ชิ้นที่ 5 "
                       }
                      ]
                     }
@@ -40442,7 +41866,7 @@
               },
               {
                "el": "text",
-               "value": "ชุดเซ็ต — ชิ้นอื่นที่ใส่คู่กันในคลิปเดียว เช่น กางเกง เสื้อคลุม กระเป๋า",
+               "value": "ชุดเซ็ต — ชิ้นอื่นที่ใส่คู่กันในคลิปเดียว เช่น กางเกง เสื้อคลุม กระเป๋า · ชิ้นที่ 4-5 = เครื่องประดับ/ของแต่งตัว เช่น ต่างหู สร้อย หมวก",
                "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
               },
               {
@@ -40593,6 +42017,154 @@
                    "el": "input",
                    "field": "itemName3",
                    "placeholder": "ชื่อ เช่น กางเกงขากว้าง",
+                   "className": "!h-10 !px-3 !rounded-xl !text-[15px] w-[150px]"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ชิ้นที่ 4",
+                   "className": "!text-[13.5px] font-bold opacity-70 px-0.5"
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] @[560px]:w-[132px] shrink-0",
+                   "when": "item.slots.image6!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image6}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image6",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "when": "item.slots.image6=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image6",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image6",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "input",
+                   "field": "itemName4",
+                   "placeholder": "ชื่อ เช่น ต่างหูมุก",
+                   "className": "!h-10 !px-3 !rounded-xl !text-[15px] w-[150px]"
+                  }
+                 ]
+                },
+                {
+                 "el": "box",
+                 "className": "flex flex-col gap-1.5",
+                 "card": [
+                  {
+                   "el": "text",
+                   "value": "ชิ้นที่ 5",
+                   "className": "!text-[13.5px] font-bold opacity-70 px-0.5"
+                  },
+                  {
+                   "el": "box",
+                   "className": "relative w-[104px] @[560px]:w-[132px] shrink-0",
+                   "when": "item.slots.image7!=",
+                   "card": [
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.image7}",
+                     "aspect": "1:1",
+                     "style": {
+                      "borderRadius": "14px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]"
+                    },
+                    {
+                     "el": "button",
+                     "action": "hook",
+                     "fn": "clearSlot",
+                     "to": "image7",
+                     "label": "",
+                     "icon": "close",
+                     "variant": "ghost",
+                     "className": "!absolute !top-1 !right-1 z-10 justify-center !gap-0 !w-9 !h-9 @[640px]:!w-7 @[640px]:!h-7 !rounded-full !px-0 !aspect-square !bg-white/95 !text-red-500 !border-0 !min-h-0 !shrink-0"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "w-full @[560px]:w-[150px] aspect-auto @[560px]:aspect-square shrink-0 rounded-2xl border-2 border-dashed border-[var(--ev-border)] bg-black/40 flex flex-row @[560px]:flex-col gap-2.5 p-2.5 @[560px]:justify-center",
+                   "when": "item.slots.image7=",
+                   "card": [
+                    {
+                     "el": "upload",
+                     "label": "",
+                     "placeholder": "อัพโหลด",
+                     "icon": "upload",
+                     "into": "image7",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-[var(--ev-text)] !text-[var(--ev-bg)]"
+                    },
+                    {
+                     "el": "pick-button",
+                     "label": "เลือกภาพ",
+                     "icon": "photo_library",
+                     "filter": "image",
+                     "into": "image7",
+                     "resize": {
+                      "maxPx": 768,
+                      "quality": 0.8
+                     },
+                     "className": "flex-1 @[560px]:flex-none @[560px]:w-full justify-center !h-[52px] !rounded-xl !border-0 font-black !text-[16px] whitespace-nowrap uppercase !bg-white !text-[#17253a]"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "input",
+                   "field": "itemName5",
+                   "placeholder": "ชื่อ เช่น ต่างหูมุก",
                    "className": "!h-10 !px-3 !rounded-xl !text-[15px] w-[150px]"
                   }
                  ]
@@ -40842,6 +42414,20 @@
                      "b": "hands"
                     },
                     "value": "มือยื่นถือไม้แขวน"
+                   }
+                  ]
+                 },
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": {
+                     "op": "eq",
+                     "a": "{values.fsClipStyle}",
+                     "b": "focus"
+                    },
+                    "value": "โคลสอัปจุดที่ใส่"
                    }
                   ]
                  },
@@ -41404,6 +42990,12 @@
                  "label": "มือยื่นถือไม้แขวน",
                  "desc": "เห็นแค่มือยื่นจากขอบจอ ถือไม้แขวนชุดเซ็ต ไม่มีหน้านางแบบ เสียงบรรยาย · เหมาะร้านที่ไม่ใช้นางแบบ",
                  "icon": "back_hand"
+                },
+                {
+                 "value": "focus",
+                 "label": "โคลสอัปจุดที่ใส่",
+                 "desc": "กล้องใกล้เฉพาะจุดที่ใส่สินค้า เท้า มือ หู คอ ไม่เห็นหน้าเต็ม เสียงบรรยาย · เหมาะรองเท้า แหวน ต่างหู สร้อย",
+                 "icon": "center_focus_strong"
                 }
                ]
               },
@@ -41458,6 +43050,64 @@
                 "op": "eq",
                 "a": "{item.clipStyle}",
                 "b": "hands"
+               }
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 pl-3 border-l-2 border-[var(--ev-accent)]/40",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "จุดที่ใส่สินค้า",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "focusPart",
+                 "cols": 3,
+                 "mobile": {
+                  "cols": 2
+                 },
+                 "contained": true,
+                 "className": "!min-h-[48px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "feet",
+                   "label": "เท้า / รองเท้า",
+                   "icon": "footprint"
+                  },
+                  {
+                   "value": "hand",
+                   "label": "มือ / แหวน / กำไล",
+                   "icon": "back_hand"
+                  },
+                  {
+                   "value": "ear",
+                   "label": "หู / ต่างหู",
+                   "icon": "hearing"
+                  },
+                  {
+                   "value": "neck",
+                   "label": "คอ / สร้อย",
+                   "icon": "diamond"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "กล้องโคลสอัปเฉพาะจุดนั้น ไม่เห็นหน้าเต็ม · ใส่รูปสินค้าให้ชัด สินค้าในคลิปจะตรงตามรูป · เสียงเป็นเสียงบรรยาย",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.clipStyle}",
+                "b": "focus"
                }
               },
               {
@@ -65798,7 +67448,8 @@
    "street": "STREET SNAP — ONE continuous hand-held take, like a friend filming her on a phone while walking alongside (third-person, NOT a selfie, NO mirror, no phone in her hand). She strolls casually, glances back over her shoulder, laughs, adjusts her bag or hair, then turns to the camera and talks like chatting with a friend. Gentle natural hand-held follow, full body in most moments.",
    "unbox": "UNBOX TO WORN — scene 1: the model sits or stands at a table, opens a shipping box and lifts the folded garment out toward the camera, excited, talking (the garment in her hands must match the garment photos). Then a hard cut to her wearing it, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror.",
    "breeze": "CINEMATIC BREEZE — dreamy film-like fashion ad: soft backlight or golden-hour light, a gentle breeze moves the fabric and her hair in every shot, the camera glides slowly. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): full-body pose with the hem moving, slow side turn, medium shot of the fabric in the wind, looking back over the shoulder, full-body pose at the end. Her talk stays at normal speed, calm and warm.",
-   "hands": "HANDS + HANGER — NO model on screen: only a hand (or both hands, see HANDS) reaching in from the frame edge, holding the outfit on wooden hanger(s) against a plain wall; all pieces of the set hang together (e.g. top + trousers) — only the pieces in the photos. Never a face, head or body. 2-second scenes: hold still, a gentle sway, turn the hanger to show the back, the other hand lifts the hem or touches the fabric, a detail close-up, back to the full set. vo = off-screen voice-over narration. camN = framing of the hanging outfit."
+   "hands": "HANDS + HANGER — NO model on screen: only a hand (or both hands, see HANDS) reaching in from the frame edge, holding the outfit on wooden hanger(s) against a plain wall; all pieces of the set hang together (e.g. top + trousers) — only the pieces in the photos. Never a face, head or body. 2-second scenes: hold still, a gentle sway, turn the hanger to show the back, the other hand lifts the hem or touches the fabric, a detail close-up, back to the full set. vo = off-screen voice-over narration. camN = framing of the hanging outfit.",
+   "focus": "CLOSE-UP ON THE WORN PRODUCT — every scene is a close-up of the body part that wears the product (see FOCUS), never the full face. The product must match the product photos exactly (shape, colour, material, size, details) — never redesign it. 2-second scenes: slow push-in, a small turn so the light catches it, a step or hand gesture, a macro detail, a slightly wider shot of the part with the outfit. vo = off-screen voice-over narration. camN = close-up framing words."
   },
   "fsStyleVideo": {
    "mirror": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image.",
@@ -65811,7 +67462,8 @@
    "street": "ONE CONTINUOUS TAKE — candid street snap filmed hand-held by a friend walking alongside (no selfie, mirror or phone in her hand); she strolls, glances back, laughs, then talks to the camera; full body in most moments; no cuts. The opening frame is supplied — continue from exactly that image.",
    "unbox": "UNBOX TO WORN — scene 1 = she opens a shipping box and lifts the garment out toward the camera; then a hard cut every 2 s to her wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot.",
    "breeze": "CINEMATIC BREEZE — hard cut every 2 s; soft backlight, gentle breeze in fabric and hair, slow gliding third-person camera (no selfie, mirror or phone); speech at normal speed. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
-   "hands": "HANDS + HANGER — no person on screen, only hand(s) reaching in from the frame edge holding the outfit set on hanger(s) against a plain wall; never a face, head or body; gentle sway, hanger turn to show the back, fabric touch; no cuts. Image 1 is a look reference, not a frame; match outfit photos."
+   "hands": "HANDS + HANGER — no person on screen, only hand(s) reaching in from the frame edge holding the outfit set on hanger(s) against a plain wall; never a face, head or body; gentle sway, hanger turn to show the back, fabric touch; no cuts. Image 1 is a look reference, not a frame; match outfit photos.",
+   "focus": "CLOSE-UP ON THE WORN PRODUCT — close-up of the body part wearing it (see FOCUS), never the full face; small moves, slow push-in, light glints; the product exactly as in the product photos (shape, colour, material, details). Image 1 is a look reference, not a frame."
   },
   "fsStyleBoard": {
    "mirror": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance",
@@ -65824,7 +67476,8 @@
    "street": "candid full-body street-snap photo taken by a friend: the model mid-stroll glancing back over her shoulder toward the camera",
    "unbox": "full-body photo of the model wearing the outfit in a relaxed pose, natural light",
    "breeze": "full-body cinematic fashion photo, soft backlight, a gentle breeze lifting the hem and hair, the model in a graceful pose",
-   "hands": "the outfit set on wooden hanger(s) held up by a hand reaching in from the frame edge, front facing the camera, clean plain wall, no face or body in frame"
+   "hands": "the outfit set on wooden hanger(s) held up by a hand reaching in from the frame edge, front facing the camera, clean plain wall, no face or body in frame",
+   "focus": "close-up photo of the body part wearing the product (see FOCUS), the product exactly as photographed, soft natural light, the face not shown"
   },
   "fsSceneEN": {
    "closet": "a bright walk-in dressing room with neat clothes rails and a full-length mirror",
@@ -65866,6 +67519,7 @@
    "hide|unbox": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|breeze": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body.",
+   "hide|focus": "FACE NOT SHOWN: close-up crops never include the eyes or the full face.",
    "hideK|mirror": "FACE HIDDEN: she holds the phone in front of her face, covering it in the reflection.",
    "hideK|walk": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|spin": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
@@ -65877,7 +67531,9 @@
    "hideK|unbox": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|breeze": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body.",
-   "|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body."
+   "hideK|focus": "FACE NOT SHOWN: close-up crops never include the eyes or the full face.",
+   "|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body.",
+   "|focus": "FACE NOT SHOWN: close-up crops never include the eyes or the full face."
   },
   "fsFacePlan": {
    "hide": "ใบหน้า: ไม่เห็นหน้าทุกฉากรวมฉากสุดท้าย (เซลฟี่ = มือถือบังหน้า · แบบอื่น = เฟรมตั้งแต่คอลงไป หรือหันหลัง) — sNen/camN ต้องไม่เห็นหน้า"
@@ -66871,6 +68527,20 @@
    "left": "มือเดียวยื่นจากขอบซ้าย",
    "right": "มือเดียวยื่นจากขอบขวา",
    "both": "สองมือยื่นจากขอบซ้ายและขวาพร้อมกัน"
+  },
+  "fsFocusEN": {
+   "": "the body part wearing this product (see product photos)",
+   "feet": "FEET — shoes or anklet on her feet, camera near floor level",
+   "hand": "HANDS — ring, bracelet or watch on her hand and wrist",
+   "ear": "EAR — earring on her ear, side profile cropped at the cheek, no full face",
+   "neck": "NECK — necklace on her neck and collarbone, cropped below the lips"
+  },
+  "fsFocusTH": {
+   "": "จุดที่สวมสินค้าตามรูปสินค้า",
+   "feet": "เท้า — รองเท้า/กำไลข้อเท้า กล้องระดับพื้น",
+   "hand": "มือ — แหวน/กำไล/นาฬิกา ที่มือและข้อมือ",
+   "ear": "หู — ต่างหู มุมข้างครอปที่แก้ม ไม่เห็นหน้าเต็ม",
+   "neck": "คอ — สร้อยคอ คอและไหปลาร้า ครอปใต้ริมฝีปาก"
   }
  },
  "seed": {
