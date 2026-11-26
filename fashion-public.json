@@ -90,12 +90,15 @@
   "fsTextFont": "",
   "fsPet": "",
   "fsPetDesc": "",
+  "fsAngle": "",
+  "fsHandSide": "",
   "fsPetSrc": "",
   "fsPetKind": "",
   "fsCoverText": "",
   "fsCoverCustom": "",
   "__coverModal": "",
-  "svModel": "Omni 1.1 Flash"
+  "svModel": "Omni 1.1 Flash",
+  "imageModel": "🍌 Nano Banana 2.1"
  },
  "collections": {
   "control": {
@@ -158,6 +161,8 @@
     "textFont",
     "pet",
     "petDesc",
+    "angle",
+    "handSide",
     "petSrc",
     "petKind",
     "sec",
@@ -189,6 +194,8 @@
     "textFont": "",
     "pet": "",
     "petDesc": "",
+    "angle": "",
+    "handSide": "",
     "petSrc": "",
     "petKind": "",
     "sec": "",
@@ -387,6 +394,8 @@
     "pet",
     "petDesc",
     "petKind",
+    "angle",
+    "handSide",
     "sec",
     "mGender",
     "mDesc",
@@ -1813,6 +1822,175 @@
          "b": ""
         },
         "value": "ไม่มี — ovN ว่างทุกฉาก"
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.own}",
+                  "b": "true"
+                 },
+                 "then": "{item.mAge}",
+                 "else": ""
+                },
+                "b": ""
+               }
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               },
+               "then": "{item.mAge}",
+               "else": ""
+              },
+              "else": "{values.fsAge}"
+             },
+             "b": "kid"
+            },
+            {
+             "op": "eq",
+             "a": {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": {
+                 "op": "cond",
+                 "when": {
+                  "op": "eq",
+                  "a": "{item.own}",
+                  "b": "true"
+                 },
+                 "then": "{item.mAge}",
+                 "else": ""
+                },
+                "b": ""
+               }
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.own}",
+                "b": "true"
+               },
+               "then": "{item.mAge}",
+               "else": ""
+              },
+              "else": "{values.fsAge}"
+             },
+             "b": "teen"
+            }
+           ]
+          },
+          "then": "mirror",
+          "else": {
+           "op": "cond",
+           "when": {
+            "op": "eq",
+            "a": {
+             "op": "cond",
+             "when": {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             "then": "{item.clipStyle}",
+             "else": "{values.fsClipStyle}"
+            },
+            "b": "random"
+           },
+           "then": {
+            "op": "lookup",
+            "table": "fsRandStyle",
+            "key": "{item.id}",
+            "fallback": "walk"
+           },
+           "else": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.clipStyle}",
+            "else": "{values.fsClipStyle}"
+           }
+          }
+         },
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "\nมือ: ",
+          {
+           "op": "lookup",
+           "table": "fsHandTH",
+           "key": {
+            "op": "cond",
+            "when": {
+             "op": "eq",
+             "a": "{item.own}",
+             "b": "true"
+            },
+            "then": "{item.handSide}",
+            "else": "{values.fsHandSide}"
+           },
+           "fallback": "มือยื่นจากด้านที่เหมาะกับช็อต"
+          },
+          " · ไม่มีนางแบบในภาพ ไม่เห็นหน้า/ตัว · voN = เสียงบรรยายนอกจอ (ไม่ลิปซิงก์)"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.own}",
+           "b": "true"
+          },
+          "then": "{item.angle}",
+          "else": "{values.fsAngle}"
+         },
+         "b": "tips"
+        },
+        "value": "\n\nแนวเนื้อหา: แนะนำการแต่งตัว (ใช้แทนเป้าขายและ call-to-action ใน system) — บทให้ประโยชน์คนดู: เทคนิคแมตช์ชุดนี้กับชิ้นอื่น ใส่ไปไหน/โอกาสไหนดี เคล็ดลับเลือกให้เข้ากับรูปร่าง (ไม่พูดถึงไซซ์ที่ไม่ได้ให้) · พูดเหมือนเพื่อนสไตลิสต์ ไม่เร่งขาย · ฉาก 1 = ฮุกเป็นคำถามหรือเคล็ดลับ · ฉากสุดท้ายชวนแบบนุ่ม (เช่น ชอบลุคนี้ ดูตัวนี้ในตะกร้าได้นะ) · productName/caption = เคล็ดลับสั้น + ชื่อสินค้า"
        }
       ]
      },
@@ -8740,7 +8918,7 @@
    "type": "image",
    "over": "characters",
    "out": "face",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -9257,6 +9435,26 @@
       "then": "{parent.fields.petKind}",
       "else": "{values.fsPetKind}"
      },
+     "angle": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.angle}",
+      "else": "{values.fsAngle}"
+     },
+     "handSide": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{parent.fields.own}",
+       "b": "true"
+      },
+      "then": "{parent.fields.handSide}",
+      "else": "{values.fsHandSide}"
+     },
      "mGender": {
       "op": "cond",
       "when": {
@@ -9312,7 +9510,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board6",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -9447,6 +9645,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -10267,12 +10491,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -10286,106 +10524,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -10395,24 +10611,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -10560,7 +10816,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board5",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -10695,6 +10951,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -11515,12 +11797,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -11534,106 +11830,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -11643,24 +11917,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -11808,7 +12122,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board4",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -11943,6 +12257,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -12763,12 +13103,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -12782,106 +13136,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -12891,24 +13223,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -13056,7 +13428,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board3",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -13191,6 +13563,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -14011,12 +14409,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -14030,106 +14442,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -14139,24 +14529,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -14304,7 +14734,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board2",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -14439,6 +14869,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -15259,12 +15715,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -15278,106 +15748,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -15387,24 +15835,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -15552,7 +16040,7 @@
    "type": "image",
    "over": "tasks",
    "out": "board",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -15687,6 +16175,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -16507,12 +17021,26 @@
     "by": {
      "op": "cond",
      "when": {
-      "op": "eq",
-      "a": "{item.own}",
-      "b": "true"
+      "op": "or",
+      "list": [
+       {
+        "op": "eq",
+        "a": "{item.clipStyle}",
+        "b": "hands"
+       }
+      ]
      },
-     "then": "{item.refs.prod}",
-     "else": ""
+     "then": "",
+     "else": {
+      "op": "cond",
+      "when": {
+       "op": "eq",
+       "a": "{item.own}",
+       "b": "true"
+      },
+      "then": "{item.refs.prod}",
+      "else": ""
+     }
     },
     "slot": "mface",
     "also": [
@@ -16526,106 +17054,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -16635,24 +17141,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -17070,6 +17616,32 @@
            "fallback": ""
           },
           "\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
          ]
         }
        }
@@ -17767,12 +18339,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -17826,6 +18416,85 @@
           "{item.vo26} {item.vo27} {item.vo28} {item.vo29} {item.vo30}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo26} {item.vo27} {item.vo28} {item.vo29} {item.vo30}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -18106,9 +18775,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -18121,106 +18808,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -18230,24 +18895,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -18748,6 +19453,32 @@
       "parts": [
        {
         "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "not",
          "a": {
           "op": "eq",
@@ -19434,12 +20165,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -19493,6 +20242,85 @@
           "{item.vo21} {item.vo22} {item.vo23} {item.vo24} {item.vo25}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo21} {item.vo22} {item.vo23} {item.vo24} {item.vo25}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -19773,9 +20601,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -19788,106 +20634,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -19897,24 +20721,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -20415,6 +21279,32 @@
       "parts": [
        {
         "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "not",
          "a": {
           "op": "eq",
@@ -21101,12 +21991,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -21160,6 +22068,85 @@
           "{item.vo16} {item.vo17} {item.vo18} {item.vo19} {item.vo20}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo16} {item.vo17} {item.vo18} {item.vo19} {item.vo20}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -21440,9 +22427,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -21455,106 +22460,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -21564,24 +22547,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -22082,6 +23105,32 @@
       "parts": [
        {
         "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "not",
          "a": {
           "op": "eq",
@@ -22768,12 +23817,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -22827,6 +23894,85 @@
           "{item.vo11} {item.vo12} {item.vo13} {item.vo14} {item.vo15}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo11} {item.vo12} {item.vo13} {item.vo14} {item.vo15}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -23107,9 +24253,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -23122,106 +24286,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -23231,24 +24373,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -23749,6 +24931,32 @@
       "parts": [
        {
         "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "not",
          "a": {
           "op": "eq",
@@ -24435,12 +25643,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -24494,6 +25720,85 @@
           "{item.vo6} {item.vo7} {item.vo8} {item.vo9} {item.vo10}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo6} {item.vo7} {item.vo8} {item.vo9} {item.vo10}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -24774,9 +26079,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -24789,106 +26112,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -24898,24 +26199,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -25416,6 +26757,32 @@
       "parts": [
        {
         "when": {
+         "op": "eq",
+         "a": "{item.clipStyle}",
+         "b": "hands"
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "HANDS: ",
+          {
+           "op": "lookup",
+           "table": "fsHandEN",
+           "key": "{item.handSide}",
+           "fallback": "the hand(s) enter from whichever side suits each shot"
+          },
+          ".\n"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
          "op": "not",
          "a": {
           "op": "eq",
@@ -26102,12 +27469,30 @@
       "parts": [
        {
         "when": {
-         "op": "not",
-         "a": {
-          "op": "eq",
-          "a": "{item.speech}",
-          "b": "none"
-         }
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "not",
+           "a": {
+            "op": "or",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.clipStyle}",
+              "b": "hands"
+             }
+            ]
+           }
+          }
+         ]
         },
         "value": {
          "op": "concat",
@@ -26161,6 +27546,85 @@
           "{item.vo1} {item.vo2} {item.vo3} {item.vo4} {item.vo5}",
           "\"\n",
           "AUDIO: only her voice and soft natural ambience — NO music, no other voices, no narrator.\n"
+         ]
+        }
+       },
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.speech}",
+            "b": "none"
+           }
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "eq",
+             "a": "{item.clipStyle}",
+             "b": "hands"
+            }
+           ]
+          }
+         ]
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "SPEECH: off-screen Thai voice-over (nobody on screen talks, no lip-sync), ",
+          {
+           "op": "lookup",
+           "table": "fsVoiceEN@g",
+           "key": {
+            "op": "concat",
+            "parts": [
+             "{item.mGender}|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "eq",
+               "a": "{values.fsGender}",
+               "b": ""
+              },
+              "then": {
+               "op": "cond",
+               "when": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               },
+               "then": "male",
+               "else": "female"
+              },
+              "else": "{values.fsGender}"
+             },
+             "|",
+             {
+              "op": "cond",
+              "when": {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.mAge}",
+                "b": ""
+               }
+              },
+              "then": "{item.mAge}",
+              "else": "{values.fsAge}"
+             }
+            ]
+           },
+           "fallback": "a natural young adult FEMALE Thai voice (never a male voice)"
+          },
+          ", warm friendly tone, no long pauses; the voice says exactly: \"",
+          "{item.vo1} {item.vo2} {item.vo3} {item.vo4} {item.vo5}",
+          "\"\n",
+          "AUDIO: only this voice-over and soft natural ambience — NO music, no other voices.\n"
          ]
         }
        },
@@ -26441,9 +27905,27 @@
       "by": "{item.refs.prod}",
       "slot": "mface",
       "when": {
-       "op": "eq",
-       "a": "{item.own}",
-       "b": "true"
+       "op": "and",
+       "list": [
+        {
+         "op": "not",
+         "a": {
+          "op": "or",
+          "list": [
+           {
+            "op": "eq",
+            "a": "{item.clipStyle}",
+            "b": "hands"
+           }
+          ]
+         }
+        },
+        {
+         "op": "eq",
+         "a": "{item.own}",
+         "b": "true"
+        }
+       ]
       }
      },
      {
@@ -26456,106 +27938,84 @@
         {
          "op": "not",
          "a": {
-          "op": "and",
+          "op": "or",
           "list": [
            {
             "op": "eq",
-            "a": "{item.own}",
-            "b": "true"
-           },
-           {
-            "op": "refsFilled",
-            "key": "prod",
-            "from": "products",
-            "slot": "mface"
+            "a": "{item.clipStyle}",
+            "b": "hands"
            }
           ]
          }
         },
         {
-         "op": "gt",
-         "a": {
-          "op": "count",
-          "from": "characters",
-          "where": "id=model",
-          "slot": "face"
-         },
-         "b": 0
-        },
-        {
          "op": "and",
          "list": [
           {
-           "op": "or",
-           "list": [
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": ""
-            },
-            {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
-              },
-              "then": "{item.mGender}",
-              "else": ""
-             },
-             "b": "{values.fsGender}"
-            }
-           ]
-          },
-          {
-           "op": "eq",
+           "op": "not",
            "a": {
-            "op": "cond",
-            "when": {
-             "op": "eq",
-             "a": "{item.own}",
-             "b": "true"
-            },
-            "then": "{item.mDesc}",
-            "else": ""
+            "op": "and",
+            "list": [
+             {
+              "op": "eq",
+              "a": "{item.own}",
+              "b": "true"
+             },
+             {
+              "op": "refsFilled",
+              "key": "prod",
+              "from": "products",
+              "slot": "mface"
+             }
+            ]
+           }
+          },
+          {
+           "op": "gt",
+           "a": {
+            "op": "count",
+            "from": "characters",
+            "where": "id=model",
+            "slot": "face"
            },
-           "b": ""
+           "b": 0
           },
           {
-           "op": "or",
+           "op": "and",
            "list": [
             {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{values.fsGender}",
-              "b": ""
-             }
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mGender}",
+                "else": ""
+               },
+               "b": "{values.fsGender}"
+              }
+             ]
             },
-            {
-             "op": "not",
-             "a": {
-              "op": "eq",
-              "a": "{item.aGender}",
-              "b": "male"
-             }
-            }
-           ]
-          },
-          {
-           "op": "or",
-           "list": [
             {
              "op": "eq",
              "a": {
@@ -26565,24 +28025,64 @@
                "a": "{item.own}",
                "b": "true"
               },
-              "then": "{item.mAge}",
+              "then": "{item.mDesc}",
               "else": ""
              },
              "b": ""
             },
             {
-             "op": "eq",
-             "a": {
-              "op": "cond",
-              "when": {
-               "op": "eq",
-               "a": "{item.own}",
-               "b": "true"
+             "op": "or",
+             "list": [
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{values.fsGender}",
+                "b": ""
+               }
               },
-              "then": "{item.mAge}",
-              "else": ""
-             },
-             "b": "{values.fsAge}"
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.aGender}",
+                "b": "male"
+               }
+              }
+             ]
+            },
+            {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": ""
+              },
+              {
+               "op": "eq",
+               "a": {
+                "op": "cond",
+                "when": {
+                 "op": "eq",
+                 "a": "{item.own}",
+                 "b": "true"
+                },
+                "then": "{item.mAge}",
+                "else": ""
+               },
+               "b": "{values.fsAge}"
+              }
+             ]
             }
            ]
           }
@@ -26786,7 +28286,19 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "not",
+     "a": {
+      "op": "eq",
+      "a": "{values.fsCoverText}",
+      "b": "none"
+     }
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -26805,6 +28317,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -26985,7 +28516,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "🍌 Nano Banana Pro",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27004,6 +28535,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -27183,7 +28733,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "🍌 Nano Banana Pro",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27202,6 +28752,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -27381,7 +28950,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "🍌 Nano Banana Pro",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27400,6 +28969,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -27579,7 +29167,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "🍌 Nano Banana Pro",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27598,6 +29186,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -27777,7 +29384,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "{values.imageModel}",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27796,6 +29403,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -27975,7 +29601,7 @@
    "type": "image",
    "over": "tasks",
    "out": "cover",
-   "model": "🍌 Nano Banana 2.1",
+   "model": "🍌 Nano Banana Pro",
    "aspectRatio": "9:16",
    "refs": {
     "op": "lookupRefs",
@@ -27994,6 +29620,25 @@
     "op": "concat",
     "parts": [
      "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai fashion-shop TikTok/Shopee clip, in the style of trendy Thai shop covers. Attached image 1 = a frame of this clip: use the SAME person and the SAME outfit exactly (colour, fabric, cut, details — match attached image 2 if given). Show the person full body head-to-toe, standing in a confident pose, cut out with a thick clean WHITE die-cut sticker outline, layered over the background.\n",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.clipStyle}",
+           "b": "hands"
+          }
+         ]
+        },
+        "value": "NO PERSON in this clip: keep only the hand(s) holding the outfit on hanger(s) — never add a face or body.\n"
+       }
+      ]
+     },
      {
       "op": "lookup",
       "table": "fsFaceEN",
@@ -29772,6 +31417,131 @@
                       "parts": [
                        {
                         "when": {
+                         "op": "eq",
+                         "a": {
+                          "op": "cond",
+                          "when": {
+                           "op": "or",
+                           "list": [
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "cond",
+                              "when": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": {
+                                 "op": "cond",
+                                 "when": {
+                                  "op": "eq",
+                                  "a": "{item.own}",
+                                  "b": "true"
+                                 },
+                                 "then": "{item.mAge}",
+                                 "else": ""
+                                },
+                                "b": ""
+                               }
+                              },
+                              "then": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "else": "{values.fsAge}"
+                             },
+                             "b": "kid"
+                            },
+                            {
+                             "op": "eq",
+                             "a": {
+                              "op": "cond",
+                              "when": {
+                               "op": "not",
+                               "a": {
+                                "op": "eq",
+                                "a": {
+                                 "op": "cond",
+                                 "when": {
+                                  "op": "eq",
+                                  "a": "{item.own}",
+                                  "b": "true"
+                                 },
+                                 "then": "{item.mAge}",
+                                 "else": ""
+                                },
+                                "b": ""
+                               }
+                              },
+                              "then": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "else": "{values.fsAge}"
+                             },
+                             "b": "teen"
+                            }
+                           ]
+                          },
+                          "then": "mirror",
+                          "else": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.clipStyle}",
+                             "else": "{values.fsClipStyle}"
+                            },
+                            "b": "random"
+                           },
+                           "then": {
+                            "op": "lookup",
+                            "table": "fsRandStyle",
+                            "key": "{item.id}",
+                            "fallback": "walk"
+                           },
+                           "else": {
+                            "op": "cond",
+                            "when": {
+                             "op": "eq",
+                             "a": "{item.own}",
+                             "b": "true"
+                            },
+                            "then": "{item.clipStyle}",
+                            "else": "{values.fsClipStyle}"
+                           }
+                          }
+                         },
+                         "b": "hands"
+                        },
+                        "value": "มือยื่นถือไม้แขวน"
+                       }
+                      ]
+                     },
+                     {
+                      "op": "block",
+                      "sep": "",
+                      "parts": [
+                       {
+                        "when": {
                          "op": "not",
                          "a": {
                           "op": "eq",
@@ -30552,6 +32322,100 @@
                "label": "ลมพัดฟีลหนัง",
                "desc": "แสงย้อนนุ่ม ๆ ลมพัดผ้าและผมพลิ้ว กล้องเคลื่อนช้า ตัดทุก 2 วิ · เหมาะเดรส ผ้าพลิ้ว ชุดออกงาน",
                "icon": "air"
+              },
+              {
+               "value": "hands",
+               "label": "มือยื่นถือไม้แขวน",
+               "desc": "เห็นแค่มือยื่นจากขอบจอ ถือไม้แขวนชุดเซ็ต ไม่มีหน้านางแบบ เสียงบรรยาย · เหมาะร้านที่ไม่ใช้นางแบบ",
+               "icon": "back_hand"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 pl-3 border-l-2 border-[var(--ev-accent)]/40",
+             "card": [
+              {
+               "el": "text",
+               "value": "มือยื่นจากด้านไหน",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "fsHandSide",
+               "cols": 4,
+               "mobile": {
+                "cols": 2
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "อัตโนมัติ",
+                 "icon": "auto_awesome"
+                },
+                {
+                 "value": "left",
+                 "label": "ซ้าย",
+                 "icon": "west"
+                },
+                {
+                 "value": "right",
+                 "label": "ขวา",
+                 "icon": "east"
+                },
+                {
+                 "value": "both",
+                 "label": "ทั้งสองข้าง",
+                 "icon": "sync_alt"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": "ไม่มีนางแบบในคลิป — เห็นแค่มือถือไม้แขวน ชุดเซ็ตแขวนคู่กัน (ใส่รูปชิ้นที่ 2 ในชุดเซ็ต) · เสียงเป็นเสียงบรรยาย",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+              }
+             ],
+             "when": {
+              "op": "eq",
+              "a": "{values.fsClipStyle}",
+              "b": "hands"
+             }
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "แนวเนื้อหา",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "fsAngle",
+               "cols": 2,
+               "mobile": {
+                "cols": 1
+               },
+               "contained": true,
+               "className": "!min-h-[48px] @[420px]:!min-h-0",
+               "options": [
+                {
+                 "value": "",
+                 "label": "รีวิวขาย",
+                 "desc": "ชวนซื้อ ปิดท้ายกดตะกร้า",
+                 "icon": "sell"
+                },
+                {
+                 "value": "tips",
+                 "label": "แนะนำการแต่งตัว",
+                 "desc": "ให้ความรู้ แมตช์ชุด ใส่ไปไหนดี ชวนแบบนุ่ม",
+                 "icon": "lightbulb"
+                }
+               ]
               }
              ]
             }
@@ -34214,6 +36078,44 @@
              "card": [
               {
                "el": "text",
+               "value": "โมเดลภาพ",
+               "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+              },
+              {
+               "el": "dropdown",
+               "field": "imageModel",
+               "options": [
+                {
+                 "value": "🍌 Nano Banana 2.1",
+                 "label": "🍌 Nano Banana 2.1",
+                 "icon": "image"
+                },
+                {
+                 "value": "🍌 Nano Banana 2 Lite",
+                 "label": "🍌 Nano Banana 2 Lite",
+                 "icon": "bolt"
+                },
+                {
+                 "value": "🍌 Nano Banana Pro",
+                 "label": "🍌 Nano Banana Pro",
+                 "icon": "auto_awesome"
+                }
+               ],
+               "className": "!min-h-[48px] @[420px]:!min-h-0"
+              },
+              {
+               "el": "text",
+               "value": "ใช้วาดนางแบบและภาพเปิดคลิป · ปกที่มีตัวหนังสือ ระบบใช้ Nano Banana Pro ให้อัตโนมัติ เพราะเขียนตัวไทยได้",
+               "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+              }
+             ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-1.5 mb-1",
+             "card": [
+              {
+               "el": "text",
                "value": "โมเดลวิดีโอ",
                "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
               },
@@ -35592,6 +37494,8 @@
             "textFont": "",
             "pet": "",
             "petDesc": "",
+            "angle": "",
+            "handSide": "",
             "petSrc": "",
             "petKind": "",
             "sec": "",
@@ -37046,6 +38950,131 @@
                     "parts": [
                      {
                       "when": {
+                       "op": "eq",
+                       "a": {
+                        "op": "cond",
+                        "when": {
+                         "op": "or",
+                         "list": [
+                          {
+                           "op": "eq",
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "b": ""
+                             }
+                            },
+                            "then": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.mAge}",
+                             "else": ""
+                            },
+                            "else": "{values.fsAge}"
+                           },
+                           "b": "kid"
+                          },
+                          {
+                           "op": "eq",
+                           "a": {
+                            "op": "cond",
+                            "when": {
+                             "op": "not",
+                             "a": {
+                              "op": "eq",
+                              "a": {
+                               "op": "cond",
+                               "when": {
+                                "op": "eq",
+                                "a": "{item.own}",
+                                "b": "true"
+                               },
+                               "then": "{item.mAge}",
+                               "else": ""
+                              },
+                              "b": ""
+                             }
+                            },
+                            "then": {
+                             "op": "cond",
+                             "when": {
+                              "op": "eq",
+                              "a": "{item.own}",
+                              "b": "true"
+                             },
+                             "then": "{item.mAge}",
+                             "else": ""
+                            },
+                            "else": "{values.fsAge}"
+                           },
+                           "b": "teen"
+                          }
+                         ]
+                        },
+                        "then": "mirror",
+                        "else": {
+                         "op": "cond",
+                         "when": {
+                          "op": "eq",
+                          "a": {
+                           "op": "cond",
+                           "when": {
+                            "op": "eq",
+                            "a": "{item.own}",
+                            "b": "true"
+                           },
+                           "then": "{item.clipStyle}",
+                           "else": "{values.fsClipStyle}"
+                          },
+                          "b": "random"
+                         },
+                         "then": {
+                          "op": "lookup",
+                          "table": "fsRandStyle",
+                          "key": "{item.id}",
+                          "fallback": "walk"
+                         },
+                         "else": {
+                          "op": "cond",
+                          "when": {
+                           "op": "eq",
+                           "a": "{item.own}",
+                           "b": "true"
+                          },
+                          "then": "{item.clipStyle}",
+                          "else": "{values.fsClipStyle}"
+                         }
+                        }
+                       },
+                       "b": "hands"
+                      },
+                      "value": "มือยื่นถือไม้แขวน"
+                     }
+                    ]
+                   },
+                   {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                     {
+                      "when": {
                        "op": "not",
                        "a": {
                         "op": "eq",
@@ -37723,6 +39752,8 @@
           "textFont": "",
           "pet": "",
           "petDesc": "",
+          "angle": "",
+          "handSide": "",
           "petSrc": "",
           "petKind": "",
           "sec": "",
@@ -38806,6 +40837,20 @@
                   "parts": [
                    {
                     "when": {
+                     "op": "eq",
+                     "a": "{values.fsClipStyle}",
+                     "b": "hands"
+                    },
+                    "value": "มือยื่นถือไม้แขวน"
+                   }
+                  ]
+                 },
+                 {
+                  "op": "block",
+                  "sep": "",
+                  "parts": [
+                   {
+                    "when": {
                      "op": "not",
                      "a": {
                       "op": "eq",
@@ -39353,6 +41398,100 @@
                  "label": "ลมพัดฟีลหนัง",
                  "desc": "แสงย้อนนุ่ม ๆ ลมพัดผ้าและผมพลิ้ว กล้องเคลื่อนช้า ตัดทุก 2 วิ · เหมาะเดรส ผ้าพลิ้ว ชุดออกงาน",
                  "icon": "air"
+                },
+                {
+                 "value": "hands",
+                 "label": "มือยื่นถือไม้แขวน",
+                 "desc": "เห็นแค่มือยื่นจากขอบจอ ถือไม้แขวนชุดเซ็ต ไม่มีหน้านางแบบ เสียงบรรยาย · เหมาะร้านที่ไม่ใช้นางแบบ",
+                 "icon": "back_hand"
+                }
+               ]
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5 pl-3 border-l-2 border-[var(--ev-accent)]/40",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "มือยื่นจากด้านไหน",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "handSide",
+                 "cols": 4,
+                 "mobile": {
+                  "cols": 2
+                 },
+                 "contained": true,
+                 "className": "!min-h-[48px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "อัตโนมัติ",
+                   "icon": "auto_awesome"
+                  },
+                  {
+                   "value": "left",
+                   "label": "ซ้าย",
+                   "icon": "west"
+                  },
+                  {
+                   "value": "right",
+                   "label": "ขวา",
+                   "icon": "east"
+                  },
+                  {
+                   "value": "both",
+                   "label": "ทั้งสองข้าง",
+                   "icon": "sync_alt"
+                  }
+                 ]
+                },
+                {
+                 "el": "text",
+                 "value": "ไม่มีนางแบบในคลิป — เห็นแค่มือถือไม้แขวน ชุดเซ็ตแขวนคู่กัน (ใส่รูปชิ้นที่ 2 ในชุดเซ็ต) · เสียงเป็นเสียงบรรยาย",
+                 "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug"
+                }
+               ],
+               "when": {
+                "op": "eq",
+                "a": "{item.clipStyle}",
+                "b": "hands"
+               }
+              },
+              {
+               "el": "box",
+               "className": "flex flex-col gap-1.5",
+               "card": [
+                {
+                 "el": "text",
+                 "value": "แนวเนื้อหา",
+                 "className": "!text-[15px] @[640px]:!text-[14px] font-bold opacity-75 px-0.5"
+                },
+                {
+                 "el": "grid-select",
+                 "field": "angle",
+                 "cols": 2,
+                 "mobile": {
+                  "cols": 1
+                 },
+                 "contained": true,
+                 "className": "!min-h-[48px] @[420px]:!min-h-0",
+                 "options": [
+                  {
+                   "value": "",
+                   "label": "รีวิวขาย",
+                   "desc": "ชวนซื้อ ปิดท้ายกดตะกร้า",
+                   "icon": "sell"
+                  },
+                  {
+                   "value": "tips",
+                   "label": "แนะนำการแต่งตัว",
+                   "desc": "ให้ความรู้ แมตช์ชุด ใส่ไปไหนดี ชวนแบบนุ่ม",
+                   "icon": "lightbulb"
+                  }
+                 ]
                 }
                ]
               },
@@ -63658,7 +65797,8 @@
    "hanger": "HANGER TO WORN — scene 1: the garment alone on a wooden hanger against a plain wall (no person; she talks off-screen). Then a hard cut to the model wearing the same garment, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror.",
    "street": "STREET SNAP — ONE continuous hand-held take, like a friend filming her on a phone while walking alongside (third-person, NOT a selfie, NO mirror, no phone in her hand). She strolls casually, glances back over her shoulder, laughs, adjusts her bag or hair, then turns to the camera and talks like chatting with a friend. Gentle natural hand-held follow, full body in most moments.",
    "unbox": "UNBOX TO WORN — scene 1: the model sits or stands at a table, opens a shipping box and lifts the folded garment out toward the camera, excited, talking (the garment in her hands must match the garment photos). Then a hard cut to her wearing it, a new pose every 2-second scene: full-body front, side, a fabric detail, back over the shoulder, a full-body pose at the end. Third-person camera, no selfie, no mirror.",
-   "breeze": "CINEMATIC BREEZE — dreamy film-like fashion ad: soft backlight or golden-hour light, a gentle breeze moves the fabric and her hair in every shot, the camera glides slowly. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): full-body pose with the hem moving, slow side turn, medium shot of the fabric in the wind, looking back over the shoulder, full-body pose at the end. Her talk stays at normal speed, calm and warm."
+   "breeze": "CINEMATIC BREEZE — dreamy film-like fashion ad: soft backlight or golden-hour light, a gentle breeze moves the fabric and her hair in every shot, the camera glides slowly. Third-person camera (NOT a selfie, NO mirror, NO phone). Hard cut every scene (2 s): full-body pose with the hem moving, slow side turn, medium shot of the fabric in the wind, looking back over the shoulder, full-body pose at the end. Her talk stays at normal speed, calm and warm.",
+   "hands": "HANDS + HANGER — NO model on screen: only a hand (or both hands, see HANDS) reaching in from the frame edge, holding the outfit on wooden hanger(s) against a plain wall; all pieces of the set hang together (e.g. top + trousers) — only the pieces in the photos. Never a face, head or body. 2-second scenes: hold still, a gentle sway, turn the hanger to show the back, the other hand lifts the hem or touches the fabric, a detail close-up, back to the full set. vo = off-screen voice-over narration. camN = framing of the hanging outfit."
   },
   "fsStyleVideo": {
    "mirror": "ONE CONTINUOUS TAKE — mirror selfie: we see the model's reflection in a full-length mirror; she holds a smartphone in one hand (visible in the reflection, natural slight hand-held shake); head-to-toe stays in frame; small natural moves only; no cuts. The opening frame is supplied — continue from exactly that image.",
@@ -63670,7 +65810,8 @@
    "hanger": "HANGER TO WORN — scene 1 = the garment alone on a hanger, no person (voice only); then a hard cut every 2 s to the model wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot.",
    "street": "ONE CONTINUOUS TAKE — candid street snap filmed hand-held by a friend walking alongside (no selfie, mirror or phone in her hand); she strolls, glances back, laughs, then talks to the camera; full body in most moments; no cuts. The opening frame is supplied — continue from exactly that image.",
    "unbox": "UNBOX TO WORN — scene 1 = she opens a shipping box and lifts the garment out toward the camera; then a hard cut every 2 s to her wearing it in new poses; third-person camera. Attached image 1 is the look reference (not a frame of the clip); every frame is ONE full-screen shot.",
-   "breeze": "CINEMATIC BREEZE — hard cut every 2 s; soft backlight, gentle breeze in fabric and hair, slow gliding third-person camera (no selfie, mirror or phone); speech at normal speed. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot."
+   "breeze": "CINEMATIC BREEZE — hard cut every 2 s; soft backlight, gentle breeze in fabric and hair, slow gliding third-person camera (no selfie, mirror or phone); speech at normal speed. Attached image 1 is the look reference (not a frame of the clip) — match model, outfit, place and light; every frame is ONE full-screen shot.",
+   "hands": "HANDS + HANGER — no person on screen, only hand(s) reaching in from the frame edge holding the outfit set on hanger(s) against a plain wall; never a face, head or body; gentle sway, hanger turn to show the back, fabric touch; no cuts. Image 1 is a look reference, not a frame; match outfit photos."
   },
   "fsStyleBoard": {
    "mirror": "mirror selfie: the photo IS the reflection in a full-length mirror — the model holds a smartphone in one hand (phone visible in the reflection), full body head-to-toe visible, relaxed natural stance",
@@ -63682,7 +65823,8 @@
    "hanger": "full-body photo of the model wearing the outfit in a relaxed pose, a plain wall behind her",
    "street": "candid full-body street-snap photo taken by a friend: the model mid-stroll glancing back over her shoulder toward the camera",
    "unbox": "full-body photo of the model wearing the outfit in a relaxed pose, natural light",
-   "breeze": "full-body cinematic fashion photo, soft backlight, a gentle breeze lifting the hem and hair, the model in a graceful pose"
+   "breeze": "full-body cinematic fashion photo, soft backlight, a gentle breeze lifting the hem and hair, the model in a graceful pose",
+   "hands": "the outfit set on wooden hanger(s) held up by a hand reaching in from the frame edge, front facing the camera, clean plain wall, no face or body in frame"
   },
   "fsSceneEN": {
    "closet": "a bright walk-in dressing room with neat clothes rails and a full-length mirror",
@@ -63723,6 +65865,7 @@
    "hide|street": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|unbox": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
    "hide|breeze": "FACE HIDDEN in EVERY shot incl. the last: crop the head out of frame (neck down) or she faces away — no eyes, nose or lips.",
+   "hide|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body.",
    "hideK|mirror": "FACE HIDDEN: she holds the phone in front of her face, covering it in the reflection.",
    "hideK|walk": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|spin": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
@@ -63732,7 +65875,9 @@
    "hideK|hanger": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|street": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
    "hideK|unbox": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
-   "hideK|breeze": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever."
+   "hideK|breeze": "FACE NEVER SHOWN: frame every shot from the shoulders down, head fully out of frame, first to last — no chin or lips, ever.",
+   "hideK|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body.",
+   "|hands": "NO PERSON: only hands/forearms in frame — never a face, head or body."
   },
   "fsFacePlan": {
    "hide": "ใบหน้า: ไม่เห็นหน้าทุกฉากรวมฉากสุดท้าย (เซลฟี่ = มือถือบังหน้า · แบบอื่น = เฟรมตั้งแต่คอลงไป หรือหันหลัง) — sNen/camN ต้องไม่เห็นหน้า"
@@ -64714,6 +66859,18 @@
    "pd_398": "street",
    "pd_399": "lookbook",
    "pd_400": "unbox"
+  },
+  "fsHandEN": {
+   "": "the hand(s) enter from whichever side suits each shot",
+   "left": "ONE hand enters from the LEFT edge of the frame",
+   "right": "ONE hand enters from the RIGHT edge of the frame",
+   "both": "TWO hands, one from each side edge, hold it together"
+  },
+  "fsHandTH": {
+   "": "มือยื่นจากด้านที่เหมาะกับช็อต",
+   "left": "มือเดียวยื่นจากขอบซ้าย",
+   "right": "มือเดียวยื่นจากขอบขวา",
+   "both": "สองมือยื่นจากขอบซ้ายและขวาพร้อมกัน"
   }
  },
  "seed": {
