@@ -54,8 +54,7 @@ COVER = {
     'logDone': '[{item.productName} คลิป {item.clipIndex}] ปก TikTok เสร็จแล้ว',
     'timeoutMs': 180000,
 }
-if 'mnCover' in ops: d['ops'][[o['id'] for o in d['ops']].index('mnCover')] = COVER
-else: d['ops'].append(COVER)
+if 'mnCover' not in ops: d['ops'].append(COVER)   # มีแล้ว = ไม่ทับ (v33/v34 แก้ต่อจากนี้ — ทับ = ถอยงานนั้น)
 L['opNames']['mnCover'] = 'กำลังสร้างปก'; L['opIcons']['mnCover'] = 'image'
 
 # ── หน้าผลิต (มุมมองการ์ด) คอลัมน์กลาง ต่อจากเรื่องย่อ ──
