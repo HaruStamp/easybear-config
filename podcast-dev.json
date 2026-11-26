@@ -188,7 +188,9 @@
     "guestAge",
     "guestVoice",
     "mic",
-    "gaze"
+    "gaze",
+    "sec",
+    "ep"
    ],
    "slots": [
     "image",
@@ -226,7 +228,9 @@
     "guestAge": "",
     "guestVoice": "",
     "mic": "",
-    "gaze": ""
+    "gaze": "",
+    "sec": "",
+    "ep": ""
    }
   },
   "tasks": {
@@ -462,7 +466,8 @@
     "sp28",
     "sp29",
     "sp30",
-    "prodId"
+    "prodId",
+    "epN"
    ],
    "slots": [
     "castRef",
@@ -693,7 +698,28 @@
           }
          }
         },
-        "{values.svSec}"
+        {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        }
        ]
       },
       "fallback": "คุณคือโชว์รันเนอร์คลิปพอดแคสต์ 20 วินาที 10 ฉาก"
@@ -973,7 +999,28 @@
           }
          }
         },
-        "{values.svSec}"
+        {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        }
        ]
       },
       "fallback": "กฎบทพูด: ทุกฉากมี vo และ sp"
@@ -1022,7 +1069,28 @@
           "else": ""
          }
         },
-        "{values.svSec}"
+        {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        }
        ]
       },
       "fallback": "Output: JSON array ล้วน"
@@ -1933,13 +2001,41 @@
      },
      "\n\nกฎเหล็ก: บทใช้ตัวอักษร ตัวเลข และเครื่องหมายวรรคตอนปกติเท่านั้น ห้ามใส่ emoji หรือสัญลักษณ์ภาพทุกชนิด (เช่น 😍✨🔥💖👉) — ใช้กับทุกช่องที่ตอบ (vo ov hook synopsis caption coverTitle productName และคำบรรยายภาพ) ถ้าบท/หัวข้อจากผู้ใช้มี emoji ให้ตัดออก",
      {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "values.svLang!=English",
+        "value": "\n\nกฎเว้นวรรคภาษาไทย (vo ov hook synopsis caption coverTitle productName): เขียนคำไทยติดกันภายในวลี เว้นวรรค 1 ช่องเฉพาะตอนจบวลีหรือประโยค และก่อน-หลังตัวเลขหรือคำภาษาอังกฤษ (เช่น ราคา 199 บาท · ใช้ iPhone มา 2 ปี) · ห้ามเว้นวรรคระหว่างทุกคำ ห้ามเว้นกลางคำ ห้ามขึ้นบรรทัดใหม่ในช่องเดียว · ไม้ยมกติดคำหน้า (เด็กๆ) · แฮชแท็กห้ามมีช่องว่างข้างใน"
+       }
+      ]
+     },
+     {
       "op": "concat",
       "parts": [
        "\n\n★ ข้อมูลตอน (จากผู้ใช้ — ใช้ทำงานตามกฎทั้งหมดข้างบน):\n",
        {
         "op": "concat",
         "parts": [
-         "ออกแบบตอนพอดแคสต์จำนวน {values.clipsPerProduct} คลิป สำหรับตอนนี้ — แต่ละคลิปเป็นตอนที่จบในตัว มุมเรื่อง/ฮุคต่างกัน\n\nคุยเรื่อง (หัวข้อหรือเนื้อเรื่องจากผู้ใช้ — ยึดตามนี้): {item.name}\n(หัวข้อมาก่อนเสมอ — ถ้าแนวเนื้อหาหรือรูปแบบรายการข้างล่างไม่เข้ากับหัวข้อ ให้ใช้เป็นแค่มุมเล่าหรือโทน ห้ามบิดเรื่องจนไม่ตรงหัวข้อ · กติกาความปลอดภัยของแนวยังใช้เมื่อเนื้อหาเข้าข่าย)\nสินค้าในตอนนี้: {item.hasProduct}\n",
+         {
+          "op": "concat",
+          "parts": [
+           {
+            "op": "cond",
+            "when": {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.ep}",
+              "b": ""
+             }
+            },
+            "then": "ออกแบบตอนพอดแคสต์ยาว 1 ตอน แบ่งเป็น {item.ep} คลิปต่อเนื่อง (คลิปละ 60 วินาที รวมราว {item.ep} นาที — ผู้ชมดูต่อกันเป็นตอนเดียว) · คลิป 1 = เปิดรายการ ทักทาย ฮุค · คลิปกลาง = เล่าต่อจากประโยคสุดท้ายของคลิปก่อนทันที ห้ามทักทายใหม่ ห้ามแนะนำตัวซ้ำ ห้ามสรุปจบ · คลิปสุดท้าย = สรุปและปิดรายการ (CTA ถ้ามี) · แต่ละคลิปเล่าคนละช่วงของเรื่อง ห้ามวนประเด็นเดิม · productName = ชื่อตอนเดียวกันทุกคลิป ตามด้วย (ลำดับ/ทั้งหมด) เช่น ชื่อตอน (2/{item.ep}) · palette hostSheet guestSheet studioEN hostVoiceEN guestVoiceEN voice synopsis caption hashtags coverTitle เหมือนกันทุกตัวอักษรทุกคลิป · hook = ประโยคแรกของคลิปนั้น",
+            "else": "ออกแบบตอนพอดแคสต์จำนวน {values.clipsPerProduct} คลิป สำหรับตอนนี้ — แต่ละคลิปเป็นตอนที่จบในตัว มุมเรื่อง/ฮุคต่างกัน"
+           },
+           "\n\nคุยเรื่อง (หัวข้อหรือเนื้อเรื่องจากผู้ใช้ — ยึดตามนี้): {item.name}\n(หัวข้อมาก่อนเสมอ — ถ้าแนวเนื้อหาหรือรูปแบบรายการข้างล่างไม่เข้ากับหัวข้อ ให้ใช้เป็นแค่มุมเล่าหรือโทน ห้ามบิดเรื่องจนไม่ตรงหัวข้อ · กติกาความปลอดภัยของแนวยังใช้เมื่อเนื้อหาเข้าข่าย)\nสินค้าในตอนนี้: {item.hasProduct}\n"
+          ]
+         },
          {
           "op": "block",
           "sep": "",
@@ -5942,7 +6038,19 @@
        "value": "{item.data.plan}",
        "arrayOnly": true
       },
-      "b": "{values.clipsPerProduct}"
+      "b": {
+       "op": "cond",
+       "when": {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.ep}",
+         "b": ""
+        }
+       },
+       "then": "{item.ep}",
+       "else": "{values.clipsPerProduct}"
+      }
      },
      {
       "op": "not",
@@ -6109,7 +6217,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6127,7 +6256,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6145,7 +6295,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6163,7 +6334,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6181,7 +6373,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6199,7 +6412,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6217,7 +6451,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6235,7 +6490,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6253,7 +6529,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6271,7 +6568,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6289,7 +6607,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6307,7 +6646,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6325,7 +6685,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6343,7 +6724,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6361,7 +6763,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6379,7 +6802,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6397,7 +6841,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6415,7 +6880,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6433,7 +6919,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6451,7 +6958,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "10"
        },
        {
@@ -6469,7 +6997,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6487,7 +7036,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6505,7 +7075,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6523,7 +7114,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6541,7 +7153,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6559,7 +7192,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6577,7 +7231,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6595,7 +7270,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6613,7 +7309,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6631,7 +7348,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6649,7 +7387,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6667,7 +7426,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6685,7 +7465,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6703,7 +7504,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6721,7 +7543,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6739,7 +7582,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6757,7 +7621,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6775,7 +7660,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6793,7 +7699,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6811,7 +7738,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "20"
        },
        {
@@ -6829,7 +7777,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6847,7 +7816,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6865,7 +7855,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6883,7 +7894,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6901,7 +7933,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6919,7 +7972,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6937,7 +8011,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6955,7 +8050,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6973,7 +8089,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -6991,7 +8128,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7009,7 +8167,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7027,7 +8206,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7045,7 +8245,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7063,7 +8284,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7081,7 +8323,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7099,7 +8362,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7117,7 +8401,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7135,7 +8440,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7153,7 +8479,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7171,7 +8518,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "30"
        },
        {
@@ -7189,7 +8557,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7207,7 +8596,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7225,7 +8635,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7243,7 +8674,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7261,7 +8713,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7279,7 +8752,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7297,7 +8791,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7315,7 +8830,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7333,7 +8869,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7351,7 +8908,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7369,7 +8947,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7387,7 +8986,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7405,7 +9025,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7423,7 +9064,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7441,7 +9103,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7459,7 +9142,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7477,7 +9181,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7495,7 +9220,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7513,7 +9259,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7531,7 +9298,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "40"
        },
        {
@@ -7549,7 +9337,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7567,7 +9376,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7585,7 +9415,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7603,7 +9454,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7621,7 +9493,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7639,7 +9532,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7657,7 +9571,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7675,7 +9610,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7693,7 +9649,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7711,7 +9688,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7729,7 +9727,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7747,7 +9766,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7765,7 +9805,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7783,7 +9844,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7801,7 +9883,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7819,7 +9922,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7837,7 +9961,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7855,7 +10000,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7873,7 +10039,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7891,7 +10078,28 @@
       "list": [
        {
         "op": "lte",
-        "a": "{values.svSec}",
+        "a": {
+         "op": "cond",
+         "when": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{item.ep}",
+           "b": ""
+          }
+         },
+         "then": "60",
+         "else": {
+          "op": "cond",
+          "when": {
+           "op": "eq",
+           "a": "{item.sec}",
+           "b": ""
+          },
+          "then": "{values.svSec}",
+          "else": "{item.sec}"
+         }
+        },
         "b": "50"
        },
        {
@@ -7914,14 +10122,56 @@
      {
       "op": "lookup",
       "table": "lenScenes",
-      "key": "{values.svSec}",
+      "key": {
+       "op": "cond",
+       "when": {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.ep}",
+         "b": ""
+        }
+       },
+       "then": "60",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.sec}",
+         "b": ""
+        },
+        "then": "{values.svSec}",
+        "else": "{item.sec}"
+       }
+      },
       "fallback": "5"
      },
      "th · s1en..s",
      {
       "op": "lookup",
       "table": "lenScenes",
-      "key": "{values.svSec}",
+      "key": {
+       "op": "cond",
+       "when": {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.ep}",
+         "b": ""
+        }
+       },
+       "then": "60",
+       "else": {
+        "op": "cond",
+        "when": {
+         "op": "eq",
+         "a": "{item.sec}",
+         "b": ""
+        },
+        "then": "{values.svSec}",
+        "else": "{item.sec}"
+       }
+      },
       "fallback": "5"
      },
      "en · vo · sp · ov · cam ของทุกคลิป ห้ามเว้นว่างหรือข้ามคีย์แม้แต่ตัวเดียว"
@@ -8573,8 +10823,41 @@
      "ov30": "{item.fields.ov30}",
      "vo30": "{item.fields.vo30}",
      "cam30": "{item.fields.cam30}",
-     "secAt": "{values.svSec}",
-     "clipsAt": "{values.clipsPerProduct}",
+     "secAt": {
+      "op": "cond",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{parent.fields.ep}",
+        "b": ""
+       }
+      },
+      "then": "60",
+      "else": {
+       "op": "cond",
+       "when": {
+        "op": "eq",
+        "a": "{parent.fields.sec}",
+        "b": ""
+       },
+       "then": "{values.svSec}",
+       "else": "{parent.fields.sec}"
+      }
+     },
+     "clipsAt": {
+      "op": "cond",
+      "when": {
+       "op": "not",
+       "a": {
+        "op": "eq",
+        "a": "{parent.fields.ep}",
+        "b": ""
+       }
+      },
+      "then": "{parent.fields.ep}",
+      "else": "{values.clipsPerProduct}"
+     },
      "arc": "{parent.fields.arc}",
      "look": "{item.fields.look}",
      "camMode": {
@@ -9088,7 +11371,8 @@
       },
       "then": "1",
       "else": ""
-     }
+     },
+     "epN": "{parent.fields.ep}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -9115,8 +11399,10 @@
     "else": "🍌 Nano Banana Pro"
    },
    "aspectRatio": "9:16",
-   "when": "values.svSec>50",
-   "where": "s26en!=",
+   "where": [
+    "s26en!=",
+    "secAt>50"
+   ],
    "prompt": {
     "op": "cond",
     "when": {
@@ -9133,7 +11419,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 6 — ฉาก 26 ถึง 30"
         }
        ]
@@ -9196,7 +11482,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 6 — ฉาก 26 ถึง 30"
         }
        ]
@@ -12339,7 +14625,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดสตูดิโอ ช่วง 6",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วง 6 เสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "50"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>50"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnBoard5",
@@ -12359,8 +14673,10 @@
     "else": "🍌 Nano Banana Pro"
    },
    "aspectRatio": "9:16",
-   "when": "values.svSec>40",
-   "where": "s21en!=",
+   "where": [
+    "s21en!=",
+    "secAt>40"
+   ],
    "prompt": {
     "op": "cond",
     "when": {
@@ -12377,7 +14693,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 5 — ฉาก 21 ถึง 25"
         }
        ]
@@ -12440,7 +14756,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 5 — ฉาก 21 ถึง 25"
         }
        ]
@@ -15583,7 +17899,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดสตูดิโอ ช่วง 5",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วง 5 เสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "40"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>40"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnBoard4",
@@ -15603,8 +17947,10 @@
     "else": "🍌 Nano Banana Pro"
    },
    "aspectRatio": "9:16",
-   "when": "values.svSec>30",
-   "where": "s16en!=",
+   "where": [
+    "s16en!=",
+    "secAt>30"
+   ],
    "prompt": {
     "op": "cond",
     "when": {
@@ -15621,7 +17967,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 4 — ฉาก 16 ถึง 20"
         }
        ]
@@ -15684,7 +18030,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 4 — ฉาก 16 ถึง 20"
         }
        ]
@@ -18827,7 +21173,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดสตูดิโอ ช่วง 4",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วง 4 เสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "30"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>30"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnBoard3",
@@ -18847,8 +21221,10 @@
     "else": "🍌 Nano Banana Pro"
    },
    "aspectRatio": "9:16",
-   "when": "values.svSec>20",
-   "where": "s11en!=",
+   "where": [
+    "s11en!=",
+    "secAt>20"
+   ],
    "prompt": {
     "op": "cond",
     "when": {
@@ -18865,7 +21241,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 3 — ฉาก 11 ถึง 15"
         }
        ]
@@ -18928,7 +21304,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 3 — ฉาก 11 ถึง 15"
         }
        ]
@@ -22071,7 +24447,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดสตูดิโอ ช่วง 3",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วง 3 เสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "20"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>20"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnBoard2",
@@ -22091,8 +24495,10 @@
     "else": "🍌 Nano Banana Pro"
    },
    "aspectRatio": "9:16",
-   "when": "values.svSec>10",
-   "where": "s6en!=",
+   "where": [
+    "s6en!=",
+    "secAt>10"
+   ],
    "prompt": {
     "op": "cond",
     "when": {
@@ -22109,7 +24515,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 2 — ฉาก 6 ถึง 10"
         }
        ]
@@ -22172,7 +24578,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 2 — ฉาก 6 ถึง 10"
         }
        ]
@@ -25315,7 +27721,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดสตอรีบอร์ดสตูดิโอ ช่วง 2",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] สตอรีบอร์ดช่วง 2 เสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "10"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>10"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnBoard",
@@ -25351,7 +27785,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 1 — ฉาก 1 ถึง 5"
         }
        ]
@@ -25414,7 +27848,7 @@
        "sep": "",
        "parts": [
         {
-         "when": "values.svSec>10",
+         "when": "item.secAt>10",
          "value": " · ช่วงที่ 1 — ฉาก 1 ถึง 5"
         }
        ]
@@ -28562,8 +30996,10 @@
    "model": "Omni 1.2 Flash",
    "aspectRatio": "9:16",
    "durationSeconds": 10,
-   "when": "values.svSec>50",
-   "where": "s26en!=",
+   "where": [
+    "s26en!=",
+    "secAt>50"
+   ],
    "resolution": "{values.svRes}",
    "prompt": {
     "op": "cond",
@@ -34216,7 +36652,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 6 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 6 เสร็จแล้ว",
-   "timeoutMs": 300000
+   "timeoutMs": 300000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "50"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>50"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnVideo5",
@@ -34226,8 +36690,10 @@
    "model": "Omni 1.2 Flash",
    "aspectRatio": "9:16",
    "durationSeconds": 10,
-   "when": "values.svSec>40",
-   "where": "s21en!=",
+   "where": [
+    "s21en!=",
+    "secAt>40"
+   ],
    "resolution": "{values.svRes}",
    "prompt": {
     "op": "cond",
@@ -39880,7 +42346,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 5 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 5 เสร็จแล้ว",
-   "timeoutMs": 300000
+   "timeoutMs": 300000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "40"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>40"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnVideo4",
@@ -39890,8 +42384,10 @@
    "model": "Omni 1.2 Flash",
    "aspectRatio": "9:16",
    "durationSeconds": 10,
-   "when": "values.svSec>30",
-   "where": "s16en!=",
+   "where": [
+    "s16en!=",
+    "secAt>30"
+   ],
    "resolution": "{values.svRes}",
    "prompt": {
     "op": "cond",
@@ -45544,7 +48040,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 4 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 4 เสร็จแล้ว",
-   "timeoutMs": 300000
+   "timeoutMs": 300000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "30"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>30"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnVideo3",
@@ -45554,8 +48078,10 @@
    "model": "Omni 1.2 Flash",
    "aspectRatio": "9:16",
    "durationSeconds": 10,
-   "when": "values.svSec>20",
-   "where": "s11en!=",
+   "where": [
+    "s11en!=",
+    "secAt>20"
+   ],
    "resolution": "{values.svRes}",
    "prompt": {
     "op": "cond",
@@ -51208,7 +53734,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 3 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 3 เสร็จแล้ว",
-   "timeoutMs": 300000
+   "timeoutMs": 300000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "20"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>20"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnVideo2",
@@ -51218,8 +53772,10 @@
    "model": "Omni 1.2 Flash",
    "aspectRatio": "9:16",
    "durationSeconds": 10,
-   "when": "values.svSec>10",
-   "where": "s6en!=",
+   "where": [
+    "s6en!=",
+    "secAt>10"
+   ],
    "resolution": "{values.svRes}",
    "prompt": {
     "op": "cond",
@@ -56872,7 +59428,35 @@
    },
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังอัดพอดแคสต์ ช่วง 2 (10 วิ)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] ช่วง 2 เสร็จแล้ว",
-   "timeoutMs": 300000
+   "timeoutMs": 300000,
+   "when": {
+    "op": "or",
+    "list": [
+     {
+      "op": "gt",
+      "a": "{values.svSec}",
+      "b": "10"
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "sec>10"
+      },
+      "b": 0
+     },
+     {
+      "op": "gt",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep!="
+      },
+      "b": 0
+     }
+    ]
+   }
   },
   {
    "id": "mnVideo",
@@ -63983,6 +66567,34 @@
         }
        ]
       },
+      {
+       "op": "block",
+       "sep": "",
+       "parts": [
+        {
+         "when": {
+          "op": "and",
+          "a": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.epN}",
+            "b": ""
+           }
+          },
+          "b": {
+           "op": "not",
+           "a": {
+            "op": "eq",
+            "a": "{item.clipIndex}",
+            "b": "1"
+           }
+          }
+         },
+         "value": "EPISODE LOCK: later part of the same episode; copy the attached earlier master frame exactly (room, desk, seats, light, outfits, camera).\n"
+        }
+       ]
+      },
       "No other people, no camera gear",
       {
        "op": "lookup",
@@ -64845,6 +67457,30 @@
       }
      },
      {
+      "from": "tasks",
+      "by": "t_{item.prodId}_0",
+      "slot": "master",
+      "when": {
+       "op": "and",
+       "a": {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.epN}",
+         "b": ""
+        }
+       },
+       "b": {
+        "op": "not",
+        "a": {
+         "op": "eq",
+         "a": "{item.clipIndex}",
+         "b": "1"
+        }
+       }
+      }
+     },
+     {
       "from": "characters",
       "by": "studio",
       "slot": "room1",
@@ -64930,25 +67566,6 @@
     "default": "🍌 Nano Banana 2.1"
    },
    "aspectRatio": "9:16",
-   "when": {
-    "op": "not",
-    "a": {
-     "op": "and",
-     "a": {
-      "op": "not",
-      "a": {
-       "op": "eq",
-       "a": "{characters[ch1].slots.face}",
-       "b": ""
-      }
-     },
-     "b": {
-      "op": "eq",
-      "a": "{values.pdHostSrc}",
-      "b": "face"
-     }
-    }
-   },
    "where": [
     "clipIndex=1",
     "broll!=full"
@@ -65919,7 +68536,26 @@
    },
    "logRun": "[{item.productName}] กำลังวาดตัวละครอ้างอิง (ใช้ทุกคลิปของเรื่องนี้)",
    "logDone": "[{item.productName}] ตัวละครอ้างอิงเสร็จแล้ว",
-   "timeoutMs": 180000
+   "timeoutMs": 180000,
+   "when": {
+    "op": "not",
+    "a": {
+     "op": "and",
+     "a": {
+      "op": "not",
+      "a": {
+       "op": "eq",
+       "a": "{characters[ch1].slots.face}",
+       "b": ""
+      }
+     },
+     "b": {
+      "op": "eq",
+      "a": "{values.pdHostSrc}",
+      "b": "face"
+     }
+    }
+   }
   },
   {
    "id": "pdCover",
@@ -66119,7 +68755,35 @@
        }
       ]
      },
-     "ความยาวคลิป: {values.svSec} วินาที\n",
+     {
+      "op": "concat",
+      "parts": [
+       "ความยาวคลิป: ",
+       {
+        "op": "cond",
+        "when": {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.ep}",
+          "b": ""
+         }
+        },
+        "then": "60",
+        "else": {
+         "op": "cond",
+         "when": {
+          "op": "eq",
+          "a": "{item.sec}",
+          "b": ""
+         },
+         "then": "{values.svSec}",
+         "else": "{item.sec}"
+        }
+       },
+       " วินาที\n"
+      ]
+     },
      {
       "op": "block",
       "sep": "",
@@ -70066,13 +72730,34 @@
               {
                "el": "text",
                "value": {
-                "op": "mul",
+                "op": "add",
                 "a": {
-                 "op": "count",
-                 "from": "products",
-                 "where": "enabled=true"
+                 "op": "mul",
+                 "a": {
+                  "op": "count",
+                  "from": "products",
+                  "where": "enabled=true"
+                 },
+                 "b": "{values.clipsPerProduct}"
                 },
-                "b": "{values.clipsPerProduct}"
+                "b": {
+                 "op": "sub",
+                 "a": {
+                  "op": "sum",
+                  "from": "products",
+                  "where": "enabled=true",
+                  "field": "ep"
+                 },
+                 "b": {
+                  "op": "mul",
+                  "a": {
+                   "op": "count",
+                   "from": "products",
+                   "where": "ep>0"
+                  },
+                  "b": "{values.clipsPerProduct}"
+                 }
+                }
                },
                "className": "!text-[31px] @[640px]:!text-[30px] font-black !text-[var(--ev-accent)] tabular-nums leading-none"
               },
@@ -70541,13 +73226,34 @@
           "parts": [
            "เริ่มแบบทีละขั้น — เขียนบทเลย · ",
            {
-            "op": "mul",
+            "op": "add",
             "a": {
-             "op": "count",
-             "from": "products",
-             "where": "enabled=true"
+             "op": "mul",
+             "a": {
+              "op": "count",
+              "from": "products",
+              "where": "enabled=true"
+             },
+             "b": "{values.clipsPerProduct}"
             },
-            "b": "{values.clipsPerProduct}"
+            "b": {
+             "op": "sub",
+             "a": {
+              "op": "sum",
+              "from": "products",
+              "where": "enabled=true",
+              "field": "ep"
+             },
+             "b": {
+              "op": "mul",
+              "a": {
+               "op": "count",
+               "from": "products",
+               "where": "ep>0"
+              },
+              "b": "{values.clipsPerProduct}"
+             }
+            }
            },
            " คลิป"
           ]
@@ -76466,7 +79172,7 @@
             },
             {
              "el": "text",
-             "value": "คนพูด · ตัวละคร · ฉาก · ภาพ · จังหวะ — ว่าง = ตามรายการ",
+             "value": "คนพูด · ตัวละคร · ฉาก · ภาพ · จังหวะ · ความยาว — ว่าง = ตามรายการ",
              "className": "!text-[13px] opacity-40 truncate min-w-0"
             }
            ],
@@ -78206,6 +80912,141 @@
                "className": "!p-4 !rounded-xl !text-[19px] @[640px]:!text-[18px] !leading-relaxed !min-h-[104px] @[420px]:!min-h-[64px]"
               }
              ]
+            },
+            {
+             "el": "box",
+             "className": "flex flex-col gap-2.5",
+             "card": [
+              {
+               "el": "text",
+               "value": "ความยาวของเรื่องนี้",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold opacity-70 px-0.5"
+              },
+              {
+               "el": "grid-select",
+               "field": "ep",
+               "contained": true,
+               "cols": 4,
+               "mobile": {
+                "cols": 2
+               },
+               "options": [
+                {
+                 "value": "",
+                 "label": "คลิปสั้น",
+                 "icon": "movie"
+                },
+                {
+                 "value": "3",
+                 "label": "ตอนยาว 3 นาที",
+                 "icon": "playlist_play"
+                },
+                {
+                 "value": "4",
+                 "label": "ตอนยาว 4 นาที",
+                 "icon": "playlist_play"
+                },
+                {
+                 "value": "5",
+                 "label": "ตอนยาว 5 นาที",
+                 "icon": "playlist_play"
+                }
+               ]
+              },
+              {
+               "el": "grid-select",
+               "field": "sec",
+               "contained": true,
+               "cols": 4,
+               "mobile": {
+                "cols": 2
+               },
+               "when": {
+                "op": "eq",
+                "a": "{item.ep}",
+                "b": ""
+               },
+               "options": [
+                {
+                 "value": "",
+                 "label": "ตามรายการ",
+                 "icon": "settings"
+                },
+                {
+                 "value": "10",
+                 "label": "10 วิ",
+                 "icon": "timer"
+                },
+                {
+                 "value": "20",
+                 "label": "20 วิ",
+                 "icon": "timer"
+                },
+                {
+                 "value": "30",
+                 "label": "30 วิ",
+                 "icon": "timer"
+                },
+                {
+                 "value": "40",
+                 "label": "40 วิ",
+                 "icon": "timer"
+                },
+                {
+                 "value": "50",
+                 "label": "50 วิ",
+                 "icon": "timer"
+                },
+                {
+                 "value": "60",
+                 "label": "60 วิ",
+                 "icon": "timer"
+                }
+               ]
+              },
+              {
+               "el": "text",
+               "value": {
+                "op": "concat",
+                "parts": [
+                 "ตอนยาว = ",
+                 "{item.ep}",
+                 " คลิป คลิปละ 60 วิ เล่าต่อกันเป็นตอนเดียว · ตัวละครและห้องล็อกจากคลิปแรก · ใช้ราว ",
+                 {
+                  "op": "mul",
+                  "a": "{item.ep}",
+                  "b": 180
+                 },
+                 " เครดิต (360p ราว ",
+                 {
+                  "op": "mul",
+                  "a": "{item.ep}",
+                  "b": 60
+                 },
+                 ") · ได้เป็นคลิปแยกตามลำดับ นำไปต่อกันในแอปตัดต่อ"
+                ]
+               },
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug",
+               "when": {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.ep}",
+                 "b": ""
+                }
+               }
+              },
+              {
+               "el": "text",
+               "value": "ว่าง = ใช้ความยาวและจำนวนคลิปจากหน้าตั้งค่า",
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-50 px-0.5 leading-snug",
+               "when": {
+                "op": "eq",
+                "a": "{item.ep}",
+                "b": ""
+               }
+              }
+             ]
             }
            ],
            "bodyClass": "pt-2 gap-3",
@@ -78994,13 +81835,34 @@
                    "from": "tasks"
                   },
                   "b": {
-                   "op": "mul",
+                   "op": "add",
                    "a": {
-                    "op": "count",
-                    "from": "products",
-                    "where": "enabled=true"
+                    "op": "mul",
+                    "a": {
+                     "op": "count",
+                     "from": "products",
+                     "where": "enabled=true"
+                    },
+                    "b": "{values.clipsPerProduct}"
                    },
-                   "b": "{values.clipsPerProduct}"
+                   "b": {
+                    "op": "sub",
+                    "a": {
+                     "op": "sum",
+                     "from": "products",
+                     "where": "enabled=true",
+                     "field": "ep"
+                    },
+                    "b": {
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "ep>0"
+                     },
+                     "b": "{values.clipsPerProduct}"
+                    }
+                   }
                   }
                  }
                 ]
@@ -79216,13 +82078,34 @@
                     "from": "tasks"
                    },
                    "b": {
-                    "op": "mul",
+                    "op": "add",
                     "a": {
-                     "op": "count",
-                     "from": "products",
-                     "where": "enabled=true"
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "enabled=true"
+                     },
+                     "b": "{values.clipsPerProduct}"
                     },
-                    "b": "{values.clipsPerProduct}"
+                    "b": {
+                     "op": "sub",
+                     "a": {
+                      "op": "sum",
+                      "from": "products",
+                      "where": "enabled=true",
+                      "field": "ep"
+                     },
+                     "b": {
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "ep>0"
+                      },
+                      "b": "{values.clipsPerProduct}"
+                     }
+                    }
                    }
                   }
                  ]
@@ -79288,13 +82171,34 @@
                     "parts": [
                      "/",
                      {
-                      "op": "mul",
+                      "op": "add",
                       "a": {
-                       "op": "count",
-                       "from": "products",
-                       "where": "enabled=true"
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "enabled=true"
+                       },
+                       "b": "{values.clipsPerProduct}"
                       },
-                      "b": "{values.clipsPerProduct}"
+                      "b": {
+                       "op": "sub",
+                       "a": {
+                        "op": "sum",
+                        "from": "products",
+                        "where": "enabled=true",
+                        "field": "ep"
+                       },
+                       "b": {
+                        "op": "mul",
+                        "a": {
+                         "op": "count",
+                         "from": "products",
+                         "where": "ep>0"
+                        },
+                        "b": "{values.clipsPerProduct}"
+                       }
+                      }
                      },
                      " คลิป"
                     ]
@@ -79510,13 +82414,34 @@
                         "from": "tasks"
                        },
                        "b": {
-                        "op": "mul",
+                        "op": "add",
                         "a": {
-                         "op": "count",
-                         "from": "products",
-                         "where": "enabled=true"
+                         "op": "mul",
+                         "a": {
+                          "op": "count",
+                          "from": "products",
+                          "where": "enabled=true"
+                         },
+                         "b": "{values.clipsPerProduct}"
                         },
-                        "b": "{values.clipsPerProduct}"
+                        "b": {
+                         "op": "sub",
+                         "a": {
+                          "op": "sum",
+                          "from": "products",
+                          "where": "enabled=true",
+                          "field": "ep"
+                         },
+                         "b": {
+                          "op": "mul",
+                          "a": {
+                           "op": "count",
+                           "from": "products",
+                           "where": "ep>0"
+                          },
+                          "b": "{values.clipsPerProduct}"
+                         }
+                        }
                        }
                       }
                      ]
@@ -79715,13 +82640,34 @@
                          "from": "tasks"
                         },
                         "b": {
-                         "op": "mul",
+                         "op": "add",
                          "a": {
-                          "op": "count",
-                          "from": "products",
-                          "where": "enabled=true"
+                          "op": "mul",
+                          "a": {
+                           "op": "count",
+                           "from": "products",
+                           "where": "enabled=true"
+                          },
+                          "b": "{values.clipsPerProduct}"
                          },
-                         "b": "{values.clipsPerProduct}"
+                         "b": {
+                          "op": "sub",
+                          "a": {
+                           "op": "sum",
+                           "from": "products",
+                           "where": "enabled=true",
+                           "field": "ep"
+                          },
+                          "b": {
+                           "op": "mul",
+                           "a": {
+                            "op": "count",
+                            "from": "products",
+                            "where": "ep>0"
+                           },
+                           "b": "{values.clipsPerProduct}"
+                          }
+                         }
                         }
                        }
                       ]
@@ -79737,13 +82683,34 @@
                     "parts": [
                      "/",
                      {
-                      "op": "mul",
+                      "op": "add",
                       "a": {
-                       "op": "count",
-                       "from": "products",
-                       "where": "enabled=true"
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "enabled=true"
+                       },
+                       "b": "{values.clipsPerProduct}"
                       },
-                      "b": "{values.clipsPerProduct}"
+                      "b": {
+                       "op": "sub",
+                       "a": {
+                        "op": "sum",
+                        "from": "products",
+                        "where": "enabled=true",
+                        "field": "ep"
+                       },
+                       "b": {
+                        "op": "mul",
+                        "a": {
+                         "op": "count",
+                         "from": "products",
+                         "where": "ep>0"
+                        },
+                        "b": "{values.clipsPerProduct}"
+                       }
+                      }
                      },
                      " คลิป"
                     ]
@@ -80314,13 +83281,34 @@
                      "from": "tasks"
                     },
                     "b": {
-                     "op": "mul",
+                     "op": "add",
                      "a": {
-                      "op": "count",
-                      "from": "products",
-                      "where": "enabled=true"
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "enabled=true"
+                      },
+                      "b": "{values.clipsPerProduct}"
                      },
-                     "b": "{values.clipsPerProduct}"
+                     "b": {
+                      "op": "sub",
+                      "a": {
+                       "op": "sum",
+                       "from": "products",
+                       "where": "enabled=true",
+                       "field": "ep"
+                      },
+                      "b": {
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "ep>0"
+                       },
+                       "b": "{values.clipsPerProduct}"
+                      }
+                     }
                     }
                    }
                   ]
@@ -80537,13 +83525,34 @@
                       "from": "tasks"
                      },
                      "b": {
-                      "op": "mul",
+                      "op": "add",
                       "a": {
-                       "op": "count",
-                       "from": "products",
-                       "where": "enabled=true"
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "enabled=true"
+                       },
+                       "b": "{values.clipsPerProduct}"
                       },
-                      "b": "{values.clipsPerProduct}"
+                      "b": {
+                       "op": "sub",
+                       "a": {
+                        "op": "sum",
+                        "from": "products",
+                        "where": "enabled=true",
+                        "field": "ep"
+                       },
+                       "b": {
+                        "op": "mul",
+                        "a": {
+                         "op": "count",
+                         "from": "products",
+                         "where": "ep>0"
+                        },
+                        "b": "{values.clipsPerProduct}"
+                       }
+                      }
                      }
                     }
                    ]
@@ -80859,13 +83868,34 @@
                     "from": "tasks"
                    },
                    "b": {
-                    "op": "mul",
+                    "op": "add",
                     "a": {
-                     "op": "count",
-                     "from": "products",
-                     "where": "enabled=true"
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "enabled=true"
+                     },
+                     "b": "{values.clipsPerProduct}"
                     },
-                    "b": "{values.clipsPerProduct}"
+                    "b": {
+                     "op": "sub",
+                     "a": {
+                      "op": "sum",
+                      "from": "products",
+                      "where": "enabled=true",
+                      "field": "ep"
+                     },
+                     "b": {
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "ep>0"
+                      },
+                      "b": "{values.clipsPerProduct}"
+                     }
+                    }
                    }
                   },
                   "b": {
@@ -81090,13 +84120,34 @@
                       "from": "tasks"
                      },
                      "b": {
-                      "op": "mul",
+                      "op": "add",
                       "a": {
-                       "op": "count",
-                       "from": "products",
-                       "where": "enabled=true"
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "enabled=true"
+                       },
+                       "b": "{values.clipsPerProduct}"
                       },
-                      "b": "{values.clipsPerProduct}"
+                      "b": {
+                       "op": "sub",
+                       "a": {
+                        "op": "sum",
+                        "from": "products",
+                        "where": "enabled=true",
+                        "field": "ep"
+                       },
+                       "b": {
+                        "op": "mul",
+                        "a": {
+                         "op": "count",
+                         "from": "products",
+                         "where": "ep>0"
+                        },
+                        "b": "{values.clipsPerProduct}"
+                       }
+                      }
                      }
                     }
                    ]
@@ -81133,13 +84184,34 @@
                     "from": "tasks"
                    },
                    "b": {
-                    "op": "mul",
+                    "op": "add",
                     "a": {
-                     "op": "count",
-                     "from": "products",
-                     "where": "enabled=true"
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "enabled=true"
+                     },
+                     "b": "{values.clipsPerProduct}"
                     },
-                    "b": "{values.clipsPerProduct}"
+                    "b": {
+                     "op": "sub",
+                     "a": {
+                      "op": "sum",
+                      "from": "products",
+                      "where": "enabled=true",
+                      "field": "ep"
+                     },
+                     "b": {
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "ep>0"
+                      },
+                      "b": "{values.clipsPerProduct}"
+                     }
+                    }
                    }
                   },
                   "b": {
@@ -81214,13 +84286,34 @@
                     "from": "tasks"
                    },
                    "b": {
-                    "op": "mul",
+                    "op": "add",
                     "a": {
-                     "op": "count",
-                     "from": "products",
-                     "where": "enabled=true"
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "enabled=true"
+                     },
+                     "b": "{values.clipsPerProduct}"
                     },
-                    "b": "{values.clipsPerProduct}"
+                    "b": {
+                     "op": "sub",
+                     "a": {
+                      "op": "sum",
+                      "from": "products",
+                      "where": "enabled=true",
+                      "field": "ep"
+                     },
+                     "b": {
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "ep>0"
+                      },
+                      "b": "{values.clipsPerProduct}"
+                     }
+                    }
                    }
                   }
                  },
@@ -81816,13 +84909,34 @@
                      "from": "tasks"
                     },
                     "b": {
-                     "op": "mul",
+                     "op": "add",
                      "a": {
-                      "op": "count",
-                      "from": "products",
-                      "where": "enabled=true"
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "enabled=true"
+                      },
+                      "b": "{values.clipsPerProduct}"
                      },
-                     "b": "{values.clipsPerProduct}"
+                     "b": {
+                      "op": "sub",
+                      "a": {
+                       "op": "sum",
+                       "from": "products",
+                       "where": "enabled=true",
+                       "field": "ep"
+                      },
+                      "b": {
+                       "op": "mul",
+                       "a": {
+                        "op": "count",
+                        "from": "products",
+                        "where": "ep>0"
+                       },
+                       "b": "{values.clipsPerProduct}"
+                      }
+                     }
                     }
                    }
                   ]
@@ -82053,13 +85167,34 @@
                  "from": "tasks"
                 },
                 "b": {
-                 "op": "mul",
+                 "op": "add",
                  "a": {
-                  "op": "count",
-                  "from": "products",
-                  "where": "enabled=true"
+                  "op": "mul",
+                  "a": {
+                   "op": "count",
+                   "from": "products",
+                   "where": "enabled=true"
+                  },
+                  "b": "{values.clipsPerProduct}"
                  },
-                 "b": "{values.clipsPerProduct}"
+                 "b": {
+                  "op": "sub",
+                  "a": {
+                   "op": "sum",
+                   "from": "products",
+                   "where": "enabled=true",
+                   "field": "ep"
+                  },
+                  "b": {
+                   "op": "mul",
+                   "a": {
+                    "op": "count",
+                    "from": "products",
+                    "where": "ep>0"
+                   },
+                   "b": "{values.clipsPerProduct}"
+                  }
+                 }
                 }
                }
               ]
@@ -82082,13 +85217,34 @@
                "from": "tasks"
               },
               "b": {
-               "op": "mul",
+               "op": "add",
                "a": {
-                "op": "count",
-                "from": "products",
-                "where": "enabled=true"
+                "op": "mul",
+                "a": {
+                 "op": "count",
+                 "from": "products",
+                 "where": "enabled=true"
+                },
+                "b": "{values.clipsPerProduct}"
                },
-               "b": "{values.clipsPerProduct}"
+               "b": {
+                "op": "sub",
+                "a": {
+                 "op": "sum",
+                 "from": "products",
+                 "where": "enabled=true",
+                 "field": "ep"
+                },
+                "b": {
+                 "op": "mul",
+                 "a": {
+                  "op": "count",
+                  "from": "products",
+                  "where": "ep>0"
+                 },
+                 "b": "{values.clipsPerProduct}"
+                }
+               }
               }
              }
             },
@@ -82279,13 +85435,34 @@
                 "from": "tasks"
                },
                "b": {
-                "op": "mul",
+                "op": "add",
                 "a": {
-                 "op": "count",
-                 "from": "products",
-                 "where": "enabled=true"
+                 "op": "mul",
+                 "a": {
+                  "op": "count",
+                  "from": "products",
+                  "where": "enabled=true"
+                 },
+                 "b": "{values.clipsPerProduct}"
                 },
-                "b": "{values.clipsPerProduct}"
+                "b": {
+                 "op": "sub",
+                 "a": {
+                  "op": "sum",
+                  "from": "products",
+                  "where": "enabled=true",
+                  "field": "ep"
+                 },
+                 "b": {
+                  "op": "mul",
+                  "a": {
+                   "op": "count",
+                   "from": "products",
+                   "where": "ep>0"
+                  },
+                  "b": "{values.clipsPerProduct}"
+                 }
+                }
                }
               }
              ]
@@ -82507,7 +85684,7 @@
                           "op": "not",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 10
                           }
                          }
@@ -82519,7 +85696,7 @@
                           "op": "and",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 10
                           },
                           "b": {
@@ -82606,7 +85783,7 @@
                              "a": 1,
                              "b": {
                               "op": "div",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 10
                              }
                             }
@@ -82617,7 +85794,7 @@
                             "a": 1,
                             "b": {
                              "op": "div",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             }
                            }
@@ -82631,7 +85808,7 @@
                           "op": "and",
                           "a": {
                            "op": "gt",
-                           "a": "{values.svSec}",
+                           "a": "{item.secAt}",
                            "b": 10
                           },
                           "b": {
@@ -82718,7 +85895,7 @@
                              "a": 1,
                              "b": {
                               "op": "div",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 10
                              }
                             }
@@ -82729,7 +85906,7 @@
                             "a": 1,
                             "b": {
                              "op": "div",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             }
                            }
@@ -82851,7 +86028,7 @@
                             "op": "and",
                             "a": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "b": {
@@ -82898,7 +86075,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -83013,7 +86190,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -83021,7 +86198,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83056,7 +86233,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -83171,7 +86348,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -83179,7 +86356,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83430,7 +86607,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -83507,14 +86684,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83568,7 +86745,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -83645,14 +86822,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83706,7 +86883,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -83783,14 +86960,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83844,7 +87021,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -83921,14 +87098,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -83982,7 +87159,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -84059,14 +87236,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -84120,7 +87297,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -84197,14 +87374,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -84217,7 +87394,7 @@
                          "el": "row",
                          "when": {
                           "op": "gt",
-                          "a": "{values.svSec}",
+                          "a": "{item.secAt}",
                           "b": 10
                          },
                          "style": {
@@ -84282,7 +87459,7 @@
                                "/",
                                {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               ]
@@ -84316,7 +87493,7 @@
                             },
                             "b": {
                              "op": "div",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             }
                            },
@@ -84422,7 +87599,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 0
                              },
                              {
@@ -84476,7 +87653,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 10
                              },
                              {
@@ -84530,7 +87707,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 20
                              },
                              {
@@ -84584,7 +87761,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 30
                              },
                              {
@@ -84638,7 +87815,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 40
                              },
                              {
@@ -84692,7 +87869,7 @@
                              },
                              {
                               "op": "gt",
-                              "a": "{values.svSec}",
+                              "a": "{item.secAt}",
                               "b": 50
                              },
                              {
@@ -84935,7 +88112,7 @@
                             "op": "and",
                             "a": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "b": {
@@ -85030,7 +88207,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -85162,7 +88339,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -85170,7 +88347,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -85205,7 +88382,7 @@
                            "op": "and",
                            "a": {
                             "op": "gt",
-                            "a": "{values.svSec}",
+                            "a": "{item.secAt}",
                             "b": 10
                            },
                            "b": {
@@ -85337,7 +88514,7 @@
                                 "a": 1,
                                 "b": {
                                  "op": "div",
-                                 "a": "{values.svSec}",
+                                 "a": "{item.secAt}",
                                  "b": 10
                                 }
                                }
@@ -85345,7 +88522,7 @@
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -85486,7 +88663,7 @@
                            {
                             "when": {
                              "op": "gt",
-                             "a": "{values.svSec}",
+                             "a": "{item.secAt}",
                              "b": 10
                             },
                             "value": {
@@ -85563,14 +88740,14 @@
                                },
                                "b": {
                                 "op": "div",
-                                "a": "{values.svSec}",
+                                "a": "{item.secAt}",
                                 "b": 10
                                }
                               },
                               "/",
                               {
                                "op": "div",
-                               "a": "{values.svSec}",
+                               "a": "{item.secAt}",
                                "b": 10
                               }
                              ]
@@ -85795,7 +88972,7 @@
                     },
                     {
                      "el": "text",
-                     "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
+                     "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
                      "className": "!text-[11px] font-bold opacity-85 leading-none whitespace-nowrap",
                      "when": {
                       "op": "eq",
@@ -85843,7 +89020,7 @@
                        "op": "and",
                        "a": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        },
                        "b": {
@@ -85871,7 +89048,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -85899,7 +89076,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -85986,7 +89163,7 @@
                       "op": "not",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      }
@@ -85998,7 +89175,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -86085,7 +89262,7 @@
                          "a": 1,
                          "b": {
                           "op": "div",
-                          "a": "{values.svSec}",
+                          "a": "{item.secAt}",
                           "b": 10
                          }
                         }
@@ -86096,7 +89273,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -86110,7 +89287,7 @@
                       "op": "and",
                       "a": {
                        "op": "gt",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       },
                       "b": {
@@ -86197,7 +89374,7 @@
                          "a": 1,
                          "b": {
                           "op": "div",
-                          "a": "{values.svSec}",
+                          "a": "{item.secAt}",
                           "b": 10
                          }
                         }
@@ -86208,7 +89385,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -86508,7 +89685,7 @@
                        {
                         "op": "lookup",
                         "table": "lenSecs",
-                        "key": "{values.svSec}",
+                        "key": "{item.secAt}",
                         "fallback": "10"
                        },
                        " วิ · 9:16"
@@ -94529,7 +97706,7 @@
                          "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed"
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -94794,7 +97971,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -95059,7 +98236,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -95324,7 +98501,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -95589,7 +98766,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -95854,7 +99031,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>10"
+                       "when": "item.secAt>10"
                       },
                       {
                        "el": "box",
@@ -99085,7 +102262,7 @@
                          "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed"
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -99350,7 +102527,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -99615,7 +102792,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -99880,7 +103057,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -100145,7 +103322,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -100410,7 +103587,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>20"
+                       "when": "item.secAt>20"
                       },
                       {
                        "el": "box",
@@ -103641,7 +106818,7 @@
                          "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed"
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -103906,7 +107083,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -104171,7 +107348,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -104436,7 +107613,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -104701,7 +107878,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -104966,7 +108143,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>30"
+                       "when": "item.secAt>30"
                       },
                       {
                        "el": "box",
@@ -108197,7 +111374,7 @@
                          "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed"
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -108462,7 +111639,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -108727,7 +111904,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -108992,7 +112169,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -109257,7 +112434,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -109522,7 +112699,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>40"
+                       "when": "item.secAt>40"
                       },
                       {
                        "el": "box",
@@ -112753,7 +115930,7 @@
                          "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed"
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -113018,7 +116195,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -113283,7 +116460,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -113548,7 +116725,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -113813,7 +116990,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       },
                       {
                        "el": "box",
@@ -114078,7 +117255,7 @@
                          ]
                         }
                        ],
-                       "when": "values.svSec>50"
+                       "when": "item.secAt>50"
                       }
                      ]
                     }
@@ -114156,7 +117333,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114167,7 +117344,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114178,7 +117355,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114189,7 +117366,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114200,7 +117377,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -114394,7 +117571,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114405,7 +117582,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114416,7 +117593,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114427,7 +117604,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114438,7 +117615,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -114575,7 +117752,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114589,7 +117766,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114603,7 +117780,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114617,7 +117794,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114631,7 +117808,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114645,7 +117822,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -114671,7 +117848,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114682,7 +117859,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114693,7 +117870,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114704,7 +117881,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114715,7 +117892,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -114806,7 +117983,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114820,7 +117997,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114834,7 +118011,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114848,7 +118025,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114862,7 +118039,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114876,7 +118053,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -114902,7 +118079,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -114913,7 +118090,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -114924,7 +118101,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -114935,7 +118112,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -114946,7 +118123,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115094,7 +118271,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115105,7 +118282,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115116,7 +118293,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115127,7 +118304,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115138,7 +118315,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115249,7 +118426,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115260,7 +118437,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115271,7 +118448,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115282,7 +118459,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115293,7 +118470,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115340,7 +118517,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115354,7 +118531,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115368,7 +118545,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115382,7 +118559,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115396,7 +118573,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115410,7 +118587,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115436,7 +118613,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115447,7 +118624,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115458,7 +118635,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115469,7 +118646,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115480,7 +118657,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115592,7 +118769,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115606,7 +118783,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115620,7 +118797,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115634,7 +118811,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115648,7 +118825,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115662,7 +118839,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115689,7 +118866,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115700,7 +118877,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115711,7 +118888,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115722,7 +118899,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115733,7 +118910,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115775,7 +118952,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115789,7 +118966,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115803,7 +118980,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115817,7 +118994,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115831,7 +119008,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115845,7 +119022,7 @@
                      "force": true,
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115871,7 +119048,7 @@
                      "into": "board2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -115882,7 +119059,7 @@
                      "into": "board3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -115893,7 +119070,7 @@
                      "into": "board4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -115904,7 +119081,7 @@
                      "into": "board5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -115915,7 +119092,7 @@
                      "into": "board6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -115966,7 +119143,19 @@
                   "a": {
                    "op": "index"
                   },
-                  "b": "{values.clipsPerProduct}"
+                  "b": {
+                   "op": "cond",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.ep}",
+                     "b": ""
+                    }
+                   },
+                   "then": "{item.ep}",
+                   "else": "{values.clipsPerProduct}"
+                  }
                  },
                  {
                   "op": "not",
@@ -116116,7 +119305,19 @@
                   "a": {
                    "op": "index"
                   },
-                  "b": "{values.clipsPerProduct}"
+                  "b": {
+                   "op": "cond",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.ep}",
+                     "b": ""
+                    }
+                   },
+                   "then": "{item.ep}",
+                   "else": "{values.clipsPerProduct}"
+                  }
                  }
                 ]
                },
@@ -116262,7 +119463,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -116276,7 +119477,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -116290,7 +119491,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 20
                        }
                       },
@@ -116304,7 +119505,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 30
                        }
                       },
@@ -116318,7 +119519,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 40
                        }
                       },
@@ -116332,7 +119533,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 50
                        }
                       }
@@ -116374,7 +119575,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -116388,7 +119589,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
@@ -116402,7 +119603,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 20
                        }
                       },
@@ -116416,7 +119617,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 30
                        }
                       },
@@ -116430,7 +119631,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 40
                        }
                       },
@@ -116444,7 +119645,7 @@
                        "force": true,
                        "when": {
                         "op": "gt",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 50
                        }
                       }
@@ -116525,7 +119726,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -116602,14 +119803,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -116742,7 +119943,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -116819,14 +120020,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -116881,7 +120082,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -116958,14 +120159,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -117020,7 +120221,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -117097,14 +120298,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -117159,7 +120360,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -117236,14 +120437,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -117298,7 +120499,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -117375,14 +120576,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -117437,7 +120638,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -117514,14 +120715,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -117613,7 +120814,7 @@
                      "into": "video2",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      }
                     },
@@ -117624,7 +120825,7 @@
                      "into": "video3",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      }
                     },
@@ -117635,7 +120836,7 @@
                      "into": "video4",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      }
                     },
@@ -117646,7 +120847,7 @@
                      "into": "video5",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      }
                     },
@@ -117657,7 +120858,7 @@
                      "into": "video6",
                      "when": {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      }
                     }
@@ -117763,7 +120964,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 0
                      },
                      {
@@ -117817,7 +121018,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 10
                      },
                      {
@@ -117871,7 +121072,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 20
                      },
                      {
@@ -117925,7 +121126,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 30
                      },
                      {
@@ -117979,7 +121180,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 40
                      },
                      {
@@ -118033,7 +121234,7 @@
                      },
                      {
                       "op": "gt",
-                      "a": "{values.svSec}",
+                      "a": "{item.secAt}",
                       "b": 50
                      },
                      {
@@ -118302,7 +121503,7 @@
                     "op": "and",
                     "a": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "b": {
@@ -118390,7 +121591,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 10
                    },
                    "b": {
@@ -118546,7 +121747,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -118554,7 +121755,7 @@
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -118589,7 +121790,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 10
                    },
                    "b": {
@@ -118745,7 +121946,7 @@
                         "a": 1,
                         "b": {
                          "op": "div",
-                         "a": "{values.svSec}",
+                         "a": "{item.secAt}",
                          "b": 10
                         }
                        }
@@ -118753,7 +121954,7 @@
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -118875,7 +122076,7 @@
                    "into": "board2",
                    "when": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 10
                    }
                   },
@@ -118886,7 +122087,7 @@
                    "into": "board3",
                    "when": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 20
                    }
                   },
@@ -118897,7 +122098,7 @@
                    "into": "board4",
                    "when": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 30
                    }
                   },
@@ -118908,7 +122109,7 @@
                    "into": "board5",
                    "when": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 40
                    }
                   },
@@ -118919,7 +122120,7 @@
                    "into": "board6",
                    "when": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 50
                    }
                   }
@@ -119219,7 +122420,7 @@
                    "op": "and",
                    "a": {
                     "op": "gt",
-                    "a": "{values.svSec}",
+                    "a": "{item.secAt}",
                     "b": 10
                    },
                    "b": {
@@ -119247,7 +122448,7 @@
                   "op": "and",
                   "a": {
                    "op": "gt",
-                   "a": "{values.svSec}",
+                   "a": "{item.secAt}",
                    "b": 10
                   },
                   "b": {
@@ -119275,7 +122476,7 @@
                   "op": "and",
                   "a": {
                    "op": "gt",
-                   "a": "{values.svSec}",
+                   "a": "{item.secAt}",
                    "b": 10
                   },
                   "b": {
@@ -119493,7 +122694,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
+                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
                  "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
                  "when": {
                   "op": "eq",
@@ -119551,7 +122752,7 @@
                 },
                 {
                  "el": "text",
-                 "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
+                 "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
                  "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
                  "when": {
                   "op": "eq",
@@ -119613,7 +122814,19 @@
                   "a": {
                    "op": "index"
                   },
-                  "b": "{values.clipsPerProduct}"
+                  "b": {
+                   "op": "cond",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.ep}",
+                     "b": ""
+                    }
+                   },
+                   "then": "{item.ep}",
+                   "else": "{values.clipsPerProduct}"
+                  }
                  },
                  {
                   "op": "not",
@@ -119776,7 +122989,19 @@
                   "a": {
                    "op": "index"
                   },
-                  "b": "{values.clipsPerProduct}"
+                  "b": {
+                   "op": "cond",
+                   "when": {
+                    "op": "not",
+                    "a": {
+                     "op": "eq",
+                     "a": "{item.ep}",
+                     "b": ""
+                    }
+                   },
+                   "then": "{item.ep}",
+                   "else": "{values.clipsPerProduct}"
+                  }
                  }
                 ]
                },
@@ -120229,13 +123454,34 @@
                 "from": "tasks"
                },
                "b": {
-                "op": "mul",
+                "op": "add",
                 "a": {
-                 "op": "count",
-                 "from": "products",
-                 "where": "enabled=true"
+                 "op": "mul",
+                 "a": {
+                  "op": "count",
+                  "from": "products",
+                  "where": "enabled=true"
+                 },
+                 "b": "{values.clipsPerProduct}"
                 },
-                "b": "{values.clipsPerProduct}"
+                "b": {
+                 "op": "sub",
+                 "a": {
+                  "op": "sum",
+                  "from": "products",
+                  "where": "enabled=true",
+                  "field": "ep"
+                 },
+                 "b": {
+                  "op": "mul",
+                  "a": {
+                   "op": "count",
+                   "from": "products",
+                   "where": "ep>0"
+                  },
+                  "b": "{values.clipsPerProduct}"
+                 }
+                }
                }
               }
              ]
@@ -120541,13 +123787,34 @@
                   "parts": [
                    "/",
                    {
-                    "op": "mul",
+                    "op": "add",
                     "a": {
-                     "op": "count",
-                     "from": "products",
-                     "where": "enabled=true"
+                     "op": "mul",
+                     "a": {
+                      "op": "count",
+                      "from": "products",
+                      "where": "enabled=true"
+                     },
+                     "b": "{values.clipsPerProduct}"
                     },
-                    "b": "{values.clipsPerProduct}"
+                    "b": {
+                     "op": "sub",
+                     "a": {
+                      "op": "sum",
+                      "from": "products",
+                      "where": "enabled=true",
+                      "field": "ep"
+                     },
+                     "b": {
+                      "op": "mul",
+                      "a": {
+                       "op": "count",
+                       "from": "products",
+                       "where": "ep>0"
+                      },
+                      "b": "{values.clipsPerProduct}"
+                     }
+                    }
                    },
                    " คลิป"
                   ]
@@ -120836,7 +124103,7 @@
                    {
                     "when": {
                      "op": "gt",
-                     "a": "{values.svSec}",
+                     "a": "{item.secAt}",
                      "b": 10
                     },
                     "value": {
@@ -120913,14 +124180,14 @@
                        },
                        "b": {
                         "op": "div",
-                        "a": "{values.svSec}",
+                        "a": "{item.secAt}",
                         "b": 10
                        }
                       },
                       "/",
                       {
                        "op": "div",
-                       "a": "{values.svSec}",
+                       "a": "{item.secAt}",
                        "b": 10
                       }
                      ]
@@ -121253,7 +124520,7 @@
                   },
                   {
                    "el": "text",
-                   "value": "คลิปที่ {item.clipIndex}/{values.clipsPerProduct}",
+                   "value": "คลิปที่ {item.clipIndex}/{item.clipsAt}",
                    "className": "!text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--ev-surface2)] !text-[var(--ev-text)] opacity-85 shrink-0 whitespace-nowrap leading-none flex items-center ml-auto",
                    "when": {
                     "op": "eq",
@@ -121856,13 +125123,34 @@
              "from": "tasks"
             },
             "b": {
-             "op": "mul",
+             "op": "add",
              "a": {
-              "op": "count",
-              "from": "products",
-              "where": "enabled=true"
+              "op": "mul",
+              "a": {
+               "op": "count",
+               "from": "products",
+               "where": "enabled=true"
+              },
+              "b": "{values.clipsPerProduct}"
              },
-             "b": "{values.clipsPerProduct}"
+             "b": {
+              "op": "sub",
+              "a": {
+               "op": "sum",
+               "from": "products",
+               "where": "enabled=true",
+               "field": "ep"
+              },
+              "b": {
+               "op": "mul",
+               "a": {
+                "op": "count",
+                "from": "products",
+                "where": "ep>0"
+               },
+               "b": "{values.clipsPerProduct}"
+              }
+             }
             }
            }
           ]
@@ -121921,13 +125209,34 @@
     "to": ""
    },
    "total": {
-    "op": "mul",
+    "op": "add",
     "a": {
-     "op": "count",
-     "from": "products",
-     "where": "enabled=true"
+     "op": "mul",
+     "a": {
+      "op": "count",
+      "from": "products",
+      "where": "enabled=true"
+     },
+     "b": "{values.clipsPerProduct}"
     },
-    "b": "{values.clipsPerProduct}"
+    "b": {
+     "op": "sub",
+     "a": {
+      "op": "sum",
+      "from": "products",
+      "where": "enabled=true",
+      "field": "ep"
+     },
+     "b": {
+      "op": "mul",
+      "a": {
+       "op": "count",
+       "from": "products",
+       "where": "ep>0"
+      },
+      "b": "{values.clipsPerProduct}"
+     }
+    }
    }
   }
  },
@@ -122027,7 +125336,8 @@
   "textPlan": {
    "ไม่มีข้อความ": "โหมดคลิปนี้คือ \"ไม่มีข้อความบนภาพ\" — ห้ามพึ่งตัวหนังสือในการสื่อสาร: ออกแบบ s1th-s5th และ s1en-s5en ให้เล่าเรื่องด้วยภาพล้วน (องค์ประกอบ มุมกล้อง การกระทำ) และให้เสียงพากย์ vo1-vo5 ช่วยแบกสารเฉพาะเมื่อโหมดเสียงพากย์เปิดอยู่ — ถ้าปิดเสียงพากย์ด้วย (เงียบ/ASMR) ต้องเล่าให้เข้าใจครบด้วยภาพล้วน ไม่มีทั้งตัวหนังสือและคำพูด · ห้ามบรรยายว่ามีข้อความ ป้าย ซับไตเติล หรือตัวอักษรใดๆ ปรากฏในภาพ (ยกเว้นฉลากจริงบนตัวสินค้า) · ฟิลด์ ov1-ov5 ยังเขียนไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดข้อความภายหลัง",
    "หัวเรื่องตอนเปิด": "โหมดข้อความ \"หัวเรื่องตอนเปิด\" — มีตัวหนังสือบนภาพเฉพาะฉากแรก (ov1) เป็นหัวเรื่องของคลิป 2-5 คำ บอกว่าทำอะไรให้ดู (เช่น \"ขัดห้องน้ำ 3 นาที\") · ฉาก 2 เป็นต้นไปไม่มีตัวหนังสือ เล่าด้วยภาพล้วน ov2-ovN ยังเขียนไว้ตามปกติแต่จะไม่ถูกใช้ · ห้ามบรรยายว่ามีข้อความ ป้าย หรือซับไตเติลในฉากอื่น · **ov1 ยาวไม่เกิน 20 ตัวอักษรไทย** (นับรวมวรรค) เพื่อให้พิมพ์จบในบรรทัดเดียว — ยาวกว่านี้โมเดลจะตัดบรรทัดเอง และตัดคนละที่ในแต่ละช่วง 10 วินาที",
-   "หัวเรื่องค้างทั้งคลิป": "โหมดข้อความ \"หัวเรื่องค้างทั้งคลิป\" — มีตัวหนังสือบนภาพชุดเดียวคือ ov1 ที่ค้างอยู่ตลอดคลิป เป็นหัวเรื่องของคลิป 2-5 คำ บอกว่าทำอะไรให้ดู (เช่น \"ขัดห้องน้ำ 3 นาที\") · ฉาก 2 เป็นต้นไปไม่มีตัวหนังสือ เล่าด้วยภาพล้วน ov2-ovN ยังเขียนไว้ตามปกติแต่จะไม่ถูกใช้ · ห้ามบรรยายว่ามีข้อความ ป้าย หรือซับไตเติลในฉากอื่น · ข้อความนี้ค้างทุกเฟรมทุกช่วง จึงต้องขึ้นเหมือนกันเป๊ะทุกช่วง · **ov1 ยาวไม่เกิน 20 ตัวอักษรไทย** (นับรวมวรรค) เพื่อให้พิมพ์จบในบรรทัดเดียว — ยาวกว่านี้โมเดลจะตัดบรรทัดเอง และตัดคนละที่ในแต่ละช่วง 10 วินาที"
+   "หัวเรื่องค้างทั้งคลิป": "โหมดข้อความ \"หัวเรื่องค้างทั้งคลิป\" — มีตัวหนังสือบนภาพชุดเดียวคือ ov1 ที่ค้างอยู่ตลอดคลิป เป็นหัวเรื่องของคลิป 2-5 คำ บอกว่าทำอะไรให้ดู (เช่น \"ขัดห้องน้ำ 3 นาที\") · ฉาก 2 เป็นต้นไปไม่มีตัวหนังสือ เล่าด้วยภาพล้วน ov2-ovN ยังเขียนไว้ตามปกติแต่จะไม่ถูกใช้ · ห้ามบรรยายว่ามีข้อความ ป้าย หรือซับไตเติลในฉากอื่น · ข้อความนี้ค้างทุกเฟรมทุกช่วง จึงต้องขึ้นเหมือนกันเป๊ะทุกช่วง · **ov1 ยาวไม่เกิน 20 ตัวอักษรไทย** (นับรวมวรรค) เพื่อให้พิมพ์จบในบรรทัดเดียว — ยาวกว่านี้โมเดลจะตัดบรรทัดเอง และตัดคนละที่ในแต่ละช่วง 10 วินาที",
+   "ซับไตเติ้ลรายฉาก": "โหมดข้อความ \"ซับไตเติ้ลรายฉาก\" — ทุกฉากมีซับ 1 บรรทัดล่างจอ = ovN ของฉากนั้น · ovN = ใจความของ voN ย่อเป็นวลีเดียว **ไม่เกิน 16 ตัวอักษรไทย** (นับรวมวรรค · อังกฤษไม่เกิน 5 คำ) เพื่อให้จบในบรรทัดเดียว — ยาวกว่านี้โมเดลจะตัดบรรทัดกลางคำ · เขียนคำไทยติดกันทั้งวลี ห้ามเว้นวรรคระหว่างคำ ห้ามใส่เครื่องหมายคำพูด/อีโมจิ · ทุกฉากต้องมี ovN ห้ามว่าง"
   },
   "audioPlan": {
    "ไม่มีเสียงพากย์": "คลิปนี้ \"ไม่มีเสียงพากย์\" (ไม่มีคนพูดเลย) — สารทั้งหมดต้องสื่อผ่านภาพเป็นหลัก (ใช้ข้อความบนภาพช่วยได้เฉพาะเมื่อโหมดข้อความเปิดอยู่ — ถ้าปิดอยู่ต้องเล่าด้วยภาพล้วน) · ออกแบบ s1th-s5th และ s1en-s5en ให้เข้าใจได้ครบโดยไม่ต้องมีคำพูด ห้ามวางฉากที่ต้องพึ่งการพูดอธิบาย · ถ้ามีพรีเซนเตอร์ ห้ามให้พูดใส่กล้อง ใช้การกระทำและสีหน้าแทน · ยังเขียน vo1-vo5 ไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดเสียงพากย์ภายหลัง",
