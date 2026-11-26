@@ -86,7 +86,9 @@
     "svScene": "",
     "svVoTone": "",
     "svRes": "720p",
-    "svModel": "Omni 1.1 Flash"
+    "svModel": "Omni 1.1 Flash",
+    "imageModel": "🍌 Nano Banana Pro",
+    "svSell": "อัตโนมัติ"
   },
   "collections": {
     "control": {
@@ -197,7 +199,9 @@
         "cam12",
         "cam13",
         "cam14",
-        "cam15"
+        "cam15",
+        "caption",
+        "hashtags"
       ],
       "slots": [
         "board",
@@ -205,7 +209,8 @@
         "board2",
         "board3",
         "video2",
-        "video3"
+        "video3",
+        "cover"
       ],
       "idPrefix": "t"
     },
@@ -389,6 +394,45 @@
             "table": "lenActTail",
             "key": "{values.svSec}",
             "fallback": ""
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "or",
+                    "list": [
+                      {
+                        "op": "eq",
+                        "a": "{values.svSell}",
+                        "b": "อัตโนมัติ"
+                      },
+                      {
+                        "op": "eq",
+                        "a": "{values.svSell}",
+                        "b": ""
+                      }
+                    ]
+                  }
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    {
+                      "op": "lookup",
+                      "table": "sellPlan",
+                      "key": "{values.svSell}",
+                      "fallback": ""
+                    },
+                    " · ใช้กับลำดับเรื่องและถ้อยคำใน synopsis/ov/vo เท่านั้น — โครงฉาก ฉาก มุมกล้อง และน้ำเสียงยังตามค่าที่ตั้งไว้",
+                    "\n"
+                  ]
+                }
+              }
+            ]
           },
           {
             "op": "block",
@@ -908,6 +952,31 @@
                   "key": "{values.svSec}",
                   "fallback": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา แต่ตัด emoji และสัญลักษณ์ภาพออก\",\"category\":\"หมวดสินค้า\",\"palette\":\"ชื่อโทนสีสั้นๆ เช่น ชมพู-ส้ม\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาอังกฤษ ห้ามมีอักษรไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์"
                 }
+              }
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "eq",
+                    "a": "{values.svLang}",
+                    "b": "English"
+                  }
+                },
+                "value": "\n\nเพิ่มอีก 2 คีย์ในทุก object: \"caption\":\"แคปชันโพสต์ TikTok/Facebook ภาษาไทย 1-2 ประโยค ไม่เกิน 150 ตัวอักษร พูดถึงสินค้าและประโยชน์ ไม่มี emoji ไม่แต่งราคา/โปรที่ผู้ใช้ไม่ได้ให้ ห้ามใช้คำสไตล์ภาพตามกฎคำสไตล์ข้างต้น\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ไทยปนอังกฤษ ไม่มีชื่อร้าน\""
+              },
+              {
+                "when": {
+                  "op": "eq",
+                  "a": "{values.svLang}",
+                  "b": "English"
+                },
+                "value": "\n\nเพิ่มอีก 2 คีย์ในทุก object: \"caption\":\"แคปชันโพสต์ TikTok/Facebook เป็นภาษาอังกฤษ 1-2 ประโยค ไม่เกิน 150 ตัวอักษร ห้ามมีอักษรไทย พูดถึงสินค้าและประโยชน์ ไม่มี emoji ไม่แต่งราคา/โปรที่ผู้ใช้ไม่ได้ให้ ห้ามใช้คำสไตล์ภาพตามกฎคำสไตล์ข้างต้น\",\"hashtags\":\"แฮชแท็กภาษาอังกฤษ 5-7 อัน คั่นด้วยเว้นวรรค ไม่มีชื่อร้าน\""
               }
             ]
           },
@@ -1476,7 +1545,9 @@
           "s15en": "{item.fields.s15en}",
           "ov15": "{item.fields.ov15}",
           "vo15": "{item.fields.vo15}",
-          "cam15": "{item.fields.cam15}"
+          "cam15": "{item.fields.cam15}",
+          "caption": "{item.fields.caption}",
+          "hashtags": "{item.fields.hashtags}"
         },
         "refs": {
           "prod": "{item.fields.__parentId}"
@@ -1490,7 +1561,28 @@
       "type": "image",
       "over": "tasks",
       "out": "board3",
-      "model": "🍌 Nano Banana Pro",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "eq",
+            "a": "{values.svTextOn}",
+            "b": "ไม่มีข้อความ"
+          }
+        },
+        "then": "🍌 Nano Banana Pro",
+        "else": {
+          "op": "cond",
+          "when": {
+            "op": "eq",
+            "a": "{values.imageModel}",
+            "b": ""
+          },
+          "then": "🍌 Nano Banana Pro",
+          "else": "{values.imageModel}"
+        }
+      },
       "aspectRatio": "9:16",
       "prompt": {
         "op": "concat",
@@ -1893,7 +1985,7 @@
                           "b": "English"
                         }
                       },
-                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
+                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
                     },
                     {
                       "when": {
@@ -1909,9 +2001,9 @@
                             "op": "lookup",
                             "table": "svTextEN",
                             "key": "{values.svText}",
-                            "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                            "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                           },
-                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
+                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
                         ]
                       }
                     }
@@ -2358,7 +2450,28 @@
       "type": "image",
       "over": "tasks",
       "out": "board2",
-      "model": "🍌 Nano Banana Pro",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "eq",
+            "a": "{values.svTextOn}",
+            "b": "ไม่มีข้อความ"
+          }
+        },
+        "then": "🍌 Nano Banana Pro",
+        "else": {
+          "op": "cond",
+          "when": {
+            "op": "eq",
+            "a": "{values.imageModel}",
+            "b": ""
+          },
+          "then": "🍌 Nano Banana Pro",
+          "else": "{values.imageModel}"
+        }
+      },
       "aspectRatio": "9:16",
       "prompt": {
         "op": "concat",
@@ -2761,7 +2874,7 @@
                           "b": "English"
                         }
                       },
-                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
+                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
                     },
                     {
                       "when": {
@@ -2777,9 +2890,9 @@
                             "op": "lookup",
                             "table": "svTextEN",
                             "key": "{values.svText}",
-                            "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                            "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                           },
-                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
+                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
                         ]
                       }
                     }
@@ -3232,7 +3345,28 @@
       "type": "image",
       "over": "tasks",
       "out": "board",
-      "model": "🍌 Nano Banana Pro",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "eq",
+            "a": "{values.svTextOn}",
+            "b": "ไม่มีข้อความ"
+          }
+        },
+        "then": "🍌 Nano Banana Pro",
+        "else": {
+          "op": "cond",
+          "when": {
+            "op": "eq",
+            "a": "{values.imageModel}",
+            "b": ""
+          },
+          "then": "🍌 Nano Banana Pro",
+          "else": "{values.imageModel}"
+        }
+      },
       "aspectRatio": "9:16",
       "prompt": {
         "op": "concat",
@@ -3635,7 +3769,7 @@
                           "b": "English"
                         }
                       },
-                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
+                      "value": "Overlay: {values.svText} ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำไทยต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาไทยใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อภาษาอังกฤษหรือบรรทัดบอกสไตล์ลงในภาพ"
                     },
                     {
                       "when": {
@@ -3651,9 +3785,9 @@
                             "op": "lookup",
                             "table": "svTextEN",
                             "key": "{values.svText}",
-                            "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                            "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                           },
-                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษต้องเรนเดอร์เป็นฟอนต์สไตล์ที่กำหนดจริงๆ ให้เห็นชัดเจน · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ต้องเป็นลายเส้นวาดมือเท่านั้น ห้ามใช้ emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
+                          " ประกอบทุกฉาก — บรรทัดเดียว ไม่เกิน 5 คำอังกฤษต่อช่อง วางไม่ทับตัวสินค้า แต่งด้วย doodle ลายเส้นวาดมือชิ้นเล็ก (หัวใจ ประกาย ดาว ลูกศร) พองาม · ตัวหนังสือ overlay ภาษาอังกฤษใช้ฟอนต์สไตล์ที่กำหนดจริง ขนาด สี ขอบ ตำแหน่งเดียวกันทุกช่อง · สะกดถูกต้อง คมชัด อ่านง่าย · doodle ห้ามเป็น emoji · ห้ามพิมพ์ชื่อหัวข้อหรือบรรทัดบอกสไตล์ลงในภาพ"
                         ]
                       }
                     }
@@ -4153,7 +4287,7 @@
                     ]
                   }
                 },
-                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -4161,7 +4295,7 @@
                   "a": "{values.svVibe}",
                   "b": "อัตโนมัติ"
                 },
-                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -4169,7 +4303,7 @@
                   "a": "{values.svVibe}",
                   "b": "รีวิวแบบเพื่อนเล่า"
                 },
-                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -4177,7 +4311,7 @@
                   "a": "{values.svVibe}",
                   "b": "กำหนดฉากเอง"
                 },
-                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               }
             ]
           },
@@ -5033,7 +5167,19 @@
                                 "b": "English"
                               }
                             },
-                            "value": "\n\nON-SCREEN TEXT STYLE: {values.svText}; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                            "value": {
+                              "op": "concat",
+                              "parts": [
+                                "\n\nON-SCREEN TEXT STYLE: ",
+                                {
+                                  "op": "lookup",
+                                  "table": "svTextEN",
+                                  "key": "{values.svText}",
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
+                                },
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                              ]
+                            }
                           },
                           {
                             "when": {
@@ -5049,9 +5195,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -5113,9 +5259,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": ""
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           },
@@ -5133,9 +5279,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -5152,7 +5298,7 @@
             ]
           },
           "\n\nCONTINUATION SHOT — part 3: continue exactly where the previous 10 seconds ended (same take, story, product, set, light, palette, person). Do NOT re-introduce the product, restart the story or add an ending before the final scenes.",
-          "\n\nThe LAST reference image is this clip storyboard sheet; the others are real product photos. Silent look guide only — it must NEVER appear on screen. Every frame is live-action photography.",
+          "\n\nThe LAST reference image is this clip storyboard sheet, a silent guide: follow each scene's panel (pose, framing, product); the sheet must NEVER appear on screen. Every frame is live-action photography.",
           {
             "op": "concat",
             "parts": [
@@ -5169,7 +5315,7 @@
                         "b": "English"
                       }
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or non-Thai text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or non-Thai text, warped or morphing product or extra fingers."
                   },
                   {
                     "when": {
@@ -5177,7 +5323,7 @@
                       "a": "{values.svLang}",
                       "b": "English"
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or misspelled text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or misspelled text, warped or morphing product or extra fingers."
                   }
                 ]
               },
@@ -7046,7 +7192,7 @@
                     ]
                   }
                 },
-                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -7054,7 +7200,7 @@
                   "a": "{values.svVibe}",
                   "b": "อัตโนมัติ"
                 },
-                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -7062,7 +7208,7 @@
                   "a": "{values.svVibe}",
                   "b": "รีวิวแบบเพื่อนเล่า"
                 },
-                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -7070,7 +7216,7 @@
                   "a": "{values.svVibe}",
                   "b": "กำหนดฉากเอง"
                 },
-                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               }
             ]
           },
@@ -7926,7 +8072,19 @@
                                 "b": "English"
                               }
                             },
-                            "value": "\n\nON-SCREEN TEXT STYLE: {values.svText}; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                            "value": {
+                              "op": "concat",
+                              "parts": [
+                                "\n\nON-SCREEN TEXT STYLE: ",
+                                {
+                                  "op": "lookup",
+                                  "table": "svTextEN",
+                                  "key": "{values.svText}",
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
+                                },
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                              ]
+                            }
                           },
                           {
                             "when": {
@@ -7942,9 +8100,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -8006,9 +8164,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": ""
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           },
@@ -8026,9 +8184,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -8045,7 +8203,7 @@
             ]
           },
           "\n\nCONTINUATION SHOT — part 2: continue exactly where the previous 10 seconds ended (same take, story, product, set, light, palette, person). Do NOT re-introduce the product, restart the story or add an ending before the final scenes.",
-          "\n\nThe LAST reference image is this clip storyboard sheet; the others are real product photos. Silent look guide only — it must NEVER appear on screen. Every frame is live-action photography.",
+          "\n\nThe LAST reference image is this clip storyboard sheet, a silent guide: follow each scene's panel (pose, framing, product); the sheet must NEVER appear on screen. Every frame is live-action photography.",
           {
             "op": "concat",
             "parts": [
@@ -8062,7 +8220,7 @@
                         "b": "English"
                       }
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or non-Thai text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or non-Thai text, warped or morphing product or extra fingers."
                   },
                   {
                     "when": {
@@ -8070,7 +8228,7 @@
                       "a": "{values.svLang}",
                       "b": "English"
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or misspelled text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or misspelled text, warped or morphing product or extra fingers."
                   }
                 ]
               },
@@ -9939,7 +10097,7 @@
                     ]
                   }
                 },
-                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial of approximately 10 seconds as one single continuous full-bleed 9:16 shot: Scandinavian pastel look, soft natural light, moving smoothly through the 5 scenes below in order.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -9947,7 +10105,7 @@
                   "a": "{values.svVibe}",
                   "b": "อัตโนมัติ"
                 },
-                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal commercial, ~10 s, as one single continuous full-bleed 9:16 shot through the 5 scenes below, each set as its scene describes: clean pastel studio or cozy lived-in home.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -9955,7 +10113,7 @@
                   "a": "{values.svVibe}",
                   "b": "รีวิวแบบเพื่อนเล่า"
                 },
-                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A UGC-style product review, ~10 s, full-bleed 9:16, 5 clean-cut shots below: cozy lived-in minimal home/garden (Pinterest/MUJI/IKEA), natural daylight.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               },
               {
                 "when": {
@@ -9963,7 +10121,7 @@
                   "a": "{values.svVibe}",
                   "b": "กำหนดฉากเอง"
                 },
-                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw, restyle or cartoonify it. Styling applies to the set and light, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
+                "value": "A minimal product video, ~10 s, vertical full-bleed 9:16, 5 clean-cut shots below, all in the location each scene names. If a location photo is attached (just before the storyboard), use that exact place.\n\nPRODUCT LOCK (outranks all style): the product is the exact real object in the attached product photos — same colour, shape, proportions, size, material, texture, label, logo, lettering and number of parts; never redraw or cartoonify it. Style applies to the set, never to the product itself. For angles the photos lack, use the closest shown one; never invent details."
               }
             ]
           },
@@ -10819,7 +10977,19 @@
                                 "b": "English"
                               }
                             },
-                            "value": "\n\nON-SCREEN TEXT STYLE: {values.svText}; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                            "value": {
+                              "op": "concat",
+                              "parts": [
+                                "\n\nON-SCREEN TEXT STYLE: ",
+                                {
+                                  "op": "lookup",
+                                  "table": "svTextEN",
+                                  "key": "{values.svText}",
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
+                                },
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                              ]
+                            }
                           },
                           {
                             "when": {
@@ -10835,9 +11005,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -10899,9 +11069,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": ""
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 Thai words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted Thai overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           },
@@ -10919,9 +11089,9 @@
                                   "op": "lookup",
                                   "table": "svTextEN",
                                   "key": "{values.svText}",
-                                  "fallback": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles"
+                                  "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
                                 },
-                                "; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
+                                "; same font, size, colour, outline, position in all scenes; one line, max 5 English words, never covering the product, crisp, copied exactly from the quote. The ONLY text allowed anywhere in the video is each scene's quoted English overlay (plus text printed on the product), only in its own scene, then gone; never two at once. Camera directions, scene labels and timings are instructions — never draw them."
                               ]
                             }
                           }
@@ -10937,7 +11107,7 @@
               }
             ]
           },
-          "\n\nThe LAST reference image is this clip storyboard sheet; the others are real product photos. Silent look guide only — it must NEVER appear on screen. Every frame is live-action photography.",
+          "\n\nThe LAST reference image is this clip storyboard sheet, a silent guide: follow each scene's panel (pose, framing, product); the sheet must NEVER appear on screen. Every frame is live-action photography.",
           {
             "op": "concat",
             "parts": [
@@ -10954,7 +11124,7 @@
                         "b": "English"
                       }
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or non-Thai text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or non-Thai text, warped or morphing product or extra fingers."
                   },
                   {
                     "when": {
@@ -10962,7 +11132,7 @@
                       "a": "{values.svLang}",
                       "b": "English"
                     },
-                    "value": "\n\nNegative: no storyboard sheet, no line art, no sketch, no paper page, no framed panel, no band across top or bottom, no grid, no split screen, no distorted or misspelled text, no warped or morphing product, no extra fingers."
+                    "value": "\n\nNegative: no storyboard sheet, line art, sketch, paper page, framed panel, top/bottom band, grid, split screen, distorted or misspelled text, warped or morphing product or extra fingers."
                   }
                 ]
               },
@@ -12780,6 +12950,120 @@
         },
         "else": ""
       }
+    },
+    {
+      "id": "mnCover",
+      "type": "image",
+      "over": "tasks",
+      "out": "cover",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "eq",
+            "a": "{values.svTextOn}",
+            "b": "ไม่มีข้อความ"
+          }
+        },
+        "then": "🍌 Nano Banana Pro",
+        "else": {
+          "op": "cond",
+          "when": {
+            "op": "eq",
+            "a": "{values.imageModel}",
+            "b": ""
+          },
+          "then": "🍌 Nano Banana Pro",
+          "else": "{values.imageModel}"
+        }
+      },
+      "aspectRatio": "9:16",
+      "where": "slots.board!=",
+      "refs": {
+        "op": "lookupRefs",
+        "from": "tasks",
+        "by": "{item.id}",
+        "slot": "board",
+        "also": [
+          {
+            "from": "products",
+            "by": "{item.refs.prod}",
+            "slot": "image"
+          },
+          {
+            "from": "products",
+            "by": "{item.refs.prod}",
+            "slot": "image2"
+          },
+          {
+            "from": "products",
+            "by": "{item.refs.prod}",
+            "slot": "image3"
+          },
+          {
+            "from": "characters",
+            "by": "{values.charId}",
+            "slot": "face",
+            "when": {
+              "op": "and",
+              "a": {
+                "op": "eq",
+                "a": "{values.svChar}",
+                "b": "มีพรีเซนเตอร์ไทย 1 คนในคลิป"
+              },
+              "b": {
+                "op": "eq",
+                "a": "{values.svCharSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+              }
+            }
+          }
+        ]
+      },
+      "prompt": {
+        "op": "concat",
+        "parts": [
+          "Design one scroll-stopping vertical 9:16 COVER photo (thumbnail) for this product clip: clean Scandinavian minimal look, soft natural light, uncluttered. Reference image 1 is this clip's storyboard sheet: borrow only its set, light, palette and presenter (if any) — never copy the sheet, its panels, rows, number marks or notes. The other images are real photos of the product (plus the presenter's face if attached).\nPRODUCT LOCK: the product is the hero, large and sharp, exactly as photographed — same colour, shape, proportions, material, label, logo and lettering; never redraw or restyle it.\n",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "not",
+                  "a": {
+                    "op": "eq",
+                    "a": "{values.svTextOn}",
+                    "b": "ไม่มีข้อความ"
+                  }
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "HEADLINE text, spelled exactly: \"{item.productName}\" — one short line in the top area, ",
+                    {
+                      "op": "lookup",
+                      "table": "svTextEN",
+                      "key": "{values.svText}",
+                      "fallback": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles"
+                    },
+                    ", the same lettering style as the clip overlays, never covering the product. Optional one tiny label taken only from this caption: \"{item.caption}\".\n"
+                  ]
+                }
+              },
+              {
+                "when": "values.svTextOn=ไม่มีข้อความ",
+                "value": "NO TEXT on the cover: no headline, captions or labels; only text printed on the product may be readable.\n"
+              }
+            ]
+          },
+          "RULES: one single full-bleed photo, no grid, no split screen, no collage; text spelled exactly, never mirrored; never invent prices, discounts, free shipping or stock claims; no shopping UI, no emoji, no watermark."
+        ]
+      },
+      "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างปก",
+      "logDone": "[{item.productName} คลิป {item.clipIndex}] ปกเสร็จแล้ว",
+      "timeoutMs": 180000
     }
   ],
   "stages": [
@@ -14603,6 +14887,88 @@
                     {
                       "el": "box",
                       "className": "flex flex-col gap-2 mt-2",
+                      "card": [
+                        {
+                          "el": "row",
+                          "className": "items-center gap-2 mt-1",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "campaign",
+                              "textSize": "text-[18px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                            },
+                            {
+                              "el": "text",
+                              "value": "สไตล์การขาย",
+                              "className": "!text-[17px] @[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "วิธีเล่าเพื่อขายของ — มีผลกับบทพูดและข้อความ ส่วนฉากยังตาม \"ฉากในคลิป\"",
+                          "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
+                        },
+                        {
+                          "el": "grid-select",
+                          "field": "svSell",
+                          "cols": 2,
+                          "contained": true,
+                          "options": [
+                            {
+                              "value": "อัตโนมัติ",
+                              "label": "อัตโนมัติ",
+                              "desc": "หมีเลือกให้เข้ากับสินค้า",
+                              "icon": "auto_awesome"
+                            },
+                            {
+                              "value": "สินค้าแก้ปัญหา",
+                              "label": "สินค้าแก้ปัญหา",
+                              "desc": "เปิดด้วยปัญหา แล้วโชว์ทางแก้",
+                              "icon": "lightbulb"
+                            },
+                            {
+                              "value": "เพื่อนแนะนำเพื่อน",
+                              "label": "เพื่อนแนะนำเพื่อน",
+                              "desc": "บอกต่อของดีแบบคนสนิท",
+                              "icon": "group"
+                            },
+                            {
+                              "value": "รีวิวจริงใจ",
+                              "label": "รีวิวจริงใจ",
+                              "desc": "เล่าข้อดีตรง ๆ ไม่โอเวอร์",
+                              "icon": "thumb_up"
+                            },
+                            {
+                              "value": "เปรียบเทียบก่อน-หลัง",
+                              "label": "ก่อน-หลังใช้",
+                              "desc": "ชีวิตก่อนมี vs หลังมีสินค้า",
+                              "icon": "compare"
+                            },
+                            {
+                              "value": "ขายดุ เร่งปิด",
+                              "label": "ขายดุ เร่งปิด",
+                              "desc": "จังหวะเร็ว ชวนซื้อชัด",
+                              "icon": "bolt"
+                            },
+                            {
+                              "value": "เล่าเรื่องสั้น",
+                              "label": "เล่าเรื่องสั้น",
+                              "desc": "มีเรื่องราว ต้น-กลาง-จบ",
+                              "icon": "auto_stories"
+                            }
+                          ],
+                          "className": "!min-h-[48px] @[420px]:!min-h-0"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-2 mt-2",
                       "card": []
                     },
                     {
@@ -14713,6 +15079,56 @@
                       "el": "box",
                       "className": "flex flex-col gap-1.5",
                       "card": [
+                        {
+                          "el": "row",
+                          "className": "items-center !gap-1.5 px-0.5",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "image",
+                              "textSize": "text-[16px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                            },
+                            {
+                              "el": "text",
+                              "value": "โมเดลภาพ (สตอรีบอร์ด · ปก)",
+                              "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "dropdown",
+                          "field": "imageModel",
+                          "label": "",
+                          "options": [
+                            {
+                              "value": "🍌 Nano Banana Pro",
+                              "label": "🍌 Nano Banana Pro",
+                              "icon": "auto_awesome"
+                            },
+                            {
+                              "value": "🍌 Nano Banana 2.1",
+                              "label": "🍌 Nano Banana 2.1",
+                              "icon": "image"
+                            },
+                            {
+                              "value": "🍌 Nano Banana 2 Lite",
+                              "label": "🍌 Nano Banana 2 Lite",
+                              "icon": "bolt"
+                            }
+                          ],
+                          "className": "!min-h-[48px] @[420px]:!min-h-0"
+                        },
+                        {
+                          "el": "text",
+                          "value": "มีข้อความบนภาพ ระบบใช้ Nano Banana Pro ให้อัตโนมัติ",
+                          "icon": "info",
+                          "className": "!text-[12.5px] leading-snug opacity-60 px-0.5 mb-1",
+                          "when": "values.svTextOn!=ไม่มีข้อความ"
+                        },
                         {
                           "el": "row",
                           "className": "items-center !gap-1.5 px-0.5",
@@ -23332,6 +23748,183 @@
                                               "op": "eq",
                                               "a": "{item.slots.video}",
                                               "b": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-2 rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)]/60 p-3",
+                                  "when": "item.caption!=",
+                                  "card": [
+                                    {
+                                      "el": "row",
+                                      "className": "items-center !gap-1.5 px-0.5",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "icon",
+                                          "icon": "chat",
+                                          "textSize": "text-[16px]",
+                                          "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": "แคปชันพร้อมโพสต์",
+                                          "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.caption}",
+                                      "className": "!text-[15px] @[640px]:!text-[14px] leading-relaxed whitespace-pre-line"
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "{item.hashtags}",
+                                      "className": "!text-[14px] @[640px]:!text-[13px] leading-relaxed font-bold !text-[var(--ev-accent)] break-words",
+                                      "when": "item.hashtags!="
+                                    },
+                                    {
+                                      "el": "copy-button",
+                                      "value": "{item.caption}\n\n{item.hashtags}",
+                                      "label": "คัดลอกแคปชัน + แฮชแท็ก",
+                                      "icon": "content_copy",
+                                      "variant": "ghost",
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "el": "box",
+                                  "className": "flex flex-col gap-2 rounded-2xl border border-[var(--ev-border)] bg-[var(--ev-bg)]/60 p-3",
+                                  "when": {
+                                    "op": "not",
+                                    "a": {
+                                      "op": "eq",
+                                      "a": "{item.slots.board}",
+                                      "b": ""
+                                    }
+                                  },
+                                  "card": [
+                                    {
+                                      "el": "row",
+                                      "className": "items-center !gap-1.5 px-0.5",
+                                      "style": {
+                                        "flexWrap": "nowrap"
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "icon",
+                                          "icon": "photo",
+                                          "textSize": "text-[16px]",
+                                          "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                                        },
+                                        {
+                                          "el": "text",
+                                          "value": "ปกคลิป",
+                                          "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "box",
+                                      "className": "w-[140px]",
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.cover}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "media-slot",
+                                          "src": "{item.slots.cover}",
+                                          "aspect": "9:16",
+                                          "style": {
+                                            "borderRadius": "14px"
+                                          },
+                                          "className": "ring-1 ring-[var(--ev-border)]"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "el": "text",
+                                      "value": "ภาพปก 9:16 จากสตอรีบอร์ดและรูปสินค้าของคลิปนี้ — สร้างเมื่อไหร่ก็ได้",
+                                      "className": "!text-[13px] @[640px]:!text-[12px] opacity-55 leading-snug",
+                                      "when": {
+                                        "op": "eq",
+                                        "a": "{item.slots.cover}",
+                                        "b": ""
+                                      }
+                                    },
+                                    {
+                                      "el": "gen-button",
+                                      "op": "mnCover",
+                                      "label": "สร้างปก",
+                                      "icon": "auto_awesome",
+                                      "variant": "solid",
+                                      "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white",
+                                      "when": {
+                                        "op": "and",
+                                        "list": [
+                                          {
+                                            "op": "eq",
+                                            "a": "{item.slots.cover}",
+                                            "b": ""
+                                          },
+                                          {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "el": "box",
+                                      "className": "grid grid-cols-1 @[420px]:grid-cols-2 gap-2",
+                                      "when": {
+                                        "op": "not",
+                                        "a": {
+                                          "op": "eq",
+                                          "a": "{item.slots.cover}",
+                                          "b": ""
+                                        }
+                                      },
+                                      "card": [
+                                        {
+                                          "el": "download-button",
+                                          "to": "{item.slots.cover}",
+                                          "label": "โหลดปก",
+                                          "icon": "download",
+                                          "variant": "solid",
+                                          "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#3f8ef0] !to-[#2571dd] !text-white"
+                                        },
+                                        {
+                                          "el": "retry-button",
+                                          "op": "mnCover",
+                                          "label": "สร้างปกใหม่",
+                                          "icon": "refresh",
+                                          "variant": "ghost",
+                                          "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)]",
+                                          "when": {
+                                            "op": "not",
+                                            "a": {
+                                              "op": "eq",
+                                              "a": "{item.status}",
+                                              "b": "running"
                                             }
                                           }
                                         }
@@ -32541,7 +33134,8 @@
       "mnBoard2": "กำลังวาดสตอรีบอร์ด",
       "mnBoard3": "กำลังวาดสตอรีบอร์ด",
       "mnVideo2": "กำลังสร้างวิดีโอ",
-      "mnVideo3": "กำลังสร้างวิดีโอ"
+      "mnVideo3": "กำลังสร้างวิดีโอ",
+      "mnCover": "กำลังสร้างปก"
     },
     "charPlan": {
       "ไม่มีคนในคลิป — โฟกัสสินค้าล้วน|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ห้ามมีคนในทุกฉาก สินค้าเป็นพระเอกล้วน (มือสะอาดตามธรรมชาติโผล่สั้นๆ ได้เฉพาะฉากสาธิตที่จำเป็น) — เขียนบท s*th/s*en ให้ไม่มีบุคคล",
@@ -32754,7 +33348,8 @@
       "mnBoard3": "image",
       "mnVideo": "movie",
       "mnVideo2": "movie",
-      "mnVideo3": "movie"
+      "mnVideo3": "movie",
+      "mnCover": "image"
     },
     "presGuide": {
       "สินค้าเดี่ยวบนพื้นเรียบ": "วิธีทำ: ทุกฉากสินค้าตั้งเดี่ยวบนพื้นเรียบสีเดียวกับฉากหลังแบบไร้รอยต่อ (seamless backdrop) ห้ามมีฉากครัว ห้อง โต๊ะอาหาร หรือสิ่งของอื่น · เล่าจุดเด่นและการใช้งานผ่านมุมกล้อง แสง และรายละเอียดของตัวสินค้าแทน · ถ้าต้องสาธิต ให้ทำบนพื้นเรียบเดิม",
@@ -32809,9 +33404,9 @@
       "สัตว์เลี้ยง + เจ้าของ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "CHARACTER CONSISTENCY (HIGHEST PRIORITY): the exact pet from the attached reference image in every shot (same species, fur colour, markings); its owner (hands/torso only) uses the product on it."
     },
     "svTextEN": {
-      "ตัวอักษรลายมือภาษาไทยเส้นโค้งนุ่มหัวกลม (cute Thai handwritten script) สีขาว มีเงานุ่มรองรับ (soft shadow) + doodle ลายเส้นวาดมือเล็กๆ": "cute rounded handwritten English script, white with a soft shadow + small hand-drawn doodles",
-      "ตัวอักษรซานเซอริฟเส้นบางเรียบสะอาด (clean thin sans-serif)": "clean thin sans-serif English lettering",
-      "ตัวอักษรหนาใหญ่ชัดเจน (bold modern typography)": "bold modern English typography"
+      "ตัวอักษรลายมือภาษาไทยเส้นโค้งนุ่มหัวกลม (cute Thai handwritten script) สีขาว มีเงานุ่มรองรับ (soft shadow) + doodle ลายเส้นวาดมือเล็กๆ": "cute rounded handwritten script, white with a soft shadow + small hand-drawn doodles",
+      "ตัวอักษรซานเซอริฟเส้นบางเรียบสะอาด (clean thin sans-serif)": "clean thin sans-serif lettering",
+      "ตัวอักษรหนาใหญ่ชัดเจน (bold modern typography)": "bold modern typography"
     },
     "voicePlanEN": {
       "เสียงผู้หญิง": "เสียงพากย์ของคลิปนี้เป็น \"ผู้หญิง\" พูดภาษาอังกฤษ — vo ทุกฉากเขียนเป็นภาษาอังกฤษ ไม่มีคำลงท้ายภาษาไทย · ถ้าโหมดมีพรีเซนเตอร์และผู้ใช้ไม่ได้ระบุเพศพรีเซนเตอร์ ให้พรีเซนเตอร์เป็นผู้หญิงเพื่อให้ตรงกับเสียง · ใส่ค่า \"หญิง\" ในฟิลด์ voice ของทุกคลิป",
@@ -32835,6 +33430,14 @@
       "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา แต่ตัด emoji และสัญลักษณ์ภาพออก\",\"category\":\"หมวดสินค้า\",\"palette\":\"ชื่อโทนสีสั้นๆ เช่น ชมพู-ส้ม\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาอังกฤษ ห้ามมีอักษรไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์",
       "20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา แต่ตัด emoji และสัญลักษณ์ภาพออก\",\"category\":\"หมวดสินค้า\",\"palette\":\"ชื่อโทนสีสั้นๆ เช่น ชมพู-ส้ม\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาอังกฤษ ห้ามมีอักษรไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์",
       "30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา แต่ตัด emoji และสัญลักษณ์ภาพออก\",\"category\":\"หมวดสินค้า\",\"palette\":\"ชื่อโทนสีสั้นๆ เช่น ชมพู-ส้ม\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาอังกฤษ ห้ามมีอักษรไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์"
+    },
+    "sellPlan": {
+      "สินค้าแก้ปัญหา": "สไตล์การขาย: สินค้าแก้ปัญหา — เปิดด้วยปัญหาที่คนกลุ่มนี้เจอจริง แล้วฉากต่อไปโชว์ว่าสินค้าแก้ยังไง ปิดด้วยผลที่ได้ + ชวนซื้อ",
+      "เพื่อนแนะนำเพื่อน": "สไตล์การขาย: เพื่อนแนะนำเพื่อน — ov/vo เหมือนบอกต่อของดีให้คนสนิท เป็นกันเอง เล่าเหตุผลที่อยากให้ลอง (ห้ามขึ้นต้นด้วยคำเรียกเพื่อน)",
+      "รีวิวจริงใจ": "สไตล์การขาย: รีวิวจริงใจ — เล่าเหมือนคนที่ใช้มาแล้ว บอกข้อดีตรง ๆ ไม่โอเวอร์ ไม่อ้างเกินจริง",
+      "เปรียบเทียบก่อน-หลัง": "สไตล์การขาย: เปรียบเทียบก่อน-หลัง — ช่วงแรกเล่าสภาพก่อนมีสินค้า ช่วงหลังโชว์ความต่างหลังใช้ (ห้ามแต่งตัวเลขผลลัพธ์ที่ผู้ใช้ไม่ได้ให้)",
+      "ขายดุ เร่งปิด": "สไตล์การขาย: ขายดุ เร่งปิด — ประโยคสั้น กระชับ บอกเหตุผลให้ซื้อตอนนี้ ชวนซื้อชัด (ห้ามแต่งโปร ราคา ของใกล้หมด หรือเวลาจำกัดเอง ใช้ได้เฉพาะที่ผู้ใช้ให้)",
+      "เล่าเรื่องสั้น": "สไตล์การขาย: เล่าเรื่องสั้น — ทั้งคลิปเป็นเรื่องเล็ก ๆ มีต้น กลาง จบ สินค้าเป็นตัวช่วยของเรื่อง จบด้วยชวนซื้อ"
     }
   },
   "seed": {
@@ -32962,7 +33565,8 @@
         "batchDelay",
         "retryDelay",
         "sv*",
-        "char*"
+        "char*",
+        "imageModel"
       ]
     },
     {
