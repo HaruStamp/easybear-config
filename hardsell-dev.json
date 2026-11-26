@@ -90,7 +90,9 @@
     "videoModel": "Omni 1.2 Flash",
     "svRes": "720p",
     "styleCat": "ugc",
-    "camLocks": ""
+    "camLocks": "",
+    "svBg": "อัตโนมัติ",
+    "svPose": "อัตโนมัติ"
   },
   "collections": {
     "control": {
@@ -101,6 +103,7 @@
         "name",
         "description",
         "price",
+        "sizeInfo",
         "promotion",
         "cta",
         "info",
@@ -200,7 +203,16 @@
         "cam12",
         "cam13",
         "cam14",
-        "cam15"
+        "cam15",
+        "o1en",
+        "o2en",
+        "o3en",
+        "o4en",
+        "o5en",
+        "o6en",
+        "o7en",
+        "o8en",
+        "sizeInfo"
       ],
       "slots": [
         "board",
@@ -271,7 +283,18 @@
             "parts": [
               "ออกแบบแผนคลิปโฆษณาสินค้า จำนวน {values.clipsPerProduct} คลิป สำหรับสินค้านี้ (",
               "รูปแบบคลิปตามเทมเพลตที่ผู้ใช้เลือก",
-              ")\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.description} {item.info}\nราคา: {item.price}\nโปรโมชั่น: {item.promotion}\nคำชวนซื้อ (CTA) ที่ต้องใช้ในฉากปิดการขาย (ฉากสุดท้าย): {item.cta}\n(ราคา/โปรโมชั่น/CTA: ค่าว่าง = ออกแบบเองหรือไม่ต้องพูดถึง · มีค่า = ต้องพูดในบทพากย์ voN โดยเฉพาะฉากชวนซื้อ — ห้ามใส่ใน ovN)\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\n",
+              ")\n\nชื่อสินค้า: {item.name}\nข้อมูลสินค้า (จุดเด่น / คุณสมบัติ): {item.description} {item.info}\nราคา: {item.price}\n",
+              {
+                "op": "block",
+                "sep": "",
+                "parts": [
+                  {
+                    "when": "item.sizeInfo!=",
+                    "value": "ขนาดสินค้าจริง: {item.sizeInfo} (ใช้เทียบสัดส่วนกับมือ คน และของรอบตัวทุกฉาก)\n"
+                  }
+                ]
+              },
+              "โปรโมชั่น: {item.promotion}\nคำชวนซื้อ (CTA) ที่ต้องใช้ในฉากปิดการขาย (ฉากสุดท้าย): {item.cta}\n(ราคา/โปรโมชั่น/CTA: ค่าว่าง = ออกแบบเองหรือไม่ต้องพูดถึง · มีค่า = ต้องพูดในบทพากย์ voN โดยเฉพาะฉากชวนซื้อ — ห้ามใส่ใน ovN)\nไอเดียเพิ่มเติมจากผู้ใช้: {item.idea}\n",
               "เทมเพลตคลิป: ",
               {
                 "op": "lookup",
@@ -301,6 +324,58 @@
                 "fallback": ""
               },
               "\n(อารมณ์ของบทและตัวละครทั้งคลิปต้องเป็นไปตามโทนการขายนี้ ห้ามเศร้า เบื่อ หมดแรงเป็นอารมณ์หลัก · ปัญหาเล่าสั้นแวบเดียวแล้วเข้าทางแก้)",
+              {
+                "op": "block",
+                "sep": "",
+                "parts": [
+                  {
+                    "when": {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{values.svBg}",
+                            "b": "อัตโนมัติ"
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{values.svBg}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "eq",
+                          "a": {
+                            "op": "lookup",
+                            "table": "tplBgOk",
+                            "key": "{values.templateId}",
+                            "fallback": "no"
+                          },
+                          "b": "yes"
+                        }
+                      ]
+                    },
+                    "value": {
+                      "op": "concat",
+                      "parts": [
+                        "\nฉากหลังที่ผู้ใช้เลือก (ใช้ทุกฉาก แทนสถานที่ในเทมเพลต — สะท้อนใน sNth และ sNen): ",
+                        {
+                          "op": "lookup",
+                          "table": "bgTH",
+                          "key": "{values.svBg}",
+                          "fallback": ""
+                        },
+                        " · สินค้าคงขนาดจริงเทียบกับชั้นวาง โต๊ะ มือ และคนรอบข้าง ห้ามย่อหรือขยาย"
+                      ]
+                    }
+                  }
+                ]
+              },
               {
                 "op": "block",
                 "sep": "",
@@ -357,7 +432,65 @@
               },
               "\n",
               "ย้ำ: ชื่อเทมเพลตและสไตล์ภาพ",
-              " คือสไตล์ภาพของคลิป ไม่ใช่จุดขาย — ห้ามใช้คำเหล่านี้ใน ovN ทุกฉาก, voN ทุกฉาก และ synopsis (ยกเว้นผู้ใช้เขียนคำนั้นไว้เองในชื่อ/จุดเด่น/ไอเดียของสินค้า) · บทพูดและข้อความบนภาพต้องพูดถึงสินค้าและประโยชน์ต่อผู้ใช้เท่านั้น\nย้ำเรื่องคำลงท้าย: ครับ / ค่ะ / คะ ใช้ได้อย่างมาก 2 ครั้งต่อคลิป (แนะนำครั้งเดียวที่ voN ของฉากปิดการขาย = ฉากสุดท้าย) — ฉากกลาง จบห้วนไม่มีคำลงท้าย\nท่าฉากปิดการขาย (ฉากสุดท้าย): พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า มองกล้อง ยิ้ม แล้วพูดคำชวนซื้อ — ห้ามชี้ลงด้านล่าง ห้ามชี้ไปที่มุมจอ ตะกร้า ปุ่ม ลิงก์ หรือสิ่งที่ไม่อยู่ในฉาก (AI วิดีโอจะวาดปุ่มซื้อปลอมขึ้นตรงจุดที่ชี้) · sNen ทุกฉากห้ามมีคำ point down / toward the bottom / screen / corner / basket / cart / button / link\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
+              " คือสไตล์ภาพของคลิป ไม่ใช่จุดขาย — ห้ามใช้คำเหล่านี้ใน ovN ทุกฉาก, voN ทุกฉาก และ synopsis (ยกเว้นผู้ใช้เขียนคำนั้นไว้เองในชื่อ/จุดเด่น/ไอเดียของสินค้า) · บทพูดและข้อความบนภาพต้องพูดถึงสินค้าและประโยชน์ต่อผู้ใช้เท่านั้น\nย้ำเรื่องคำลงท้าย: ครับ / ค่ะ / คะ ใช้ได้อย่างมาก 2 ครั้งต่อคลิป (แนะนำครั้งเดียวที่ voN ของฉากปิดการขาย = ฉากสุดท้าย) — ฉากกลาง จบห้วนไม่มีคำลงท้าย\nท่าฉากปิดการขาย (ฉากสุดท้าย): ",
+              {
+                "op": "lookup",
+                "table": "poseClose",
+                "key": "{values.svPose}",
+                "fallback": "พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า (ชิ้นใหญ่ เช่น เฟอร์นิเจอร์ เครื่องใช้ไฟฟ้า ให้ยืนข้างสินค้าแทน ห้ามยก)"
+              },
+              " มองกล้อง ยิ้ม แล้วพูดคำชวนซื้อ — ห้ามชี้ลงด้านล่าง ห้ามชี้ไปที่มุมจอ ตะกร้า ปุ่ม ลิงก์ หรือสิ่งที่ไม่อยู่ในฉาก (AI วิดีโอจะวาดปุ่มซื้อปลอมขึ้นตรงจุดที่ชี้) · sNen ทุกฉากห้ามมีคำ point down / toward the bottom / screen / corner / basket / cart / button / link\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplChar",
+                        "key": "{values.templateId}",
+                        "fallback": ""
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n",
+                    {
+                      "op": "lookup",
+                      "table": "poseTH",
+                      "key": "{values.svPose}",
+                      "fallback": ""
+                    }
+                  ]
+                }
+              }
             ]
           },
           "\n\nโหมดพรีเซนเตอร์: ",
@@ -565,7 +698,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -583,7 +716,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -601,7 +734,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -619,7 +752,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -637,7 +770,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -655,7 +788,7 @@
               {
                 "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": "10"
               },
               {
                 "op": "not",
@@ -674,7 +807,7 @@
         "op": "concat",
         "sep": "",
         "parts": [
-          "\n\nรอบที่แล้วบทไม่ครบ — รอบนี้ต้องส่ง JSON เป็นลิสต์ยาว {values.clipsPerProduct} รายการ และทุกรายการต้องมีคีย์ฉากครบทุกฉากตามความยาวคลิปที่เลือก (8 วินาที = ฉาก 1 ถึง 4 · 16 วินาที = ฉาก 1 ถึง 8) ห้ามเว้นคีย์ไหนว่าง"
+          "\n\nรอบที่แล้วบทไม่ครบ — รอบนี้ต้องส่ง JSON เป็นลิสต์ยาว {values.clipsPerProduct} รายการ และทุกรายการต้องมีคีย์ฉากครบทุกฉากตามความยาวคลิปที่เลือก (8 วินาที = ฉาก 1 ถึง 4 · 10 วินาที = ฉาก 1 ถึง 5 · 16 วินาที = ฉาก 1 ถึง 8) ห้ามเว้นคีย์ไหนว่าง"
         ]
       }
     },
@@ -916,7 +1049,16 @@
           "s15en": "{item.fields.s15en}",
           "ov15": "{item.fields.ov15}",
           "vo15": "{item.fields.vo15}",
-          "cam15": "{item.fields.cam15}"
+          "cam15": "{item.fields.cam15}",
+          "o1en": "{item.fields.s1en}",
+          "o2en": "{item.fields.s2en}",
+          "o3en": "{item.fields.s3en}",
+          "o4en": "{item.fields.s4en}",
+          "o5en": "{item.fields.s5en}",
+          "o6en": "{item.fields.s6en}",
+          "o7en": "{item.fields.s7en}",
+          "o8en": "{item.fields.s8en}",
+          "sizeInfo": "{parent.fields.sizeInfo}"
         },
         "refs": {
           "prod": "{item.fields.__parentId}"
@@ -967,6 +1109,130 @@
             "table": "toneVisual",
             "key": "{values.toneId}",
             "fallback": ""
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svBg}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svBg}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplBgOk",
+                        "key": "{values.templateId}",
+                        "fallback": "no"
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\nฉากหลังที่ผู้ใช้เลือก (ชนะสถานที่ในสไตล์ภาพ): ",
+                    {
+                      "op": "lookup",
+                      "table": "bgTH",
+                      "key": "{values.svBg}",
+                      "fallback": ""
+                    },
+                    " · สินค้าคงขนาดจริงเทียบกับชั้นวาง โต๊ะ มือ และคนรอบข้าง ห้ามย่อหรือขยาย"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplChar",
+                        "key": "{values.templateId}",
+                        "fallback": ""
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n",
+                    {
+                      "op": "lookup",
+                      "table": "poseTH",
+                      "key": "{values.svPose}",
+                      "fallback": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": "item.sizeInfo!=",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\nขนาดสินค้าจริง: ",
+                    {
+                      "op": "clamp",
+                      "max": 80,
+                      "value": "{item.sizeInfo}"
+                    },
+                    " — วาดสัดส่วนให้ตรงขนาดนี้เทียบกับคน มือ และของรอบตัว"
+                  ]
+                }
+              }
+            ]
           },
           "\nองค์ประกอบ 9:16: ตัวแบบอยู่ค่อนลงล่างเล็กน้อย เว้นที่ว่างด้านบน · สินค้าเห็นชัด ไม่ถูกบัง โฟกัสคม (ชิ้นเล็กถือใกล้กล้อง · ชิ้นใหญ่ เช่น เฟอร์นิเจอร์ เครื่องใช้ไฟฟ้า คงขนาดจริงวางอยู่กับที่ ให้กล้องเข้าใกล้แทน ห้ามย่อให้ถือได้)",
           "\n\nรูปแนบรูปแรก = ตัวสินค้า (ต้นแบบที่ต้องเหมือนเป๊ะ) · ถ้ามีรูปที่สอง = ใบหน้าพรีเซนเตอร์ (ใช้แค่หน้า ไม่ใช่สินค้า)\nกติกาเหล็กสินค้า (สำคัญกว่าความสวย): สินค้าในภาพต้องเป็นชิ้นเดียวกับรูปที่แนบเป๊ะ — ห้ามเปลี่ยนสี รูปทรง สัดส่วน วัสดุ พื้นผิว ฉลาก โลโก้ ตัวอักษรบนสินค้า จำนวนชิ้น · ห้ามวาดใหม่หรือทำเป็นการ์ตูน · ขนาดต้องสมจริงเทียบมือ หน้า ของรอบตัว ห้ามขยายให้เต็มเฟรม (ให้เด่นด้วยการเข้าใกล้กล้อง) · สไตล์เทมเพลตใช้กับฉากเท่านั้น ไม่ใช่ตัวสินค้า · มุมที่รูปไม่มีให้ใช้มุมใกล้เคียง ห้ามเดา · ห้ามมีเด็กหรือทารกในภาพ",
@@ -1162,6 +1428,12 @@
             "key": "{values.templateId}",
             "fallback": ""
           },
+          {
+            "op": "lookup",
+            "table": "clipSecEN",
+            "key": "{values.svSec}",
+            "fallback": " About 8 seconds long."
+          },
           " Scene: ",
           {
             "op": "lookup",
@@ -1177,6 +1449,57 @@
             "fallback": ""
           },
           ".",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplChar",
+                        "key": "{values.templateId}",
+                        "fallback": ""
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\n",
+                    {
+                      "op": "lookup",
+                      "table": "poseEN",
+                      "key": "{values.svPose}",
+                      "fallback": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          },
           "\n\nPRODUCT LOCK (outranks all style): the product is the exact object in the first frame — same colour, shape, proportions, real size, material, label, logo and printed text; never redraw, restyle, cartoonify, enlarge, add or remove parts. Style applies to the set only.",
           {
             "op": "block",
@@ -1193,7 +1516,7 @@
                     "fallback": ""
                   },
                   ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo5} {item.vo6} {item.vo7} {item.vo8}\"",
-                  "\n\nVoice continuity: same take as part 1 — keep the exact same voice (gender, pitch, timbre, accent, pace); no other speaker."
+                  "\n\nVoice continuity: same take as part 1 — keep the exact same voice (gender, pitch, timbre, accent, pace); no other speaker. Start speaking at 0.0s with the new sentence of this script; never repeat words already said in part 1."
                 ]
               }
             ]
@@ -1212,7 +1535,7 @@
                       "op": "lookup",
                       "table": "voiceLockEN",
                       "key": "{values.svVoice}",
-                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result. Voice identity, identical in every part: one adult Thai woman, warm mid-pitched clear timbre, standard central-Thai accent, steady medium-fast pace."
                     }
                   },
                   {
@@ -1239,7 +1562,7 @@
                         ],
                         "fallback": "เสียงผู้หญิง"
                       },
-                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result. Voice identity, identical in every part: one adult Thai woman, warm mid-pitched clear timbre, standard central-Thai accent, steady medium-fast pace."
                     }
                   }
                 ]
@@ -1261,6 +1584,279 @@
             ]
           },
           "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on the person, not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing.",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "or",
+                  "list": [
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o5en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s5en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s5en}",
+                            "b": "{item.o5en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o6en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s6en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s6en}",
+                            "b": "{item.o6en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o7en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s7en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s7en}",
+                            "b": "{item.o7en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o8en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s8en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s8en}",
+                            "b": "{item.o8en}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\nUser shot notes (same continuous take, product unchanged): ",
+                    {
+                      "op": "clamp",
+                      "max": 240,
+                      "value": {
+                        "op": "block",
+                        "sep": "",
+                        "parts": [
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o5en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s5en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s5en}",
+                                    "b": "{item.o5en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s5en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o6en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s6en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s6en}",
+                                    "b": "{item.o6en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s6en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o7en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s7en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s7en}",
+                                    "b": "{item.o7en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s7en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o8en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s8en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s8en}",
+                                    "b": "{item.o8en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s8en} "
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
           "\n\nOne continuous take with a single simple action: keep the same action and framing as the end of part 1 — no scene changes, no new angles, no cuts — closing with rising energy and a confident nod that invites the viewer to buy. Handle the product gently and keep it clearly visible exactly as in the first frame.",
           "\n\nPresenter: ",
           {
@@ -1351,9 +1947,9 @@
                       "b": "Omni"
                     },
                     {
-                      "op": "eq",
+                      "op": "lte",
                       "a": "{values.svSec}",
-                      "b": "8"
+                      "b": 10
                     }
                   ]
                 },
@@ -1384,9 +1980,9 @@
                 "b": "Omni"
               },
               {
-                "op": "eq",
+                "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": 10
               }
             ]
           }
@@ -1417,9 +2013,9 @@
                   "b": "Omni"
                 },
                 {
-                  "op": "eq",
+                  "op": "lte",
                   "a": "{values.svSec}",
-                  "b": "8"
+                  "b": 10
                 }
               ]
             }
@@ -1444,9 +2040,9 @@
               "b": "Omni"
             },
             {
-              "op": "eq",
+              "op": "lte",
               "a": "{values.svSec}",
-              "b": "8"
+              "b": 10
             }
           ]
         },
@@ -1462,7 +2058,26 @@
       "out": "video",
       "model": "{values.videoModel}",
       "aspectRatio": "9:16",
-      "durationSeconds": 8,
+      "durationSeconds": {
+        "op": "cond",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.svSec}",
+              "b": "10"
+            },
+            {
+              "op": "contains",
+              "a": "{values.videoModel}",
+              "b": "Omni"
+            }
+          ]
+        },
+        "then": "10",
+        "else": "8"
+      },
       "prompt": {
         "op": "concat",
         "parts": [
@@ -1471,6 +2086,12 @@
             "table": "tplVidLead",
             "key": "{values.templateId}",
             "fallback": ""
+          },
+          {
+            "op": "lookup",
+            "table": "clipSecEN",
+            "key": "{values.svSec}",
+            "fallback": " About 8 seconds long."
           },
           " Scene: ",
           {
@@ -1487,6 +2108,130 @@
             "fallback": ""
           },
           ".",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svBg}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svBg}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplBgOk",
+                        "key": "{values.templateId}",
+                        "fallback": "no"
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\n",
+                    {
+                      "op": "lookup",
+                      "table": "bgEN",
+                      "key": "{values.svBg}",
+                      "fallback": ""
+                    },
+                    " The product keeps its true real-world size against the surroundings."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": "อัตโนมัติ"
+                      }
+                    },
+                    {
+                      "op": "not",
+                      "a": {
+                        "op": "eq",
+                        "a": "{values.svPose}",
+                        "b": ""
+                      }
+                    },
+                    {
+                      "op": "eq",
+                      "a": {
+                        "op": "lookup",
+                        "table": "tplChar",
+                        "key": "{values.templateId}",
+                        "fallback": ""
+                      },
+                      "b": "yes"
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\n",
+                    {
+                      "op": "lookup",
+                      "table": "poseEN",
+                      "key": "{values.svPose}",
+                      "fallback": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": "item.sizeInfo!=",
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\nReal product size: ",
+                    {
+                      "op": "clamp",
+                      "max": 60,
+                      "value": "{item.sizeInfo}"
+                    },
+                    " — keep this scale next to people and objects."
+                  ]
+                }
+              }
+            ]
+          },
           "\n\nPRODUCT LOCK (outranks all style): the product is the exact object in the first frame — same colour, shape, proportions, real size, material, label, logo and printed text; never redraw, restyle, cartoonify, enlarge, add or remove parts. Style applies to the set only.",
           {
             "op": "block",
@@ -1495,14 +2240,32 @@
               {
                 "op": "concat",
                 "parts": [
-                  "\n\nAudio: continuous Thai narration from 0.0s to the end, no silent gaps. Tone: ",
+                  "\n\nAudio: continuous Thai narration ",
+                  {
+                    "op": "lookup",
+                    "table": "audioSpan",
+                    "key": "{values.svSec}",
+                    "fallback": "from 0.0s to the end, no silent gaps"
+                  },
+                  ". Tone: ",
                   {
                     "op": "lookup",
                     "table": "toneVoice",
                     "key": "{values.toneId}",
                     "fallback": ""
                   },
-                  ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo1} {item.vo2} {item.vo3} {item.vo4}\""
+                  ". Natural Thai pronunciation and speed, no English. No music or sound effects — only the voice. Script (Thai): \"{item.vo1} {item.vo2} {item.vo3} {item.vo4}",
+                  {
+                    "op": "block",
+                    "sep": "",
+                    "parts": [
+                      {
+                        "when": "values.svSec=10",
+                        "value": " {item.vo5}"
+                      }
+                    ]
+                  },
+                  "\""
                 ]
               }
             ]
@@ -1521,7 +2284,7 @@
                       "op": "lookup",
                       "table": "voiceLockEN",
                       "key": "{values.svVoice}",
-                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result. Voice identity, identical in every part: one adult Thai woman, warm mid-pitched clear timbre, standard central-Thai accent, steady medium-fast pace."
                     }
                   },
                   {
@@ -1548,7 +2311,7 @@
                         ],
                         "fallback": "เสียงผู้หญิง"
                       },
-                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result."
+                      "fallback": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result. Voice identity, identical in every part: one adult Thai woman, warm mid-pitched clear timbre, standard central-Thai accent, steady medium-fast pace."
                     }
                   }
                 ]
@@ -1571,7 +2334,361 @@
           },
           "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on the person, not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing.",
           "\n\nThe first frame is given: animate forward from it — the same person, outfit, place, light and product; no cut, no new layout, no split screen.",
-          "\n\nOne continuous take with a single simple action from start to end: follow the Scene above only — no scene changes, no new angles, no cuts. Handle the product gently and keep it clearly visible exactly as in the first frame.",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "or",
+                  "list": [
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o1en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s1en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s1en}",
+                            "b": "{item.o1en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o2en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s2en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s2en}",
+                            "b": "{item.o2en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o3en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s3en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s3en}",
+                            "b": "{item.o3en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.o4en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s4en}",
+                            "b": ""
+                          }
+                        },
+                        {
+                          "op": "not",
+                          "a": {
+                            "op": "eq",
+                            "a": "{item.s4en}",
+                            "b": "{item.o4en}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "op": "and",
+                      "list": [
+                        {
+                          "op": "eq",
+                          "a": "{values.svSec}",
+                          "b": "10"
+                        },
+                        {
+                          "op": "and",
+                          "list": [
+                            {
+                              "op": "not",
+                              "a": {
+                                "op": "eq",
+                                "a": "{item.o5en}",
+                                "b": ""
+                              }
+                            },
+                            {
+                              "op": "not",
+                              "a": {
+                                "op": "eq",
+                                "a": "{item.s5en}",
+                                "b": ""
+                              }
+                            },
+                            {
+                              "op": "not",
+                              "a": {
+                                "op": "eq",
+                                "a": "{item.s5en}",
+                                "b": "{item.o5en}"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "value": {
+                  "op": "concat",
+                  "parts": [
+                    "\n\nUser shot notes (same continuous take, product unchanged): ",
+                    {
+                      "op": "clamp",
+                      "max": 240,
+                      "value": {
+                        "op": "block",
+                        "sep": "",
+                        "parts": [
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o1en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s1en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s1en}",
+                                    "b": "{item.o1en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s1en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o2en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s2en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s2en}",
+                                    "b": "{item.o2en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s2en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o3en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s3en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s3en}",
+                                    "b": "{item.o3en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s3en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.o4en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s4en}",
+                                    "b": ""
+                                  }
+                                },
+                                {
+                                  "op": "not",
+                                  "a": {
+                                    "op": "eq",
+                                    "a": "{item.s4en}",
+                                    "b": "{item.o4en}"
+                                  }
+                                }
+                              ]
+                            },
+                            "value": "{item.s4en} "
+                          },
+                          {
+                            "when": {
+                              "op": "and",
+                              "list": [
+                                {
+                                  "op": "eq",
+                                  "a": "{values.svSec}",
+                                  "b": "10"
+                                },
+                                {
+                                  "op": "and",
+                                  "list": [
+                                    {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{item.o5en}",
+                                        "b": ""
+                                      }
+                                    },
+                                    {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{item.s5en}",
+                                        "b": ""
+                                      }
+                                    },
+                                    {
+                                      "op": "not",
+                                      "a": {
+                                        "op": "eq",
+                                        "a": "{item.s5en}",
+                                        "b": "{item.o5en}"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "value": "{item.s5en} "
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "\n\nOne continuous take with a single simple action from start to end: follow the Scene above — no scene changes, no new angles, no cuts. Handle the product gently and keep it clearly visible exactly as in the first frame.",
           "\n\nPresenter: ",
           {
             "op": "lookup",
@@ -1660,9 +2777,9 @@
                       "b": "Omni"
                     },
                     {
-                      "op": "eq",
+                      "op": "lte",
                       "a": "{values.svSec}",
-                      "b": "8"
+                      "b": 10
                     }
                   ]
                 },
@@ -1672,7 +2789,19 @@
           }
         ]
       },
-      "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอ 8 วิ (ช็อตเดียวต่อเนื่อง)",
+      "logRun": {
+        "op": "concat",
+        "parts": [
+          "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอ ",
+          {
+            "op": "lookup",
+            "table": "clipSecTH",
+            "key": "{values.svSec}",
+            "fallback": "8 วิ"
+          },
+          " (ช็อตเดียวต่อเนื่อง)"
+        ]
+      },
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอเสร็จแล้ว พร้อมดาวน์โหลด",
       "resolution": {
         "op": "cond",
@@ -1690,9 +2819,9 @@
               "b": "Omni"
             },
             {
-              "op": "eq",
+              "op": "lte",
               "a": "{values.svSec}",
-              "b": "8"
+              "b": 10
             }
           ]
         },
@@ -1717,9 +2846,9 @@
                 "b": "Omni"
               },
               {
-                "op": "eq",
+                "op": "lte",
                 "a": "{values.svSec}",
-                "b": "8"
+                "b": 10
               }
             ]
           }
@@ -1750,9 +2879,9 @@
                   "b": "Omni"
                 },
                 {
-                  "op": "eq",
+                  "op": "lte",
                   "a": "{values.svSec}",
-                  "b": "8"
+                  "b": 10
                 }
               ]
             }
@@ -2196,6 +3325,12 @@
                               "icon": "zoom_in"
                             },
                             {
+                              "value": "ugc-lips",
+                              "label": "ปากทาลิป",
+                              "desc": "โคลสอัปปาก ล็อกสีลิป",
+                              "icon": "face_retouching_natural"
+                            },
+                            {
                               "value": "ugc-recommend",
                               "label": "แนะนำ",
                               "desc": "พูดแนะนำให้เพื่อน",
@@ -2308,6 +3443,172 @@
                           ],
                           "className": "!min-h-[48px] @[420px]:!min-h-0",
                           "when": "values.styleCat=d3"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-2 mt-2",
+                      "when": {
+                        "op": "eq",
+                        "a": {
+                          "op": "lookup",
+                          "table": "tplBgOk",
+                          "key": "{values.templateId}",
+                          "fallback": "no"
+                        },
+                        "b": "yes"
+                      },
+                      "card": [
+                        {
+                          "el": "row",
+                          "className": "items-center gap-2 mt-1",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "landscape",
+                              "textSize": "text-[18px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                            },
+                            {
+                              "el": "text",
+                              "value": "ฉากหลัง",
+                              "className": "!text-[17px] @[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "เลือกสถานที่ของคลิป — สินค้าคงขนาดจริงเทียบกับของรอบตัว · อัตโนมัติ = AI เลือกให้เหมาะกับสินค้า",
+                          "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
+                        },
+                        {
+                          "el": "grid-select",
+                          "field": "svBg",
+                          "cols": 3,
+                          "mobile": {
+                            "cols": 2
+                          },
+                          "contained": true,
+                          "className": "!min-h-[48px] @[420px]:!min-h-0",
+                          "options": [
+                            {
+                              "value": "อัตโนมัติ",
+                              "label": "อัตโนมัติ",
+                              "desc": "AI เลือกให้",
+                              "icon": "auto_fix_high"
+                            },
+                            {
+                              "value": "โกดังสินค้า",
+                              "label": "โกดังสินค้า",
+                              "desc": "ชั้นวางเหล็ก พาเลท",
+                              "icon": "warehouse"
+                            },
+                            {
+                              "value": "ห้างสรรพสินค้า",
+                              "label": "ห้างฯ",
+                              "desc": "ทางเดินห้าง ไฟสว่าง",
+                              "icon": "storefront"
+                            },
+                            {
+                              "value": "ตลาดนัดเปิดท้ายขายของ",
+                              "label": "ตลาดนัดเปิดท้าย",
+                              "desc": "เทของจากท้ายรถ",
+                              "icon": "local_shipping"
+                            },
+                            {
+                              "value": "บ้าน",
+                              "label": "บ้าน",
+                              "desc": "ห้องที่ใช้สินค้าจริง",
+                              "icon": "home"
+                            },
+                            {
+                              "value": "ร้านค้า",
+                              "label": "ร้านค้า",
+                              "desc": "ชั้นวาง เคาน์เตอร์",
+                              "icon": "store"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-2 mt-2",
+                      "when": {
+                        "op": "eq",
+                        "a": {
+                          "op": "lookup",
+                          "table": "tplChar",
+                          "key": "{values.templateId}",
+                          "fallback": ""
+                        },
+                        "b": "yes"
+                      },
+                      "card": [
+                        {
+                          "el": "row",
+                          "className": "items-center gap-2 mt-1",
+                          "style": {
+                            "flexWrap": "nowrap"
+                          },
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "accessibility_new",
+                              "textSize": "text-[18px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+                            },
+                            {
+                              "el": "text",
+                              "value": "ท่านำเสนอสินค้า",
+                              "className": "!text-[17px] @[640px]:!text-[16px] font-black !text-[var(--ev-text)]"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "text",
+                          "value": "นาย/นางแบบถือสินค้า หรือยืนข้างแล้วชี้นำเสนอ · สินค้าใหญ่ = ยืนข้าง กล้องถอยให้เห็นทั้งชิ้น (ใส่ขนาดสินค้าในหน้าแก้ไขสินค้าด้วย)",
+                          "className": "!text-[14px] @[640px]:!text-[13px] opacity-60 leading-relaxed mb-1"
+                        },
+                        {
+                          "el": "grid-select",
+                          "field": "svPose",
+                          "cols": 2,
+                          "mobile": {
+                            "cols": 2
+                          },
+                          "contained": true,
+                          "className": "!min-h-[48px] @[420px]:!min-h-0",
+                          "options": [
+                            {
+                              "value": "อัตโนมัติ",
+                              "label": "อัตโนมัติ",
+                              "desc": "ชิ้นเล็กถือ · ชิ้นใหญ่ยืนข้าง",
+                              "icon": "auto_fix_high"
+                            },
+                            {
+                              "value": "ถือสินค้า",
+                              "label": "ถือสินค้า",
+                              "desc": "ยกใกล้กล้อง",
+                              "icon": "back_hand"
+                            },
+                            {
+                              "value": "ยืนข้างสินค้า",
+                              "label": "ยืนข้าง ชี้นำเสนอ",
+                              "desc": "ไม่ต้องถือ",
+                              "icon": "person_pin"
+                            },
+                            {
+                              "value": "สินค้าใหญ่",
+                              "label": "สินค้าใหญ่",
+                              "desc": "ยืนข้าง เห็นทั้งชิ้น",
+                              "icon": "chair"
+                            }
+                          ]
                         }
                       ]
                     },
@@ -3918,6 +5219,35 @@
                         {
                           "el": "grid-select",
                           "field": "svSec",
+                          "cols": 3,
+                          "contained": true,
+                          "options": [
+                            {
+                              "value": "8",
+                              "label": "8 วินาที",
+                              "desc": "1 ช่วง · 4 ฉาก"
+                            },
+                            {
+                              "value": "10",
+                              "label": "10 วินาที",
+                              "desc": "1 ช่วง · 5 ฉาก"
+                            },
+                            {
+                              "value": "16",
+                              "label": "16 วินาที",
+                              "desc": "2 ช่วงต่อฉาก · 8 ฉาก"
+                            }
+                          ],
+                          "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold",
+                          "when": {
+                            "op": "contains",
+                            "a": "{values.videoModel}",
+                            "b": "Omni"
+                          }
+                        },
+                        {
+                          "el": "grid-select",
+                          "field": "svSec",
                           "cols": 2,
                           "contained": true,
                           "options": [
@@ -3932,7 +5262,51 @@
                               "desc": "2 ช่วงต่อฉาก · 8 ฉาก"
                             }
                           ],
-                          "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold"
+                          "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold",
+                          "when": {
+                            "op": "not",
+                            "a": {
+                              "op": "contains",
+                              "a": "{values.videoModel}",
+                              "b": "Omni"
+                            }
+                          }
+                        },
+                        {
+                          "el": "text",
+                          "value": "คลิป 10 วิ ใช้ได้เฉพาะ Omni — Veo ทำได้ 8 / 16 วิ",
+                          "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 px-0.5 leading-snug",
+                          "when": {
+                            "op": "not",
+                            "a": {
+                              "op": "contains",
+                              "a": "{values.videoModel}",
+                              "b": "Omni"
+                            }
+                          }
+                        },
+                        {
+                          "el": "text",
+                          "value": "ตอนนี้ตั้งความยาว 10 วิ แต่ Veo ทำไม่ได้ — เลือก 8 หรือ 16 วินาทีใหม่ก่อนเริ่ม",
+                          "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold !text-[var(--ev-accent)] px-0.5 leading-snug",
+                          "when": {
+                            "op": "and",
+                            "list": [
+                              {
+                                "op": "not",
+                                "a": {
+                                  "op": "contains",
+                                  "a": "{values.videoModel}",
+                                  "b": "Omni"
+                                }
+                              },
+                              {
+                                "op": "eq",
+                                "a": "{values.svSec}",
+                                "b": "10"
+                              }
+                            ]
+                          }
                         }
                       ]
                     },
@@ -4131,6 +5505,11 @@
                                       "icon": "image"
                                     },
                                     {
+                                      "value": "🍌 Nano Banana 2 Lite",
+                                      "label": "🍌 Nano Banana 2 Lite",
+                                      "icon": "bolt"
+                                    },
+                                    {
                                       "value": "🍌 Nano Banana Pro",
                                       "label": "🍌 Nano Banana Pro",
                                       "icon": "auto_awesome"
@@ -4175,12 +5554,24 @@
                                     {
                                       "value": "Veo 3.1 - Lite",
                                       "label": "Veo 3.1 - Lite",
-                                      "icon": "electric_bolt"
+                                      "icon": "electric_bolt",
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "10"
+                                      },
+                                      "reason": "ทำได้แค่ 8 / 16 วิ"
                                     },
                                     {
                                       "value": "Veo 3.1 - Lite [Lower Priority]",
                                       "label": "Veo 3.1 - Lite [Lower Priority]",
-                                      "icon": "trending_down"
+                                      "icon": "trending_down",
+                                      "disabledWhen": {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "10"
+                                      },
+                                      "reason": "ทำได้แค่ 8 / 16 วิ"
                                     }
                                   ],
                                   "className": "!min-h-[48px] @[420px]:!min-h-0"
@@ -4213,20 +5604,20 @@
                                         {
                                           "value": "720p",
                                           "label": "ชัด 720p",
-                                          "desc": "24 เครดิต / 8 วิ · ภาพคม ลง Shopee ได้"
+                                          "desc": "24 เครดิต / 8 วิ · 30 / 10 วิ · ภาพคม ลง Shopee ได้"
                                         },
                                         {
                                           "value": "360p",
                                           "label": "ประหยัด 360p",
-                                          "desc": "8 เครดิต / 8 วิ · ภาพไม่คม"
+                                          "desc": "8 เครดิต / 8 วิ · 10 / 10 วิ · ภาพไม่คม"
                                         }
                                       ],
                                       "when": {
                                         "op": "not",
                                         "a": {
-                                          "op": "eq",
+                                          "op": "gt",
                                           "a": "{values.svSec}",
-                                          "b": "16"
+                                          "b": 10
                                         }
                                       }
                                     },
@@ -4248,18 +5639,18 @@
                                         {
                                           "value": "360p",
                                           "label": "ประหยัด 360p",
-                                          "desc": "ใช้ได้กับคลิป 8 วิ เท่านั้น · ตอนนี้ 16 วิ จะใช้ 720p 48 เครดิต"
+                                          "desc": "ใช้ได้กับคลิป 8 / 10 วิ เท่านั้น · ตอนนี้ 16 วิ จะใช้ 720p 48 เครดิต"
                                         }
                                       ],
                                       "when": {
-                                        "op": "eq",
+                                        "op": "gt",
                                         "a": "{values.svSec}",
-                                        "b": "16"
+                                        "b": 10
                                       }
                                     },
                                     {
                                       "el": "text",
-                                      "value": "360p: ทำได้ทีละ 8 วิ · ใช้ภาพเฟรมแรกเป็นภาพอ้างอิงแทนการขยับจากภาพนั้นตรงๆ — เปิดคลิปอาจไม่ตรงภาพเฟรมแรกเป๊ะ",
+                                      "value": "360p: ทำได้เฉพาะคลิปช่วงเดียว (8 / 10 วิ) · ใช้ภาพเฟรมแรกเป็นภาพอ้างอิงแทนการขยับจากภาพนั้นตรงๆ — เปิดคลิปอาจไม่ตรงภาพเฟรมแรกเป๊ะ",
                                       "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 px-0.5 leading-snug",
                                       "when": {
                                         "op": "and",
@@ -4275,16 +5666,16 @@
                                             "b": "Omni"
                                           },
                                           {
-                                            "op": "eq",
+                                            "op": "lte",
                                             "a": "{values.svSec}",
-                                            "b": "8"
+                                            "b": 10
                                           }
                                         ]
                                       }
                                     },
                                     {
                                       "el": "text",
-                                      "value": "360p ทำได้ทีละ 8 วิ — ตอนนี้ตั้งความยาว 16 วิ คลิปจะใช้ 720p · ถ้าจะประหยัดด้วย 360p ให้เลือก 8 วินาที",
+                                      "value": "360p ทำได้เฉพาะคลิปช่วงเดียว — ตอนนี้ตั้งความยาว 16 วิ คลิปจะใช้ 720p · ถ้าจะประหยัดด้วย 360p ให้เลือก 8 หรือ 10 วินาที",
                                       "className": "!text-[13px] @[640px]:!text-[12.5px] font-bold !text-[var(--ev-accent)] px-0.5 leading-snug",
                                       "when": {
                                         "op": "and",
@@ -4295,9 +5686,9 @@
                                             "b": "360p"
                                           },
                                           {
-                                            "op": "eq",
+                                            "op": "gt",
                                             "a": "{values.svSec}",
-                                            "b": "16"
+                                            "b": 10
                                           }
                                         ]
                                       }
@@ -6170,6 +7561,28 @@
                           "field": "price",
                           "placeholder": "฿390",
                           "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
+                      "className": "flex flex-col gap-2",
+                      "card": [
+                        {
+                          "el": "text",
+                          "value": "ขนาดสินค้า (ไม่บังคับ)",
+                          "className": "!text-[13.5px] @[640px]:!text-[13px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 mb-2"
+                        },
+                        {
+                          "el": "input",
+                          "field": "sizeInfo",
+                          "placeholder": "เช่น สูง 180 ซม. กว้าง 90 ซม. · หนัก 15 กก.",
+                          "className": "!h-14 !px-4 !rounded-xl !text-[20px] @[640px]:!text-[19px]"
+                        },
+                        {
+                          "el": "text",
+                          "value": "ช่วยให้ AI วาดสัดส่วนสินค้าเทียบกับคนได้ตรง — สำคัญกับสินค้าชิ้นใหญ่",
+                          "className": "!text-[13px] @[640px]:!text-[12px] opacity-50 leading-relaxed px-0.5"
                         }
                       ]
                     },
@@ -12537,7 +13950,11 @@
                                                   ]
                                                 }
                                               ],
-                                              "when": "values.svSec=16"
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 8
+                                              }
                                             },
                                             {
                                               "el": "box",
@@ -12765,7 +14182,11 @@
                                                   ]
                                                 }
                                               ],
-                                              "when": "values.svSec=16"
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
                                             },
                                             {
                                               "el": "box",
@@ -12993,7 +14414,11 @@
                                                   ]
                                                 }
                                               ],
-                                              "when": "values.svSec=16"
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
                                             },
                                             {
                                               "el": "box",
@@ -13221,7 +14646,11 @@
                                                   ]
                                                 }
                                               ],
-                                              "when": "values.svSec=16"
+                                              "when": {
+                                                "op": "gt",
+                                                "a": "{values.svSec}",
+                                                "b": 10
+                                              }
                                             }
                                           ]
                                         }
@@ -17316,8 +18745,8 @@
       "สุ่มตามสินค้า": "ผู้ใช้ให้คุณเลือกเพศเสียงพากย์เอง — พิจารณาจากหมวดสินค้าและกลุ่มลูกค้าเป้าหมายว่าเสียงผู้หญิงหรือผู้ชายน่าเชื่อถือ/ขายได้กว่า แล้วเลือกให้เหมาะกับสินค้าแต่ละคลิป · ต้องเขียนผลที่เลือกลงฟิลด์ voice เป็นคำว่า \"หญิง\" หรือ \"ชาย\" เท่านั้น · คำลงท้ายและสรรพนามใน voN ทุกฉาก ต้องตรงกับเพศที่เลือก (หญิง = ค่ะ/คะ ห้ามใช้ ครับ · ชาย = ครับ ห้ามใช้ ค่ะ/คะ) ห้ามผสมสองเพศในคลิปเดียวกันเด็ดขาด · ไม่ต้องใส่คำลงท้ายทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ · ถ้าทำหลายคลิปให้สินค้าเดียวกัน เลือกต่างกันได้เพื่อความหลากหลาย แต่ในคลิปหนึ่งต้องเพศเดียวตลอด · ถ้าโหมดมีพรีเซนเตอร์และผู้ใช้ไม่ได้ระบุเพศพรีเซนเตอร์ ให้พรีเซนเตอร์เป็นเพศเดียวกับเสียงที่เลือก"
     },
     "voiceLockEN": {
-      "เสียงผู้หญิง": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result.",
-      "เสียงผู้ชาย": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a MALE (adult man) voice. A female narrator is a wrong result."
+      "เสียงผู้หญิง": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a FEMALE (adult woman) voice. A male narrator is a wrong result. Voice identity, identical in every part: one adult Thai woman, warm mid-pitched clear timbre, standard central-Thai accent, steady medium-fast pace.",
+      "เสียงผู้ชาย": "\n\nVOICE LOCK: The Thai voice-over narration MUST be performed by a MALE (adult man) voice. A female narrator is a wrong result. Voice identity, identical in every part: one adult Thai man, warm mid-low clear timbre, standard central-Thai accent, steady medium-fast pace."
     },
     "textPlan": {
       "ไม่มีข้อความ": "โหมดคลิปนี้คือ \"ไม่มีข้อความบนภาพ\" — ห้ามพึ่งตัวหนังสือในการสื่อสาร: ออกแบบ sNth ทุกฉาก และ sNen ทุกฉาก ให้เล่าเรื่องด้วยภาพล้วน (องค์ประกอบ มุมกล้อง การกระทำ) และให้เสียงพากย์ voN ทุกฉาก ช่วยแบกสาร · ห้ามบรรยายว่ามีข้อความ ป้าย ซับไตเติล หรือตัวอักษรใดๆ ปรากฏในภาพ (ยกเว้นฉลากจริงบนตัวสินค้า) · ฟิลด์ ovN ทุกฉาก ยังเขียนไว้ตามปกติ เก็บเป็นข้อมูลสำรองเผื่อผู้ใช้เปิดข้อความภายหลัง"
@@ -17334,7 +18763,12 @@
       "16|5": "5. ใช้จริงให้ดู [8-10s]",
       "16|6": "6. ผลลัพธ์ที่ได้ [10-12s]",
       "16|7": "7. ข้อเสนอพิเศษ [12-14s]",
-      "16|8": "8. ปิดการขาย [14-16s]"
+      "16|8": "8. ปิดการขาย [14-16s]",
+      "10|1": "1. ฮุคแรง [0-2s]",
+      "10|2": "2. ปัญหาที่เจอ [2-4s]",
+      "10|3": "3. จุดเด่นที่ชัดที่สุด [4-6s]",
+      "10|4": "4. ใช้จริงให้ดู [6-8s]",
+      "10|5": "5. ปิดการขาย [8-10s]"
     },
     "sceneEN": {
       "8|1": "Scene 1 (0-2s) — Hook",
@@ -17348,23 +18782,32 @@
       "16|5": "Scene 5 (8-10s) — Demo in real use",
       "16|6": "Scene 6 (10-12s) — The result",
       "16|7": "Scene 7 (12-14s) — The offer",
-      "16|8": "Scene 8 (14-16s) — Closing (spoken ask to buy)"
+      "16|8": "Scene 8 (14-16s) — Closing (spoken ask to buy)",
+      "10|1": "Scene 1 (0-2s) — Hook",
+      "10|2": "Scene 2 (2-4s) — The problem",
+      "10|3": "Scene 3 (4-6s) — Strongest benefit",
+      "10|4": "Scene 4 (6-8s) — Demo in real use",
+      "10|5": "Scene 5 (8-10s) — Closing (spoken ask to buy)"
     },
     "lenSys": {
       "8": "คุณคือผู้กำกับคลิปขายของสไตล์ TikTok ของพี่หมีแว่น (แนวขายดุ — ฮุคแรง โน้มน้าวไว ปิดการขายชัด) — ออกแบบคลิปแนวตั้ง 9:16 ยาว 8 วินาที เป็นช็อตเดียวต่อเนื่อง เดินผ่าน 4 ฉากคงที่ตามลำดับนี้เสมอ:\n1. ฮุคแรง 0-2s — หยุดนิ้วคนดูตั้งแต่วินาทีแรก ด้วยประโยคหรือภาพที่คนดูต้องหยุดดู\n2. ปัญหา/จุดเด่น 2-4s — ปัญหาที่คนดูเจออยู่ หรือจุดเด่นที่ชัดที่สุดของสินค้า 1 อย่าง\n3. ใช้จริงให้ดู 4-6s — โชว์สินค้าตอนใช้งานจริง ให้เห็นผลกับตา\n4. ปิดการขาย 6-8s — ชวนซื้อตอนนี้เลย จบที่คน ไม่ใช่การ์ดปิด",
-      "16": "คุณคือผู้กำกับคลิปขายของสไตล์ TikTok ของพี่หมีแว่น (แนวขายดุ — ฮุคแรง โน้มน้าวไว ปิดการขายชัด) — ออกแบบคลิปแนวตั้ง 9:16 ยาว 16 วินาที แบ่ง 2 ช่วง ช่วงละ 8 วินาทีต่อกันเป็นเรื่องเดียว (ช่วงที่ 2 เริ่มจากเฟรมสุดท้ายของช่วงแรก) เดินผ่าน 8 ฉากคงที่ตามลำดับนี้เสมอ:\n1. ฮุคแรง 0-2s — หยุดนิ้วคนดูตั้งแต่วินาทีแรก\n2. ปัญหาที่เจอ 2-4s — ปัญหาที่คนดูเจออยู่จริง\n3. แนะนำสินค้า 4-6s — เปิดตัวสินค้าเป็นทางออก\n4. จุดเด่นที่ชัดที่สุด 6-8s — จุดขายหลัก 1 อย่าง\n5. ใช้จริงให้ดู 8-10s — โชว์ตอนใช้งานจริง\n6. ผลลัพธ์ที่ได้ 10-12s — ให้เห็นผลกับตา\n7. ข้อเสนอพิเศษ 12-14s — ราคา/โปรที่ผู้ใช้ให้มา (ถ้าไม่มี ให้เน้นความคุ้ม)\n8. ปิดการขาย 14-16s — ชวนซื้อตอนนี้เลย จบที่คน ไม่ใช่การ์ดปิด\nสำคัญ: ฉาก 4 คือเฟรมสุดท้ายของช่วงแรก และฉาก 5 เริ่มช่วงที่ 2 จากท่าและตำแหน่งเดียวกัน — ห้ามให้ฉาก 4 เป็นตอนจบ ห้ามให้ฉาก 5 เปิดเรื่องใหม่หรือแนะนำสินค้าซ้ำ"
+      "16": "คุณคือผู้กำกับคลิปขายของสไตล์ TikTok ของพี่หมีแว่น (แนวขายดุ — ฮุคแรง โน้มน้าวไว ปิดการขายชัด) — ออกแบบคลิปแนวตั้ง 9:16 ยาว 16 วินาที แบ่ง 2 ช่วง ช่วงละ 8 วินาทีต่อกันเป็นเรื่องเดียว (ช่วงที่ 2 เริ่มจากเฟรมสุดท้ายของช่วงแรก) เดินผ่าน 8 ฉากคงที่ตามลำดับนี้เสมอ:\n1. ฮุคแรง 0-2s — หยุดนิ้วคนดูตั้งแต่วินาทีแรก\n2. ปัญหาที่เจอ 2-4s — ปัญหาที่คนดูเจออยู่จริง\n3. แนะนำสินค้า 4-6s — เปิดตัวสินค้าเป็นทางออก\n4. จุดเด่นที่ชัดที่สุด 6-8s — จุดขายหลัก 1 อย่าง\n5. ใช้จริงให้ดู 8-10s — โชว์ตอนใช้งานจริง\n6. ผลลัพธ์ที่ได้ 10-12s — ให้เห็นผลกับตา\n7. ข้อเสนอพิเศษ 12-14s — ราคา/โปรที่ผู้ใช้ให้มา (ถ้าไม่มี ให้เน้นความคุ้ม)\n8. ปิดการขาย 14-16s — ชวนซื้อตอนนี้เลย จบที่คน ไม่ใช่การ์ดปิด\nสำคัญ: ฉาก 4 คือเฟรมสุดท้ายของช่วงแรก และฉาก 5 เริ่มช่วงที่ 2 จากท่าและตำแหน่งเดียวกัน — ห้ามให้ฉาก 4 เป็นตอนจบ ห้ามให้ฉาก 5 เปิดเรื่องใหม่หรือแนะนำสินค้าซ้ำ",
+      "10": "คุณคือผู้กำกับคลิปขายของสไตล์ TikTok ของพี่หมีแว่น (แนวขายดุ — ฮุคแรง โน้มน้าวไว ปิดการขายชัด) — ออกแบบคลิปแนวตั้ง 9:16 ยาว 10 วินาที เป็นช็อตเดียวต่อเนื่อง เดินผ่าน 5 ฉากคงที่ตามลำดับนี้เสมอ:\n1. ฮุคแรง 0-2s — หยุดนิ้วคนดูตั้งแต่วินาทีแรก ด้วยประโยคหรือภาพที่คนดูต้องหยุดดู\n2. ปัญหาที่เจอ 2-4s — ปัญหาที่คนดูเจออยู่จริง\n3. จุดเด่นที่ชัดที่สุด 4-6s — จุดขายหลัก 1 อย่างของสินค้า\n4. ใช้จริงให้ดู 6-8s — โชว์สินค้าตอนใช้งานจริง ให้เห็นผลกับตา\n5. ปิดการขาย 8-10s — ชวนซื้อตอนนี้เลย จบที่คน ไม่ใช่การ์ดปิด"
     },
     "lenOut": {
       "8": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา\",\"category\":\"หมวดสินค้า\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์",
-      "16": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา\",\"category\":\"หมวดสินค้า\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์"
+      "16": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา\",\"category\":\"หมวดสินค้า\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์",
+      "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่อสินค้า คัดลอกตรงตามที่ให้มา\",\"category\":\"หมวดสินค้า\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์"
     },
     "lenActHead": {
       "8": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\n",
-      "16": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — ใช้กับทุกฉากในองก์นั้น:\n"
+      "16": "\n\nข้อกำหนดรายองก์จากผู้ใช้ (ค่าว่าง = ออกแบบเอง) — ใช้กับทุกฉากในองก์นั้น:\n",
+      "10": "\n\nข้อกำหนดรายฉากจากผู้ใช้ (ค่าว่าง = ออกแบบเอง):\n"
     },
     "lenActTail": {
       "8": "",
-      "16": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\n"
+      "16": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\n",
+      "10": "ฉากในองก์เดียวกันต้องใช้มุมกล้องที่ผู้ใช้ล็อกไว้เหมือนกัน แต่เปลี่ยนระยะ การเคลื่อนไหว และองค์ประกอบให้ไม่ซ้ำกัน\n"
     },
     "lenAct": {
       "8|1": "ฉาก 1 ฮุคแรง",
@@ -17374,19 +18817,26 @@
       "16|1": "องก์ 1 (ฉาก 1-2) ฮุคแรง + ปัญหาที่เจอ",
       "16|2": "องก์ 2 (ฉาก 3-4) แนะนำสินค้า + จุดเด่น",
       "16|3": "องก์ 3 (ฉาก 5-6) ใช้จริง + ผลลัพธ์",
-      "16|4": "องก์ 4 (ฉาก 7-8) ข้อเสนอ + ปิดการขาย"
+      "16|4": "องก์ 4 (ฉาก 7-8) ข้อเสนอ + ปิดการขาย",
+      "10|1": "ฉาก 1 ฮุคแรง",
+      "10|2": "ฉาก 2 ปัญหาที่เจอ",
+      "10|3": "ฉาก 3-4 จุดเด่น + ใช้จริง",
+      "10|4": "ฉาก 5 ปิดการขาย"
     },
     "lenLabel": {
       "8": "8 วินาที",
-      "16": "16 วินาที"
+      "16": "16 วินาที",
+      "10": "10 วินาที"
     },
     "lenSecs": {
       "8": "8",
-      "16": "16"
+      "16": "16",
+      "10": "10"
     },
     "lenScenes": {
       "8": "4",
-      "16": "8"
+      "16": "8",
+      "10": "5"
     },
     "sceneAct": {
       "8|1": "ฮุคแรง",
@@ -17400,11 +18850,20 @@
       "16|5": "ใช้จริงให้ดู",
       "16|6": "ผลลัพธ์ที่ได้",
       "16|7": "ข้อเสนอพิเศษ",
-      "16|8": "ปิดการขาย"
+      "16|8": "ปิดการขาย",
+      "10|1": "ฮุคแรง",
+      "10|2": "ปัญหาที่เจอ",
+      "10|3": "จุดเด่นที่ชัดที่สุด",
+      "10|4": "ใช้จริงให้ดู",
+      "10|5": "ปิดการขาย",
+      "10|6": "",
+      "10|7": "",
+      "10|8": ""
     },
     "lenVo": {
       "8": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 8 วินาที มี 4 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo4 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- นับเป็นตัวอักษรไทย ไม่ใช่จำนวนคำ: ฉากละไม่เกิน 32 ตัวอักษร รวมทั้งคลิปไม่เกิน 128 ตัวอักษร\n  (นับทุกตัวอักษรรวมสระและวรรณยุกต์ เว้นวรรคไม่ต้องนับ) — เกินเมื่อไหร่เสียงจะพูดรัวจนฟังไม่ทัน\n- เขียนให้ vo1 ถึง vo4 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 8 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน\n- ภาษาพูดแบบคนรีวิวจริง ไม่ใช่ภาษาโฆษณาอ่านสคริปต์",
-      "16": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 16 วินาที มี 8 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo8 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- นับเป็นตัวอักษรไทย ไม่ใช่จำนวนคำ: ฉากละไม่เกิน 32 ตัวอักษร รวมทั้งคลิปไม่เกิน 256 ตัวอักษร\n  (นับทุกตัวอักษรรวมสระและวรรณยุกต์ เว้นวรรคไม่ต้องนับ) — เกินเมื่อไหร่เสียงจะพูดรัวจนฟังไม่ทัน\n- เขียนให้ vo1 ถึง vo8 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 16 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน\n- ภาษาพูดแบบคนรีวิวจริง ไม่ใช่ภาษาโฆษณาอ่านสคริปต์"
+      "16": "กฎความยาวบทพูด (ต้องพูดต่อเนื่อง ห้ามมีช่วงเงียบกลางประโยค):\n- คลิปนี้ยาว 16 วินาที มี 8 ฉาก แบ่ง 2 ช่วงที่สร้างเสียงแยกกัน — vo1 ถึง vo8 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- นับเป็นตัวอักษรไทย ไม่ใช่จำนวนคำ (นับทุกตัวอักษรรวมสระและวรรณยุกต์ เว้นวรรคไม่ต้องนับ) — เกินเมื่อไหร่เสียงจะพูดรัวจนฟังไม่ทัน\n- ช่วงแรก vo1 ถึง vo4: ฉากละไม่เกิน 28 ตัวอักษร รวมไม่เกิน 100 ตัวอักษร เพราะช่วงแรกถูกตัดที่วินาทีที่ 7 — vo4 ต้องจบประโยคสมบูรณ์ ห้ามค้างครึ่งประโยคไปต่อใน vo5\n- ช่วงสอง vo5 ถึง vo8: ฉากละไม่เกิน 32 ตัวอักษร รวมไม่เกิน 128 ตัวอักษร · vo5 เริ่มประโยคใหม่ ห้ามทวนคำหรือวลีของ vo4 ห้ามทักทายหรือแนะนำสินค้าซ้ำ\n- ในแต่ละช่วงเขียนให้ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบ ไม่ใช่วลีสั้นที่จบห้วนแยกกัน\n- ภาษาพูดแบบคนรีวิวจริง ไม่ใช่ภาษาโฆษณาอ่านสคริปต์",
+      "10": "กฎความยาวบทพูด (ต้องพูดต่อเนื่องเต็มความยาว ห้ามมีช่วงเงียบ):\n- คลิปนี้ยาว 10 วินาที มี 5 ฉาก ฉากละ 2 วินาที — vo1 ถึง vo5 ต้องมีบทพูดครบทุกฉาก ห้ามเว้นว่างแม้แต่ฉากเดียว\n- นับเป็นตัวอักษรไทย ไม่ใช่จำนวนคำ: ฉากละไม่เกิน 32 ตัวอักษร รวมทั้งคลิปไม่เกิน 160 ตัวอักษร\n  (นับทุกตัวอักษรรวมสระและวรรณยุกต์ เว้นวรรคไม่ต้องนับ) — เกินเมื่อไหร่เสียงจะพูดรัวจนฟังไม่ทัน\n- เขียนให้ vo1 ถึง vo5 ต่อกันเป็นย่อหน้าเดียวที่อ่านรวดเดียวจบพอดี 10 วินาที ไม่ใช่วลีสั้นที่จบห้วนแยกกัน\n- ภาษาพูดแบบคนรีวิวจริง ไม่ใช่ภาษาโฆษณาอ่านสคริปต์"
     },
     "opIcons": {
       "mnPlan": "edit_note",
@@ -17435,7 +18894,8 @@
       "d3-fruit": "3D ผลไม้",
       "d3-object": "3D สิ่งของ",
       "d3-car": "3D รถ",
-      "d3-organ": "3D อวัยวะ"
+      "d3-organ": "3D อวัยวะ",
+      "ugc-lips": "ปากทาลิป"
     },
     "tplScene": {
       "ugc-review": "UGC-style realistic photo, natural lighting. The reviewer presents the product with explosive energy like a top TikTok live-commerce host — proud, wide-eyed, big excited smile or amazed open mouth. The setting matches the product's real usage context.",
@@ -17446,9 +18906,9 @@
       "ugc-feeling": "UGC-style realistic close-up on the reviewer's face right after using the product — genuine delighted reaction, touched satisfied expression, the product held up near the face.",
       "ugc-closeup": "Extreme close-up macro shot of the product held in hands — texture, label and fine details razor sharp, shallow depth of field, background fully blurred, natural light.",
       "ugc-recommend": "UGC-style realistic photo: the reviewer gives a confident thumbs-up while holding the product, big assured smile, recommending it like telling a best friend, friendly medium shot.",
-      "ugc-warehouse": "Inside a real distribution warehouse: tall metal shelving stacked with many identical units of the product, the reviewer stands beside the shelves holding one unit up. No price tags, no closed parcel boxes hiding the product.",
+      "ugc-warehouse": "Inside a real distribution warehouse: tall steel pallet racking stacked with many identical units of the product, film-wrapped pallets, concrete floor, high-bay ceiling lights. The reviewer stands beside the racking presenting one unit at its true real-world size — a small item held up; a large item (furniture, appliance, big box) stays full size on the floor or display while the reviewer stands beside it and gestures, never shrunk to be held. No price tags, no readable signs, no closed parcel boxes hiding the product.",
       "ugc-factory": "Inside a clean modern factory: a conveyor line with the product moving along it, two or three blurred uniformed workers in the background, the reviewer in the foreground holding the product. No recognizable brand logos on any machinery.",
-      "ugc-mall": "Inside a bright premium shopping mall retail store: clean stocked shelves, bright LED retail lighting, the reviewer holds the product in the aisle with a delighted expression. No store logos visible.",
+      "ugc-mall": "Inside a bright premium shopping-mall store: clean stocked shelves, glossy floor, bright LED retail lighting. The reviewer presents the product in the aisle with a delighted expression at its true real-world size — a small item held up; a large item (furniture, appliance, big box) stays full size on the floor or display while the reviewer stands beside it and gestures, never shrunk to be held. No store logos or readable signs.",
       "ugc-market": "Thai fresh-market stall scene: wooden stalls, wicker baskets, natural daylight filtering through canvas roofs, lively local vibe. The reviewer holds the product up by the stall.",
       "pro-studio": "Polished commercial studio advertisement: seamless backdrop, dramatic professional studio lighting, 8K commercial quality. The product is hero-lit at center of attention; the presenter is styled professionally.",
       "product-only": "Product-only hero shot — no people anywhere. The product displayed on a styled surface matching its category, dramatic commercial lighting, tasteful prop accents, crisp clean composition.",
@@ -17459,7 +18919,8 @@
       "d3-fruit": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon fruit or vegetable character, fresh and cheerful, proudly showing the real product with squashy cartoon energy. Overall mood is upbeat and energetic, matching the chosen sales tone — the problem is shown only as a quick comic beat, never as sadness or boredom. The real product appears prominently and must stay photorealistic exactly as the reference.",
       "d3-object": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon everyday object character, lively and expressive, eagerly presenting the real product. Overall mood is upbeat and energetic, matching the chosen sales tone — the problem is shown only as a quick comic beat, never as sadness or boredom. The real product appears prominently and must stay photorealistic exactly as the reference.",
       "d3-car": "Pixar Cars-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon car with expressive eyes, revved up and excited, showing off the real product. Overall mood is upbeat and energetic, matching the chosen sales tone — the problem is shown only as a quick comic beat, never as sadness or boredom. The real product appears prominently and must stay photorealistic exactly as the reference.",
-      "d3-organ": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon body-organ character (matching the product's benefit), energetic and cheerful, presenting the real product. Overall mood is upbeat and energetic, matching the chosen sales tone — the problem is shown only as a quick comic beat, never as sadness or boredom. The real product appears prominently and must stay photorealistic exactly as the reference."
+      "d3-organ": "Pixar-style 3D animated cartoon, vibrant colors, soft cinematic lighting: a cute 3D cartoon body-organ character (matching the product's benefit), energetic and cheerful, presenting the real product. Overall mood is upbeat and energetic, matching the chosen sales tone — the problem is shown only as a quick comic beat, never as sadness or boredom. The real product appears prominently and must stay photorealistic exactly as the reference.",
+      "ugc-lips": "Extreme close-up beauty macro of a woman's lips only — no eyes, no full face; just the lips, a little chin and the lipstick bullet in hand. The lipstick from the reference is applied straight from the bullet in one smooth stroke. COLOUR LOCK: the shade on the lips must match the lipstick bullet colour in the product photo exactly — same hue, depth, undertone and finish (matte, satin or gloss); never shift it pinker, redder, lighter or darker. Real lip texture with fine natural lines, soft even beauty light, clean neutral background."
     },
     "tplSceneEN": {
       "ugc-review": "The reviewer speaks directly to camera with high energy while holding and presenting the product, leaning slightly forward with genuine excitement, making direct eye contact, natural handheld home-video feel.",
@@ -17470,9 +18931,9 @@
       "ugc-feeling": "Close-up reaction shot: the reviewer expresses honest delight about the result, subtle disbelieving head shakes, warm genuine smile while speaking to camera.",
       "ugc-closeup": "Camera stays tight on the product while hands slowly rotate it, revealing every angle and detail; an unseen narrator describes what we see. Voice-over only, speaker not visible.",
       "ugc-recommend": "The reviewer recommends the product straight to camera like talking to a close friend — nodding confidently, thumbs-up gesture, pointing at the product on the final beat.",
-      "ugc-warehouse": "The reviewer presents the product among the warehouse shelves, gesturing back at the huge stock behind them, energetic \"shipped straight from the warehouse\" vibe.",
+      "ugc-warehouse": "The reviewer presents the product among the warehouse racking at its true size (a large item stays on the floor, never lifted), gesturing back at the huge stock behind them, energetic \"shipped straight from the warehouse\" vibe.",
       "ugc-factory": "The reviewer presents the product beside the running conveyor line, pointing back at the production behind, confident \"direct from the factory\" energy.",
-      "ugc-mall": "The reviewer presents the product in the retail aisle — picks it from the shelf, shows it to camera with delight, premium shopping atmosphere around.",
+      "ugc-mall": "The reviewer presents the product in the retail aisle — a small item picked from the shelf and shown to camera, a large item shown in place at true size — with delight, premium shopping atmosphere around.",
       "ugc-market": "The reviewer presents the product at the market stall with friendly street energy, gesturing at the lively market around them.",
       "pro-studio": "Premium commercial pacing: the presenter delivers polished ad lines to camera while the product gets slow cinematic hero moves under constant even studio lighting.",
       "product-only": "No people on screen: slow orbit and push-in moves on the product under constant even studio lighting; an unseen narrator sells the product. Voice-over only.",
@@ -17483,7 +18944,8 @@
       "d3-fruit": "The cartoon fruit/vegetable character does a quick comic droop, then plumps up fresh and glowing thanks to the product — squashy bouncy cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
       "d3-object": "The cartoon object character does a quick comic reaction to the problem, then gets revived sparkling-new thanks to the product — charming lively cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
       "d3-car": "The cartoon car does a quick comic sputter, then revs up shiny and happy thanks to the product — fun automotive cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
-      "d3-organ": "The cute organ character does a quick comic wobble, then glows healthy and energetic thanks to the product — uplifting cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference."
+      "d3-organ": "The cute organ character does a quick comic wobble, then glows healthy and energetic thanks to the product — uplifting cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
+      "ugc-lips": "Macro beauty shot of the lips only: the hand glides the lipstick bullet across the lips in one smooth stroke, the lips press together and part to show even full colour, then a soft smile with the lipstick held beside the lips. COLOUR LOCK: the colour on the lips matches the lipstick bullet in the first frame exactly — same hue, depth, undertone and finish — and never shifts under any light. An unseen narrator speaks; voice-over only, the lips do not lip-sync."
     },
     "tplKind": {
       "ugc-review": "person",
@@ -17507,7 +18969,8 @@
       "d3-fruit": "cartoon",
       "d3-object": "cartoon",
       "d3-car": "cartoon",
-      "d3-organ": "cartoon"
+      "d3-organ": "cartoon",
+      "ugc-lips": "hands"
     },
     "tplChar": {
       "ugc-review": "yes",
@@ -17531,7 +18994,8 @@
       "d3-fruit": "no",
       "d3-object": "no",
       "d3-car": "no",
-      "d3-organ": "no"
+      "d3-organ": "no",
+      "ugc-lips": "no"
     },
     "toneName": {
       "hardsell": "ขายดุ (ดุดัน)",
@@ -17609,7 +19073,8 @@
       "d3-fruit": "ไม่มีคนจริง — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง",
       "d3-object": "ไม่มีคนจริง — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง",
       "d3-car": "ไม่มีคนจริง — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง",
-      "d3-organ": "ไม่มีคนจริง — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง"
+      "d3-organ": "ไม่มีคนจริง — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง",
+      "ugc-lips": "ไม่มีคนเต็มตัวในคลิป — เห็นแค่ริมฝีปากและมือที่ทาลิปสติก (โคลสอัปปาก)"
     },
     "charPlanT": {
       "ugc-review|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: มีนาย/นางแบบไทยหน้าตาดี 1 คน บุคลิกเป็นมิตร ดูจริงใจ เข้ากับหมวดสินค้าและกลุ่มเป้าหมาย — เขียนบทให้พรีเซนเตอร์ ถือ/ใช้/รีวิวสินค้าอย่างเป็นธรรมชาติ (แนะนำ → ชี้จุดเด่น → ใช้จริง → โคลสอัพดีเทล → ยิ้มปิดพร้อมสินค้า) สินค้ายังเป็นจุดโฟกัสหลักทุกฉาก · สะท้อนพรีเซนเตอร์ใน s*th และ s*en ทุกฉากที่มีคน",
@@ -17655,7 +19120,9 @@
       "d3-car|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
       "d3-car|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
       "d3-organ|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
-      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง"
+      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
+      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด",
+      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด"
     },
     "charBoardT": {
       "ugc-review|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "มีนาย/นางแบบไทย 1 คนตามบท — คนเดียวกันในภาพนี้ หน้าตาเป็นมิตรดูจริงใจ ท่าทางธรรมชาติ สินค้าเด่นกว่าคนเสมอ",
@@ -17701,7 +19168,9 @@
       "d3-car|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ไม่มีคนจริงในภาพ — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง ตัวเดิมในภาพ · สินค้าจริงคงความสมจริงและเป็นจุดโฟกัส",
       "d3-car|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ไม่มีคนจริงในภาพ — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง ตัวเดิมในภาพ · สินค้าจริงคงความสมจริงและเป็นจุดโฟกัส",
       "d3-organ|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "ไม่มีคนจริงในภาพ — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง ตัวเดิมในภาพ · สินค้าจริงคงความสมจริงและเป็นจุดโฟกัส",
-      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ไม่มีคนจริงในภาพ — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง ตัวเดิมในภาพ · สินค้าจริงคงความสมจริงและเป็นจุดโฟกัส"
+      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "ไม่มีคนจริงในภาพ — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง ตัวเดิมในภาพ · สินค้าจริงคงความสมจริงและเป็นจุดโฟกัส",
+      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "เห็นแค่ริมฝีปากโคลสอัปและมือที่ถือแท่งลิปสติก ห้ามเห็นตาหรือทั้งใบหน้า · สีบนปาก = สีเนื้อลิปในรูปสินค้าเป๊ะ (เฉด ความเข้ม อันเดอร์โทน ความเงา/แมตต์)",
+      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "เห็นแค่ริมฝีปากโคลสอัปและมือที่ถือแท่งลิปสติก ห้ามเห็นตาหรือทั้งใบหน้า · สีบนปาก = สีเนื้อลิปในรูปสินค้าเป๊ะ (เฉด ความเข้ม อันเดอร์โทน ความเงา/แมตต์)"
     },
     "charVideoENT": {
       "ugc-review|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "One friendly, authentic Thai presenter (gender and age fit the product and audience) with natural expressions, eye contact and real hand interaction — the same person in every scene, the product always the main focus.",
@@ -17747,7 +19216,9 @@
       "d3-car|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
       "d3-car|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
       "d3-organ|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
-      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus."
+      "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
+      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "Only the lips and the hand holding the lipstick are visible — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame.",
+      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "Only the lips and the hand holding the lipstick are visible — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame."
     },
     "actName": {
       "8|1": "ฮุคแรง",
@@ -17757,7 +19228,11 @@
       "16|1": "ฮุคแรง + ปัญหาที่เจอ",
       "16|2": "แนะนำสินค้า + จุดเด่น",
       "16|3": "ใช้จริง + ผลลัพธ์",
-      "16|4": "ข้อเสนอ + ปิดการขาย"
+      "16|4": "ข้อเสนอ + ปิดการขาย",
+      "10|1": "ฮุคแรง",
+      "10|2": "ปัญหาที่เจอ",
+      "10|3": "จุดเด่น + ใช้จริง",
+      "10|4": "ปิดการขาย"
     },
     "actTime": {
       "8|1": "0-2 วิ",
@@ -17767,31 +19242,36 @@
       "16|1": "0-4 วิ",
       "16|2": "4-8 วิ",
       "16|3": "8-12 วิ",
-      "16|4": "12-16 วิ"
+      "16|4": "12-16 วิ",
+      "10|1": "0-2 วิ",
+      "10|2": "2-4 วิ",
+      "10|3": "4-8 วิ",
+      "10|4": "8-10 วิ"
     },
     "tplVidLead": {
-      "ugc-review": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-live": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-hand": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-using": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-compare": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-feeling": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-closeup": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-recommend": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-warehouse": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-factory": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-mall": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "ugc-market": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "pro-studio": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "product-only": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "lifestyle": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "social-viral": "Plain unedited single-take phone footage, 9:16 vertical, about 8 seconds, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-person": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-animal": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-fruit": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-object": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-car": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
-      "d3-organ": "One continuous 3D-animated take, 9:16 vertical, about 8 seconds. Nothing added in post: no graphics, transitions, effects or added music/SFX."
+      "ugc-review": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-live": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-hand": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-using": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-compare": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-feeling": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-closeup": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-recommend": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-warehouse": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-factory": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-mall": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-market": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "pro-studio": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "product-only": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "lifestyle": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "social-viral": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-person": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-animal": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-fruit": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-object": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-car": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "d3-organ": "One continuous 3D-animated take, 9:16 vertical. Nothing added in post: no graphics, transitions, effects or added music/SFX.",
+      "ugc-lips": "Plain unedited single-take phone footage, 9:16 vertical, one continuous shot. Nothing added in post: no graphics, transitions, effects or added music/SFX."
     },
     "tplImgLead": {
       "ugc-review": "A real photograph captured with a camera — not a 3D render, illustration or digital art. Real skin with natural texture and fine pores, yet a clear, healthy, even complexion — a pleasant, well-groomed everyday person who looks good in a natural way, not a celebrity or model, and not unattractive; no acne, pimples, spots, blemishes, scars or rough patches on any face; real fabric and surfaces; no beauty filter, face smoothing, airbrushing, waxy plastic skin or stock-photo look.\n\n",
@@ -17815,7 +19295,8 @@
       "d3-fruit": "",
       "d3-object": "",
       "d3-car": "",
-      "d3-organ": ""
+      "d3-organ": "",
+      "ugc-lips": "A real photograph captured with a macro lens on a camera — not a 3D render, illustration or digital art. Real lip texture with fine natural lines, healthy smooth skin around the mouth, no blemishes; no beauty filter, airbrushing or waxy plastic look."
     },
     "tplImgClose": {
       "ugc-review": "Shot on a modern phone camera, sharp and well exposed",
@@ -17839,7 +19320,8 @@
       "d3-fruit": "High quality 3D render, crisp detail",
       "d3-object": "High quality 3D render, crisp detail",
       "d3-car": "High quality 3D render, crisp detail",
-      "d3-organ": "High quality 3D render, crisp detail"
+      "d3-organ": "High quality 3D render, crisp detail",
+      "ugc-lips": "Shot on a modern phone camera, sharp and well exposed, macro beauty detail"
     },
     "castGenderEN": {
       "หญิง": "female",
@@ -17862,6 +19344,76 @@
       "8": "bouncy comic cartoon font, multicolor with playful outlines",
       "9": "minimal Japanese-magazine style typography, cream and brown, airy layout",
       "10": "high-contrast bold condensed font, black and white, street-cool attitude"
+    },
+    "clipSecEN": {
+      "8": " About 8 seconds long.",
+      "10": " About 10 seconds long.",
+      "16": " About 8 seconds long."
+    },
+    "clipSecTH": {
+      "8": "8 วิ",
+      "10": "10 วิ",
+      "16": "8 วิ"
+    },
+    "audioSpan": {
+      "8": "from 0.0s to the end, no silent gaps",
+      "10": "from 0.0s to the end, no silent gaps",
+      "16": "from 0.0s, no gaps, last sentence done by 6.5s; then silent to the end, lips closed, same pose (the clip is cut at 7s)"
+    },
+    "tplBgOk": {
+      "ugc-review": "yes",
+      "ugc-live": "no",
+      "ugc-hand": "yes",
+      "ugc-using": "yes",
+      "ugc-compare": "yes",
+      "ugc-feeling": "yes",
+      "ugc-closeup": "yes",
+      "ugc-recommend": "yes",
+      "ugc-warehouse": "no",
+      "ugc-factory": "no",
+      "ugc-mall": "no",
+      "ugc-market": "no",
+      "pro-studio": "no",
+      "product-only": "yes",
+      "lifestyle": "yes",
+      "social-viral": "no",
+      "d3-person": "no",
+      "d3-animal": "no",
+      "d3-fruit": "no",
+      "d3-object": "no",
+      "d3-car": "no",
+      "d3-organ": "no",
+      "ugc-lips": "no"
+    },
+    "bgTH": {
+      "โกดังสินค้า": "โกดังกระจายสินค้าจริง — ชั้นวางเหล็กสูงหลายชั้น (racking) พาเลทไม้ห่อฟิล์มใส พื้นปูนขัดมันมีเส้นเหลือง ไฟเพดานสูงแบบโกดัง ป้ายไม่มีตัวหนังสือ",
+      "ห้างสรรพสินค้า": "ทางเดินในห้างสรรพสินค้าจริง — พื้นหินขัดเงาสะท้อนไฟ ไฟดาวน์ไลท์เพดาน หน้าร้านกระจกและคนเดินเบลออยู่ไกลๆ ป้ายร้านไม่มีตัวหนังสือหรือโลโก้",
+      "ตลาดนัดเปิดท้ายขายของ": "ตลาดนัดเปิดท้ายขายของตอนเย็น — ท้ายรถกระบะหรือ SUV เปิดอยู่ สินค้าวางเรียงบนผ้าปูและโต๊ะพับ ไฟหลอดแขวนสีส้ม รถคันอื่นและคนเดินเบลอด้านหลัง ป้ายไม่มีตัวหนังสือ",
+      "บ้าน": "ในบ้านคนไทยจริง — ห้องที่ตรงกับการใช้สินค้า (ห้องนั่งเล่น ห้องนอน ห้องครัว ห้องน้ำ) ของใช้จริงวางเป็นธรรมชาติ แสงธรรมชาติจากหน้าต่าง",
+      "ร้านค้า": "ร้านค้าปลีกเล็กๆ จริง — ชั้นวางสินค้าเรียบร้อย เคาน์เตอร์ ไฟร้านสว่าง ป้ายและฉลากบนชั้นไม่มีตัวหนังสือที่อ่านได้"
+    },
+    "bgEN": {
+      "โกดังสินค้า": "Setting: a real distribution warehouse — tall steel pallet racking, film-wrapped pallets, polished concrete floor with yellow lines, high-bay ceiling lights; signs carry no readable text.",
+      "ห้างสรรพสินค้า": "Setting: a real shopping-mall walkway — glossy stone floor reflecting downlights, blurred glass shopfronts and distant shoppers; no readable signs or logos.",
+      "ตลาดนัดเปิดท้ายขายของ": "Setting: an evening car-boot market — an open pickup or SUV tailgate, goods laid on cloth and folding tables, warm hanging bulbs, blurred cars and shoppers; no readable signs.",
+      "บ้าน": "Setting: a real lived-in Thai home room that fits how the product is used, natural window light.",
+      "ร้านค้า": "Setting: a real small retail shop — tidy stocked shelves, a counter, bright shop lighting; no readable labels or signs."
+    },
+    "poseTH": {
+      "ถือสินค้า": "ท่าพรีเซนเตอร์ (ผู้ใช้เลือก): ถือสินค้าในมือทุกฉาก ยกใกล้กล้องให้เห็นชัด",
+      "ยืนข้างสินค้า": "ท่าพรีเซนเตอร์ (ผู้ใช้เลือก): ไม่ถือสินค้า — สินค้าวางบนโต๊ะ ชั้น หรือพื้นข้างตัว พรีเซนเตอร์ยืนข้าง ผายมือหรือชี้นำเสนอ แตะได้แต่ไม่ยก",
+      "สินค้าใหญ่": "โหมดสินค้าขนาดใหญ่ (ผู้ใช้เลือก): สินค้าคงขนาดจริงวางกับพื้น พรีเซนเตอร์ยืนข้าง ผายมือหรือชี้นำเสนอ ห้ามถือหรือยก · กล้องถอยให้เห็นสินค้าทั้งชิ้นพร้อมคนในเฟรมเดียว เทียบขนาดได้ชัด"
+    },
+    "poseEN": {
+      "ถือสินค้า": "Pose: the presenter holds the product in hand throughout, close to camera.",
+      "ยืนข้างสินค้า": "Pose override: the presenter never holds the product — it rests on a table, shelf or floor beside them; they stand next to it presenting with an open hand or pointing.",
+      "สินค้าใหญ่": "Pose override (large product): it stays full size on the floor; the presenter stands beside it with an open hand, never holding or lifting it; camera pulled back so the whole product and person fit at true scale."
+    },
+    "poseClose": {
+      "อัตโนมัติ": "พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า (ชิ้นใหญ่ เช่น เฟอร์นิเจอร์ เครื่องใช้ไฟฟ้า ให้ยืนข้างสินค้าแทน ห้ามยก)",
+      "ถือสินค้า": "พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า",
+      "ยืนข้างสินค้า": "พรีเซนเตอร์ยืนข้างสินค้า ผายมือไปที่สินค้า (ไม่ถือ)",
+      "สินค้าใหญ่": "พรีเซนเตอร์ยืนข้างสินค้าชิ้นใหญ่ ผายมือไปที่สินค้า (ไม่ถือ ไม่ยก) กล้องเห็นสินค้าทั้งชิ้น"
     }
   },
   "seed": {
