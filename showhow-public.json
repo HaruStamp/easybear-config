@@ -75,7 +75,8 @@
   "svLang": "ไทย",
   "svAccent": "มาตรฐาน",
   "svStyle": "",
-  "svVoiceBy": ""
+  "svVoiceBy": "",
+  "imageModel": "🍌 Nano Banana Pro"
  },
  "collections": {
   "control": {
@@ -128,7 +129,8 @@
     "castKind",
     "sceneMode",
     "endMode",
-    "ideaMode"
+    "ideaMode",
+    "mic"
    ],
    "slots": [
     "image",
@@ -149,7 +151,8 @@
     "castKind": "",
     "sceneMode": "",
     "endMode": "",
-    "ideaMode": ""
+    "ideaMode": "",
+    "mic": ""
    }
   },
   "tasks": {
@@ -325,7 +328,10 @@
     "charAge",
     "castKind",
     "sceneMode",
-    "endMode"
+    "endMode",
+    "mic",
+    "caption",
+    "hashtags"
    ],
    "slots": [
     "board",
@@ -339,7 +345,9 @@
     "board5",
     "video5",
     "board6",
-    "video6"
+    "video6",
+    "face",
+    "cover"
    ],
    "idPrefix": "t"
   },
@@ -14864,7 +14872,10 @@
      "charAge": "{parent.fields.charAge}",
      "castKind": "{parent.fields.castKind}",
      "sceneMode": "{parent.fields.sceneMode}",
-     "endMode": "{parent.fields.endMode}"
+     "endMode": "{parent.fields.endMode}",
+     "mic": "{parent.fields.mic}",
+     "caption": "{item.fields.caption}",
+     "hashtags": "{item.fields.hashtags}"
     },
     "refs": {
      "prod": "{item.fields.__parentId}"
@@ -14874,11 +14885,112 @@
    "logDone": "จัดคิวแล้ว — พร้อมวาดสตอรีบอร์ด"
   },
   {
+   "id": "mnFace",
+   "type": "image",
+   "over": "tasks",
+   "out": "face",
+   "model": "{values.imageModel}",
+   "aspectRatio": "9:16",
+   "prompt": {
+    "op": "concat",
+    "parts": [
+     "Character reference photo for a Thai how-to video series about \"{item.productName}\": ONE ordinary Thai adult who fits this job",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "item.look!=",
+        "value": ", look: {item.look}"
+       }
+      ]
+     },
+     ". Waist-up portrait facing the camera, face fully visible and sharp, relaxed natural expression, arms relaxed, simple work clothes that suit the job (keep the outfit in the look if given). Ordinary non-famous everyday face with its own small quirks, never a celebrity look-alike. Plain soft light-grey background, even soft daylight. ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "or",
+         "a": {
+          "op": "eq",
+          "a": "{values.svStyle}",
+          "b": ""
+         },
+         "b": {
+          "op": "eq",
+          "a": "{values.svStyle}",
+          "b": "real"
+         }
+        },
+        "value": "Real smartphone photo, real skin texture, natural colours, true-white balance — NOT AI-looking, NOT CGI, NOT plastic skin"
+       },
+       {
+        "when": {
+         "op": "and",
+         "a": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{values.svStyle}",
+           "b": ""
+          }
+         },
+         "b": {
+          "op": "not",
+          "a": {
+           "op": "eq",
+           "a": "{values.svStyle}",
+           "b": "real"
+          }
+         }
+        },
+        "value": {
+         "op": "concat",
+         "parts": [
+          "Draw the person in this look: ",
+          {
+           "op": "lookup",
+           "table": "styleVideoEN",
+           "key": "{values.svStyle}",
+           "fallback": ""
+          }
+         ]
+        }
+       }
+      ]
+     },
+     ". No text, no logos, no watermark, no other people."
+    ]
+   },
+   "where": [
+    "people=คนเดียวเต็มตัว",
+    "peopleSrc!=ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต",
+    "arc!=ไทม์แลปส์กล้องนิ่ง",
+    "castKind!=animalReal",
+    "castKind!=animalAnthro",
+    "castKind!=petOwner"
+   ],
+   "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังวาดหน้าตัวละคร (ใช้ล็อกหน้าทุกบอร์ดและวิดีโอ)",
+   "logDone": "[{item.productName} คลิป {item.clipIndex}] วาดหน้าตัวละครเสร็จแล้ว",
+   "timeoutMs": 180000
+  },
+  {
    "id": "mnBoard6",
    "type": "image",
    "over": "tasks",
    "out": "board6",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "eq",
+     "a": "{values.svTextOn}",
+     "b": "ซับไตเติ้ลรายฉาก"
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -15170,10 +15282,37 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|บอร์ด",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -15316,6 +15455,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -15632,7 +15814,16 @@
    "type": "image",
    "over": "tasks",
    "out": "board5",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "eq",
+     "a": "{values.svTextOn}",
+     "b": "ซับไตเติ้ลรายฉาก"
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -15924,10 +16115,37 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|บอร์ด",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -16070,6 +16288,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -16386,7 +16647,16 @@
    "type": "image",
    "over": "tasks",
    "out": "board4",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "eq",
+     "a": "{values.svTextOn}",
+     "b": "ซับไตเติ้ลรายฉาก"
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -16678,10 +16948,37 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|บอร์ด",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -16824,6 +17121,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -17140,7 +17480,16 @@
    "type": "image",
    "over": "tasks",
    "out": "board3",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "eq",
+     "a": "{values.svTextOn}",
+     "b": "ซับไตเติ้ลรายฉาก"
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -17432,10 +17781,37 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|บอร์ด",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -17578,6 +17954,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -17894,7 +18313,16 @@
    "type": "image",
    "over": "tasks",
    "out": "board2",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "eq",
+     "a": "{values.svTextOn}",
+     "b": "ซับไตเติ้ลรายฉาก"
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -18186,10 +18614,45 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.slots.face}",
+                "b": ""
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|รูปหน้า",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -18332,6 +18795,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -18567,11 +19073,6 @@
      {
       "from": "products",
       "by": "{item.refs.prod}",
-      "slot": "image5"
-     },
-     {
-      "from": "products",
-      "by": "{item.refs.prod}",
       "slot": "room1",
       "when": {
        "op": "eq",
@@ -18605,6 +19106,29 @@
         "a": "{item.peopleSrc}",
         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
        }
+      }
+     },
+     {
+      "from": "tasks",
+      "by": "{item.id}",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.people}",
+         "b": "คนเดียวเต็มตัว"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.peopleSrc}",
+          "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+         }
+        }
+       ]
       }
      },
      {
@@ -18648,7 +19172,19 @@
    "type": "image",
    "over": "tasks",
    "out": "board",
-   "model": "🍌 Nano Banana Pro",
+   "model": {
+    "op": "cond",
+    "when": {
+     "op": "not",
+     "a": {
+      "op": "eq",
+      "a": "{values.svTextOn}",
+      "b": "ไม่มีข้อความ"
+     }
+    },
+    "then": "🍌 Nano Banana Pro",
+    "else": "{values.imageModel}"
+   },
    "aspectRatio": "9:16",
    "prompt": {
     "op": "concat",
@@ -18949,10 +19485,45 @@
             }
            },
            "value": {
-            "op": "lookup",
-            "table": "charBoard",
-            "key": "{item.people}|{item.peopleSrc}",
-            "fallback": ""
+            "op": "cond",
+            "when": {
+             "op": "and",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{item.people}",
+               "b": "คนเดียวเต็มตัว"
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.peopleSrc}",
+                "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+               }
+              },
+              {
+               "op": "not",
+               "a": {
+                "op": "eq",
+                "a": "{item.slots.face}",
+                "b": ""
+               }
+              }
+             ]
+            },
+            "then": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "ใบหน้าตัวละคร|รูปหน้า",
+             "fallback": ""
+            },
+            "else": {
+             "op": "lookup",
+             "table": "charBoard",
+             "key": "{item.people}|{item.peopleSrc}",
+             "fallback": ""
+            }
            }
           },
           {
@@ -19095,6 +19666,49 @@
         }
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " ผู้แสดงติดไมค์เล็กสีดำหนีบปกเสื้อ 1 ตัว เห็นทุกช่อง ไม่ถือไมค์",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " ห้ามมีไมค์ทุกชนิดในภาพ (ไมค์หนีบปก ไมค์ถือ เฮดเซ็ต)",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      "\nตัวหนังสือบนภาพ: ",
      {
@@ -19369,6 +19983,29 @@
       }
      },
      {
+      "from": "tasks",
+      "by": "{item.id}",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.people}",
+         "b": "คนเดียวเต็มตัว"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.peopleSrc}",
+          "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+         }
+        }
+       ]
+      }
+     },
+     {
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "endRef",
@@ -19436,7 +20073,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -19561,10 +20198,37 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|บอร์ด",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -19628,6 +20292,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -19828,7 +20535,7 @@
           "b": "ไทม์แลปส์กล้องนิ่ง"
          }
         },
-        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
+        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
        },
        {
         "when": {
@@ -19884,12 +20591,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -20082,12 +20810,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -20280,12 +21029,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -20478,12 +21248,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -20676,12 +21467,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -21251,7 +22063,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -21376,10 +22188,37 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|บอร์ด",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -21443,6 +22282,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -21643,7 +22525,7 @@
           "b": "ไทม์แลปส์กล้องนิ่ง"
          }
         },
-        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
+        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
        },
        {
         "when": {
@@ -21699,12 +22581,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -21897,12 +22800,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -22095,12 +23019,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -22293,12 +23238,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -22491,12 +23457,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -23066,7 +24053,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -23191,10 +24178,37 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|บอร์ด",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -23258,6 +24272,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -23458,7 +24515,7 @@
           "b": "ไทม์แลปส์กล้องนิ่ง"
          }
         },
-        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
+        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
        },
        {
         "when": {
@@ -23514,12 +24571,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -23712,12 +24790,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -23910,12 +25009,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -24108,12 +25228,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -24306,12 +25447,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -24881,7 +26043,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -25006,10 +26168,37 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|บอร์ด",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -25073,6 +26262,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -25273,7 +26505,7 @@
           "b": "ไทม์แลปส์กล้องนิ่ง"
          }
         },
-        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
+        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
        },
        {
         "when": {
@@ -25329,12 +26561,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -25527,12 +26780,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -25725,12 +26999,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -25923,12 +27218,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -26121,12 +27437,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -26697,7 +28034,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -26822,10 +28159,37 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|บอร์ด",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -26889,6 +28253,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -27089,7 +28496,7 @@
           "b": "ไทม์แลปส์กล้องนิ่ง"
          }
         },
-        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
+        "value": "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene."
        },
        {
         "when": {
@@ -27145,12 +28552,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -27343,12 +28771,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -27541,12 +28990,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -27739,12 +29209,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -27937,12 +29428,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -28511,7 +30023,7 @@
            "from": "products",
            "slot": "image"
           },
-          "value": "PRODUCT LOCK (overrides style): every product must be the exact object in the attached reference photo(s), each matching its own photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product itself, never the props, background or ad text in its photo. "
+          "value": "PRODUCT LOCK (overrides style): each product = the exact object in its own attached photo — never change colour, transparency, shape, size, material, label, logo, lettering or parts; never redraw, restyle or cartoonify; unseen angles = closest angle shown, invent nothing; copy only the product, never its photo's props, background or ad text. "
          },
          {
           "when": {
@@ -28636,10 +30148,45 @@
               }
              },
              "value": {
-              "op": "lookup",
-              "table": "charVideoEN",
-              "key": "{item.people}|{item.peopleSrc}",
-              "fallback": ""
+              "op": "cond",
+              "when": {
+               "op": "and",
+               "list": [
+                {
+                 "op": "eq",
+                 "a": "{item.people}",
+                 "b": "คนเดียวเต็มตัว"
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.peopleSrc}",
+                  "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+                 }
+                },
+                {
+                 "op": "not",
+                 "a": {
+                  "op": "eq",
+                  "a": "{item.slots.face}",
+                  "b": ""
+                 }
+                }
+               ]
+              },
+              "then": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "ใบหน้าตัวละคร|รูปหน้า",
+               "fallback": ""
+              },
+              "else": {
+               "op": "lookup",
+               "table": "charVideoEN",
+               "key": "{item.people}|{item.peopleSrc}",
+               "fallback": ""
+              }
              }
             },
             {
@@ -28703,6 +30250,49 @@
         ]
        }
       ]
+     },
+     {
+      "op": "block",
+      "parts": [
+       {
+        "value": " Collar clip-on mic.",
+        "when": {
+         "a": {
+          "a": {
+           "list": [
+            {
+             "a": "{item.people}",
+             "b": "ไม่มีคน",
+             "op": "eq"
+            },
+            {
+             "a": "{item.people}",
+             "b": "เห็นแต่มือ ไม่เห็นหน้า",
+             "op": "eq"
+            }
+           ],
+           "op": "or"
+          },
+          "op": "not"
+         },
+         "b": {
+          "a": "{item.mic}",
+          "b": "มีไมค์",
+          "op": "eq"
+         },
+         "op": "and"
+        }
+       },
+       {
+        "value": " No microphone.",
+        "when": {
+         "a": "{item.mic}",
+         "b": "ไม่มีไมค์",
+         "op": "eq"
+        }
+       }
+      ],
+      "sep": ""
      },
      {
       "op": "block",
@@ -28910,7 +30500,7 @@
        }
       ]
      },
-     "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — copy its room, fixtures, surfaces, framing, lighting; others = same room, same light. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene.",
+     "\n\nAttached sheets are a silent guide: image 1 = this part's 5 scenes — scene N follows panel N: pose, framing, camera angle, product position, room, fixtures, light; others = same room. Sheets, panels and number marks must NEVER appear on screen; frame 1 is already a live scene.",
      "\n",
      {
       "op": "block",
@@ -28955,12 +30545,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -29153,12 +30764,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -29351,12 +30983,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -29549,12 +31202,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -29747,12 +31421,33 @@
            "parts": [
             {
              "when": {
-              "op": "not",
-              "a": {
-               "op": "eq",
-               "a": "{item.arc}",
-               "b": "ไทม์แลปส์กล้องนิ่ง"
-              }
+              "op": "and",
+              "list": [
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.arc}",
+                 "b": "ไทม์แลปส์กล้องนิ่ง"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "ตั้งนิ่งเห็นทั้งพื้นที่"
+                }
+               },
+               {
+                "op": "not",
+                "a": {
+                 "op": "eq",
+                 "a": "{item.camMode}",
+                 "b": "มองจากด้านบน"
+                }
+               }
+              ]
              },
              "value": {
               "op": "concat",
@@ -30208,6 +31903,29 @@
       }
      },
      {
+      "from": "tasks",
+      "by": "{item.id}",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.people}",
+         "b": "คนเดียวเต็มตัว"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.peopleSrc}",
+          "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+         }
+        }
+       ]
+      }
+     },
+     {
       "from": "products",
       "by": "{item.refs.prod}",
       "slot": "image2"
@@ -30270,6 +31988,185 @@
    "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังสร้างวิดีโอ 10 วิ (ช็อตเดียวต่อเนื่อง)",
    "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอเสร็จแล้ว พร้อมดาวน์โหลด",
    "timeoutMs": 300000
+  },
+  {
+   "id": "mnCover",
+   "type": "image",
+   "over": "tasks",
+   "out": "cover",
+   "model": "🍌 Nano Banana Pro",
+   "aspectRatio": "9:16",
+   "refs": {
+    "op": "lookupRefs",
+    "from": "tasks",
+    "by": "{item.id}",
+    "slot": "board",
+    "also": [
+     {
+      "from": "products",
+      "by": "{item.refs.prod}",
+      "slot": "image"
+     },
+     {
+      "from": "tasks",
+      "by": "{item.id}",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.people}",
+         "b": "คนเดียวเต็มตัว"
+        },
+        {
+         "op": "not",
+         "a": {
+          "op": "eq",
+          "a": "{item.peopleSrc}",
+          "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "from": "characters",
+      "by": "{values.charId}",
+      "slot": "face",
+      "when": {
+       "op": "and",
+       "list": [
+        {
+         "op": "eq",
+         "a": "{item.people}",
+         "b": "คนเดียวเต็มตัว"
+        },
+        {
+         "op": "eq",
+         "a": "{item.peopleSrc}",
+         "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "prompt": {
+    "op": "concat",
+    "parts": [
+     "Design a scroll-stopping vertical 9:16 COVER (thumbnail) for a Thai how-to TikTok clip about \"{item.productName}\". ",
+     "Attached image 1 = this clip's storyboard sheet (a grid of panels): use it only as reference — make ONE single full-bleed photo, never a grid, panels, borders or number marks. ",
+     "Show the most satisfying moment: the finished result, big and clear, in the same place, same light, same person and same product as the sheet. ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "refsFilled",
+         "key": "prod",
+         "from": "products",
+         "slot": "image"
+        },
+        "value": "The attached product photo is the real product — keep its exact colour, shape, label and logo. "
+       }
+      ]
+     },
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": {
+         "op": "and",
+         "list": [
+          {
+           "op": "eq",
+           "a": "{item.people}",
+           "b": "คนเดียวเต็มตัว"
+          },
+          {
+           "op": "or",
+           "list": [
+            {
+             "op": "not",
+             "a": {
+              "op": "eq",
+              "a": "{item.slots.face}",
+              "b": ""
+             }
+            },
+            {
+             "op": "eq",
+             "a": "{item.peopleSrc}",
+             "b": "ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต"
+            }
+           ]
+          }
+         ]
+        },
+        "value": "The attached face photo is the person — same face and hair; natural, not posing like a model. "
+       }
+      ]
+     },
+     "Look: ",
+     {
+      "op": "lookup",
+      "table": "styleVideoEN",
+      "key": "{values.svStyle}",
+      "fallback": "realistic documentary look of a real lived-in home"
+     },
+     ". Headline: ",
+     {
+      "op": "block",
+      "sep": "",
+      "parts": [
+       {
+        "when": "values.svLang=English",
+        "value": "big bold short English title (2-5 words) about this job, on a single line,"
+       },
+       {
+        "when": "values.svLang!=English",
+        "value": {
+         "op": "concat",
+         "parts": [
+          "the exact Thai text \"",
+          {
+           "op": "cond",
+           "when": {
+            "op": "not",
+            "a": {
+             "op": "eq",
+             "a": "{item.ov1}",
+             "b": ""
+            }
+           },
+           "then": {
+            "op": "clamp",
+            "value": "{item.ov1}",
+            "max": 24
+           },
+           "else": {
+            "op": "clamp",
+            "value": "{item.productName}",
+            "max": 20
+           }
+          },
+          "\" — copy it letter for letter in Thai script, big and bold, never translate or reword it, on a single line,"
+         ]
+        }
+       }
+      ]
+     },
+     " in the upper third, white letters with a thick dark outline and soft shadow, easy to read on a phone; keep faces and the product uncovered. ",
+     "Bright, clean, high-contrast TikTok cover look, at most one small arrow or sparkle accent. No other text: no subtitle, no caption paragraph, no labels, no logos, no watermark, no emoji."
+    ]
+   },
+   "aux": true,
+   "logRun": "[{item.productName} คลิป {item.clipIndex}] กำลังทำปก TikTok",
+   "logDone": "[{item.productName} คลิป {item.clipIndex}] ปก TikTok เสร็จแล้ว",
+   "timeoutMs": 180000
   }
  ],
  "stages": [
@@ -30278,6 +32175,9 @@
   },
   {
    "op": "mnQueue"
+  },
+  {
+   "op": "mnFace"
   },
   {
    "op": "mnBoard",
@@ -31463,6 +33363,72 @@
               }
              ],
              "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold"
+            }
+           ]
+          },
+          {
+           "el": "box",
+           "className": "flex flex-col gap-1.5",
+           "card": [
+            {
+             "card": [
+              {
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0",
+               "el": "icon",
+               "icon": "image",
+               "textSize": "text-[16px]"
+              },
+              {
+               "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0",
+               "el": "text",
+               "value": "โมเดลสร้างภาพ"
+              }
+             ],
+             "className": "items-center !gap-1.5 px-0.5",
+             "el": "row",
+             "style": {
+              "flexWrap": "nowrap"
+             }
+            },
+            {
+             "el": "grid-select",
+             "field": "imageModel",
+             "cols": 3,
+             "contained": true,
+             "options": [
+              {
+               "value": "🍌 Nano Banana Pro",
+               "label": "Nano Banana Pro",
+               "desc": "ค่าเริ่ม · สวยละเอียดสุด เขียนตัวไทยได้"
+              },
+              {
+               "value": "🍌 Nano Banana 2.1",
+               "label": "Nano Banana 2.1",
+               "desc": "สมดุลทั้งคุณภาพและเวลา"
+              },
+              {
+               "value": "🍌 Nano Banana 2 Lite",
+               "label": "Nano Banana 2 Lite",
+               "desc": "เร็วสุด · รายละเอียดน้อยกว่า"
+              }
+             ],
+             "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button>span:first-of-type]:font-bold",
+             "mobile": {
+              "cols": 1
+             }
+            },
+            {
+             "el": "text",
+             "value": "มีข้อความบนภาพ ระบบใช้ Nano Banana Pro ให้ภาพที่มีตัวหนังสืออัตโนมัติ เพราะเขียนตัวไทยได้",
+             "className": "!text-[13.5px] @[640px]:!text-[13px] opacity-55 px-0.5 leading-snug",
+             "when": {
+              "op": "not",
+              "a": {
+               "op": "eq",
+               "a": "{values.svTextOn}",
+               "b": "ไม่มีข้อความ"
+              }
+             }
             }
            ]
           },
@@ -34915,6 +36881,77 @@
                ]
               },
               {
+               "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-60 px-0.5 mt-1",
+               "el": "text",
+               "value": "ไมค์",
+               "when": {
+                "a": {
+                 "list": [
+                  {
+                   "a": "{item.people}",
+                   "b": "ไม่มีคน",
+                   "op": "eq"
+                  },
+                  {
+                   "a": "{item.people}",
+                   "b": "เห็นแต่มือ ไม่เห็นหน้า",
+                   "op": "eq"
+                  }
+                 ],
+                 "op": "or"
+                },
+                "op": "not"
+               }
+              },
+              {
+               "className": "!min-h-[44px] @[420px]:!min-h-0",
+               "cols": 3,
+               "contained": true,
+               "el": "grid-select",
+               "field": "mic",
+               "mobile": {
+                "cols": 1
+               },
+               "options": [
+                {
+                 "desc": "หมีเลือกให้เข้ากับงาน",
+                 "icon": "auto_awesome",
+                 "label": "อัตโนมัติ",
+                 "value": ""
+                },
+                {
+                 "desc": "ไมค์เล็กหนีบปกเสื้อ",
+                 "icon": "mic",
+                 "label": "มีไมค์",
+                 "value": "มีไมค์"
+                },
+                {
+                 "desc": "ไม่เห็นไมค์ในภาพ",
+                 "icon": "mic_off",
+                 "label": "ไม่มีไมค์",
+                 "value": "ไม่มีไมค์"
+                }
+               ],
+               "when": {
+                "a": {
+                 "list": [
+                  {
+                   "a": "{item.people}",
+                   "b": "ไม่มีคน",
+                   "op": "eq"
+                  },
+                  {
+                   "a": "{item.people}",
+                   "b": "เห็นแต่มือ ไม่เห็นหน้า",
+                   "op": "eq"
+                  }
+                 ],
+                 "op": "or"
+                },
+                "op": "not"
+               }
+              },
+              {
                "el": "text",
                "value": "เข้ากับไทม์แลปส์พอดี",
                "className": "!text-[13px] @[640px]:!text-[12.5px] px-0.5 !text-[#15803d] dark:!text-[#4ade80]",
@@ -38341,6 +40378,7 @@
               {
                "el": "gen-phase",
                "ops": [
+                "mnFace",
                 "mnBoard6",
                 "mnBoard5",
                 "mnBoard4",
@@ -38894,6 +40932,7 @@
               {
                "el": "gen-phase",
                "ops": [
+                "mnFace",
                 "mnBoard",
                 "mnBoard2",
                 "mnBoard3",
@@ -51286,6 +53325,7 @@
                     }
                    },
                    "chain": [
+                    "mnFace",
                     "mnBoard",
                     "mnBoard2",
                     "mnBoard3",
@@ -51522,6 +53562,7 @@
                    "icon": "auto_fix_high",
                    "className": "w-full justify-center !h-12 !rounded-xl !text-[15px] @[640px]:!text-[14px] font-bold !bg-gradient-to-b !from-[#16a34a] !to-[#15803d] transition-all hover:-translate-y-0.5 active:translate-y-0 !text-white",
                    "chain": [
+                    "mnFace",
                     "mnBoard",
                     "mnBoard2",
                     "mnBoard3",
@@ -52220,6 +54261,7 @@
                    "variant": "ghost",
                    "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
                    "chain": [
+                    "mnFace",
                     "mnBoard",
                     "mnBoard2",
                     "mnBoard3",
@@ -52708,6 +54750,116 @@
                     },
                     {
                      "slot": "video6"
+                    }
+                   ]
+                  },
+                  {
+                   "el": "box",
+                   "className": "flex flex-col gap-2 rounded-xl border border-[var(--ev-border)] p-2.5",
+                   "card": [
+                    {
+                     "el": "text",
+                     "value": "โพสต์ TikTok",
+                     "icon": "smartphone",
+                     "className": "!text-[13px] @[640px]:!text-[12px] font-bold opacity-60"
+                    },
+                    {
+                     "el": "media-slot",
+                     "src": "{item.slots.cover}",
+                     "aspect": "9:16",
+                     "style": {
+                      "borderRadius": "12px"
+                     },
+                     "className": "ring-1 ring-[var(--ev-border)]",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     }
+                    },
+                    {
+                     "el": "gen-button",
+                     "op": "mnCover",
+                     "label": "ทำปก TikTok",
+                     "icon": "auto_awesome",
+                     "variant": "ghost",
+                     "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.slots.cover}",
+                      "b": ""
+                     }
+                    },
+                    {
+                     "el": "text",
+                     "value": "ภาพปก 9:16 จากบอร์ดคลิปนี้ · ใช้เครดิตภาพ 1 ใบ",
+                     "className": "!text-[12px] @[640px]:!text-[11px] opacity-50",
+                     "when": {
+                      "op": "eq",
+                      "a": "{item.slots.cover}",
+                      "b": ""
+                     }
+                    },
+                    {
+                     "el": "box",
+                     "className": "grid grid-cols-2 gap-2",
+                     "when": {
+                      "op": "not",
+                      "a": {
+                       "op": "eq",
+                       "a": "{item.slots.cover}",
+                       "b": ""
+                      }
+                     },
+                     "card": [
+                      {
+                       "el": "download-button",
+                       "to": "{item.slots.cover}",
+                       "label": "โหลดปก",
+                       "icon": "download",
+                       "variant": "ghost",
+                       "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                      },
+                      {
+                       "el": "retry-button",
+                       "chain": [
+                        "mnCover"
+                       ],
+                       "label": "ทำปกใหม่",
+                       "icon": "refresh",
+                       "variant": "ghost",
+                       "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                      }
+                     ]
+                    },
+                    {
+                     "el": "box",
+                     "className": "flex flex-col gap-1.5",
+                     "when": "item.caption!=",
+                     "card": [
+                      {
+                       "el": "text",
+                       "value": "{item.caption}",
+                       "className": "!text-[14px] @[640px]:!text-[13px] leading-snug !text-[var(--ev-text)]"
+                      },
+                      {
+                       "el": "text",
+                       "value": "{item.hashtags}",
+                       "className": "!text-[13px] @[640px]:!text-[12px] leading-snug !text-[var(--ev-accent)]",
+                       "when": "item.hashtags!="
+                      },
+                      {
+                       "el": "copy-button",
+                       "value": "{item.caption}\n\n{item.hashtags}",
+                       "label": "คัดลอกแคปชัน + แฮชแท็ก",
+                       "icon": "content_copy",
+                       "variant": "ghost",
+                       "className": "w-full justify-center !h-11 !rounded-xl !text-[14px] @[640px]:!text-[13px] font-bold border border-[var(--ev-border)] !bg-[var(--ev-surface)] !min-h-[48px] @[420px]:!min-h-0"
+                      }
+                     ]
                     }
                    ]
                   },
@@ -55975,6 +58127,7 @@
                  },
                  "className": "justify-center !h-10 !rounded-xl !text-[13.5px] font-bold !bg-gradient-to-b !from-[#16a34a] !to-[#15803d] !text-white w-[132px] !pointer-events-auto !min-h-[48px] @[420px]:!min-h-0",
                  "chain": [
+                  "mnFace",
                   "mnBoard",
                   "mnBoard2",
                   "mnBoard3",
@@ -56151,6 +58304,7 @@
                   }
                  },
                  "chain": [
+                  "mnFace",
                   "mnBoard",
                   "mnBoard2",
                   "mnBoard3",
@@ -58187,6 +60341,7 @@
           {
            "el": "gen-phase",
            "ops": [
+            "mnFace",
             "mnBoard6",
             "mnBoard5",
             "mnBoard4",
@@ -58660,7 +60815,7 @@
   "charPlan": {
    "เห็นแต่มือ ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: เห็นแต่มือและแขนของผู้ลงมือ ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือต้องกำลังทำงานจริงทุกฉากที่มีมือ (ฉากก่อน/ผลลัพธ์ไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ",
    "เห็นแต่มือ ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: เห็นแต่มือและแขนของผู้ลงมือ ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือต้องกำลังทำงานจริงทุกฉากที่มีมือ (ฉากก่อน/ผลลัพธ์ไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ",
-   "คนเดียวเต็มตัว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน",
+   "คนเดียวเต็มตัว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน · ช่อง look ต้องบรรยายคนนี้เป็นอังกฤษ 8-12 คำ (เพศ ช่วงอายุ ทรงผม สีเสื้อ สีกางเกง) แม้ไม่มีรูปใบหน้า — ใช้วาดรูปหน้าตัวละคร",
    "คนเดียวเต็มตัว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน · ใช้บุคคลจากรูปใบหน้าที่แนบเป็นคนเดิมทุกฉากทุกคลิป ห้ามเปลี่ยนคน",
    "ทีมช่างเบลอเคลื่อนไหวเร็ว|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
    "ทีมช่างเบลอเคลื่อนไหวเร็ว|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
@@ -58669,7 +60824,7 @@
    "|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
    "|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
    "เห็นแต่มือ ไม่เห็นหน้า|": "กฎคนในคลิป: เห็นแต่มือและแขนของผู้ลงมือ ห้ามเห็นหน้า ห้ามเห็นตัวเต็ม — มือต้องกำลังทำงานจริงทุกฉากที่มีมือ (ฉากก่อน/ผลลัพธ์ไม่มีมือได้) · เขียน s*th/s*en ให้ชัดว่าเห็นแค่มือ",
-   "คนเดียวเต็มตัว|": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน",
+   "คนเดียวเต็มตัว|": "กฎคนในคลิป: มีผู้ลงมือ 1 คน (คนไทย) เห็นทั้งตัวได้ แต่เป็น \"ผู้ลงมือทำ\" ไม่ใช่พรีเซนเตอร์ — ห้ามมองกล้อง ห้ามยิ้มให้กล้อง ห้ามโพสท่า ห้ามชี้ของ คนเดียวกันทุกฉากทุกคลิป · สะท้อนใน s*th และ s*en ทุกฉากที่มีคน · ช่อง look ต้องบรรยายคนนี้เป็นอังกฤษ 8-12 คำ (เพศ ช่วงอายุ ทรงผม สีเสื้อ สีกางเกง) แม้ไม่มีรูปใบหน้า — ใช้วาดรูปหน้าตัวละคร",
    "ทีมช่างเบลอเคลื่อนไหวเร็ว|": "กฎคนในคลิป: มีทีมงานหลายคน บทบาทตามประเภทงาน — ครัว = เชฟและผู้ช่วยเชฟ · ทำความสะอาด = แม่บ้าน/ทีมทำความสะอาด · สวน = คนสวน · ก่อสร้าง/ซ่อม = ช่าง · ชุดทำงานเข้ากับงานเดียวกันทั้งทีม ไม่มองกล้อง ไม่โพสท่า งานเด่นกว่าคน · โหมดไทม์แลปส์กล้องนิ่ง: เห็นเป็นเงาเคลื่อนไหวเร็ว ไม่เห็นหน้าชัด · เขียน s*en ให้ระบุบทบาททีมงานทุกฉากที่มีคน",
    "ไม่มีคน|": "กฎคนในคลิป: ไม่มีคนและไม่มีมือเลยทุกฉาก — เขียนแต่ละฉากเป็น **สภาพของพื้นที่/ของ ณ ช็อตนั้น** (คราบจางลงครึ่งหนึ่ง · แผ่นกรองสะอาดอยู่ในตำแหน่งแล้ว · พื้นแห้งเงา) **ห้ามเขียนให้สิ่งของเป็นผู้ลงมือทำงานที่ต้องใช้มือ** (ผ้ากำลังเช็ด · แผ่นกรองเลื่อนเข้าที่ · แปรงกำลังขัด) เพราะภาพจะเติมมือคนเข้ามาถือของนั้นให้สมเหตุสมผล · เล่าความคืบหน้าด้วยการเทียบสภาพระหว่างช็อต ไม่ใช่ด้วยการกระทำ",
    "|": "กฎคนในคลิป: เลือกเองว่าจะให้เห็นคนแค่ไหนให้เข้ากับงานนี้ (เห็นแต่มือ / คนเดียวเต็มตัว / ทีมช่างเบลอ / ไม่มีคน) — งานที่ต้องสอนทำตามให้เห็นมือลงมือชัด · งานไทม์แลปส์ให้คนอยู่ไกลหรือเบลอ · งานโชว์ของอย่างเดียวไม่ต้องมีคนก็ได้ · เลือกแล้วต้องเป็นแบบเดียวกันทุกฉากทุกคลิป และสะท้อนใน s*th/s*en ทุกฉากที่มีคน · ห้ามเป็นพรีเซนเตอร์ ห้ามมองกล้อง",
@@ -58695,7 +60850,9 @@
    "|": "คนในภาพ: ให้เข้ากับงาน และต้องเป็นแบบเดียวกันทุกช่อง · ห้ามมองกล้อง ห้ามโพสท่า",
    "เห็นตัว ไม่เห็นหน้า|": "เห็นตัวคนทำงานตั้งแต่ไหล่ลงมา ไม่เห็นคาง ห้ามเห็นหน้า ชุดเดิมทุกช่อง",
    "เห็นตัว ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "เห็นตัวคนทำงานตั้งแต่ไหล่ลงมา ไม่เห็นคาง ห้ามเห็นหน้า ชุดเดิมทุกช่อง",
-   "เห็นตัว ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "เห็นตัวคนทำงานตั้งแต่ไหล่ลงมา ไม่เห็นคาง ห้ามเห็นหน้า ชุดเดิมทุกช่อง"
+   "เห็นตัว ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "เห็นตัวคนทำงานตั้งแต่ไหล่ลงมา ไม่เห็นคาง ห้ามเห็นหน้า ชุดเดิมทุกช่อง",
+   "ใบหน้าตัวละคร|รูปหน้า": "คนลงมือ 1 คน = คนในรูปหน้าที่แนบ เป๊ะทุกช่อง (หน้า ผม สีผิว ชุดเดิม) ห้ามสร้างหน้าใหม่ ไม่มองกล้อง ไม่โพสท่า",
+   "ใบหน้าตัวละคร|บอร์ด": "คนลงมือ 1 คน = คนเดียวกับในสตอรีบอร์ดที่แนบ เป๊ะทุกช่อง (หน้า ผม สีผิว ชุดเดิม) ห้ามสร้างหน้าใหม่ ไม่มองกล้อง ไม่โพสท่า"
   },
   "charVideoEN": {
    "เห็นแต่มือ ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "only the worker's hands and forearms are visible, actively working; never a face or a full body; natural hands with the correct number of fingers.",
@@ -58715,7 +60872,9 @@
    "|": "people: match the job — keep it identical across every shot; never look at camera, never pose",
    "เห็นตัว ไม่เห็นหน้า|": "framed from the shoulders down, no chin — body, arms, hands at work, never the face; same outfit every scene.",
    "เห็นตัว ไม่เห็นหน้า|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "framed from the shoulders down, no chin — body, arms, hands at work, never the face; same outfit every scene.",
-   "เห็นตัว ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "framed from the shoulders down, no chin — body, arms, hands at work, never the face; same outfit every scene."
+   "เห็นตัว ไม่เห็นหน้า|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "framed from the shoulders down, no chin — body, arms, hands at work, never the face; same outfit every scene.",
+   "ใบหน้าตัวละคร|รูปหน้า": "FACE LOCK: the worker is the person in the attached face photo — same face, hair, skin, outfit every scene; absorbed in the task, never poses.",
+   "ใบหน้าตัวละคร|บอร์ด": "FACE LOCK: the worker is the same person shown in the sheets — same face, hair, skin, outfit every scene; absorbed in the task, never poses."
   },
   "voicePlan": {
    "เสียงผู้หญิง": "เสียงพากย์ของคลิปนี้เป็น \"ผู้หญิง\" — ถ้ามีคำลงท้าย vo1-vo5 ต้องใช้คำลงท้าย ค่ะ/คะ เท่านั้น ห้ามใช้ ครับ/ครับผม เด็ดขาด (แต่ไม่ต้องใส่ทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ) · สรรพนามแทนผู้พูดใช้ \"เรา\" หรือไม่ต้องมีสรรพนาม ห้ามใช้ \"ผม\" · ห้ามผสมคำลงท้ายสองเพศในคลิปเดียวกัน · ถ้าโหมดมีคนในคลิปและผู้ใช้ไม่ได้ระบุเพศ ให้คนในคลิปเป็นผู้หญิงเพื่อให้ตรงกับเสียง · ใส่ค่า \"หญิง\" ในฟิลด์ voice ของทุกคลิป",
@@ -58723,8 +60882,8 @@
    "สุ่มตามสินค้า": "ผู้ใช้ให้คุณเลือกเพศเสียงพากย์เอง — พิจารณาจากประเภทงานและกลุ่มคนดูว่าเสียงผู้หญิงหรือผู้ชายเข้ากับคลิปกว่า แล้วเลือกให้เหมาะกับงานแต่ละคลิป · ต้องเขียนผลที่เลือกลงฟิลด์ voice เป็นคำว่า \"หญิง\" หรือ \"ชาย\" เท่านั้น · คำลงท้ายและสรรพนามใน vo1-vo5 ต้องตรงกับเพศที่เลือก (หญิง = ค่ะ/คะ ห้ามใช้ ครับ · ชาย = ครับ ห้ามใช้ ค่ะ/คะ) ห้ามผสมสองเพศในคลิปเดียวกันเด็ดขาด · ไม่ต้องใส่คำลงท้ายทุกประโยค — อย่างมาก 2 ครั้งต่อคลิป ตามกฎคำลงท้ายในคำสั่งระบบ · ถ้าทำหลายคลิปให้งานเดียวกัน เลือกต่างกันได้เพื่อความหลากหลาย แต่ในคลิปหนึ่งต้องเพศเดียวตลอด · ถ้าโหมดมีคนในคลิปและผู้ใช้ไม่ได้ระบุเพศ ให้คนในคลิปเป็นเพศเดียวกับเสียงที่เลือก"
   },
   "voiceVideoEN": {
-   "เสียงผู้หญิง": "warm friendly FEMALE voice-over (adult woman, never a male voice)",
-   "เสียงผู้ชาย": "warm friendly MALE voice-over (adult man, never a female voice)"
+   "เสียงผู้หญิง": "warm friendly FEMALE voice-over",
+   "เสียงผู้ชาย": "warm friendly MALE voice-over"
   },
   "voiceLockEN": {
    "เสียงผู้หญิง": "\n\nVOICE LOCK: the narration MUST be a FEMALE (adult woman) voice — a male narrator is a wrong result.",
@@ -58855,12 +61014,12 @@
    "60": "คุณคือผู้กำกับคลิป \"ทำให้ดู\" ของพี่หมีแว่น ถ่ายทำแบบภาพสมจริงเหมือนถ่ายในบ้านจริง (สไตล์นี้คือวิธีจัดภาพ แสง และองค์ประกอบ ไม่ใช่เนื้อหาของบท) — ออกแบบคลิปแนวตั้ง 9:16 ยาวประมาณ 60 วินาที เป็นเรื่องเดียวต่อเนื่องจบในตัว เดินผ่าน 5 องก์ องก์ละ 6 ฉาก ฉากละ 2 วินาที รวม 30 ฉาก — องก์ 1-5 คือ \"ฉาก 1-5\" ของโครงเรื่องข้างล่าง (องก์ 6 ฉาก = ยืดจังหวะเดียวกันออก ไม่ใช่เรื่องใหม่ — \"ยืด\" คือเล่าความคืบหน้าของจังหวะนั้นทีละขั้น ไม่ใช่ถ่ายของเดิมซ้ำหลายมุม · แม้แต่องก์ผลลัพธ์ก็ต้องมีคนกำลังทำอะไรอยู่ในเฟรม (เก็บของ เช็ดรอบสุดท้าย วางของกลับที่ เปิดใช้งานจริง) แล้วปิดด้วยภาพกว้างผลลัพธ์ ฉากเดียวคือฉากสุดท้ายของคลิป):\nโครงเรื่อง 3 แบบ (5 ช่องเดิม เปลี่ยนแค่ความหมาย):\n- ก่อน → ลงมือ → หลัง: ฉาก 1 ก่อน ภาพกว้างเห็นทั้งพื้นที่ · 2 เตรียมของ · 3 ลงมือทำ · 4 คืบหน้า · 5 ผลลัพธ์ ภาพกว้างมุมเดียวกับฉาก 1 (ฉากสุดท้ายสุดของคลิปต้องเป็นภาพนี้) — ใช้กับ จัดบ้าน ทำความสะอาด จัดสวน ทาสี รีโนเวท ทำอาหาร ทำของ\n- ปัญหา → แก้แล้ว: ฉาก 1 ปัญหา (กว้าง) · 2 ปัญหา (ใกล้) · 3 แก้แล้ว มุมเดียวกับฉาก 1 · 4 จุดเด่น · 5 ผลลัพธ์ — ใช้กับของที่ \"ติดแล้วจบ\" ผ้ายาง มุ้ง กันสาด ชั้นวาง\n- ทัวร์จุดเด่น: ฉาก 1 เห็นของทำงาน/สภาพเสร็จ · 2 จุดขายหลัก · 3 จุด 2 หรือใช้จริง · 4 จุด 3 หรือการใช้งานแถม · 5 ภาพปิด — ใช้กับของประดิษฐ์ เครื่องใช้ bundle · เลือกทรงย่อยเอง: ทีละจุด หรือ ตามลำดับการใช้งาน\n★ เรื่องต้องจบสมบูรณ์ภายใน 60 วินาที — ฉาก 30 คือฉากปิด ห้ามค้างคาหรือเล่าไม่จบ\n★ ทุกฉากคือคลิปเดียวกัน เล่าต่อเนื่องกันไปข้างหน้า ห้ามเริ่มเรื่องใหม่กลางทาง ห้ามย้อนสภาพ และห้ามใส่ฉากผลลัพธ์ก่อนองก์ 5\n★ ตอนถ่ายจริงคลิปนี้จะถูกสร้างเป็น 6 ก้อน ก้อนละ 5 ฉาก แล้วนำมาต่อกัน — ทุกก้อนต้องเป็นสถานที่เดียวกัน แสงเดียวกัน ของชิ้นเดิม และคนคนเดิม\n"
   },
   "lenOut": {
-   "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
-   "60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON"
+   "10": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "20": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 10 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "30": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 15 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "40": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 20 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "50": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 25 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON",
+   "60": "Output: ตอบเป็น JSON array ล้วน ห้ามมี markdown ห้ามมีข้อความอื่นนอก JSON · จำนวน object ในอาร์เรย์ = จำนวนคลิปที่ขอ (ขอ 1 คลิปก็ต้องเป็น array ที่มี 1 object) แต่ละ object ต้องมีครบทั้ง 30 ฉาก ห้ามขาดฉากใดฉากหนึ่ง รูปแบบแต่ละ object:\n{\"productName\":\"ชื่องาน คัดลอกตรงตามที่ให้มา\",\"category\":\"ประเภทงาน เช่น ทำความสะอาด จัดบ้าน รีโนเวท ทำอาหาร สาธิตของ\",\"palette\":\"lighting and mood in English 3-6 words e.g. soft morning window light\",\"look\":\"มีรูปใบหน้าแนบมาเป็นรูปสุดท้าย = บรรยายคนในรูปนั้นเป็นอังกฤษ **4-6 คำ สั้นที่สุด** (เพศ ช่วงอายุ ทรงผม) เช่น Thai woman late 20s brown bob · ไม่มีรูปใบหน้า = ส่งค่าว่าง\",\"synopsis\":\"เรื่องย่อคลิป 1-2 ประโยค ภาษาไทย\",\"caption\":\"แคปชันโพสต์ TikTok 1 บรรทัด ไม่เกิน 80 ตัวอักษร บอกว่าทำอะไรแล้วได้ผลแบบไหน ชวนดูจนจบ ห้ามมี emoji · ภาษาไทย (พากย์ English = เขียนอังกฤษ)\",\"hashtags\":\"แฮชแท็ก 5-7 อัน คั่นด้วยเว้นวรรค ตรงกับงานนี้ ไทยปนอังกฤษ (พากย์ English = อังกฤษล้วน) ห้ามชื่อแบรนด์หรือร้าน\",\"voice\":\"หญิง หรือ ชาย — เพศเสียงพากย์ของคลิปนี้\",\"s1th\":\"...\",\"s1en\":\"...\",\"ov1\":\"...\",\"vo1\":\"...\",\"cam1\":\"...\",\"s2th\":\"...\",\"s2en\":\"...\",\"ov2\":\"...\",\"vo2\":\"...\",\"cam2\":\"...\",\"s3th\":\"...\",\"s3en\":\"...\",\"ov3\":\"...\",\"vo3\":\"...\",\"cam3\":\"...\",\"s4th\":\"...\",\"s4en\":\"...\",\"ov4\":\"...\",\"vo4\":\"...\",\"cam4\":\"...\",\"s5th\":\"...\",\"s5en\":\"...\",\"ov5\":\"...\",\"vo5\":\"...\",\"cam5\":\"...\",\"s6th\":\"...\",\"s6en\":\"...\",\"ov6\":\"...\",\"vo6\":\"...\",\"cam6\":\"...\",\"s7th\":\"...\",\"s7en\":\"...\",\"ov7\":\"...\",\"vo7\":\"...\",\"cam7\":\"...\",\"s8th\":\"...\",\"s8en\":\"...\",\"ov8\":\"...\",\"vo8\":\"...\",\"cam8\":\"...\",\"s9th\":\"...\",\"s9en\":\"...\",\"ov9\":\"...\",\"vo9\":\"...\",\"cam9\":\"...\",\"s10th\":\"...\",\"s10en\":\"...\",\"ov10\":\"...\",\"vo10\":\"...\",\"cam10\":\"...\",\"s11th\":\"...\",\"s11en\":\"...\",\"ov11\":\"...\",\"vo11\":\"...\",\"cam11\":\"...\",\"s12th\":\"...\",\"s12en\":\"...\",\"ov12\":\"...\",\"vo12\":\"...\",\"cam12\":\"...\",\"s13th\":\"...\",\"s13en\":\"...\",\"ov13\":\"...\",\"vo13\":\"...\",\"cam13\":\"...\",\"s14th\":\"...\",\"s14en\":\"...\",\"ov14\":\"...\",\"vo14\":\"...\",\"cam14\":\"...\",\"s15th\":\"...\",\"s15en\":\"...\",\"ov15\":\"...\",\"vo15\":\"...\",\"cam15\":\"...\",\"s16th\":\"...\",\"s16en\":\"...\",\"ov16\":\"...\",\"vo16\":\"...\",\"cam16\":\"...\",\"s17th\":\"...\",\"s17en\":\"...\",\"ov17\":\"...\",\"vo17\":\"...\",\"cam17\":\"...\",\"s18th\":\"...\",\"s18en\":\"...\",\"ov18\":\"...\",\"vo18\":\"...\",\"cam18\":\"...\",\"s19th\":\"...\",\"s19en\":\"...\",\"ov19\":\"...\",\"vo19\":\"...\",\"cam19\":\"...\",\"s20th\":\"...\",\"s20en\":\"...\",\"ov20\":\"...\",\"vo20\":\"...\",\"cam20\":\"...\",\"s21th\":\"...\",\"s21en\":\"...\",\"ov21\":\"...\",\"vo21\":\"...\",\"cam21\":\"...\",\"s22th\":\"...\",\"s22en\":\"...\",\"ov22\":\"...\",\"vo22\":\"...\",\"cam22\":\"...\",\"s23th\":\"...\",\"s23en\":\"...\",\"ov23\":\"...\",\"vo23\":\"...\",\"cam23\":\"...\",\"s24th\":\"...\",\"s24en\":\"...\",\"ov24\":\"...\",\"vo24\":\"...\",\"cam24\":\"...\",\"s25th\":\"...\",\"s25en\":\"...\",\"ov25\":\"...\",\"vo25\":\"...\",\"cam25\":\"...\",\"s26th\":\"...\",\"s26en\":\"...\",\"ov26\":\"...\",\"vo26\":\"...\",\"cam26\":\"...\",\"s27th\":\"...\",\"s27en\":\"...\",\"ov27\":\"...\",\"vo27\":\"...\",\"cam27\":\"...\",\"s28th\":\"...\",\"s28en\":\"...\",\"ov28\":\"...\",\"vo28\":\"...\",\"cam28\":\"...\",\"s29th\":\"...\",\"s29en\":\"...\",\"ov29\":\"...\",\"vo29\":\"...\",\"cam29\":\"...\",\"s30th\":\"...\",\"s30en\":\"...\",\"ov30\":\"...\",\"vo30\":\"...\",\"cam30\":\"...\"}\n\nกฎ overlay เพิ่มเติม: ovN ทุกตัวเป็นภาษาไทย บรรทัดเดียว ไม่เกิน 5 คำ ห้ามใส่เลขฉาก/ลิสต์ · ต้องบอกสิ่งที่เห็นจริงในฉากนั้น ห้ามใช้ชื่อขั้นตอนของโครงเรื่อง (ก่อน / เตรียมของ / ลงมือทำ / คืบหน้า / ผลลัพธ์ / จุดเด่น) เป็นข้อความบนภาพ\n\nรูปแบบคำตอบ: เริ่มด้วย [ ปิดด้วย ] แล้วหยุดทันที — ห้ามมี ``` ห้ามมีคำอธิบาย หมายเหตุ หรือข้อความใด ๆ ก่อนหรือหลัง JSON"
   },
   "lenLabel": {
    "10": "10 วินาที",
