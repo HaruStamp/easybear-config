@@ -438,7 +438,19 @@
                 "key": "{values.svPose}",
                 "fallback": "พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า (ชิ้นใหญ่ เช่น เฟอร์นิเจอร์ เครื่องใช้ไฟฟ้า ให้ยืนข้างสินค้าแทน ห้ามยก)"
               },
-              " มองกล้อง ยิ้ม แล้วพูดคำชวนซื้อ — ห้ามชี้ลงด้านล่าง ห้ามชี้ไปที่มุมจอ ตะกร้า ปุ่ม ลิงก์ หรือสิ่งที่ไม่อยู่ในฉาก (AI วิดีโอจะวาดปุ่มซื้อปลอมขึ้นตรงจุดที่ชี้) · sNen ทุกฉากห้ามมีคำ point down / toward the bottom / screen / corner / basket / cart / button / link\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
+              {
+                "op": "concat",
+                "parts": [
+                  "",
+                  {
+                    "op": "lookup",
+                    "table": "tplCloseTH",
+                    "key": "{values.templateId}",
+                    "fallback": " มองกล้อง ยิ้ม แล้วพูดคำชวนซื้อ"
+                  },
+                  " — ห้ามชี้ลงด้านล่าง ห้ามชี้ไปที่มุมจอ ตะกร้า ปุ่ม ลิงก์ หรือสิ่งที่ไม่อยู่ในฉาก (AI วิดีโอจะวาดปุ่มซื้อปลอมขึ้นตรงจุดที่ชี้) · sNen ทุกฉากห้ามมีคำ point down / toward the bottom / screen / corner / basket / cart / button / link\n\nตอบเป็น JSON array เท่านั้น — token แรกของคำตอบต้องเป็น [ และ token สุดท้ายต้องเป็น ] ห้ามมีข้อความอื่นใดนอก JSON"
+                ]
+              }
             ]
           },
           {
@@ -1420,7 +1432,19 @@
       "prompt": {
         "op": "concat",
         "parts": [
-          "Part 2 of the same take: continue seamlessly from the first frame (last frame of part 1) — same person, outfit, place, light and product; no cut, fade, restart or re-introduction.\n\n",
+          {
+            "op": "concat",
+            "parts": [
+              "Part 2 of the same take: continue seamlessly from the first frame (last frame of part 1) — same ",
+              {
+                "op": "lookup",
+                "table": "tplSameEN",
+                "key": "{values.templateId}",
+                "fallback": "person, outfit"
+              },
+              ", place, light and product; no cut, fade, restart or re-introduction.\n\n"
+            ]
+          },
           {
             "op": "lookup",
             "table": "tplVidLead",
@@ -1448,6 +1472,12 @@
             "fallback": ""
           },
           ".",
+          {
+            "op": "lookup",
+            "table": "tplFrameEN",
+            "key": "{values.templateId}",
+            "fallback": ""
+          },
           {
             "op": "block",
             "sep": "",
@@ -1582,7 +1612,19 @@
               }
             ]
           },
-          "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on the person, not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing.",
+          {
+            "op": "concat",
+            "parts": [
+              "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on ",
+              {
+                "op": "lookup",
+                "table": "tplEndEN",
+                "key": "{values.templateId}",
+                "fallback": "the person"
+              },
+              ", not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing."
+            ]
+          },
           {
             "op": "block",
             "sep": "",
@@ -1856,7 +1898,19 @@
               }
             ]
           },
-          "\n\nOne continuous take with a single simple action: keep the same action and framing as the end of part 1 — no scene changes, no new angles, no cuts — closing with rising energy and a confident nod that invites the viewer to buy. Handle the product gently and keep it clearly visible exactly as in the first frame.",
+          {
+            "op": "concat",
+            "parts": [
+              "\n\nOne continuous take with a single simple action: keep the same action and framing as the end of part 1 — no scene changes, no new angles, no cuts — ",
+              {
+                "op": "lookup",
+                "table": "tplP2CloseEN",
+                "key": "{values.templateId}",
+                "fallback": "closing with rising energy and a confident nod that invites the viewer to buy"
+              },
+              ". Handle the product gently and keep it clearly visible exactly as in the first frame."
+            ]
+          },
           "\n\nPresenter: ",
           {
             "op": "lookup",
@@ -1995,6 +2049,12 @@
             "fallback": ""
           },
           ".",
+          {
+            "op": "lookup",
+            "table": "tplFrameEN",
+            "key": "{values.templateId}",
+            "fallback": ""
+          },
           {
             "op": "block",
             "sep": "",
@@ -2219,7 +2279,19 @@
               }
             ]
           },
-          "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on the person, not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing.",
+          {
+            "op": "concat",
+            "parts": [
+              "\n\nThe ask to buy is spoken only, never shown on screen; the clip ends on ",
+              {
+                "op": "lookup",
+                "table": "tplEndEN",
+                "key": "{values.templateId}",
+                "fallback": "the person"
+              },
+              ", not a card. Negative: no end card, closing title, buy buttons, shopping UI, on-screen buy prompts, price or discount graphics, stickers, emoji, arrows, logos, watermarks, transitions, glitch, light leaks, zoom punch-ins, sparkles, slow motion, split screen, warped product, extra fingers or morphing."
+            ]
+          },
           "\n\nThe first frame is given: animate forward from it — the same person, outfit, place, light and product; no cut, no new layout, no split screen.",
           {
             "op": "block",
@@ -18623,7 +18695,7 @@
       "d3-object": "The cartoon object character does a quick comic reaction to the problem, then gets revived sparkling-new thanks to the product — charming lively cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
       "d3-car": "The cartoon car does a quick comic sputter, then revs up shiny and happy thanks to the product — fun automotive cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
       "d3-organ": "The cute organ character does a quick comic wobble, then glows healthy and energetic thanks to the product — uplifting cartoon motion, energy matching the sales tone throughout. The real product stays photorealistic exactly as the reference.",
-      "ugc-lips": "Macro beauty shot of the lips only: the hand glides the lipstick bullet across the lips in one smooth stroke, the lips press together and part to show even full colour, then a soft smile with the lipstick held beside the lips. COLOUR LOCK: the colour on the lips matches the lipstick bullet in the first frame exactly — same hue, depth, undertone and finish — and never shifts under any light. An unseen narrator speaks; voice-over only, the lips do not lip-sync."
+      "ugc-lips": "Macro beauty shot of the lips only: the hand glides the lipstick bullet across the lips in one smooth stroke, the lips press together and part to show even full colour, then a soft lip smile with the lipstick held beside the lips. COLOUR LOCK: the colour on the lips matches the lipstick bullet in the first frame exactly — same hue, depth, undertone and finish — and never shifts under any light. An unseen narrator speaks; voice-over only, the lips do not lip-sync."
     },
     "tplKind": {
       "ugc-review": "person",
@@ -18799,8 +18871,8 @@
       "d3-car|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
       "d3-organ|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
       "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎพรีเซนเตอร์: ไม่มีคนจริงในทุกฉาก — ตัวการ์ตูน 3D ตามเทมเพลตเป็นตัวเดินเรื่อง (ตัวเดิมทุกฉาก) สินค้าจริงเป็นจุดโฟกัส — เขียนบท s*th/s*en ให้ตัวการ์ตูนตัวนี้เป็นผู้แสดง ไม่มีบุคคลจริง",
-      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด",
-      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด"
+      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · ทุกฉาก (รวมฉาก 5-8 ของคลิปยาวและฉากปิดการขาย) กล้องอยู่ระยะโคลสอัปปากเท่าเดิม ห้ามถอยกล้อง/ซูมออก — เปลี่ยนได้แค่การกระทำของมือและปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด",
+      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "กฎภาพ: ทุกฉากเห็นแค่ริมฝีปาก (และมือที่ถือแท่งลิป) ห้ามเห็นตาหรือทั้งหน้า — เขียน sNth/sNen เป็นโคลสอัปปาก: หมุนแท่งลิปให้เห็นเนื้อสี → ทาจากแท่งลงปาก → เม้มปากเกลี่ยสี → โชว์สีบนปากเต็มๆ → ยิ้มพร้อมแท่งลิปข้างปาก · ทุกฉาก (รวมฉาก 5-8 ของคลิปยาวและฉากปิดการขาย) กล้องอยู่ระยะโคลสอัปปากเท่าเดิม ห้ามถอยกล้อง/ซูมออก — เปลี่ยนได้แค่การกระทำของมือและปาก · สีบนปากต้องตรงกับสีเนื้อลิปในรูปสินค้าเป๊ะ ห้ามบรรยายเป็นสีอื่น · เสียงพากย์เป็นเสียงบรรยาย ไม่ใช่ปากในภาพพูด"
     },
     "charBoardT": {
       "ugc-review|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "มีนาย/นางแบบไทย 1 คนตามบท — คนเดียวกันในภาพนี้ หน้าตาเป็นมิตรดูจริงใจ ท่าทางธรรมชาติ สินค้าเด่นกว่าคนเสมอ",
@@ -18895,8 +18967,8 @@
       "d3-car|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
       "d3-organ|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
       "d3-organ|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "No real people — the 3D cartoon character described in the scene is the presenter, the same character in every scene; the real product stays photorealistic and in focus.",
-      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "Only the lips and the hand holding the lipstick are visible — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame.",
-      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "Only the lips and the hand holding the lipstick are visible — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame."
+      "ugc-lips|AI เลือกนาย/นางแบบให้เหมาะกับสินค้า": "Only the lips and the lipstick hand, in every part — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame.",
+      "ugc-lips|ใช้รูปใบหน้าที่แนบ — ล็อกหน้าเป็นคนเดิมทุกช็อต": "Only the lips and the lipstick hand, in every part — never the eyes or full face; the lip colour stays exactly the lipstick colour from the first frame."
     },
     "actName": {
       "8|1": "ฮุคแรง",
@@ -19092,6 +19164,21 @@
       "ถือสินค้า": "พรีเซนเตอร์ถือสินค้าไว้ข้างหน้า",
       "ยืนข้างสินค้า": "พรีเซนเตอร์ยืนข้างสินค้า ผายมือไปที่สินค้า (ไม่ถือ)",
       "สินค้าใหญ่": "พรีเซนเตอร์ยืนข้างสินค้าชิ้นใหญ่ ผายมือไปที่สินค้า (ไม่ถือ ไม่ยก) กล้องเห็นสินค้าทั้งชิ้น"
+    },
+    "tplFrameEN": {
+      "ugc-lips": "\n\nFRAMING LOCK (every part, to the last frame): macro close-up of the lips only, nose tip to chin; the eyes and full face never enter the frame; the camera never pulls back, zooms out or tilts up."
+    },
+    "tplEndEN": {
+      "ugc-lips": "the lips and the lipstick"
+    },
+    "tplP2CloseEN": {
+      "ugc-lips": "closing on the same lips close-up: a soft lip smile, lipstick beside the mouth, while the voice invites the viewer to buy — no nod, no face reveal"
+    },
+    "tplSameEN": {
+      "ugc-lips": "lips-only close-up framing, lip colour"
+    },
+    "tplCloseTH": {
+      "ugc-lips": " — ข้อนี้ไม่ใช้กับเทมเพลตปากทาลิป: ฉากสุดท้ายยังโคลสอัปปากระยะเดิม ไม่มองกล้อง ไม่เห็นตา/ทั้งหน้า — ยิ้มที่ปาก ถือแท่งลิปข้างปาก ชวนซื้อด้วยเสียงพากย์"
     }
   },
   "seed": {
