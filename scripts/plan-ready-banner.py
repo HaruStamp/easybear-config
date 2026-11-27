@@ -26,6 +26,29 @@ NEW_TEXT = 'บทพร้อมแล้ว — กดปุ่มด้าน
 NEW_TEXT_SETUP = 'บทพร้อมแล้ว — กดปุ่มเริ่มด้านล่างเพื่อสร้างคลิปจากบทนี้ (ไม่ต้องคิดบทใหม่)'
 BTN_CLS = ('w-full justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold '
            '!bg-gradient-to-b !from-[#7c3aed] !to-[#6d28d9] !text-white !min-h-[48px] @[420px]:!min-h-0')
+# ④ (27 พ.ย. ค่ำ · เทสสด hardsell) สีปุ่มในป้าย = สีปุ่ม "เริ่ม" หลักของแอปนั้น (hardsell ส้ม · minimal ฟ้า …) ไม่ใช่ม่วงของ podcast ทุกแอป
+import re as _re
+_GRAD = _re.compile(r'!from-\[#[0-9a-fA-F]{6}\] !to-\[#[0-9a-fA-F]{6}\]')
+
+
+def app_grad(cfg) -> str:
+    found = []
+    def w(o):
+        if isinstance(o, dict):
+            if o.get('el') == 'run-button' and 'จากบทนี้' not in str(o.get('label', '')):
+                m = _GRAD.search(str(o.get('className', '')))
+                if m: found.append(m.group(0))
+            for v in o.values(): w(v)
+        elif isinstance(o, list):
+            for v in o: w(v)
+    w(cfg.get('phases'))
+    return found[0] if found else '!from-[#7c3aed] !to-[#6d28d9]'
+
+
+def is_new(n) -> bool:
+    return (isinstance(n, dict) and isinstance(n.get('card'), list) and n.get('when') is not None and any(
+        isinstance(r, dict) and r.get('el') == 'row' and any(isinstance(t, dict) and t.get('el') == 'text' and str(t.get('value', '')).startswith('บทพร้อมแล้ว — ')
+                                                            for t in (r.get('card') or [])) for r in n['card']))
 
 
 def build(plan_op: str, queue_op: str, with_buttons: bool = True) -> dict:
@@ -77,6 +100,19 @@ def apply(cfg: dict) -> int:
         elif isinstance(o, dict):
             for v in o.values(): walk(v)
     walk(cfg.get('phases'))
+    grad = app_grad(cfg)   # ④ ป้ายใหม่ทุกจุด (รวมที่ทำไว้แล้ว) ใช้สีปุ่มของแอป · รันซ้ำไม่เปลี่ยน
+
+    def paint(o):
+        if isinstance(o, list):
+            for x in o: paint(x)
+        elif isinstance(o, dict):
+            if is_new(o):
+                for b in o['card']:
+                    if isinstance(b, dict) and b.get('el') in ('run-button', 'gen-phase'):
+                        b['className'] = _GRAD.sub(grad, b['className'])
+                return
+            for v in o.values(): paint(v)
+    paint(cfg.get('phases'))
     return n[0]
 
 
@@ -88,5 +124,6 @@ if __name__ == '__main__':
         k = apply(cfg)
         left = json.dumps(cfg['phases'], ensure_ascii=False).count('บทที่ได้มาไม่สมบูรณ์')
         nl = '\n' if raw.endswith('\n') else ''
-        if k: open(f, 'w', encoding='utf-8').write(json.dumps(cfg, ensure_ascii=False, indent=indent) + nl)
+        new = json.dumps(cfg, ensure_ascii=False, indent=indent) + nl
+        if new != raw: open(f, 'w', encoding='utf-8').write(new)
         print(f'{f}: ป้ายบทพร้อม {k} จุด · ข้อความเดิมเหลือ {left}')
