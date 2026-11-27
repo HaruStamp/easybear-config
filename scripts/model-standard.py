@@ -331,7 +331,8 @@ def std_minimal(c):
     for o in video_ops(c):   # resolution: เดิม 1.2 เท่านั้นที่ส่ง 360p ⇒ 360p+10 วิ ส่ง 360p ทั้ง 2 รุ่น · 720p เดิมทุกไบต์
         r = o['resolution']
         assert r['op'] == 'cond' and r['else'] == '' and r['then']['then'] == '360p' and r['then']['else'] == '720p', o['id']
-        o['resolution'] = cond(D(r['then']['when']), '360p', cond(D(r['when']), '720p', ''))
+        # v68 (r32): เลือก 360p แต่ความยาวค้าง 20/30 วิ = ทำ 720p (ตรงบรรทัดสรุป) ⇒ ส่ง 720p ชัดทั้ง 2 รุ่น · ค่าเริ่ม 720p/1.1 ยังไม่ส่งคีย์
+        o['resolution'] = cond(D(r['then']['when']), '360p', cond(OR(D(r['when']), D(IS360)), '720p', ''))
     g_img, g_vid = grids(S, 'imageModel'), grids(S, 'svModel')
     assert len(g_img) == 1 and len(g_vid) == 1 and len(grids(S, 'svRes')) == 2
     box = box_holding(S, g_vid[0])
