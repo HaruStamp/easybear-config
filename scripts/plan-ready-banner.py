@@ -13,6 +13,8 @@
 #   ① ป้ายนี้ = "บทพร้อมแล้ว" (โทนม่วง ไม่ใช่เตือน) โผล่เฉพาะตอนไม่มีงานวิ่ง (ระหว่างเขียนบทซ่อน — การ์ดสถานะบอกอยู่แล้ว)
 #   ② ใส่ปุ่มในป้าย: ออโต้ = run-button (ทางเดียวกับปุ่ม "เริ่ม" หน้าตั้งค่า · บทที่มีอยู่ไม่ถูกเขียนซ้ำ — llm dedup)
 #      ทีละขั้น = gen-phase [plan, queue] perProduct (จัดคิวจากบทเดิม ไม่ใช้สื่อ · ทางเดียวกับปุ่ม "เริ่มแบบทีละขั้น")
+#   ③ (27 พ.ย. ค่ำ · ขยายทุกแอป) ป้ายเดิมที่อยู่ในรายการเดียวกับปุ่ม "เริ่ม" อยู่แล้ว (หน้าตั้งค่าของ hardsell) = ป้ายข้อความอย่างเดียว
+#      ชี้ปุ่มเริ่มด้านล่าง (ไม่ใส่ปุ่มซ้ำ) · เงื่อนไขเดียวกับ ①
 # ใช้: python3 scripts/plan-ready-banner.py <config.json>…   (รันซ้ำได้ — ไฟล์ที่แก้แล้วไม่เปลี่ยน)
 import json, sys, copy
 
@@ -21,12 +23,13 @@ OLD_WHEN = {'op': 'and', 'a': {'op': 'eq', 'a': {'op': 'count', 'from': 'tasks'}
             'b': {'op': 'some', 'from': 'products', 'where': 'data.plan!='}}
 NEW_WHEN = {'op': 'and', 'list': [OLD_WHEN['a'], OLD_WHEN['b'], {'op': 'not', 'a': RUNNING}]}
 NEW_TEXT = 'บทพร้อมแล้ว — กดปุ่มด้านล่างเพื่อสร้างคลิปจากบทนี้ (ไม่ต้องคิดบทใหม่)'
+NEW_TEXT_SETUP = 'บทพร้อมแล้ว — กดปุ่มเริ่มด้านล่างเพื่อสร้างคลิปจากบทนี้ (ไม่ต้องคิดบทใหม่)'
 BTN_CLS = ('w-full justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold '
            '!bg-gradient-to-b !from-[#7c3aed] !to-[#6d28d9] !text-white !min-h-[48px] @[420px]:!min-h-0')
 
 
-def build(plan_op: str, queue_op: str) -> dict:
-    return {
+def build(plan_op: str, queue_op: str, with_buttons: bool = True) -> dict:
+    b = {
         'el': 'box',
         'className': 'flex flex-col gap-3 bg-[var(--ev-accent)]/[0.06] border border-[var(--ev-accent)]/25 rounded-2xl p-3 @[420px]:p-3.5',
         'card': [
@@ -45,6 +48,10 @@ def build(plan_op: str, queue_op: str) -> dict:
         ],
         'when': NEW_WHEN,
     }
+    if not with_buttons:   # ③ มีปุ่มเริ่มในรายการเดียวกันอยู่แล้ว
+        b['card'] = b['card'][:1]
+        b['card'][0]['card'][1]['value'] = NEW_TEXT_SETUP
+    return b
 
 
 def is_old(n) -> bool:
@@ -61,9 +68,10 @@ def apply(cfg: dict) -> int:
 
     def walk(o):
         if isinstance(o, list):
+            has_start = any(isinstance(x, dict) and x.get('el') == 'run-button' for x in o)
             for i, x in enumerate(o):
                 if is_old(x):
-                    o[i] = build(plan_op, queue_op); n[0] += 1
+                    o[i] = build(plan_op, queue_op, not has_start); n[0] += 1
                 else:
                     walk(x)
         elif isinstance(o, dict):
@@ -74,9 +82,11 @@ def apply(cfg: dict) -> int:
 
 if __name__ == '__main__':
     for f in sys.argv[1:]:
-        cfg = json.load(open(f, encoding='utf-8'))
+        raw = open(f, encoding='utf-8').read()
+        indent = 2 if raw.startswith('{\n  "') else 1   # minimal/hardsell = 2 ช่อง · แอปอื่น 1 ช่อง (คงรูปเดิม ไม่จัดทั้งไฟล์ใหม่)
+        cfg = json.loads(raw)
         k = apply(cfg)
         left = json.dumps(cfg['phases'], ensure_ascii=False).count('บทที่ได้มาไม่สมบูรณ์')
-        nl = '\n' if open(f, encoding='utf-8').read().endswith('\n') else ''
-        if k: open(f, 'w', encoding='utf-8').write(json.dumps(cfg, ensure_ascii=False, indent=1) + nl)
+        nl = '\n' if raw.endswith('\n') else ''
+        if k: open(f, 'w', encoding='utf-8').write(json.dumps(cfg, ensure_ascii=False, indent=indent) + nl)
         print(f'{f}: ป้ายบทพร้อม {k} จุด · ข้อความเดิมเหลือ {left}')
