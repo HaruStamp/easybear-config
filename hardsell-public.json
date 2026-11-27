@@ -91,7 +91,8 @@
     "styleCat": "ugc",
     "camLocks": "",
     "svBg": "อัตโนมัติ",
-    "svPose": "อัตโนมัติ"
+    "svPose": "อัตโนมัติ",
+    "svRes": "720p"
   },
   "collections": {
     "control": {
@@ -2962,7 +2963,26 @@
       "type": "video",
       "over": "tasks",
       "out": "video2",
-      "model": "{values.videoModel}",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "or",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.videoModel}",
+              "b": "Veo 3.1 - Fast"
+            },
+            {
+              "op": "eq",
+              "a": "{values.videoModel}",
+              "b": "Veo 3.1 - Quality"
+            }
+          ]
+        },
+        "then": "Veo 3.1 - Lite",
+        "else": "{values.videoModel}"
+      },
       "aspectRatio": "9:16",
       "durationSeconds": {
         "op": "cond",
@@ -3685,7 +3705,45 @@
               }
             ]
           },
-          "\n\nLabels, timings and camera notes are instructions only — never show them."
+          "\n\nLabels, timings and camera notes are instructions only — never show them.",
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.svRes}",
+                      "b": "360p"
+                    },
+                    {
+                      "op": "contains",
+                      "a": "{values.videoModel}",
+                      "b": "Omni"
+                    },
+                    {
+                      "op": "lte",
+                      "a": {
+                        "op": "cond",
+                        "when": {
+                          "op": "eq",
+                          "a": "{item.eSec}",
+                          "b": ""
+                        },
+                        "then": "{values.svSec}",
+                        "else": "{item.eSec}"
+                      },
+                      "b": 10
+                    }
+                  ]
+                },
+                "value": "\n\n360p mode: no frame is supplied — attached image 1 is the opening shot of part 1; continue the same take with the same person, outfit, place, light and product. Every mention of the first frame means that image."
+              }
+            ]
+          }
         ]
       },
       "logRun": {
@@ -3711,21 +3769,150 @@
         ]
       },
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอช่วงที่ 2 เสร็จแล้ว",
-      "startFrame": "{item.slots.video}",
+      "startFrame": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.svRes}",
+                "b": "360p"
+              },
+              {
+                "op": "contains",
+                "a": "{values.videoModel}",
+                "b": "Omni"
+              },
+              {
+                "op": "lte",
+                "a": {
+                  "op": "cond",
+                  "when": {
+                    "op": "eq",
+                    "a": "{item.eSec}",
+                    "b": ""
+                  },
+                  "then": "{values.svSec}",
+                  "else": "{item.eSec}"
+                },
+                "b": 10
+              }
+            ]
+          }
+        },
+        "then": "{item.slots.video}"
+      },
       "where": [
         "s5en!=",
         "eSec>10"
       ],
       "tailTrim": 1,
-      "resolution": "720p",
-      "timeoutMs": 300000
+      "resolution": {
+        "op": "cond",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.svRes}",
+              "b": "360p"
+            },
+            {
+              "op": "contains",
+              "a": "{values.videoModel}",
+              "b": "Omni"
+            },
+            {
+              "op": "lte",
+              "a": {
+                "op": "cond",
+                "when": {
+                  "op": "eq",
+                  "a": "{item.eSec}",
+                  "b": ""
+                },
+                "then": "{values.svSec}",
+                "else": "{item.eSec}"
+              },
+              "b": 10
+            }
+          ]
+        },
+        "then": "360p",
+        "else": "720p"
+      },
+      "timeoutMs": 300000,
+      "refs": {
+        "op": "lookupRefs",
+        "from": "tasks",
+        "by": "",
+        "slot": "board",
+        "also": [
+          {
+            "from": "tasks",
+            "by": "{item.id}",
+            "slot": "board",
+            "when": {
+              "op": "and",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.svRes}",
+                  "b": "360p"
+                },
+                {
+                  "op": "contains",
+                  "a": "{values.videoModel}",
+                  "b": "Omni"
+                },
+                {
+                  "op": "lte",
+                  "a": {
+                    "op": "cond",
+                    "when": {
+                      "op": "eq",
+                      "a": "{item.eSec}",
+                      "b": ""
+                    },
+                    "then": "{values.svSec}",
+                    "else": "{item.eSec}"
+                  },
+                  "b": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "id": "mnVideo",
       "type": "video",
       "over": "tasks",
       "out": "video",
-      "model": "{values.videoModel}",
+      "model": {
+        "op": "cond",
+        "when": {
+          "op": "or",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.videoModel}",
+              "b": "Veo 3.1 - Fast"
+            },
+            {
+              "op": "eq",
+              "a": "{values.videoModel}",
+              "b": "Veo 3.1 - Quality"
+            }
+          ]
+        },
+        "then": "Veo 3.1 - Lite",
+        "else": "{values.videoModel}"
+      },
       "aspectRatio": "9:16",
       "durationSeconds": {
         "op": "cond",
@@ -4671,6 +4858,44 @@
                 }
               }
             ]
+          },
+          {
+            "op": "block",
+            "sep": "",
+            "parts": [
+              {
+                "when": {
+                  "op": "and",
+                  "list": [
+                    {
+                      "op": "eq",
+                      "a": "{values.svRes}",
+                      "b": "360p"
+                    },
+                    {
+                      "op": "contains",
+                      "a": "{values.videoModel}",
+                      "b": "Omni"
+                    },
+                    {
+                      "op": "lte",
+                      "a": {
+                        "op": "cond",
+                        "when": {
+                          "op": "eq",
+                          "a": "{item.eSec}",
+                          "b": ""
+                        },
+                        "then": "{values.svSec}",
+                        "else": "{item.eSec}"
+                      },
+                      "b": 10
+                    }
+                  ]
+                },
+                "value": "\n\n360p mode: no frame is supplied — attached image 1 is the opening shot; start the clip looking exactly like it (same person, outfit, place, light, product and headline). Every mention of the first frame means that image."
+              }
+            ]
           }
         ]
       },
@@ -4697,9 +4922,119 @@
         ]
       },
       "logDone": "[{item.productName} คลิป {item.clipIndex}] วิดีโอเสร็จแล้ว พร้อมดาวน์โหลด",
-      "resolution": "720p",
-      "startFrame": "{item.slots.board}",
-      "timeoutMs": 300000
+      "resolution": {
+        "op": "cond",
+        "when": {
+          "op": "and",
+          "list": [
+            {
+              "op": "eq",
+              "a": "{values.svRes}",
+              "b": "360p"
+            },
+            {
+              "op": "contains",
+              "a": "{values.videoModel}",
+              "b": "Omni"
+            },
+            {
+              "op": "lte",
+              "a": {
+                "op": "cond",
+                "when": {
+                  "op": "eq",
+                  "a": "{item.eSec}",
+                  "b": ""
+                },
+                "then": "{values.svSec}",
+                "else": "{item.eSec}"
+              },
+              "b": 10
+            }
+          ]
+        },
+        "then": "360p",
+        "else": "720p"
+      },
+      "startFrame": {
+        "op": "cond",
+        "when": {
+          "op": "not",
+          "a": {
+            "op": "and",
+            "list": [
+              {
+                "op": "eq",
+                "a": "{values.svRes}",
+                "b": "360p"
+              },
+              {
+                "op": "contains",
+                "a": "{values.videoModel}",
+                "b": "Omni"
+              },
+              {
+                "op": "lte",
+                "a": {
+                  "op": "cond",
+                  "when": {
+                    "op": "eq",
+                    "a": "{item.eSec}",
+                    "b": ""
+                  },
+                  "then": "{values.svSec}",
+                  "else": "{item.eSec}"
+                },
+                "b": 10
+              }
+            ]
+          }
+        },
+        "then": "{item.slots.board}"
+      },
+      "timeoutMs": 300000,
+      "refs": {
+        "op": "lookupRefs",
+        "from": "tasks",
+        "by": "",
+        "slot": "board",
+        "also": [
+          {
+            "from": "tasks",
+            "by": "{item.id}",
+            "slot": "board",
+            "when": {
+              "op": "and",
+              "list": [
+                {
+                  "op": "eq",
+                  "a": "{values.svRes}",
+                  "b": "360p"
+                },
+                {
+                  "op": "contains",
+                  "a": "{values.videoModel}",
+                  "b": "Omni"
+                },
+                {
+                  "op": "lte",
+                  "a": {
+                    "op": "cond",
+                    "when": {
+                      "op": "eq",
+                      "a": "{item.eSec}",
+                      "b": ""
+                    },
+                    "then": "{values.svSec}",
+                    "else": "{item.eSec}"
+                  },
+                  "b": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "id": "mnCover",
@@ -7222,6 +7557,412 @@
                     },
                     {
                       "el": "box",
+                      "className": "flex flex-col gap-3 eb-model-std",
+                      "card": [
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-1.5",
+                          "card": [
+                            {
+                              "el": "row",
+                              "className": "items-center !gap-1.5 px-0.5",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "image",
+                                  "textSize": "text-[16px]",
+                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "โมเดลภาพ",
+                                  "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "grid-select",
+                              "field": "imageModel",
+                              "cols": 3,
+                              "mobile": {
+                                "cols": 3
+                              },
+                              "contained": true,
+                              "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button]:border [&_button]:border-[var(--ev-border)] [&_button>span:first-of-type]:font-bold [&_button>span:first-of-type]:!text-[15px]",
+                              "options": [
+                                {
+                                  "value": "🍌 Nano Banana Pro",
+                                  "label": "Pro",
+                                  "desc": "ดีสุด · เขียนไทยได้",
+                                  "icon": "auto_awesome"
+                                },
+                                {
+                                  "value": "🍌 Nano Banana 2.1",
+                                  "label": "2.1",
+                                  "desc": "มาตรฐาน",
+                                  "icon": "image"
+                                },
+                                {
+                                  "value": "🍌 Nano Banana 2 Lite",
+                                  "label": "2 Lite",
+                                  "desc": "ประหยัด",
+                                  "icon": "bolt"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": "ภาพที่มีตัวหนังสือไทย ระบบใช้ Pro ให้อัตโนมัติ",
+                              "icon": "info",
+                              "className": "!text-[12.5px] leading-snug opacity-60 px-0.5"
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-1.5",
+                          "card": [
+                            {
+                              "el": "row",
+                              "className": "items-center !gap-1.5 px-0.5",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "movie",
+                                  "textSize": "text-[16px]",
+                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "โมเดลวิดีโอ",
+                                  "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "grid-select",
+                              "field": "videoModel",
+                              "cols": 2,
+                              "mobile": {
+                                "cols": 2
+                              },
+                              "contained": true,
+                              "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button]:border [&_button]:border-[var(--ev-border)] [&_button>span:first-of-type]:font-bold [&_button>span:first-of-type]:!text-[15px]",
+                              "options": [
+                                {
+                                  "value": "Omni 1.1 Flash",
+                                  "label": "Omni 1.1 Flash",
+                                  "desc": "15 เครดิต/10 วิ"
+                                },
+                                {
+                                  "value": "Omni 1.2 Flash",
+                                  "label": "Omni 1.2 Flash",
+                                  "desc": "30 เครดิต/10 วิ"
+                                },
+                                {
+                                  "value": "Veo 3.1 - Lite",
+                                  "label": "Veo 3.1 Lite",
+                                  "desc": "8 / 16 วิ · 720p",
+                                  "disabledWhen": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "10"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "20"
+                                      }
+                                    ]
+                                  },
+                                  "reason": "ทำได้แค่ 8 / 16 วิ"
+                                },
+                                {
+                                  "value": "Veo 3.1 - Lite [Lower Priority]",
+                                  "label": "Veo 3.1 Lite คิวช้า",
+                                  "desc": "8 / 16 วิ · 720p",
+                                  "disabledWhen": {
+                                    "op": "or",
+                                    "list": [
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "10"
+                                      },
+                                      {
+                                        "op": "eq",
+                                        "a": "{values.svSec}",
+                                        "b": "20"
+                                      }
+                                    ]
+                                  },
+                                  "reason": "ทำได้แค่ 8 / 16 วิ"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-col gap-1.5",
+                          "card": [
+                            {
+                              "el": "row",
+                              "className": "items-center !gap-1.5 px-0.5",
+                              "style": {
+                                "flexWrap": "nowrap"
+                              },
+                              "card": [
+                                {
+                                  "el": "icon",
+                                  "icon": "high_quality",
+                                  "textSize": "text-[16px]",
+                                  "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center opacity-80 shrink-0"
+                                },
+                                {
+                                  "el": "text",
+                                  "value": "ความละเอียด",
+                                  "className": "!text-[13px] @[640px]:!text-[12.5px] !text-[var(--ev-text)] opacity-65 uppercase tracking-[0.14em] font-black px-0.5 !px-0"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "grid-select",
+                              "field": "svRes",
+                              "cols": 2,
+                              "mobile": {
+                                "cols": 2
+                              },
+                              "contained": true,
+                              "className": "!min-h-[48px] @[420px]:!min-h-0 [&_button]:border [&_button]:border-[var(--ev-border)] [&_button>span:first-of-type]:font-bold [&_button>span:first-of-type]:!text-[15px]",
+                              "options": [
+                                {
+                                  "value": "720p",
+                                  "label": "720p",
+                                  "desc": "ชัด · ลง Shopee ได้"
+                                },
+                                {
+                                  "value": "360p",
+                                  "label": "360p",
+                                  "desc": "ประหยัด · Shopee ไม่รับ"
+                                }
+                              ]
+                            },
+                            {
+                              "el": "text",
+                              "value": "360p ทำได้เฉพาะคลิปช่วงเดียว (8 / 10 วิ) · ใช้ภาพเฟรมแรกเป็นภาพอ้างอิงแทน — เปิดคลิปอาจไม่ตรงภาพเฟรมแรกเป๊ะ",
+                              "icon": "info",
+                              "className": "!text-[12.5px] leading-snug opacity-60 px-0.5",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.svRes}",
+                                    "b": "360p"
+                                  },
+                                  {
+                                    "op": "lte",
+                                    "a": "{values.svSec}",
+                                    "b": 10
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "el": "text",
+                              "value": "ความยาว 16 / 20 วิ ใช้ 720p · อยากประหยัดด้วย 360p เลือก 8 หรือ 10 วิ",
+                              "icon": "warning",
+                              "className": "!text-[12.5px] leading-snug !text-amber-600 px-0.5",
+                              "when": {
+                                "op": "and",
+                                "list": [
+                                  {
+                                    "op": "eq",
+                                    "a": "{values.svRes}",
+                                    "b": "360p"
+                                  },
+                                  {
+                                    "op": "gt",
+                                    "a": "{values.svSec}",
+                                    "b": 10
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "when": {
+                            "op": "contains",
+                            "a": "{values.videoModel}",
+                            "b": "Omni"
+                          }
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-row items-center gap-2 rounded-2xl px-3 py-2.5 bg-[var(--ev-accent)]/[0.08] border border-[var(--ev-accent)]/25",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "toll",
+                              "textSize": "text-[18px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center shrink-0"
+                            },
+                            {
+                              "el": "text",
+                              "className": "!text-[14px] leading-snug !text-[var(--ev-text)]",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  "ใช้ ",
+                                  {
+                                    "op": "round",
+                                    "value": {
+                                      "op": "mul",
+                                      "a": {
+                                        "op": "cond",
+                                        "when": {
+                                          "op": "and",
+                                          "list": [
+                                            {
+                                              "op": "eq",
+                                              "a": "{values.svRes}",
+                                              "b": "360p"
+                                            },
+                                            {
+                                              "op": "lte",
+                                              "a": "{values.svSec}",
+                                              "b": 10
+                                            }
+                                          ]
+                                        },
+                                        "then": {
+                                          "op": "cond",
+                                          "when": {
+                                            "op": "eq",
+                                            "a": "{values.videoModel}",
+                                            "b": "Omni 1.2 Flash"
+                                          },
+                                          "then": 10,
+                                          "else": 7
+                                        },
+                                        "else": {
+                                          "op": "cond",
+                                          "when": {
+                                            "op": "eq",
+                                            "a": "{values.videoModel}",
+                                            "b": "Omni 1.2 Flash"
+                                          },
+                                          "then": 30,
+                                          "else": 15
+                                        }
+                                      },
+                                      "b": {
+                                        "op": "div",
+                                        "a": "{values.svSec}",
+                                        "b": "10"
+                                      }
+                                    }
+                                  },
+                                  " เครดิต ต่อคลิป · ",
+                                  {
+                                    "op": "cond",
+                                    "when": {
+                                      "op": "eq",
+                                      "a": "{values.videoModel}",
+                                      "b": "Omni 1.2 Flash"
+                                    },
+                                    "then": "Omni 1.2",
+                                    "else": "Omni 1.1"
+                                  },
+                                  " · ",
+                                  {
+                                    "op": "cond",
+                                    "when": {
+                                      "op": "and",
+                                      "list": [
+                                        {
+                                          "op": "eq",
+                                          "a": "{values.svRes}",
+                                          "b": "360p"
+                                        },
+                                        {
+                                          "op": "lte",
+                                          "a": "{values.svSec}",
+                                          "b": 10
+                                        }
+                                      ]
+                                    },
+                                    "then": "360p",
+                                    "else": "720p"
+                                  },
+                                  " · ",
+                                  "{values.svSec}",
+                                  " วิ"
+                                ]
+                              }
+                            }
+                          ],
+                          "when": {
+                            "op": "contains",
+                            "a": "{values.videoModel}",
+                            "b": "Omni"
+                          }
+                        },
+                        {
+                          "el": "box",
+                          "className": "flex flex-row items-center gap-2 rounded-2xl px-3 py-2.5 bg-[var(--ev-accent)]/[0.08] border border-[var(--ev-accent)]/25",
+                          "card": [
+                            {
+                              "el": "icon",
+                              "icon": "toll",
+                              "textSize": "text-[18px]",
+                              "className": "!text-[var(--ev-accent)] leading-none flex items-center shrink-0"
+                            },
+                            {
+                              "el": "text",
+                              "className": "!text-[14px] leading-snug !text-[var(--ev-text)]",
+                              "value": {
+                                "op": "concat",
+                                "parts": [
+                                  {
+                                    "op": "cond",
+                                    "when": {
+                                      "op": "eq",
+                                      "a": "{values.videoModel}",
+                                      "b": "Veo 3.1 - Lite [Lower Priority]"
+                                    },
+                                    "then": "Veo 3.1 Lite คิวช้า",
+                                    "else": "Veo 3.1 Lite"
+                                  },
+                                  " · 720p · ",
+                                  "{values.svSec}",
+                                  " วิ"
+                                ]
+                              }
+                            }
+                          ],
+                          "when": {
+                            "op": "not",
+                            "a": {
+                              "op": "contains",
+                              "a": "{values.videoModel}",
+                              "b": "Omni"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "el": "box",
                       "className": "flex flex-col gap-2.5",
                       "card": [
                         {
@@ -7376,179 +8117,6 @@
                                 ]
                               },
                               "className": "!text-[17px] @[640px]:!text-[16px] opacity-70 truncate !whitespace-normal @[420px]:!whitespace-nowrap"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "el": "box",
-                      "className": "flex flex-col gap-2.5 mt-1",
-                      "card": [
-                        {
-                          "el": "text",
-                          "value": "โมเดล AI",
-                          "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5 leading-none",
-                          "icon": "smart_toy"
-                        },
-                        {
-                          "el": "box",
-                          "className": "grid grid-cols-1 @[420px]:grid-cols-2 gap-4",
-                          "card": [
-                            {
-                              "el": "box",
-                              "className": "flex flex-col gap-1.5 min-w-0",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "โมเดลสร้างภาพ",
-                                  "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5",
-                                  "icon": "image"
-                                },
-                                {
-                                  "el": "dropdown",
-                                  "field": "imageModel",
-                                  "options": [
-                                    {
-                                      "value": "🍌 Nano Banana Pro",
-                                      "label": "🍌 Nano Banana Pro",
-                                      "icon": "auto_awesome"
-                                    },
-                                    {
-                                      "value": "🍌 Nano Banana 2.1",
-                                      "label": "🍌 Nano Banana 2.1",
-                                      "icon": "image"
-                                    },
-                                    {
-                                      "value": "🍌 Nano Banana 2 Lite",
-                                      "label": "🍌 Nano Banana 2 Lite",
-                                      "icon": "bolt"
-                                    }
-                                  ],
-                                  "className": "!min-h-[48px] @[420px]:!min-h-0"
-                                },
-                                {
-                                  "el": "text",
-                                  "value": "มีข้อความบนภาพ ระบบใช้ Nano Banana Pro ให้อัตโนมัติ เพราะเขียนตัวไทยได้",
-                                  "className": "!text-[13px] @[640px]:!text-[12.5px] opacity-55 px-0.5 leading-snug",
-                                  "when": {
-                                    "op": "not",
-                                    "a": {
-                                      "op": "eq",
-                                      "a": "{values.svTextOn}",
-                                      "b": "ไม่มีข้อความ"
-                                    }
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "el": "box",
-                              "className": "flex flex-col gap-1.5 min-w-0",
-                              "card": [
-                                {
-                                  "el": "text",
-                                  "value": "โมเดลสร้างวีดีโอ",
-                                  "className": "!text-[12.5px] @[640px]:!text-[12px] font-bold uppercase tracking-[0.14em] opacity-60 flex flex-row items-center gap-1.5",
-                                  "icon": "movie"
-                                },
-                                {
-                                  "el": "dropdown",
-                                  "field": "videoModel",
-                                  "options": [
-                                    {
-                                      "value": "Omni 1.1 Flash",
-                                      "label": "Omni 1.1 Flash",
-                                      "icon": "speed"
-                                    },
-                                    {
-                                      "value": "Veo 3.1 - Lite",
-                                      "label": "Veo 3.1 - Lite",
-                                      "icon": "electric_bolt",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "10"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "20"
-                                          }
-                                        ]
-                                      },
-                                      "reason": "ทำได้แค่ 8 / 16 วิ"
-                                    },
-                                    {
-                                      "value": "Veo 3.1 - Fast",
-                                      "label": "Veo 3.1 - Fast",
-                                      "icon": "bolt",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "10"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "20"
-                                          }
-                                        ]
-                                      },
-                                      "reason": "ทำได้แค่ 8 / 16 วิ"
-                                    },
-                                    {
-                                      "value": "Veo 3.1 - Quality",
-                                      "label": "Veo 3.1 - Quality",
-                                      "icon": "high_quality",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "10"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "20"
-                                          }
-                                        ]
-                                      },
-                                      "reason": "ทำได้แค่ 8 / 16 วิ"
-                                    },
-                                    {
-                                      "value": "Veo 3.1 - Lite [Lower Priority]",
-                                      "label": "Veo 3.1 - Lite [Lower Priority]",
-                                      "icon": "trending_down",
-                                      "disabledWhen": {
-                                        "op": "or",
-                                        "list": [
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "10"
-                                          },
-                                          {
-                                            "op": "eq",
-                                            "a": "{values.svSec}",
-                                            "b": "20"
-                                          }
-                                        ]
-                                      },
-                                      "reason": "ทำได้แค่ 8 / 16 วิ"
-                                    }
-                                  ],
-                                  "className": "!min-h-[48px] @[420px]:!min-h-0"
-                                }
-                              ]
                             }
                           ]
                         }
