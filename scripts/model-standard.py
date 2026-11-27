@@ -7,7 +7,7 @@
   "ทำ ux/ui ตั้งค่าโมเดล วีดีโอ ความละเอียด แบบมาตรฐานเดียวกัน ให้สวย layout ข้อความใกล้เคียงกัน ใช้ pattern คล้ายๆกัน"
 
 บล็อกเดียวกันทุกแอป (วางต่อจาก "ความยาวคลิป" ในส่วนการผลิต):
-  โมเดลภาพ   — ปุ่ม 3 ช่องแถวเดียว Pro / 2.1 / 2 Lite + บรรทัด "ภาพที่มีตัวหนังสือไทย ระบบใช้ Pro ให้อัตโนมัติ"
+  โมเดลภาพ   — ปุ่ม 3 ช่องแถวเดียว Pro "ดีสุด" / 2.1 "มาตรฐาน" / 2 Lite "ประหยัด" + บรรทัด "มีข้อความไทย ใช้ Pro อัตโนมัติ"
   โมเดลวิดีโอ — ปุ่ม 2 ช่อง Omni 1.1 Flash / Omni 1.2 Flash (hardsell + Veo 3.1 Lite 2 ปุ่ม แบบเดียวกัน)
   ความละเอียด — ปุ่ม 2 ช่อง 720p / 360p (ทั้ง Omni 1.1 และ 1.2) + หมายเหตุเฉพาะแอป
   บรรทัดสรุป "ใช้ X เครดิต ต่อคลิป · รุ่น · ความละเอียด · ความยาว" คิดจากรุ่น+ความละเอียด+ความยาวจริง
@@ -27,7 +27,7 @@ IMG_ORDER = [PRO, NB21, LITE]
 VEO_LITE, VEO_LITE_LP, VEO_FAST, VEO_Q = 'Veo 3.1 - Lite', 'Veo 3.1 - Lite [Lower Priority]', 'Veo 3.1 - Fast', 'Veo 3.1 - Quality'
 PRICE = {V11: {'720p': 15, '360p': 7}, V12: {'720p': 30, '360p': 10}}
 TEXT_NONE = 'ไม่มีข้อความ'
-HINT_IMG = 'ภาพที่มีตัวหนังสือไทย ระบบใช้ Pro ให้อัตโนมัติ'
+HINT_IMG = 'มีข้อความไทย ใช้ Pro อัตโนมัติ'   # พี่หมี 27 พ.ย.: "ปรับคำอธิบาย โมเดล nano banana pro ให้สั้นกระชับกว่านี้"
 
 
 def eq(a, b): return {'op': 'eq', 'a': a, 'b': b}
@@ -128,7 +128,7 @@ def section(icon, label, body, when=None):
     return s
 
 
-IMG_OPTS = [{'value': PRO, 'label': 'Pro', 'desc': 'ดีสุด · เขียนไทยได้', 'icon': 'auto_awesome'},
+IMG_OPTS = [{'value': PRO, 'label': 'Pro', 'desc': 'ดีสุด', 'icon': 'auto_awesome'},
             {'value': NB21, 'label': '2.1', 'desc': 'มาตรฐาน', 'icon': 'image'},
             {'value': LITE, 'label': '2 Lite', 'desc': 'ประหยัด', 'icon': 'bolt'}]
 VID_OPTS = [{'value': V11, 'label': 'Omni 1.1 Flash', 'desc': '15 เครดิต/10 วิ'},
