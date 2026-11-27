@@ -3,7 +3,7 @@
 
   ระหว่างรอวิดีโอ อย่าสลับแอปหรือล็อกจอ · ได้บอร์ดครบแล้วกดบันทึกมุมขวาบนเก็บไว้ก่อน
   เหตุ: รีโหลดแท็บ (มือถือสลับแอป/ล็อกจอ = แรมโดนคืน) = งานหาย · ฝั่งลูกค้าไม่มีบันทึกอัตโนมัติ (iframe เก็บของถาวรไม่ได้ · engine v1.25.2 release note §4)
-  โผล่เมื่อมีคลิปในคิวแล้ว (count tasks > 0) เหมือน minimal r32 · ทุกแอปมีขั้นบอร์ด (mnBoard*) ⇒ ใช้ข้อความเดียวกันทุกแอป
+  โผล่เมื่อมีคลิปในคิวแล้ว (count tasks > 0) เหมือน minimal r32 · คำ "บอร์ด" ตามการ์ดคลิป (รอคิววาดสตอรีบอร์ด) · แอปที่การ์ดเรียก "ภาพ" (hardsell) = WARN_IMG
   ตำแหน่ง: ต่อท้ายการ์ดสถานะ (ลูกตรงของกล่องหน้าผลิต max-w-[1060px] ที่มีปุ่ม gen-phase วิดีโอทั้งหมด = ops mnVideo* ล้วน)
     ไม่แทรกกลาง ⇒ path ของแถวอื่นไม่เลื่อน · ใช้ของที่ engine 1.22 มีครบ (text + icon + when/count) — ตัวขายเก่าอ่าน public ตัวเดียวกัน
 ใช้: python3 scripts/produce-warn-line.py <ไฟล์ config>…   (แก้ในที่ · รันซ้ำ = ไม่เปลี่ยน · minimal มีแล้ว = 0 จุด)
@@ -11,6 +11,8 @@
 import json, sys
 
 WARN = 'ระหว่างรอวิดีโอ อย่าสลับแอปหรือล็อกจอ · ได้บอร์ดครบแล้วกดบันทึกมุมขวาบนเก็บไว้ก่อน'
+WARN_IMG = 'ระหว่างรอวิดีโอ อย่าสลับแอปหรือล็อกจอ · ได้ภาพครบแล้วกดบันทึกมุมขวาบนเก็บไว้ก่อน'
+# การ์ดคลิปของแอปเรียกขั้นภาพว่า "ภาพ" ไม่ใช่ "สตอรีบอร์ด" (hardsell: รอคิววาดภาพ · Gen ภาพทั้งหมด) ⇒ ใช้คำ "ภาพ" (เทสสดบัญชี Team 27 พ.ย. ค่ำ)
 WARN_CLS = '!text-[12.5px] leading-snug opacity-60 px-0.5'
 
 
@@ -43,10 +45,18 @@ def status_card(c):
     return hit[0][0]
 
 
+def warn_text(c) -> str:
+    return WARN if 'รอคิววาดสตอรีบอร์ด' in json.dumps(c['phases'], ensure_ascii=False) else WARN_IMG
+
+
 def apply(c) -> int:
     st = status_card(c)
-    if any(isinstance(k, dict) and k.get('value') == WARN for k in st['card']): return 0
-    st['card'].append({'el': 'text', 'value': WARN, 'icon': 'info', 'className': WARN_CLS,
+    want = warn_text(c)
+    for k in st['card']:
+        if isinstance(k, dict) and k.get('value') in (WARN, WARN_IMG):
+            if k['value'] == want: return 0
+            k['value'] = want; return 1
+    st['card'].append({'el': 'text', 'value': want, 'icon': 'info', 'className': WARN_CLS,
                        'when': {'op': 'gt', 'a': {'op': 'count', 'from': 'tasks'}, 'b': 0}})
     return 1
 
@@ -57,6 +67,7 @@ if __name__ == '__main__':
         indent = 2 if raw.startswith('{\n  "') else 1
         c = json.loads(raw)
         k = apply(c)
-        assert json.dumps(c, ensure_ascii=False).count(WARN) == 1
+        s_ = json.dumps(c, ensure_ascii=False)
+        assert s_.count(WARN) + s_.count(WARN_IMG) == 1
         if k: open(F, 'w', encoding='utf-8').write(json.dumps(c, ensure_ascii=False, indent=indent) + ('\n' if raw.endswith('\n') else ''))
         print(f'{F}: บรรทัดเตือนหน้าผลิต {k} จุด')
