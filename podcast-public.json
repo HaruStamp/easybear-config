@@ -82323,45 +82323,105 @@
          }
         },
         {
-         "el": "row",
-         "className": "items-center gap-3.5 bg-amber-500/[0.07] border border-amber-500/25 rounded-2xl p-3 @[420px]:p-3.5",
-         "style": {
-          "flexWrap": "nowrap"
-         },
+         "el": "box",
+         "className": "flex flex-col gap-3 bg-[var(--ev-accent)]/[0.06] border border-[var(--ev-accent)]/25 rounded-2xl p-3 @[420px]:p-3.5",
          "card": [
           {
-           "el": "box",
-           "className": "w-[40px] h-[40px] rounded-xl bg-amber-500/[0.14] flex items-center justify-center shrink-0",
+           "el": "row",
+           "className": "items-center gap-3.5",
+           "style": {
+            "flexWrap": "nowrap"
+           },
            "card": [
             {
-             "el": "icon",
-             "icon": "sync_problem",
-             "textSize": "text-[20px]",
-             "className": "!text-amber-500 leading-none flex items-center justify-center"
+             "el": "box",
+             "className": "w-[40px] h-[40px] rounded-xl bg-[var(--ev-accent)]/[0.14] flex items-center justify-center shrink-0",
+             "card": [
+              {
+               "el": "icon",
+               "icon": "task_alt",
+               "textSize": "text-[20px]",
+               "className": "!text-[var(--ev-accent)] leading-none flex items-center justify-center"
+              }
+             ]
+            },
+            {
+             "el": "text",
+             "value": "บทพร้อมแล้ว — กดปุ่มด้านล่างเพื่อสร้างคลิปจากบทนี้ (ไม่ต้องคิดบทใหม่)",
+             "className": "!text-[15px] @[640px]:!text-[14px] !text-[var(--ev-accent)] font-medium leading-relaxed flex-1 min-w-0"
             }
            ]
           },
           {
-           "el": "text",
-           "value": "บทที่ได้มาไม่สมบูรณ์ — กดปุ่มสมองที่เรื่องเพื่อคิดบทใหม่ แล้วกด \"เริ่ม\" อีกครั้ง",
-           "className": "!text-[15px] @[640px]:!text-[14px] !text-amber-600 font-medium leading-relaxed flex-1 min-w-0"
+           "el": "run-button",
+           "label": "เริ่มสร้างคลิปจากบทนี้",
+           "to": "",
+           "icon": "bolt",
+           "className": "w-full justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#7c3aed] !to-[#6d28d9] !text-white !min-h-[48px] @[420px]:!min-h-0",
+           "when": {
+            "op": "eq",
+            "a": "{values.mode}",
+            "b": "auto"
+           }
+          },
+          {
+           "el": "gen-phase",
+           "ops": [
+            "mnPlan",
+            "mnQueue"
+           ],
+           "perProduct": true,
+           "icon": "playlist_add",
+           "variant": "solid",
+           "label": "จัดคิวคลิปจากบทนี้",
+           "className": "w-full justify-center !h-14 @[420px]:!h-12 !rounded-xl !text-[16px] @[420px]:!text-[15px] font-bold !bg-gradient-to-b !from-[#7c3aed] !to-[#6d28d9] !text-white !min-h-[48px] @[420px]:!min-h-0",
+           "when": {
+            "op": "eq",
+            "a": "{values.mode}",
+            "b": "manual"
+           }
           }
          ],
          "when": {
           "op": "and",
-          "a": {
-           "op": "eq",
-           "a": {
-            "op": "count",
-            "from": "tasks"
+          "list": [
+           {
+            "op": "eq",
+            "a": {
+             "op": "count",
+             "from": "tasks"
+            },
+            "b": 0
            },
-           "b": 0
-          },
-          "b": {
-           "op": "some",
-           "from": "products",
-           "where": "data.plan!="
-          }
+           {
+            "op": "some",
+            "from": "products",
+            "where": "data.plan!="
+           },
+           {
+            "op": "not",
+            "a": {
+             "op": "or",
+             "list": [
+              {
+               "op": "eq",
+               "a": "{values.__runState}",
+               "b": "running"
+              },
+              {
+               "op": "eq",
+               "a": "{values.__runState}",
+               "b": "cooldown"
+              },
+              {
+               "op": "eq",
+               "a": "{values.__runState}",
+               "b": "retrying"
+              }
+             ]
+            }
+           }
+          ]
          }
         },
         {
